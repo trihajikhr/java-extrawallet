@@ -1,6 +1,8 @@
 # Project Managemet Keuangan
 ## 1 | Identifikasi Entitas
 
+Halo dari readme! 😀
+
 1. Pendapatan
 2. Pengeluaran
 3. Kategori
