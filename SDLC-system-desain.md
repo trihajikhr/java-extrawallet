@@ -2,13 +2,18 @@
 
 > Sumber: [Metode SDLC](https://www.dicoding.com/blog/metode-sdlc/)
 
-![img.png](media/img.png)
+
+<div align="center">
+    <img src = "media/img.png" />
+</div>
 
 Tahukah kamu apa itu **metode SDLC**? Metode SDLC (_Software Development Life Cycle_) adalah proses pembuatan dan pengubahan sistem serta model dan metodologi yang digunakan untuk mengembangkan sistem rekayasa perangkat lunak. Metode SDLC hadir untuk membantu kamu dalam pengembangan produk. Metode ini memiliki banyak jenisnya, tapi di sini kita fokus membahas 4 metode saja ya. Berikut adalah 4 metode SDLC dalam pengembangan software.
 
 ## Waterfall
 
-![img.png](media/img_1.png)
+<div align="center">
+    <img src = "media/img_1.png" />
+</div>
 
 Metode SDLC yang pertama adalah waterfall. Metode waterfall adalah metode kerja yang menekankan fase-fase yang berurutan dan sistematis. Disebut waterfall karena proses mengalir satu arah “ke bawah” seperti air terjun. Metode waterfall ini harus dilakukan secara berurutan sesuai dengan tahap yang ada.
 
@@ -54,7 +59,9 @@ Berikut adalah kelebihan dari metode waterfall:
 
 ## Prototype
 
-![img_2.png](media/img_2.png)
+<div align="center">
+    <img src = "media/img_2.png" />
+</div>
 
 Metode SDLC selanjutnya adalah prototype. Metode prototype adalah metode yang memungkinkan pengguna atau user memiliki gambaran awal tentang perangkat lunak yang akan dikembangkan, serta pengguna dapat melakukan pengujian di awal sebelum perangkat lunak dirilis.
 
@@ -101,9 +108,11 @@ Berikut adalah kekurangan dari metode prototype:
 1. Proses yang dilakukan untuk analisis dan perancangan terlalu singkat
 2. Kurang fleksibel jika terjadi perubahan
 
-## Agile 
+## Agile
 
-![img_3.png](media/img_3.png)
+<div align="center">
+    <img src = "media/img_3.png" />
+</div>
 
 Metode SDLC ketiga adalah agile. Metode agile adalah metode yang fleksibel di mana pengembangan dilakukan dalam jangka pendek. Namun diperlukan adaptasi yang cepat dari developer terhadap perubahan dalam bentuk apa pun.
 
@@ -153,7 +162,9 @@ Berikut adalah kekurangan dari metode agile:
 
 ## Fountain
 
-![img_4.png](media/img_4.png)
+<div align="center">
+    <img src = "media/img_4.png" />
+</div>
 
 Metode SDLC yang terakhir adalah fountain. Metode fountain adalah perbaikan dari metode waterfall, di mana jenis tahapan masih sama. Namun beberapa jenis tahapan boleh didahulukan atau dilewati, tetapi ada tahapan yang tidak bisa dilewati, contohnya seperti kamu memerlukan design sebelum melakukan implementasi, jika hal tersebut dilewati maka akan ada tumpang tindih.
 
