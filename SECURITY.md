@@ -26,7 +26,7 @@ If you discover a security vulnerability, **do not create a public issue**.
 
 Instead, please report it privately via:
 
-📧 **Security Contact:** `your-email@example.com`  
+📧 **Security Contact:** `trihajikhr@gmail.com`  
 or  
 🔒 **GitHub Private Advisory:** Use “Report a vulnerability” in the repository’s Security tab.
 
