@@ -1,32 +1,25 @@
----
-name: 🐞 Bug Report
-about: Create a report to help us improve Extra Wallet
-title: "[BUG] "
-labels: bug
-assignees: ''
----
-
-## Description
+### Description
 Provide a clear and concise description of the bug.
 
-## Steps to Reproduce
+### Steps to Reproduce
 1. Go to '...'
 2. Click on '...'
 3. Observe the error
 
-## Expected Behavior
+### Expected Behavior
 Describe what you expected to happen.
 
-## Actual Behavior
+### Actual Behavior
 Describe what actually happened.
 
-## Screenshots / Logs
+### Screenshots / Logs
 Add screenshots or logs to help explain the problem, if applicable.
 
-## Environment
+### Environment
+
 - OS: [e.g., Windows 10, macOS 13]
 - Java Version: [e.g., 17]
 - Extra Wallet Version: [e.g., v1.0.0]
 
-## Additional Context
+### Additional Context
 Add any other context about the bug here.

@@ -1,10 +1,7 @@
-# Security Policy  
-**Extra Wallet – Personal Finance Manager**
+# Security Policy
 
 Thank you for taking the time to help keep Extra Wallet secure.  
 This document outlines our policies for reporting vulnerabilities, security expectations, and responsible disclosure.
-
----
 
 ## Supported Versions
 
@@ -18,17 +15,15 @@ Security fixes are applied to the following versions:
 
 If you're using an older version, please update to ensure you receive the latest security improvements.
 
----
-
 ## Reporting a Vulnerability
 
 If you discover a security vulnerability, **do not create a public issue**.
 
 Instead, please report it privately via:
 
-📧 **Security Contact:** `trihajikhr@gmail.com`  
+- **Security Contact:** `trihajikhr@gmail.com`  
 or  
-🔒 **GitHub Private Advisory:** Use “Report a vulnerability” in the repository’s Security tab.
+- **GitHub Private Advisory:** Use “Report a vulnerability” in the repository’s Security tab.
 
 When reporting, please include:
 
@@ -45,8 +40,6 @@ You can expect:
 - A timeline for the fix  
 - A coordinated disclosure process
 
----
-
 ## Responsible Disclosure
 
 We request that you:
@@ -56,8 +49,6 @@ We request that you:
 - Do not exploit the vulnerability beyond what is necessary for the report
 
 We will credit contributors who responsibly report vulnerabilities unless they prefer to remain anonymous.
-
----
 
 ## Security Practices
 
@@ -70,8 +61,6 @@ Extra Wallet follows these internal security guidelines:
 - User data is handled securely and not logged unnecessarily  
 - Dependencies are regularly scanned for vulnerabilities
 
----
-
 ## Encryption & Data Safety
 
 Extra Wallet handles personal finance data. We strongly advise:
@@ -79,8 +68,6 @@ Extra Wallet handles personal finance data. We strongly advise:
 - Users protect their local database (`.sqlite`) with OS-level security  
 - Developers never share sample databases with real user data  
 - API keys or sensitive config values must be stored in environment variables, not in code
-
----
 
 ## Thanks
 

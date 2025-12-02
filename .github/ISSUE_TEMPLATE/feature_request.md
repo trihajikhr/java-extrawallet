@@ -1,26 +1,18 @@
----
-name: ✨ Feature Request
-about: Suggest a new feature or improvement for Extra Wallet
-title: "[FEATURE] "
-labels: enhancement
-assignees: ''
----
-
-## Description
+### Description
 Provide a clear and concise description of the feature you are proposing.
 
-## Motivation / Use Case
+### Motivation / Use Case
 Why is this feature useful or necessary?  
 Who will benefit from it and how?
 
-## Proposed Implementation
+### Proposed Implementation
 (Optional) Describe how you imagine this feature could be implemented, if you have ideas.
 
-## Alternatives Considered
+### Alternatives Considered
 (Optional) Describe any alternative solutions or features you considered and why they are less suitable.
 
-## Screenshots / Mockups
+### Screenshots / Mockups
 (Optional) Add screenshots, sketches, or mockups to help explain your idea.
 
-## Additional Context
+### Additional Context
 Add any other context or notes about the feature request here.
