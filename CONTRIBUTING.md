@@ -3,11 +3,9 @@
 Thank you for your interest in contributing to **Extra Wallet**!
 We welcome contributions of all kinds: bug reports, feature suggestions, documentation improvements, or code enhancements.
 
----
+##  How to Contribute
 
-## 📝 **How to Contribute**
-
-### 1. **Reporting Bugs**
+### 1. Reporting Bugs
 
 * Check existing issues first to avoid duplicates.
 * Use the [Issue Template](.github/ISSUE_TEMPLATE/bug_report.md).
@@ -18,7 +16,7 @@ We welcome contributions of all kinds: bug reports, feature suggestions, documen
     * Screenshots or logs if possible
     * Environment (OS, Java version, Extra Wallet version)
 
-### 2. **Suggesting Features**
+### 2. Suggesting Features
 
 * Use the [Feature Request Template](.github/ISSUE_TEMPLATE/feature_request.md).
 * Be specific about:
@@ -27,7 +25,7 @@ We welcome contributions of all kinds: bug reports, feature suggestions, documen
     * Proposed solution or design
     * Expected impact
 
-### 3. **Code Contributions**
+### 3. Code Contributions
 
 1. Fork the repository
 2. Create a feature branch:
@@ -45,36 +43,33 @@ We welcome contributions of all kinds: bug reports, feature suggestions, documen
    ```
 7. Push your branch and open a **Pull Request**.
 
-> **Note:** Direct pushes to `main` are **not allowed**. All changes must go through Pull Requests.
+> [!CAUTION] 
+> Direct pushes to `main` are **not allowed**. All changes must go through Pull Requests.
 
-### 4. **Code Review Process**
+### 4. Code Review Process
 
 * All PRs will be reviewed before merging.
 * Reviewers may request changes or improvements.
 * Please respond promptly and politely to feedback.
 * Only maintainers/admins can merge PRs to `main`.
 
-### 5. **Style Guide**
+### 5. Style Guide
 
 * Follow Java conventions (CamelCase for classes, camelCase for methods/variables).
 * Use meaningful names and clear comments.
 * Avoid committing large or unnecessary files (like `.sqlite` with real data).
 
-### 6. **Testing**
+### 6. Testing
 
 * Ensure new features are tested and do not break existing functionality.
 * Include unit tests when applicable.
 
----
-
-## ⚖ **Code of Conduct**
+## Code of Conduct
 
 Please follow the [Code of Conduct](CODE_OF_CONDUCT.md) in all interactions.
 Respectful, constructive, and inclusive communication is mandatory.
 
----
+## Contact
 
-## 📬 **Contact**
-
-* Questions about contributions can be sent to: `your-email@example.com`
-* Security issues should follow [SECURITY.md](SECURITY.md) guidelines.
+* Questions about contributions can be sent to: `trihajikhr@gmail.com`
+* Security issues should follow [SECURITY](SECURITY.md) guidelines.
