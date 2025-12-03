@@ -1,0 +1,4 @@
+.white-box {
+    -fx-background-color: #FEFEFE;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 4);
+}
