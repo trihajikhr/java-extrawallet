@@ -1,0 +1,20 @@
+#top-pane {
+    -fx-background-color: #844FC1;
+}
+
+#top-top-pane {
+    -fx-background-color: #FEFEFE;
+}
+
+#navigation {
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 4);
+}
+
+#under-top-pane {
+    -fx-background-color: #00C7BE;
+}
+
+#nav-float {
+    -fx-background-color: #FEFEFE;
+}

@@ -1,0 +1,21 @@
+.btn-flat {
+    -fx-background-color: white;  /* warna normal */
+    -fx-text-fill: #333;
+    -fx-background-radius: 5;
+    -fx-padding: 6 20 6 20;
+    -fx-font-size: 14px;
+
+    -fx-border-width: 0;      /* hilangkan border */
+    -fx-border-color: transparent;
+    -fx-effect: none;         /* hilangkan shadow default */
+}
+
+/* Hover state */
+.btn-flat:hover {
+    -fx-background-color: #f2f2f2; /* sedikit gelap */
+}
+
+/* Pressed / clicked state */
+.btn-flat:pressed {
+    -fx-background-color: #e0e0e0; /* lebih gelap */
+}
