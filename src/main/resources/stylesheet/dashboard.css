@@ -18,3 +18,12 @@
 #nav-float {
     -fx-background-color: #FEFEFE;
 }
+
+.box-shadow {
+    -fx-background-color: #FEFEFE;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+}
+
+.background {
+    -fx-background-color: #00C7BE;
+}
