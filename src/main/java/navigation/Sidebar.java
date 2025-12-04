@@ -1,5 +1,7 @@
 package navigation;
 
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -15,6 +17,8 @@ import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 public class Sidebar implements Initializable {
 
@@ -54,6 +58,22 @@ public class Sidebar implements Initializable {
     @FXML
     private void page6(MouseEvent event){
         loadPage("page6");
+    }
+
+    @FXML
+    private void addTransaction(MouseEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction.fxml"));
+        Parent root = loader.load();
+
+        Stage popup = new Stage();
+        popup.setScene(new Scene(root));
+        popup.initModality(Modality.WINDOW_MODAL);
+
+        // Supaya popup nempel ke window utama (penting!)
+        popup.initOwner(((Node)event.getSource()).getScene().getWindow());
+
+        popup.setTitle("Tambah Transaksi");
+        popup.show();
     }
 
     @Override
