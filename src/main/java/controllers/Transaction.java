@@ -11,7 +11,7 @@ public class Transaction implements PopupUtils.PopupClosable {
     private Stage popupStage;
 
     @FXML
-    private Parent rootPane; // fx:id="root" pada FXML
+    private Parent rootPane; // fx:id="rootPane" pada FXML
 
     @Override
     public void setPopupStage(Stage stage) {
@@ -21,5 +21,26 @@ public class Transaction implements PopupUtils.PopupClosable {
     @FXML
     private void closePopup(MouseEvent e) {
         PopupUtils.playCloseAnimation(rootPane, popupStage);
+    }
+
+    // dragable pop up
+    private double xOffset = 0;
+    private double yOffset = 0;
+
+    @FXML
+    private void initialize() {
+        // klik awal: ambil offset
+        rootPane.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        // geser: update posisi stage
+        rootPane.setOnMouseDragged(event -> {
+            if (popupStage != null) {
+                popupStage.setX(event.getScreenX() - xOffset);
+                popupStage.setY(event.getScreenY() - yOffset);
+            }
+        });
     }
 }
