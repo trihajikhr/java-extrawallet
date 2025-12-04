@@ -45,6 +45,11 @@
             <artifactId>javafx-base</artifactId>
             <version>20</version>
         </dependency>
+        <dependency>
+            <groupId>com.jfoenix</groupId>
+            <artifactId>jfoenix</artifactId>
+            <version>9.0.10</version>
+        </dependency>
 
         <!-- konfigurasi dependency lain [sqlite, chart, logger, dll] -->
         <!-- https://mvnrepository.com/artifact/org.xerial/sqlite-jdbc -->
@@ -67,6 +72,21 @@
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.12.0</version>
+        </dependency>
+
+        <!-- dependency helper! -->
+        <!-- https://mvnrepository.com/artifact/ch.qos.logback/logback-classic -->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.21</version>
+            <scope>compile</scope>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.17</version>
         </dependency>
     </dependencies>
 
