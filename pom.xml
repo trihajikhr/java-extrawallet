@@ -20,6 +20,20 @@
     </properties>
 
     <dependencies>
+        <!-- JANGAN DIHAPUS, UNTUK PACKAGING! -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>5.7.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <version>5.7.1</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- dependency JavaFX disini -->
         <!-- https://mvnrepository.com/artifact/org.openjfx/javafx-controls -->
         <dependency>
