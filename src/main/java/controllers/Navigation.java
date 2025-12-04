@@ -1,10 +1,6 @@
-package navigation;
+package controllers;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -17,9 +13,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class Navigation implements Initializable {
 
@@ -61,22 +54,28 @@ public class Navigation implements Initializable {
         loadPage("page6");
     }
 
+//    @FXML
+//    private void addTransaction(MouseEvent event) throws IOException {
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction.fxml"));
+//        Parent root = loader.load();
+//
+//        Stage popup = new Stage();
+//        popup.initStyle(javafx.stage.StageStyle.UNDECORATED);
+//        popup.setResizable(false); // <-- penting kalau mau bener2 fix size
+//        popup.setScene(new Scene(root));
+//        // popup.initModality(Modality.WINDOW_MODAL);
+//
+//        // Supaya popup nempel ke window utama
+//        popup.initOwner(((Node)event.getSource()).getScene().getWindow());
+//
+//        // popup.setTitle("Tambah Transaksi");
+//        popup.show();
+//        // playPopupAnimation(root);
+//    }
+
     @FXML
     private void addTransaction(MouseEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction.fxml"));
-        Parent root = loader.load();
-
-        Stage popup = new Stage();
-        popup.initStyle(javafx.stage.StageStyle.UNDECORATED);
-        popup.setResizable(false); // <-- penting kalau mau bener2 fix size
-        popup.setScene(new Scene(root));
-        // popup.initModality(Modality.WINDOW_MODAL);
-
-        // Supaya popup nempel ke window utama
-        popup.initOwner(((Node)event.getSource()).getScene().getWindow());
-
-        // popup.setTitle("Tambah Transaksi");
-        popup.show();
+        PopupUtils.showPopup("/fxml/transaction.fxml", (Node) event.getSource());
     }
 
     @Override
@@ -97,4 +96,3 @@ public class Navigation implements Initializable {
     }
 
 }
-
