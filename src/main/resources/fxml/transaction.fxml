@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="705.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="705.0" minWidth="800.0" prefHeight="705.0" prefWidth="800.0" styleClass="root-pane" stylesheets="@../stylesheet/transaction.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="transaction.Control">
    <children>
       <AnchorPane layoutY="-3.0" prefHeight="75.0" prefWidth="800.0" styleClass="background" stylesheets="@../stylesheet/transaction.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -26,7 +26,7 @@
                   <Font size="17.0" />
                </font>
             </Label>
-            <Button alignment="CENTER" layoutX="725.0" layoutY="25.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" styleClass="background" stylesheets="@../stylesheet/button.css" text="X" textAlignment="CENTER" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+            <Button fx:id="btnClose" alignment="CENTER" layoutX="725.0" layoutY="25.0" mnemonicParsing="false" onAction="#closePopup" prefHeight="30.0" prefWidth="30.0" text="X" textAlignment="CENTER" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
                <font>
                   <Font name="System Bold" size="14.0" />
                </font>
@@ -70,9 +70,9 @@
                   </HBox>
                   <HBox alignment="TOP_CENTER" prefHeight="62.0" prefWidth="380.0" spacing="5.0" GridPane.rowIndex="1">
                      <children>
-                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" text="Expense" HBox.hgrow="ALWAYS" />
-                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" text="Income" HBox.hgrow="ALWAYS" />
-                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" text="Transfer" HBox.hgrow="ALWAYS" />
+                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" stylesheets="@../stylesheet/button.css" text="Expense" HBox.hgrow="ALWAYS" />
+                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" stylesheets="@../stylesheet/button.css" text="Income" HBox.hgrow="ALWAYS" />
+                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" stylesheets="@../stylesheet/button.css" text="Transfer" HBox.hgrow="ALWAYS" />
                      </children>
                      <GridPane.margin>
                         <Insets bottom="5.0" left="13.0" right="7.0" top="5.0" />
@@ -214,8 +214,8 @@
                   </VBox>
                   <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" GridPane.rowIndex="8">
                      <children>
-                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Add record" VBox.vgrow="ALWAYS" />
-                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Add and create another" VBox.vgrow="ALWAYS" />
+                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" stylesheets="@../stylesheet/button.css" text="Add record" VBox.vgrow="ALWAYS" />
+                        <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" stylesheets="@../stylesheet/button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
                      </children>
                      <GridPane.margin>
                         <Insets bottom="10.0" left="13.0" right="7.0" />
