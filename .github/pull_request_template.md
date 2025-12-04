@@ -1,26 +1,31 @@
-### Description
-Provide a clear and concise description of what this pull request does.
+### Ringkasan
 
-### Related Issue
-- Closes #[issue number] (if applicable)
+Jelaskan perubahan yang kamu buat secara singkat.
 
-### Type of Change
-<!-- Please delete options that are not relevant -->
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Code refactor
-- [ ] Documentation update
-- [ ] Other: ______
+### Terkait Issue
 
-### How Has This Been Tested?
-Describe how you tested your changes (e.g., manual testing, unit tests, integration tests).
+* Menutup #[nomor issue] (jika ada)
+
+### Jenis Perubahan
+
+* [ ] Perbaikan bug
+* [ ] Fitur baru
+* [ ] Refactor
+* [ ] Update dokumentasi
+* [ ] Lainnya: ________
+
+### Pengujian
+
+Jelaskan cara kamu mengetes perubahan ini.
 
 ### Checklist
-- [ ] I have read the contributing guidelines
-- [ ] My code follows the style guidelines of this project
-- [ ] I have added necessary documentation (if appropriate)
-- [ ] I have performed a self-review of my code
-- [ ] I have tested my changes and ensured they work
 
-### Screenshots (if applicable)
-Add screenshots or GIFs to help explain your changes.
+* [ ] Sudah mengikuti panduan kontribusi
+* [ ] Kode sudah sesuai standar
+* [ ] Dokumentasi ditambahkan bila perlu
+* [ ] Sudah dicek ulang
+* [ ] Sudah dites dan berjalan normal
+
+### Screenshot (opsional)
+
+Lampirkan screenshot atau GIF jika membantu.
