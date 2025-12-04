@@ -1,0 +1,27 @@
+.background {
+    -fx-background-color: #FFFFFF;
+}
+
+.box-shadow {
+    -fx-background-color: #FEFEFE;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+}
+
+.background1 {
+    -fx-background-color: #EBF7C5;
+}
+
+.root-pane {
+    -fx-background-color: white;
+
+    /* Border tipis */
+    -fx-border-color: rgba(0,0,0,0.15);
+    -fx-border-width: 1px;
+    -fx-border-radius: 10px;
+
+    /* Rounded corner background juga */
+    -fx-background-radius: 10px;
+
+    /* Soft shadow */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.15, 0, 4);
+}

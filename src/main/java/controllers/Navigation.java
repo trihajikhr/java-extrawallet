@@ -1,5 +1,6 @@
-package navigation;
+package controllers;
 
+import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import java.io.IOException;
 import java.net.URL;
@@ -7,16 +8,13 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
-public class Sidebar implements Initializable {
+public class Navigation implements Initializable {
 
     @FXML
     private BorderPane corePane;
@@ -56,6 +54,30 @@ public class Sidebar implements Initializable {
         loadPage("page6");
     }
 
+//    @FXML
+//    private void addTransaction(MouseEvent event) throws IOException {
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction.fxml"));
+//        Parent root = loader.load();
+//
+//        Stage popup = new Stage();
+//        popup.initStyle(javafx.stage.StageStyle.UNDECORATED);
+//        popup.setResizable(false); // <-- penting kalau mau bener2 fix size
+//        popup.setScene(new Scene(root));
+//        // popup.initModality(Modality.WINDOW_MODAL);
+//
+//        // Supaya popup nempel ke window utama
+//        popup.initOwner(((Node)event.getSource()).getScene().getWindow());
+//
+//        // popup.setTitle("Tambah Transaksi");
+//        popup.show();
+//        // playPopupAnimation(root);
+//    }
+
+    @FXML
+    private void addTransaction(MouseEvent event) throws IOException {
+        PopupUtils.showPopup("/fxml/transaction.fxml", (Node) event.getSource());
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb){
         loadPage("home");
@@ -67,11 +89,10 @@ public class Sidebar implements Initializable {
         try {
             root = FXMLLoader.load(getClass().getResource(("/fxml/" + page + ".fxml")));
         } catch (IOException e){
-            Logger.getLogger(Sidebar.class.getName()).log(Level.SEVERE, null, e);
+            Logger.getLogger(Navigation.class.getName()).log(Level.SEVERE, null, e);
         }
 
         corePane.setCenter(root);
     }
 
 }
-
