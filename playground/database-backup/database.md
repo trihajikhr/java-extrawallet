@@ -1,0 +1,1 @@
+# Query dan logika Database
