@@ -4,7 +4,7 @@ Jelaskan perubahan yang kamu buat secara singkat.
 
 ### Terkait Issue
 
-* Menutup #[nomor issue] (jika ada)
+* CLOSES #[nomor issue]
 
 ### Jenis Perubahan
 
