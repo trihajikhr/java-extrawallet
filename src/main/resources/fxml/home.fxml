@@ -9,46 +9,45 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="750.0" minWidth="1300.0" prefHeight="273.0" prefWidth="310.0" styleClass="background" stylesheets="@../stylesheet/dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="700.0" prefHeight="643.0" prefWidth="901.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #FAD05C;" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
-            <HBox prefHeight="113.0" prefWidth="290.0" style="-fx-background-color: #E3F4F7;" VBox.vgrow="ALWAYS">
+            <HBox prefHeight="113.0" prefWidth="290.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <GridPane HBox.hgrow="ALWAYS">
+                        <GridPane>
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="315.0" minWidth="10.0" prefWidth="312.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="334.0" minWidth="10.0" prefWidth="328.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FCE3BE;">
+                              <Pane prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css">
                                  <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="5.0" right="5.0" />
                                  </GridPane.margin>
                               </Pane>
-                              <Pane layoutX="15.0" layoutY="15.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FCE3BE;" GridPane.columnIndex="1">
+                              <Pane layoutX="15.0" layoutY="15.0" prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" GridPane.columnIndex="1">
                                  <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets bottom="5.0" left="5.0" right="5.0" />
                                  </GridPane.margin>
                               </Pane>
-                              <Pane layoutX="208.0" layoutY="15.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FCE3BE;" GridPane.rowIndex="1">
+                              <Pane layoutX="208.0" layoutY="15.0" prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" GridPane.rowIndex="1">
                                  <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets right="5.0" top="5.0" />
                                  </GridPane.margin>
                               </Pane>
-                              <Pane layoutX="15.0" layoutY="126.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #FCE3BE;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                              <Pane layoutX="15.0" layoutY="126.0" prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" GridPane.columnIndex="1" GridPane.rowIndex="1">
                                  <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    <Insets left="5.0" right="5.0" top="5.0" />
                                  </GridPane.margin>
                               </Pane>
                            </children>
@@ -57,33 +56,33 @@
                   </HBox>
                   <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #FCE3BE;" HBox.hgrow="ALWAYS">
+                        <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" HBox.hgrow="ALWAYS">
                            <HBox.margin>
-                              <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                              <Insets left="5.0" />
                            </HBox.margin>
                         </Pane>
                      </children>
                   </HBox>
                </children>
             </HBox>
-            <HBox prefHeight="130.0" prefWidth="290.0" style="-fx-background-color: #E3F4F7;" VBox.vgrow="ALWAYS">
+            <HBox prefHeight="130.0" prefWidth="290.0" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                </VBox.margin>
                <children>
-                  <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #FCE3BE;" HBox.hgrow="ALWAYS">
+                  <Pane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" HBox.hgrow="ALWAYS">
                      <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets right="5.0" />
                      </HBox.margin>
                   </Pane>
-                  <Pane layoutX="15.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #FCE3BE;" HBox.hgrow="ALWAYS">
+                  <Pane layoutX="15.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" HBox.hgrow="ALWAYS">
                      <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets left="5.0" right="5.0" />
                      </HBox.margin>
                   </Pane>
-                  <Pane layoutX="15.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: #FCE3BE;" HBox.hgrow="ALWAYS">
+                  <Pane layoutX="15.0" layoutY="15.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" HBox.hgrow="ALWAYS">
                      <HBox.margin>
-                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                        <Insets left="5.0" />
                      </HBox.margin>
                   </Pane>
                </children>
