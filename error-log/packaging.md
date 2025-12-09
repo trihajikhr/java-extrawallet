@@ -69,3 +69,7 @@ jpackage ^
 ```
 
 Yaitu pada bagian `--java-options "--enable-native-access=ALL-UNNAMED"`.
+
+### Perbaikan
+
+Pada package `app`, aku harus membuat dua class yaitu `App` dan `Main`, dimana keedua class ini harus saling mengoper supaya ketika dijadikan exe berhasil dibuka. Aku tidak tahu kenapa harus seperti ini, aku hanya mengetahuainya lewat stackOverflow.
