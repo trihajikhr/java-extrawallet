@@ -1,54 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="600" prefWidth="900" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
 
-    <!--
-      LAYER 2: labelSidebar (dia akan slide in/out)
-      layoutX = 60 (tepat di sebelah iconBar), translateX = -200 (hidden)
-    -->
-    <AnchorPane fx:id="labelSidebar" layoutX="60" prefHeight="500.0" prefWidth="200" style="-fx-background-color: #2b2b2b;" translateX="-200" AnchorPane.topAnchor="100.0">
-        <children>
-            <VBox layoutX="12" layoutY="20" spacing="15.0" AnchorPane.topAnchor="100.0">
-            <children>
-               <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" VBox.vgrow="ALWAYS" />
-               <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
-               <Button layoutX="10.0" layoutY="62.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
-               <Button layoutX="10.0" layoutY="114.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
-               <Button layoutX="10.0" layoutY="166.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
-               <Button layoutX="10.0" layoutY="218.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
-            </children>
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="573.0" minWidth="900.0" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
+   <children>
+      <AnchorPane fx:id="corePane" layoutX="700.0" layoutY="430.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="850.0" prefHeight="600.0" prefWidth="850.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="102.0" />
+      <AnchorPane layoutX="137.0" layoutY="242.0" maxHeight="1.7976931348623157E308" minHeight="600.0" minWidth="230.0" prefHeight="600.0" prefWidth="230.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="102.0">
+         <children>
+            <VBox alignment="TOP_CENTER" layoutX="29.0" layoutY="36.0" prefHeight="600.0" prefWidth="225.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label alignment="CENTER" prefHeight="50.0" prefWidth="154.0" text="Java Extrawallet">
+                     <font>
+                        <Font name="System Bold" size="17.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="home" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#home" prefHeight="40.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icons/cube.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Home" />
+                           </children>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </HBox>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="income" layoutX="20.0" layoutY="70.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#income" prefHeight="40.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icons/cube.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Income" />
+                           </children>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </HBox>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="expense" layoutX="20.0" layoutY="123.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#expense" prefHeight="40.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icons/cube.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Expense" />
+                           </children>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </HBox>
+                     </graphic>
+                  </Button>
+                  <Button fx:id="statistic" layoutX="20.0" layoutY="70.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#statistic" prefHeight="40.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css">
+                     <graphic>
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../icons/cube.png" />
+                                 </image>
+                              </ImageView>
+                              <Label text="Statistic" />
+                           </children>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </HBox>
+                     </graphic>
+                  </Button>
+               </children>
+               <padding>
+                  <Insets left="15.0" right="15.0" />
+               </padding>
             </VBox>
-        </children>
-    </AnchorPane>
-
-    <!--
-      LAYER 3: mainContent (akan didorong)
-      leftAnchor = 60 (start setelah iconBar)
-    -->
-    <AnchorPane fx:id="mainContent" style="-fx-background-color: #f4f6f8;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="60" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
-      <children>
-         <AnchorPane layoutX="420.0" layoutY="265.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" />
-      </children>
-    </AnchorPane>
-
-    <!--
-      LAYER 1: iconBar (selalu di atas, lebar 60px). Letakkan terakhir agar z-order di atas.
-      Tombol toggle ada di sini.
-    -->
-    <VBox fx:id="iconBar" prefHeight="500.0" prefWidth="60" style="-fx-background-color: #1f2937; -fx-alignment: top-center;" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="100.0">
-        <children>
-            <Button fx:id="toggleButton" onAction="#toggleSidebar" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-padding: 10;" text="≡" />
-            <!-- icon placeholders -->
-            <Label style="-fx-font-size: 18; -fx-text-fill: white; -fx-padding: 12 0 0 0;" text="🏠" />
-            <Label style="-fx-font-size: 18; -fx-text-fill: white; -fx-padding: 12 0 0 0;" text="🔧" />
-            <Label style="-fx-font-size: 18; -fx-text-fill: white; -fx-padding: 12 0 0 0;" text="📄" />
-        </children>
-    </VBox>
-   <AnchorPane prefHeight="60.0" prefWidth="524.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="115.0" layoutY="14.0" maxWidth="1.7976931348623157E308" minHeight="80.0" minWidth="1066.0" prefHeight="80.0" prefWidth="1066.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   </children>
 </AnchorPane>

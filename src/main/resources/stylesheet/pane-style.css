@@ -2,3 +2,7 @@
     -fx-background-color: #FEFEFE;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
 }
+
+.window-background {
+    -fx-background-color: #F4F4F4;
+}
