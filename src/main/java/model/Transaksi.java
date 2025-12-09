@@ -6,28 +6,28 @@ public class Transaksi {
     protected int id;
     protected  String tipe; // IN/OUT
     protected int jumlah;
-    protected int idKategori;
+    protected Kategori kategori;
     protected LocalDateTime tanggalSet;
     protected LocalDateTime tanggalBuat;
     protected String keterangan;
 
     // contructor full
-    public Transaksi(int id, String tipe, int jumlah, int idKategori, LocalDateTime tanggalSet, LocalDateTime tanggalBuat, String keterangan) {
+    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggalSet, LocalDateTime tanggalBuat, String keterangan) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
-        this.idKategori = idKategori;
+        this.kategori = kategori;
         this.tanggalSet = tanggalSet;
         this.tanggalBuat = tanggalBuat;
         this.keterangan = keterangan;
     }
 
     // conostructor tanpa keterangan
-    public Transaksi(int id, String tipe, int jumlah, int idKategori, LocalDateTime tanggalSet, LocalDateTime tanggalBuat) {
+    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggalSet, LocalDateTime tanggalBuat) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
-        this.idKategori = idKategori;
+        this.kategori = kategori;
         this.tanggalSet = tanggalSet;
         this.tanggalBuat = tanggalBuat;
     }
@@ -60,11 +60,11 @@ public class Transaksi {
     }
 
     public int getIdKategori() {
-        return idKategori;
+        return kategori.getId();
     }
 
     public void setIdKategori(int idKategori) {
-        this.idKategori = idKategori;
+        this.kategori.setId(idKategori);
     }
 
     public LocalDateTime getTanggalSet() {
