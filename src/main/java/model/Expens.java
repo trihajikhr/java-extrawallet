@@ -2,16 +2,15 @@ package model;
 
 import java.time.LocalDateTime;
 
-public class Expens {
-    protected int idPengeluaran;
-    protected LocalDateTime tanggal;
-    protected int idKategori;
-    protected int jumlah;
+public class Expens extends Transaction{
+    public Expens(int id, LocalDateTime tanggal, int idKategori, int jumlah, String keterangan) {
+        super(id, tanggal, idKategori, jumlah, keterangan);
+    }
 
-    public Expens(int idPengeluaran, LocalDateTime tanggal, int idKategori, int jumlah) {
-        this.idPengeluaran = idPengeluaran;
-        this.tanggal = tanggal;
-        this.idKategori = idKategori;
-        this.jumlah = jumlah;
+    public Expens(int id, LocalDateTime tanggal, int idKategori, int jumlah) {
+        super(id, tanggal, idKategori, jumlah);
+    }
+
+    public Expens() {
     }
 }
