@@ -1,21 +1,24 @@
 .btn-flat {
-    -fx-background-color: white;  /* warna normal */
+    -fx-background-color: white;
     -fx-text-fill: #333;
-    -fx-background-radius: 5;
-    -fx-padding: 6 20 6 20;
+    -fx-background-radius: 6;
+    -fx-padding: 6 20;
     -fx-font-size: 14px;
 
-    -fx-border-width: 0;      /* hilangkan border */
-    -fx-border-color: transparent;
-    -fx-effect: none;         /* hilangkan shadow default */
+    /* Elevation kecil */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 6, 0, 0, 2);
 }
 
-/* Hover state */
+/* Hover: sedikit naik */
 .btn-flat:hover {
-    -fx-background-color: #f2f2f2; /* sedikit gelap */
+    -fx-background-color: #f7f7f7;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 3);
+    -fx-translate-y: -1; /* naik sedikit */
 }
 
-/* Pressed / clicked state */
+/* Pressed: turun, shadow makin kecil */
 .btn-flat:pressed {
-    -fx-background-color: #e0e0e0; /* lebih gelap */
+    -fx-background-color: #e8e8e8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 3, 0, 0, 1);
+    -fx-translate-y: 0; /* kembali rata */
 }
