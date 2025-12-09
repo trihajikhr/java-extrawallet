@@ -3,7 +3,6 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
 }
 
-.sidebar {
-    -fx-background-color: #1F3BB3;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);
+.window-background {
+    -fx-background-color: #F4F4F4;
 }
