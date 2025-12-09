@@ -1,6 +1,5 @@
-package controllers;
+package controller;
 
-import controllers.PopupUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;

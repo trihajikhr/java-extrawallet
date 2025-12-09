@@ -1,104 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="dashboard" fx:id="dash" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" stylesheets="@../stylesheet/dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controllers.Navigation">
-   <children>
-      <AnchorPane id="top-pane" layoutX="14.0" layoutY="14.0" prefHeight="75.0" prefWidth="1200.0" stylesheets="@../stylesheet/dashboard.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <AnchorPane id="top-top-pane" layoutX="299.0" layoutY="3.0" prefHeight="70.0" prefWidth="915.0" stylesheets="@../stylesheet/dashboard.css" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-         </children>
-      </AnchorPane>
-      <AnchorPane id="nav-float" layoutX="75.0" layoutY="727.0" prefHeight="610.0" prefWidth="210.0" stylesheets="@../stylesheet/dashboard.css" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="180.0">
-         <children>
-            <VBox layoutX="14.0" layoutY="14.0" prefHeight="610.0" prefWidth="210.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="20.0">
-               <children>
-                  <Button id="btn-flat" alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#home" prefHeight="50.0" prefWidth="190.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css" text="Dashboard" />
-                  <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#page1" prefHeight="50.0" prefWidth="190.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css" text="Pemasukan" />
-                  <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#page2" prefHeight="50.0" prefWidth="190.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css" text="Pengeluaran" />
-                  <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#page3" prefHeight="50.0" prefWidth="190.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css" text="Kategori" />
-                  <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#page4" prefHeight="50.0" prefWidth="190.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css" text="Statistik" />
-                  <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#page5" prefHeight="50.0" prefWidth="190.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css" text="Tabungan" />
-                  <Button alignment="BASELINE_LEFT" mnemonicParsing="false" onMouseClicked="#page6" prefHeight="50.0" prefWidth="190.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css" text="Pengaturan" />
-               </children>
+<AnchorPane prefHeight="600" prefWidth="900" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
+
+    <!--
+      LAYER 2: labelSidebar (dia akan slide in/out)
+      layoutX = 60 (tepat di sebelah iconBar), translateX = -200 (hidden)
+    -->
+    <AnchorPane fx:id="labelSidebar" layoutX="60" prefHeight="500.0" prefWidth="200" style="-fx-background-color: #2b2b2b;" translateX="-200" AnchorPane.topAnchor="100.0">
+        <children>
+            <VBox layoutX="12" layoutY="20" spacing="15.0" AnchorPane.topAnchor="100.0">
+            <children>
+               <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" VBox.vgrow="ALWAYS" />
+               <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
+               <Button layoutX="10.0" layoutY="62.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
+               <Button layoutX="10.0" layoutY="114.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
+               <Button layoutX="10.0" layoutY="166.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
+               <Button layoutX="10.0" layoutY="218.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="100.0" text="Button" />
+            </children>
             </VBox>
-         </children>
-      </AnchorPane>
-      <AnchorPane id="under-top-pane" layoutY="92.0" prefHeight="75.0" prefWidth="1200.0" stylesheets="@../stylesheet/dashboard.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="75.0">
-         <children>
-            <Button alignment="CENTER" layoutX="782.0" layoutY="18.0" mnemonicParsing="false" onMouseClicked="#addTransaction" prefHeight="40.0" prefWidth="180.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css" textAlignment="CENTER" AnchorPane.rightAnchor="238.0">
-               <graphic>
-                  <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <ImageView fitHeight="35.0" fitWidth="54.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../icons/cube.png" />
-                           </image>
-                           <HBox.margin>
-                              <Insets left="10.0" />
-                           </HBox.margin>
-                        </ImageView>
-                        <Label prefHeight="31.0" prefWidth="47.0" text="Add" textAlignment="CENTER">
-                           <HBox.margin>
-                              <Insets left="15.0" />
-                           </HBox.margin>
-                        </Label>
-                     </children>
-                  </HBox>
-               </graphic>
-            </Button>
-         </children></AnchorPane>
-      <AnchorPane id="navigation" layoutX="7.0" layoutY="77.0" prefHeight="610.0" prefWidth="75.0" stylesheets="@../stylesheet/dashboard.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="180.0">
-         <children>
-            <VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="75.0" spacing="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="25.0">
-               <children>
-                  <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/cube.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/cube.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/cube.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/cube.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/cube.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/cube.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="50.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../icons/cube.png" />
-                     </image>
-                  </ImageView>
-               </children>
-            </VBox>
-         </children>
-      </AnchorPane>
-      <BorderPane fx:id="corePane" layoutX="300.0" layoutY="175.0" prefHeight="626.0" prefWidth="900.0" styleClass="white-box" stylesheets="@../stylesheet/border-pane.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="180.0" />
-   </children>
+        </children>
+    </AnchorPane>
+
+    <!--
+      LAYER 3: mainContent (akan didorong)
+      leftAnchor = 60 (start setelah iconBar)
+    -->
+    <AnchorPane fx:id="mainContent" style="-fx-background-color: #f4f6f8;" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="60" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+      <children>
+         <AnchorPane layoutX="420.0" layoutY="265.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" />
+      </children>
+    </AnchorPane>
+
+    <!--
+      LAYER 1: iconBar (selalu di atas, lebar 60px). Letakkan terakhir agar z-order di atas.
+      Tombol toggle ada di sini.
+    -->
+    <VBox fx:id="iconBar" prefHeight="500.0" prefWidth="60" style="-fx-background-color: #1f2937; -fx-alignment: top-center;" AnchorPane.bottomAnchor="0" AnchorPane.topAnchor="100.0">
+        <children>
+            <Button fx:id="toggleButton" onAction="#toggleSidebar" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 18; -fx-padding: 10;" text="≡" />
+            <!-- icon placeholders -->
+            <Label style="-fx-font-size: 18; -fx-text-fill: white; -fx-padding: 12 0 0 0;" text="🏠" />
+            <Label style="-fx-font-size: 18; -fx-text-fill: white; -fx-padding: 12 0 0 0;" text="🔧" />
+            <Label style="-fx-font-size: 18; -fx-text-fill: white; -fx-padding: 12 0 0 0;" text="📄" />
+        </children>
+    </VBox>
+   <AnchorPane prefHeight="60.0" prefWidth="524.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+
 </AnchorPane>
