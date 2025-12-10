@@ -135,11 +135,11 @@
          <children>
             <AnchorPane prefHeight="75.0" styleClass="box-shadow" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Button ellipsisString="" layoutX="1316.0" layoutY="25.0" mnemonicParsing="false" onAction="#addTransaction" prefHeight="35.0" prefWidth="120.0" styleClass="modern-btn" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="20.0">
+                  <Button ellipsisString="" layoutX="1316.0" layoutY="25.0" mnemonicParsing="false" onAction="#addTransaction" prefHeight="35.0" prefWidth="150.0" styleClass="modern-btn" AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="17.0">
                      <graphic>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
-                              <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../icons/add.png" />
                                  </image>

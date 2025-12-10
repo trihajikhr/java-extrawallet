@@ -9,7 +9,9 @@
     -fx-faint-focus-color: transparent;
 
     /* bentuk modern */
-    -fx-background-radius: 8;
+
+    /* karena aku menggunakan tema tegas, maka tombolnya harus kotak! */
+    /* -fx-background-radius: 8; */
 
     /* Shadow kecil yang tidak mengubah size */
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 0);
