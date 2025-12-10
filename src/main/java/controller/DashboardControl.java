@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -17,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -67,14 +69,30 @@ public class DashboardControl {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction.fxml"));
         Parent root = loader.load();
         Stage stage = new Stage();
-        stage.setScene(new Scene(root));
-        stage.initModality(Modality.APPLICATION_MODAL); // biar fokus di popup
-        stage.initStyle(StageStyle.UNDECORATED);  // hapus tombol minimize/maximize/close default
+
+        // --- 1. PENGATURAN STYLE STAGE ---
+        // Hapus StageStyle.UNDECORATED yang bertentangan
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        // --- 2. APLIKASI DROPSHADOW KE ROOT ---
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(10.0);
+        dropShadow.setOffsetX(5.0);
+        dropShadow.setOffsetY(5.0);
+        dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+        root.setEffect(dropShadow);
+
+        // --- 3. PENGATURAN SCENE (Harus SETELAH root dimuat dan diberi efek) ---
+        Scene scene = new Scene(root);
+        // Kesalahan Anda di sini: Anda hanya menulis ".setFill(Color.TRANSPARENT);"
+        scene.setFill(Color.TRANSPARENT); // Wajib agar area di sekitar shadow transparan
+        stage.setScene(scene); // Set Scene harus dilakukan setelah scene dibuat
 
         stage.setMinWidth(750);
         stage.setMinHeight(650);
-        stage.setMaxWidth(800);
-        stage.setMaxHeight(700);
+//        stage.setMaxWidth(800);
+//        stage.setMaxHeight(700);
 
         // draggable pop up
         root.setOnMousePressed(event -> {
