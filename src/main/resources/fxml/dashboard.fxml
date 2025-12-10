@@ -11,12 +11,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" stylesheets="@../stylesheet/dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="572.0" prefWidth="858.0" stylesheets="@../stylesheet/dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
    <left>
       <VBox fx:id="navbarContainer" prefHeight="480.0" prefWidth="194.0" spacing="10.0" styleClass="box-shadow" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="toggleButton" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="95.0" maxWidth="45.0" mnemonicParsing="false" onAction="#toggleNavbar" prefHeight="40.0" prefWidth="40.0" styleClass="nav-button" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+            <Button fx:id="toggleButton" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="95.0" maxHeight="40.0" maxWidth="45.0" mnemonicParsing="false" onAction="#toggleNavbar" prefHeight="40.0" prefWidth="40.0" styleClass="nav-button" textAlignment="CENTER">
                <graphic>
                   <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
                      <children>
@@ -29,7 +28,7 @@
                </graphic>
             </Button>
             <Separator prefWidth="200.0" />
-            <Button fx:id="homeButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#home" styleClass="nav-button" VBox.vgrow="ALWAYS">
+            <Button fx:id="homeButton" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#home" styleClass="nav-button">
                <graphic>
                   <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
                      <children>
@@ -46,7 +45,7 @@
                   </HBox>
                </graphic>
             </Button>
-            <Button fx:id="incomebutton" layoutX="15.0" layoutY="83.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#income" styleClass="nav-button">
+            <Button fx:id="incomebutton" layoutX="15.0" layoutY="83.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#income" styleClass="nav-button">
                <graphic>
                   <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
                      <children>
@@ -63,7 +62,7 @@
                   </HBox>
                </graphic>
             </Button>
-            <Button fx:id="expenseButton" layoutX="15.0" layoutY="131.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#expense" styleClass="nav-button">
+            <Button fx:id="expenseButton" layoutX="15.0" layoutY="131.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#expense" styleClass="nav-button">
                <graphic>
                   <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
                      <children>
@@ -80,7 +79,7 @@
                   </HBox>
                </graphic>
             </Button>
-            <Button fx:id="statisticButton" layoutX="15.0" layoutY="179.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#statistic" styleClass="nav-button">
+            <Button fx:id="statisticButton" layoutX="15.0" layoutY="179.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#statistic" styleClass="nav-button">
                <graphic>
                   <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
                      <children>
@@ -97,7 +96,7 @@
                   </HBox>
                </graphic>
             </Button>
-            <Button fx:id="reportButton" layoutX="15.0" layoutY="227.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#report" styleClass="nav-button">
+            <Button fx:id="reportButton" layoutX="15.0" layoutY="227.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#report" styleClass="nav-button">
                <graphic>
                   <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
                      <children>
@@ -115,9 +114,6 @@
                </graphic>
             </Button>
          </children>
-         <BorderPane.margin>
-            <Insets />
-         </BorderPane.margin>
          <padding>
             <Insets left="5.0" right="5.0" top="10.0" />
          </padding>
@@ -125,16 +121,13 @@
    </left>
    <top>
       <HBox prefHeight="120.0" prefWidth="858.0" styleClass="box-shadow" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets bottom="20.0" />
-         </BorderPane.margin>
       </HBox>
    </top>
    <center>
-      <AnchorPane fx:id="corePane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets left="20.0" />
-         </BorderPane.margin>
+      <AnchorPane fx:id="corePane" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </padding>
       </AnchorPane>
    </center>
 </BorderPane>
