@@ -1,4 +1,9 @@
 name: "CodeQL Scan"
+
+permissions:
+  security-events: read
+  contents: read
+
 on:
   push:
     branches: [ main ]
