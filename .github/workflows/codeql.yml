@@ -19,11 +19,14 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
 
+      - name: Build project
+        run: mvn clean compile
+
       # Step 3: Jalankan CodeQL
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@v2
+        uses: github/codeql-action/init@v3
         with:
           languages: java
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@v2
+        uses: github/codeql-action/analyze@v3
