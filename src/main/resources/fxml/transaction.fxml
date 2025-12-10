@@ -29,7 +29,7 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Button fx:id="btnClose" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#closePopup" prefHeight="30.0" prefWidth="30.0" styleClass="modern-btn" textAlignment="CENTER" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="20.0">
+            <Button fx:id="btnClose" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#closePopup" prefHeight="33.0" prefWidth="33.0" styleClass="modern-btn" textAlignment="CENTER" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="20.0">
                <font>
                   <Font size="14.0" />
                </font>

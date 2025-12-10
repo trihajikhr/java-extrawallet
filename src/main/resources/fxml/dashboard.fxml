@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="800.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
    <left>
@@ -31,85 +32,100 @@
             <Separator prefWidth="200.0" />
             <Button fx:id="homeButton" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#home" styleClass="nav-button">
                <graphic>
-                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="15.0">
                      <children>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../icons/home.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="item1Label" ellipsisString="" text="Home" />
+                        <Label fx:id="item1Label" ellipsisString="" text="Home">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
                      </children>
                      <padding>
-                        <Insets left="3.0" />
+                        <Insets left="2.0" />
                      </padding>
                   </HBox>
                </graphic>
             </Button>
             <Button fx:id="incomebutton" layoutX="15.0" layoutY="83.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#income" styleClass="nav-button">
                <graphic>
-                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="15.0">
                      <children>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../icons/income.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="item2Label" ellipsisString="" text="Income" />
+                        <Label fx:id="item2Label" ellipsisString="" text="Income">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
                      </children>
                      <padding>
-                        <Insets left="3.0" />
+                        <Insets left="2.0" />
                      </padding>
                   </HBox>
                </graphic>
             </Button>
             <Button fx:id="expenseButton" layoutX="15.0" layoutY="131.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#expense" styleClass="nav-button">
                <graphic>
-                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="15.0">
                      <children>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../icons/expense.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="item3Label" ellipsisString="" text="Expense" />
+                        <Label fx:id="item3Label" ellipsisString="" text="Expense">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
                      </children>
                      <padding>
-                        <Insets left="3.0" />
+                        <Insets left="2.0" />
                      </padding>
                   </HBox>
                </graphic>
             </Button>
             <Button fx:id="statisticButton" layoutX="15.0" layoutY="179.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#statistic" styleClass="nav-button">
                <graphic>
-                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="15.0">
                      <children>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../icons/statistic.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="item4Label" ellipsisString="" text="Statistic" />
+                        <Label fx:id="item4Label" ellipsisString="" text="Statistic">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
                      </children>
                      <padding>
-                        <Insets left="3.0" />
+                        <Insets left="2.0" />
                      </padding>
                   </HBox>
                </graphic>
             </Button>
             <Button fx:id="reportButton" layoutX="15.0" layoutY="227.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#report" styleClass="nav-button">
                <graphic>
-                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="15.0">
                      <children>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../icons/report.png" />
                            </image>
                         </ImageView>
-                        <Label fx:id="item5Label" ellipsisString="" text="Report" />
+                        <Label fx:id="item5Label" ellipsisString="" text="Report">
+                           <font>
+                              <Font size="13.0" />
+                           </font></Label>
                      </children>
                      <padding>
-                        <Insets left="3.0" />
+                        <Insets left="2.0" />
                      </padding>
                   </HBox>
                </graphic>
@@ -144,7 +160,10 @@
                                     <Image url="@../icons/add.png" />
                                  </image>
                               </ImageView>
-                              <Label text="Add Record" />
+                              <Label text="Add Record">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font></Label>
                            </children>
                         </HBox>
                      </graphic>
