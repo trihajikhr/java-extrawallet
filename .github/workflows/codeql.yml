@@ -1,7 +1,7 @@
 name: "CodeQL Scan"
 
 permissions:
-  security-events: read
+  security-events: write
   contents: read
 
 on:
