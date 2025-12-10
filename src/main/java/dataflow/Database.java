@@ -17,8 +17,6 @@ import model.Pengeluaran;
 import model.Pemasukan;
 import model.Transaksi;
 
-import javax.swing.plaf.nimbus.State;
-
 // SINGLETON CLASS!
 public class Database {
     // logger
@@ -180,7 +178,7 @@ public class Database {
                 LocalDateTime tanggalBuat = LocalDateTime.parse(tanggalBuatTemp, formatter);
 
                 Kategori kategori = null;
-                for(Kategori ktgr : DataManager.getInstance().getAllKategori()){
+                for(Kategori ktgr : DataManager.getInstance().getDataKategori()){
                     if(ktgr.getId() == idKategori) {
                         kategori = ktgr;
                         break;
@@ -240,7 +238,7 @@ public class Database {
             int affectedRows = stmt.executeUpdate();
             return affectedRows > 0;
             if (affectedRows > 0) {
-                DataManager.getInstance().getAllKategori().removeIf(t -> t.getId() == id);
+                DataManager.getInstance().getDataKategori().removeIf(t -> t.getId() == id);
             }
         } catch (Exception e) {
             e.printStackTrace();

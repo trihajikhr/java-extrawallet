@@ -1,6 +1,5 @@
 package dataflow;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Comparator;
 
@@ -39,11 +38,11 @@ public class DataManager {
     }
 
     // return copy biar data asli aman
-    public ArrayList<Transaksi> getAllTransaksi() {
+    public ArrayList<Transaksi> getDataTransaksi() {
         return new ArrayList<>(dataTransaksi);
     }
 
-    public ArrayList<Kategori> getAllKategori() {
+    public ArrayList<Kategori> getDataKategori() {
         return new ArrayList<>(dataKategori);
     }
 
@@ -77,9 +76,9 @@ public class DataManager {
         Database.getInstance().insertTransaksi(t); // kalau mau langsung save
     }
 
-    public void removeTransaksi(Transaksi t) {
-        dataTransaksi.remove(t);
-        Database.getInstance().deleteTransaksi(t.getId());
+    public void removeTransaksi(int id) {
+        dataTransaksi.removeIf(t -> t.getId() == id);
+        Database.getInstance().deleteTransaksi(id);
     }
 
     public int getTotalSaldo() {
