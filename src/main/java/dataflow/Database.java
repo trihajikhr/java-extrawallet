@@ -32,7 +32,6 @@ public class Database {
     // global variabel
     DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     private Connection koneksi;
-    private Statement stat;
 
     // constructor
     private Database () {
@@ -44,81 +43,89 @@ public class Database {
 
             String querySql;
             this.koneksi = DriverManager.getConnection(JDBC_URL + DATABASE_FOLDER + File.separator + DATABASE_NAME);
-            this.stat = koneksi.createStatement();
-
-            Statement perintah = koneksi.createStatement();
 
             querySql =
-                    """
-                    CREATE TABLE "kategori" (
-                        "id"	INTEGER NOT NULL UNIQUE,
-                        "tipe"	TEXT NOT NULL,
-                        "label"	TEXT NOT NULL UNIQUE,
-                        PRIMARY KEY("id" AUTOINCREMENT)
-                    )
-                    """;
-            perintah.executeUpdate(querySql);
+            """
+            CREATE TABLE IF NOT EXISTS "kategori" (
+                "id"	INTEGER NOT NULL UNIQUE,
+                "tipe"	TEXT NOT NULL,
+                "label"	TEXT NOT NULL UNIQUE,
+                PRIMARY KEY("id" AUTOINCREMENT)
+            )
+            """;
 
-            // table kategori langsung diisi beberapa data:
-            querySql =
-                    """
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (1, 'IN', 'gaji');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (2, 'IN', 'tunjangan');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (3, 'IN', 'bonus');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (4, 'IN', 'usaha');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (5, 'IN', 'freelance/proyek');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (6, 'IN', 'penjualan');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (7, 'IN', 'dividen');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (8, 'IN', 'keuntungan investasi');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (9, 'IN', 'transfer masuk');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (10, 'IN', 'hadiah');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (11, 'IN', 'cashback');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (12, 'IN', 'komisi');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (13, 'IN', 'royalti');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (14, 'IN', 'reward aplikasi');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (15, 'IN', 'lain-lain');
-                    """;
-            perintah.executeUpdate(querySql);
+            try (Statement perintah = koneksi.createStatement()) {
+                perintah.executeUpdate(querySql);
+            }
+
+            String[][] kategoriData = {
+                    // IN
+                    {"IN", "gaji"},
+                    {"IN", "tunjangan"},
+                    {"IN", "bonus"},
+                    {"IN", "usaha"},
+                    {"IN", "freelance/proyek"},
+                    {"IN", "penjualan"},
+                    {"IN", "dividen"},
+                    {"IN", "keuntungan investasi"},
+                    {"IN", "transfer masuk"},
+                    {"IN", "hadiah"},
+                    {"IN", "cashback"},
+                    {"IN", "komisi"},
+                    {"IN", "royalti"},
+                    {"IN", "reward aplikasi"},
+                    {"IN", "lain-lain"},
+
+                    // OUT
+                    {"OUT", "makanan & minuman"},
+                    {"OUT", "belanja harian"},
+                    {"OUT", "transportasi"},
+                    {"OUT", "tagihan & utilitas"},
+                    {"OUT", "belanja pribadi"},
+                    {"OUT", "gadget & elektronik"},
+                    {"OUT", "kesehatan"},
+                    {"OUT", "hiburan & lifestyle"},
+                    {"OUT", "pendidikan & kursus"},
+                    {"OUT", "kewajiban keuangan"},
+                    {"OUT", "rumah & peralatan"},
+                    {"OUT", "keluarga"},
+                    {"OUT", "hadiah"},
+                    {"OUT", "donasi"},
+                    {"OUT", "lain-lain"}
+            };
+
+            try (PreparedStatement ps = koneksi.prepareStatement(
+                    "INSERT OR IGNORE INTO kategori (tipe, label) VALUES (?,?)")) {
+                for (int i = 0; i < kategoriData.length; i++) {
+                    ps.setString(1, kategoriData[i][0]);
+                    ps.setString(2, kategoriData[i][1]);
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
 
             querySql =
-                    """
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (16, 'OUT', 'makanan & minuman');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (17, 'OUT', 'belanja harian');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (18, 'OUT', 'transportasi');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (19, 'OUT', 'tagihan & utilitas');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (20, 'OUT', 'belanja pribadi');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (21, 'OUT', 'gadget & elektronik');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (22, 'OUT', 'kesehatan');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (23, 'OUT', 'hiburan & lifestyle');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (24, 'OUT', 'pendidikan & kursus');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (25, 'OUT', 'kewajiban keuangan');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (26, 'OUT', 'rumah & peralatan');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (27, 'OUT', 'keluarga');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (28, 'OUT', 'hadiah');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (29, 'OUT', 'donasi');
-                    INSERT OR IGNORE INTO "main"."kategori" ("id", "jenis", "nama") VALUES (30, 'OUT', 'lain-lain');
-                    """;
-            perintah.executeUpdate(querySql);
+            """
+            CREATE TABLE IF NOT EXISTS "transaksi" (
+                "id"	INTEGER NOT NULL UNIQUE,
+                "tipe"	TEXT NOT NULL,
+                "jumlah"	INTEGER NOT NULL,
+                "id_kategori"	INTEGER NOT NULL,
+                "tanggal_set"	TEXT NOT NULL,
+                "tanggal_buat"	TEXT NOT NULL,
+                "keterangan"	TEXT,
+                PRIMARY KEY("id" AUTOINCREMENT),
+                CONSTRAINT "fk_kategori" FOREIGN KEY("id_kategori") REFERENCES "kategori"("id")
+            )
+            """;
 
-            querySql =
-                    """
-                    CREATE TABLE "transaksi" (
-                        "id"	INTEGER NOT NULL UNIQUE,
-                        "tipe"	TEXT NOT NULL,
-                        "jumlah"	INTEGER NOT NULL,
-                        "id_kategori"	INTEGER NOT NULL,
-                        "tanggal_set"	TEXT NOT NULL,
-                        "tanggal_buat"	TEXT NOT NULL,
-                        "keterangan"	TEXT,
-                        PRIMARY KEY("id" AUTOINCREMENT),
-                        CONSTRAINT "fk_kategori" FOREIGN KEY("id_kategori") REFERENCES "kategori"("id")
-                    )
-                    """;
-            perintah.executeUpdate(querySql);
+            try (Statement perintah = koneksi.createStatement()) {
+                perintah.executeUpdate(querySql);
+            }
+
             log.info("Database finance berhasil dibuat!");
-
         } catch (SQLException e) {
-            log.error("Database gagal!");
+            log.error("Database gagal!",  e);
         }
     }
 
@@ -136,7 +143,7 @@ public class Database {
 
     // fetching kategori
     public ArrayList<Kategori> fetchKategori() {
-        try {
+        try (Statement stat = koneksi.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM kategori");
             ArrayList<Kategori> data = new ArrayList<>();
 
@@ -148,20 +155,18 @@ public class Database {
                 data.add(new Kategori(id, tipe, label));
             }
 
-            rs.close();
-            stat.close();
             log.info("Data kategori berhasil difetch!");
             return data;
 
         } catch (SQLException e) {
-            log.error("Gagal fetch data 'kategori'!");
+            log.error("Gagal fetch data 'kategori'!", e);
             return null;
         }
     }
 
     // fetching transaksi
     public ArrayList<Transaksi> fetchTransaksi() {
-        try {
+        try (Statement stat = koneksi.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM transaksi");
 
             ArrayList<Transaksi> data = new ArrayList<>();
@@ -172,7 +177,7 @@ public class Database {
                 int jumlah = rs.getInt("jumlah");
                 int idKategori = rs.getInt("id_kategori");
                 String tanggalSetTemp = rs.getString("tanggal_set");
-                String tanggalBuatTemp = rs.getString("Tanggal_buat");
+                String tanggalBuatTemp = rs.getString("tanggal_buat");
 
                 LocalDateTime tanggalSet = LocalDateTime.parse(tanggalSetTemp, formatter);
                 LocalDateTime tanggalBuat = LocalDateTime.parse(tanggalBuatTemp, formatter);
@@ -185,6 +190,11 @@ public class Database {
                     }
                 }
 
+                if (kategori == null) {
+                    log.warn("Kategori id={} tidak ditemukan!", idKategori);
+                    continue; // skip
+                }
+
                 if(tipe.equals("IN")){
                     data.add(new Pemasukan(id,tipe,jumlah, kategori, tanggalSet, tanggalBuat));
                 } else if(tipe.equals("OUT")) {
@@ -192,23 +202,20 @@ public class Database {
                 }
             }
 
-            rs.close();
-            stat.close();
             log.info("Data transaksi berhasil di fetch!");
             return data;
 
         } catch (SQLException e) {
-            log.error("Gagal fetch data 'transaksi'!");
+            log.error("Gagal fetch data 'transaksi'!", e);
             return null;
         }
     }
 
     // insert transaksi baru
     public void insertTransaksi(Transaksi trans) {
-        String querySql = "INSERT INTO transaksi (tipe, jumlah, id_kategori, tanggal_set, tanggal_buat, note) VALUES (?,?,?,?,?,?)";
+        String querySql = "INSERT INTO transaksi (tipe, jumlah, id_kategori, tanggal_set, tanggal_buat, keterangan) VALUES (?,?,?,?,?,?)";
 
-        try {
-            PreparedStatement perintah = koneksi.prepareStatement(querySql);
+        try (PreparedStatement perintah = koneksi.prepareStatement(querySql)){
             perintah.setString(1, trans.getTipe());
             perintah.setInt(2, trans.getJumlah());
             perintah.setInt(3, trans.getIdKategori());
@@ -221,32 +228,29 @@ public class Database {
             perintah.setString(6, trans.getKeterangan());
 
             perintah.executeUpdate();
+            DataManager.getInstance().coreDataTransaksi().add(trans);
             log.info("Data pertanggal: {} berhasil ditambahkan!", trans.getTanggalSet());
 
         } catch (SQLException e) {
-            log.error("Kesalahan SQL: {}", e.getMessage());
+            log.error("Data transaksi gagal ditambahkan! ", e);
         }
     }
 
     // delete transaksi [JIKA PERLU ya..]
-    public boolean deleteTransaksi(int id) {
+    public void deleteTransaksi(int id) {
         String querySql = "DELETE FROM transaksi WHERE id = ?";
 
-        try {
-            PreparedStatement stmt = Database.getInstance().getConnection().prepareStatement(querySql);
-            stmt.setInt(1, id);
-            int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0;
+        try (PreparedStatement perintah = Database.getInstance().koneksi.prepareStatement(querySql)){
+            perintah.setInt(1, id);
+            int affectedRows = perintah.executeUpdate();
+
             if (affectedRows > 0) {
-                DataManager.getInstance().getDataKategori().removeIf(t -> t.getId() == id);
+                DataManager.getInstance().coreDataTransaksi().removeIf(t -> t.getId() == id);
             }
+            log.info("Data transaksi berhasil dihapus!");
         } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+            log.error("Data transaksi gagal dihapus!", e);
+
         }
-        boolean dbDeleted = ... // kode SQL di atas
-
-        return dbDeleted;
     }
-
 }

@@ -47,11 +47,11 @@ public class DataManager {
     }
 
     // akses data asli
-    public ArrayList<Transaksi> coreTransaksi(){
+    public ArrayList<Transaksi> coreDataTransaksi(){
         return dataTransaksi;
     }
 
-    public ArrayList<Kategori> coreKategori() {
+    public ArrayList<Kategori> coreDataKategori() {
         return dataKategori;
     }
 
@@ -72,12 +72,10 @@ public class DataManager {
     }
 
     public void addTransaksi(Transaksi t) {
-        dataTransaksi.add(t);
         Database.getInstance().insertTransaksi(t); // kalau mau langsung save
     }
 
     public void removeTransaksi(int id) {
-        dataTransaksi.removeIf(t -> t.getId() == id);
         Database.getInstance().deleteTransaksi(id);
     }
 
