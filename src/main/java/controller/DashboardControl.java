@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
@@ -59,25 +60,60 @@ public class DashboardControl {
         double targetWidth = isExpanded ? expandedWidth : collapsedWidth;
 
         Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(200), // Durasi animasi
+                new KeyFrame(Duration.millis(200),
                         new KeyValue(navbarContainer.prefWidthProperty(), targetWidth)
                 )
         );
 
         if (isExpanded) {
-            // Tampilkan teks dan ubah ikon setelah animasi selesai
-            timeline.setOnFinished(event -> {
-                setTextsVisible(true);
+            // Setelah navbar selesai melebar → fade in label
+            timeline.setOnFinished(e -> {
+                fadeInTexts();
                 toggleIcon.setImage(imgOpen);
             });
+
             timeline.play();
+
         } else {
-            // Sembunyikan teks sebelum animasi dimulai
-            setTextsVisible(false);
-            toggleIcon.setImage(imgClose);
+            // Fade out dulu, baru animasi mengecil
+            fadeOutTexts();
+
+            // Biar animasi shrink tunggu sebentar supaya fade out selesai
+            timeline.setDelay(Duration.millis(150));
+            timeline.setOnFinished(e -> toggleIcon.setImage(imgClose));
             timeline.play();
         }
     }
+
+
+    private void fadeInTexts() {
+        for (Label text : navLabel) {
+            text.setManaged(true);
+            text.setVisible(true);
+            text.setOpacity(0);
+
+            FadeTransition ft = new FadeTransition(Duration.millis(150), text);
+            ft.setFromValue(0);
+            ft.setToValue(1);
+            ft.play();
+        }
+    }
+
+    private void fadeOutTexts() {
+        for (Label text : navLabel) {
+            FadeTransition ft = new FadeTransition(Duration.millis(150), text);
+            ft.setFromValue(1);
+            ft.setToValue(0);
+
+            ft.setOnFinished(e -> {
+                text.setVisible(false);
+                text.setManaged(false);
+            });
+
+            ft.play();
+        }
+    }
+
 
     private void setTextsVisible(boolean visible) {
         for (Label text : navLabel) {
