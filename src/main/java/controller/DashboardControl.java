@@ -4,7 +4,6 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,6 +19,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 // logger library
@@ -35,6 +35,9 @@ public class DashboardControl {
     private final double expandedWidth = 200;
     private final double collapsedWidth = 55;
     private Label[] navLabel;
+
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     @FXML private VBox navbarContainer;
     @FXML private Button toggleButton;
@@ -66,6 +69,23 @@ public class DashboardControl {
         Stage stage = new Stage();
         stage.setScene(new Scene(root));
         stage.initModality(Modality.APPLICATION_MODAL); // biar fokus di popup
+        stage.initStyle(StageStyle.UNDECORATED);  // hapus tombol minimize/maximize/close default
+
+        stage.setMinWidth(750);
+        stage.setMinHeight(650);
+        stage.setMaxWidth(800);
+        stage.setMaxHeight(700);
+
+        // draggable pop up
+        root.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        root.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
 
         // kasih akses stage ke controller
         TransactionControl ctrl = loader.getController();
