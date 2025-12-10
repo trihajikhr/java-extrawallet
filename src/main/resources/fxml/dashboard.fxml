@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="572.0" prefWidth="858.0" stylesheets="@../stylesheet/dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="800.0" minWidth="1200.0" prefHeight="900.0" prefWidth="1400.0" stylesheets="@../stylesheet/dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
    <left>
       <VBox fx:id="navbarContainer" prefHeight="480.0" prefWidth="194.0" spacing="10.0" styleClass="box-shadow" BorderPane.alignment="CENTER">
          <children>
@@ -119,15 +119,21 @@
          </padding>
       </VBox>
    </left>
-   <top>
-      <HBox prefHeight="120.0" prefWidth="858.0" styleClass="box-shadow" BorderPane.alignment="CENTER">
-      </HBox>
-   </top>
    <center>
       <AnchorPane fx:id="corePane" BorderPane.alignment="CENTER">
          <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets bottom="10.0" left="20.0" right="10.0" />
          </padding>
       </AnchorPane>
    </center>
+   <top>
+      <AnchorPane prefHeight="90.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets bottom="20.0" />
+         </padding>
+         <children>
+            <AnchorPane prefHeight="75.0" styleClass="box-shadow" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </top>
 </BorderPane>
