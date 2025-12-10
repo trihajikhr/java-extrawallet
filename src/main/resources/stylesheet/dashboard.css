@@ -1,3 +1,4 @@
+/* mengatur agar box pane memiliki efek drop shadow */
 .box-shadow {
     -fx-background-color: #FEFEFE;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
@@ -28,11 +29,4 @@
 /* Pressed — sedikit gelap, tidak mengubah layout */
 .nav-button:pressed {
     -fx-background-color: #e6e8eb;
-}
-
-/* Active state (item sedang dipilih) */
-.nav-button-active {
-    -fx-background-color: #e7eefc;
-    -fx-text-fill: #1a73e8;
-    -fx-font-weight: bold; /* aman, tidak ubah ukuran */
 }

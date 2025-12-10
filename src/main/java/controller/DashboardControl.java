@@ -4,6 +4,8 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -16,9 +18,18 @@ import javafx.scene.Parent;
 import javafx.fxml.FXML;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
+// logger library
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class DashboardControl {
+
+    // logger
+    private static final Logger log = LoggerFactory.getLogger(DashboardControl.class);
 
     private boolean isExpanded = false;
     private final double expandedWidth = 200;
@@ -48,10 +59,20 @@ public class DashboardControl {
     @FXML private void statistic(ActionEvent e){loadPage("statistic");}
     @FXML private void report(ActionEvent e){loadPage("report");}
 
-//    @FXML
-//    private void addTransaction(MouseEvent event) throws IOException {
-//        PopupUtils.showPopup("/fxml/transaction.fxml", (Node) event.getSource());
-//    }
+    @FXML
+    private void addTransaction(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/transaction.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+        stage.setScene(new Scene(root));
+        stage.initModality(Modality.APPLICATION_MODAL); // biar fokus di popup
+
+        // kasih akses stage ke controller
+        TransactionControl ctrl = loader.getController();
+        ctrl.setStage(stage);
+
+        stage.showAndWait();
+    }
 
     @FXML
     private void toggleNavbar() {

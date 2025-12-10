@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="705.0" minWidth="800.0" prefHeight="705.0" prefWidth="800.0" styleClass="root-pane" stylesheets="@../stylesheet/transaction.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Transaction">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="705.0" minWidth="800.0" prefHeight="705.0" prefWidth="800.0" styleClass="root-pane" stylesheets="@../stylesheet/transaction.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionControl">
    <children>
       <AnchorPane layoutY="-3.0" prefHeight="75.0" prefWidth="800.0" styleClass="background" stylesheets="@../stylesheet/transaction.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
