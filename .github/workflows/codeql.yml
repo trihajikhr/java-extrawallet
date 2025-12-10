@@ -1,0 +1,29 @@
+name: "CodeQL Scan"
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  codeql-scan:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout kode
+      - uses: actions/checkout@v4
+
+      # Step 2: Setup Java (sesuaikan versi dengan project)
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Step 3: Jalankan CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: java
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
