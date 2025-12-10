@@ -1,0 +1,20 @@
+.rootPane-dropshadow {
+  -fx-border-insets: 10;
+  -fx-background-insets: 10;
+  -fx-background-radius: 3;
+  -fx-border-radius: 0;
+  -fx-border-color: gray;
+  -fx-border-style: solid;
+  -fx-border-width: 1;
+
+  /* -fx-effect: dropshadow(three-pass-box, rgba(100, 100, 100, 1) ,10, 0.5, 0, 0); */
+
+  -fx-effect: dropshadow(
+      three-pass-box,
+      rgba(0, 0, 0, 0.4),
+      12,
+      0,
+      0,
+      0
+  );
+}

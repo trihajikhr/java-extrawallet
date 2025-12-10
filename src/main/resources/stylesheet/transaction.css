@@ -1,27 +1,194 @@
-.background {
-    -fx-background-color: #FFFFFF;
+/* ================================
+           BAGIAN: TANGGAL
+   ================================ */
+
+/* Container DatePicker */
+.date-picker {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
 }
+
+/* TextField di dalam DatePicker */
+.date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 8 6 8;
+    -fx-text-fill: #2c2c2c;
+    -fx-prompt-text-fill: #a0a0a0;
+}
+
+/* Tombol arrow */
+.date-picker .arrow-button {
+    -fx-background-color: #f2f3f5;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+}
+
+/* Hover arrow */
+.date-picker .arrow-button:hover {
+    -fx-background-color: #e6e8eb;
+}
+
+/* Popup kalender */
+.date-picker .popup-content {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+}
+
+/* Hari di kalender */
+.date-picker .day-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2c2c2c;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+}
+
+/* Hover hari */
+.date-picker .day-cell:hover {
+    -fx-background-color: #f2f3f5;
+}
+
+/* Hari yang dipilih */
+.date-picker .day-cell:filled:selected,
+.date-picker .day-cell:selected {
+    -fx-background-color: #1a73e8;
+    -fx-text-fill: #ffffff;
+}
+
+/* Fokus popup (navigasi bulan) */
+.date-picker .month-year-pane,
+.date-picker .calendar-pane {
+    -fx-background-color: #ffffff;
+}
+
+
+/* ================================
+           BAGIAN: SPINNER
+   ================================ */
+
+/* Container spinner */
+.spinner {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+    -fx-padding: 0;
+}
+
+/* Textfield di dalam spinner */
+.spinner .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 6 8 6 8;
+    -fx-text-fill: #2c2c2c;
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #a0a0a0;
+}
+
+/* Tombol panah spinner - ukuran proporsional */
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: #f2f3f5;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+    -fx-padding: 4;          /* lebih clickable */
+    -fx-min-width: 24px;     /* jangan terlalu kecil */
+    -fx-min-height: 24px;
+}
+
+/* Hover/pressed effect */
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #e6e8eb;
+}
+
+.spinner .increment-arrow-button:pressed,
+.spinner .decrement-arrow-button:pressed {
+    -fx-background-color: #d3d6da;
+}
+
+
+/* ================================
+           BAGIAN: TEXT FIELD
+   ================================ */
+
+.text-field {
+    -fx-background-color: #ffffff;       /* putih bersih */
+    -fx-border-color: #c0c0c0;           /* border tipis abu */
+    -fx-border-radius: 2;                /* radius kecil, tegas */
+    -fx-background-radius: 2;
+    -fx-padding: 6 8 6 8;                /* ruang nyaman */
+    -fx-text-fill: #2c2c2c;              /* warna text */
+    /* -fx-font-size: 14px;                  ukuran font standar modern */
+    -fx-highlight-fill: #d0e0ff;         /* warna highlight */
+    -fx-highlight-text-fill: #000000;
+    -fx-prompt-text-fill: #a0a0a0;       /* warna placeholder */
+}
+
+/* Hover & fokus */
+.text-field:hover {
+    -fx-border-color: #909090;           /* sedikit gelap saat hover */
+}
+
+.text-field:focused {
+    -fx-border-color: #1a73e8;           /* warna fokus biru terang */
+    -fx-background-color: #ffffff;       /* tetap putih */
+}
+
+
+/* ================================
+           BAGIAN: CHECKBOX
+   ================================ */
+
+/* Container checkbox */
+.check-box {
+    -fx-padding: 4 0 4 0;  /* jarak nyaman */
+    -fx-text-fill: #2c2c2c;
+}
+
+/* Kotak cek */
+.check-box .box {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #c0c0c0;
+    -fx-border-radius: 2;
+    -fx-background-radius: 2;
+    -fx-min-width: 16px;
+    -fx-min-height: 16px;
+}
+
+/* Saat hover kotak cek */
+.check-box:hover .box {
+    -fx-border-color: #999999;
+}
+
+/* Saat dicentang */
+.check-box:selected .box {
+    -fx-background-color: #1a73e8;
+    -fx-border-color: #1a73e8;
+}
+
+/* Centang (tick) */
+.check-box:selected .mark {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+}
+
+/* ================================
+           BAGIAN: PANE STYLING
+   ================================ */
 
 .box-shadow {
     -fx-background-color: #FEFEFE;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
 }
 
-.background1 {
-    -fx-background-color: #EBF7C5;
-}
-
-.root-pane {
-    -fx-background-color: white;
-
-    /* Border tipis */
-    -fx-border-color: rgba(0,0,0,0.15);
-    -fx-border-width: 1px;
-    -fx-border-radius: 10px;
-
-    /* Rounded corner background juga */
-    -fx-background-radius: 10px;
-
-    /* Soft shadow */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.15, 0, 4);
+.white-box {
+    -fx-background-color: #FEFEFE;
 }

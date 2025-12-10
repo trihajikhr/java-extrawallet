@@ -1,96 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.chart.StackedAreaChart?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="700.0" prefHeight="563.0" prefWidth="975.0" styleClass="window-background" stylesheets="@../stylesheet/pane-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="900.0" prefHeight="800.0" prefWidth="1300.0" stylesheets="@../stylesheet/pane-style.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <VBox layoutX="199.0" layoutY="80.0" prefHeight="587.0" prefWidth="1017.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <HBox prefHeight="159.0" prefWidth="975.0" spacing="10.0" VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets right="10.0" />
-               </VBox.margin>
+            <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                  <VBox spacing="10.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <GridPane layoutX="112.0" layoutY="82.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                          </columnConstraints>
-                          <rowConstraints>
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                          </rowConstraints>
+                        <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                                 <GridPane.margin>
-                                    <Insets bottom="10.0" right="10.0" />
-                                 </GridPane.margin>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                                 <GridPane.margin>
-                                    <Insets bottom="10.0" />
-                                 </GridPane.margin>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
-                                 <GridPane.margin>
-                                    <Insets right="10.0" />
-                                 </GridPane.margin>
-                              </AnchorPane>
-                              <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+                              <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
+                              <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
                            </children>
-                        </GridPane>
+                        </HBox>
+                        <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
+                              <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
+                           </children>
+                        </HBox>
                      </children>
-                  </AnchorPane>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" HBox.hgrow="ALWAYS" />
+                  </VBox>
+                  <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
-            <HBox prefHeight="130.0" prefWidth="290.0" spacing="10.0" VBox.vgrow="ALWAYS">
-               <VBox.margin>
-                  <Insets right="10.0" />
-               </VBox.margin>
+            <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" HBox.hgrow="ALWAYS">
-                     <children>
-                        <LineChart layoutX="-118.0" layoutY="-95.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <xAxis>
-                            <CategoryAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </LineChart>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" HBox.hgrow="ALWAYS">
-                     <children>
-                        <PieChart layoutX="-69.0" layoutY="-36.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" HBox.hgrow="ALWAYS">
-                     <children>
-                        <StackedAreaChart layoutX="-96.0" layoutY="2.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                          <xAxis>
-                            <NumberAxis side="BOTTOM" />
-                          </xAxis>
-                          <yAxis>
-                            <NumberAxis side="LEFT" />
-                          </yAxis>
-                        </StackedAreaChart>
-                     </children>
-                  </AnchorPane>
+                  <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
+                  <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
+                  <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>

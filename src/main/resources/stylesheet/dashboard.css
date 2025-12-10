@@ -1,29 +1,32 @@
-#top-pane {
-    -fx-background-color: #844FC1;
-}
-
-#top-top-pane {
-    -fx-background-color: #FEFEFE;
-}
-
-#navigation {
-    -fx-background-color: #FFFFFF;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 20, 0, 0, 4);
-}
-
-#under-top-pane {
-    -fx-background-color: #00C7BE;
-}
-
-#nav-float {
-    -fx-background-color: #FEFEFE;
-}
-
+/* mengatur agar box pane memiliki efek drop shadow */
 .box-shadow {
     -fx-background-color: #FEFEFE;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
 }
 
-.background {
-    -fx-background-color: #00C7BE;
+/* ==========================================
+   NAVBAR BUTTON — modern, tidak atur ukuran
+   ========================================== */
+
+.nav-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #2c2c2c;
+
+    /* HILANGKAN STYLE JAVA FX JADUL */
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    /* radius tidak mempengaruhi ukuran */
+    -fx-background-radius: 8;
+}
+
+/* Hover — warna soft, tidak mengubah ukuran */
+.nav-button:hover {
+    -fx-background-color: #f2f3f5;
+}
+
+/* Pressed — sedikit gelap, tidak mengubah layout */
+.nav-button:pressed {
+    -fx-background-color: #e6e8eb;
 }

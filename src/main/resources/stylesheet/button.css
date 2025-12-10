@@ -1,24 +1,30 @@
-.btn-flat {
-    -fx-background-color: white;
-    -fx-text-fill: #333;
-    -fx-background-radius: 6;
-    -fx-padding: 6 20;
-    -fx-font-size: 14px;
+/* Tombol modern putih tanpa aturan ukuran */
+.modern-btn {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #2c2c2c;
 
-    /* Elevation kecil */
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 6, 0, 0, 2);
+    /* Hilangkan gaya jadul */
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    /* bentuk modern */
+
+    /* karena aku menggunakan tema tegas, maka tombolnya harus kotak! */
+    /* -fx-background-radius: 8; */
+
+    /* Shadow kecil yang tidak mengubah size */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 0);
 }
 
-/* Hover: sedikit naik */
-.btn-flat:hover {
-    -fx-background-color: #f7f7f7;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 3);
-    -fx-translate-y: -1; /* naik sedikit */
+/* Hover */
+.modern-btn:hover {
+    -fx-background-color: #FFFFFF;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 0);
 }
 
-/* Pressed: turun, shadow makin kecil */
-.btn-flat:pressed {
-    -fx-background-color: #e8e8e8;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 3, 0, 0, 1);
-    -fx-translate-y: 0; /* kembali rata */
+/* Pressed */
+.modern-btn:pressed {
+    -fx-background-color: #f5f5f5;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 0);
 }
