@@ -20,7 +20,7 @@ import model.Transaksi;
 // SINGLETON CLASS!
 public class Database {
     // logger
-    private static final Logger log = LoggerFactory.getLogger(Database.class);
+        private static final Logger log = LoggerFactory.getLogger(Database.class);
 
     // instance
     private static Database instance;
@@ -49,7 +49,7 @@ public class Database {
             CREATE TABLE IF NOT EXISTS "kategori" (
                 "id"	INTEGER NOT NULL UNIQUE,
                 "tipe"	TEXT NOT NULL,
-                "label"	TEXT NOT NULL UNIQUE,
+                "label"	TEXT NOT NULL,
                 PRIMARY KEY("id" AUTOINCREMENT)
             )
             """;

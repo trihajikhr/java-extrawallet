@@ -3,101 +3,138 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="573.0" minWidth="900.0" prefHeight="700.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
-   <children>
-      <AnchorPane fx:id="corePane" layoutX="700.0" layoutY="430.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="850.0" prefHeight="600.0" prefWidth="850.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="102.0" />
-      <AnchorPane layoutX="137.0" layoutY="242.0" maxHeight="1.7976931348623157E308" minHeight="600.0" minWidth="230.0" prefHeight="600.0" prefWidth="230.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="102.0">
+<BorderPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" stylesheets="@../stylesheet/dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardControl">
+   <left>
+      <VBox fx:id="navbarContainer" prefHeight="480.0" prefWidth="194.0" spacing="10.0" styleClass="box-shadow" BorderPane.alignment="CENTER">
          <children>
-            <VBox alignment="TOP_CENTER" layoutX="29.0" layoutY="36.0" prefHeight="600.0" prefWidth="225.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <Label alignment="CENTER" prefHeight="50.0" prefWidth="154.0" text="Java Extrawallet">
-                     <font>
-                        <Font name="System Bold" size="17.0" />
-                     </font>
-                  </Label>
-                  <Button fx:id="home" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#home" prefHeight="40.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css">
-                     <graphic>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                           <children>
-                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/cube.png" />
-                                 </image>
-                              </ImageView>
-                              <Label text="Home" />
-                           </children>
-                           <padding>
-                              <Insets left="20.0" />
-                           </padding>
-                        </HBox>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="income" layoutX="20.0" layoutY="70.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#income" prefHeight="40.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css">
-                     <graphic>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                           <children>
-                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/cube.png" />
-                                 </image>
-                              </ImageView>
-                              <Label text="Income" />
-                           </children>
-                           <padding>
-                              <Insets left="20.0" />
-                           </padding>
-                        </HBox>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="expense" layoutX="20.0" layoutY="123.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#expense" prefHeight="40.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css">
-                     <graphic>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                           <children>
-                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/cube.png" />
-                                 </image>
-                              </ImageView>
-                              <Label text="Expense" />
-                           </children>
-                           <padding>
-                              <Insets left="20.0" />
-                           </padding>
-                        </HBox>
-                     </graphic>
-                  </Button>
-                  <Button fx:id="statistic" layoutX="20.0" layoutY="70.0" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#statistic" prefHeight="40.0" styleClass="btn-flat" stylesheets="@../stylesheet/button.css">
-                     <graphic>
-                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                           <children>
-                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
-                                 <image>
-                                    <Image url="@../icons/cube.png" />
-                                 </image>
-                              </ImageView>
-                              <Label text="Statistic" />
-                           </children>
-                           <padding>
-                              <Insets left="20.0" />
-                           </padding>
-                        </HBox>
-                     </graphic>
-                  </Button>
-               </children>
-               <padding>
-                  <Insets left="15.0" right="15.0" />
-               </padding>
-            </VBox>
+            <Button fx:id="toggleButton" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="95.0" maxWidth="45.0" mnemonicParsing="false" onAction="#toggleNavbar" prefHeight="40.0" prefWidth="40.0" styleClass="nav-button" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+               <graphic>
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                     <children>
+                        <ImageView fx:id="toggleIcon" fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                     </children>
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </HBox>
+               </graphic>
+            </Button>
+            <Separator prefWidth="200.0" />
+            <Button fx:id="homeButton" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#home" styleClass="nav-button" VBox.vgrow="ALWAYS">
+               <graphic>
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/home.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="item1Label" ellipsisString="" text="Home" />
+                     </children>
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </HBox>
+               </graphic>
+            </Button>
+            <Button fx:id="incomebutton" layoutX="15.0" layoutY="83.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#income" styleClass="nav-button">
+               <graphic>
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/income.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="item2Label" ellipsisString="" text="Income" />
+                     </children>
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </HBox>
+               </graphic>
+            </Button>
+            <Button fx:id="expenseButton" layoutX="15.0" layoutY="131.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#expense" styleClass="nav-button">
+               <graphic>
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/expense.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="item3Label" ellipsisString="" text="Expense" />
+                     </children>
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </HBox>
+               </graphic>
+            </Button>
+            <Button fx:id="statisticButton" layoutX="15.0" layoutY="179.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#statistic" styleClass="nav-button">
+               <graphic>
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/statistic.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="item4Label" ellipsisString="" text="Statistic" />
+                     </children>
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </HBox>
+               </graphic>
+            </Button>
+            <Button fx:id="reportButton" layoutX="15.0" layoutY="227.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#report" styleClass="nav-button">
+               <graphic>
+                  <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
+                     <children>
+                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../icons/report.png" />
+                           </image>
+                        </ImageView>
+                        <Label fx:id="item5Label" ellipsisString="" text="Report" />
+                     </children>
+                     <padding>
+                        <Insets left="3.0" />
+                     </padding>
+                  </HBox>
+               </graphic>
+            </Button>
          </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <padding>
+            <Insets left="5.0" right="5.0" top="10.0" />
+         </padding>
+      </VBox>
+   </left>
+   <top>
+      <HBox prefHeight="120.0" prefWidth="858.0" styleClass="box-shadow" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="20.0" />
+         </BorderPane.margin>
+      </HBox>
+   </top>
+   <center>
+      <AnchorPane fx:id="corePane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets left="20.0" />
+         </BorderPane.margin>
       </AnchorPane>
-      <AnchorPane layoutX="115.0" layoutY="14.0" maxWidth="1.7976931348623157E308" minHeight="80.0" minWidth="1066.0" prefHeight="80.0" prefWidth="1066.0" styleClass="white-box" stylesheets="@../stylesheet/pane-style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-   </children>
-</AnchorPane>
+   </center>
+</BorderPane>

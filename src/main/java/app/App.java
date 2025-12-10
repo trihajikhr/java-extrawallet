@@ -8,8 +8,6 @@ import javafx.stage.Stage;
 // package database
 import dataflow.Database;
 
-import java.sql.SQLException;
-
 public class App extends Application {
 
 
@@ -19,13 +17,8 @@ public class App extends Application {
         stage.setScene(new Scene(loader.load()));
         stage.setTitle("Extra Wallet");
 
-        // buat instace
-        try {
-            Database.getInstance();
-        } catch (SQLException e) {
-
-        }
-
+        // buat instance
+        Database.getInstance();
         stage.show();
     }
 
