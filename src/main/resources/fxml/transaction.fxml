@@ -30,14 +30,14 @@
                   <Font size="15.0" />
                </font>
             </Label>
-            <Button fx:id="btnClose" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#closePopup" prefHeight="33.0" prefWidth="33.0" styleClass="modern-btn" textAlignment="CENTER" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="20.0">
+            <Button fx:id="btnClose" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onMouseClicked="#closePopup" prefHeight="33.0" prefWidth="33.0" styleClass="modern-btn-close" textAlignment="CENTER" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="20.0">
                <font>
                   <Font size="14.0" />
                </font>
                <graphic>
                   <ImageView fitHeight="17.0" fitWidth="17.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../icons/close.png" />
+                        <Image url="@../icons/closeW.png" />
                      </image>
                   </ImageView>
                </graphic>
@@ -67,14 +67,14 @@
                   <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                      <children>
                         <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" HBox.hgrow="ALWAYS" />
-                        <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn">
+                        <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                            <font>
                               <Font size="14.0" />
                            </font>
                            <graphic>
                               <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/add.png" />
+                                    <Image url="@../icons/addW.png" />
                                  </image>
                               </ImageView>
                            </graphic>
@@ -89,7 +89,7 @@
                   </HBox>
                   <HBox alignment="TOP_CENTER" prefHeight="62.0" prefWidth="380.0" spacing="5.0" GridPane.rowIndex="1">
                      <children>
-                        <Button fx:id="incomeBtn" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" HBox.hgrow="ALWAYS">
+                        <Button fx:id="incomeBtn" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
                            <graphic>
                               <HBox alignment="CENTER" spacing="5.0">
                                  <children>
@@ -102,7 +102,7 @@
                                  </children>
                               </HBox>
                            </graphic></Button>
-                        <Button fx:id="expenseBtn" layoutX="10.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" HBox.hgrow="ALWAYS">
+                        <Button fx:id="expenseBtn" layoutX="10.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
                            <graphic>
                               <HBox alignment="CENTER" spacing="5.0">
                                  <children>
@@ -116,7 +116,7 @@
                               </HBox>
                            </graphic>
                         </Button>
-                        <Button fx:id="transferBtn" layoutX="305.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" HBox.hgrow="ALWAYS">
+                        <Button fx:id="transferBtn" layoutX="305.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
                            <graphic>
                               <HBox alignment="CENTER" spacing="5.0">
                                  <children>
@@ -209,14 +209,14 @@
                         <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                            <children>
                               <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Labels" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
-                              <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn">
+                              <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
                                  <graphic>
                                     <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
-                                          <Image url="@../icons/add.png" />
+                                          <Image url="@../icons/addW.png" />
                                        </image>
                                     </ImageView>
                                  </graphic>
