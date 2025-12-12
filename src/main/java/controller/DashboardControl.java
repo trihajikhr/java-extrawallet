@@ -4,6 +4,7 @@ import javafx.animation.FadeTransition;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -85,7 +86,7 @@ public class DashboardControl {
 
         // --- 3. PENGATURAN SCENE (Harus SETELAH root dimuat dan diberi efek) ---
         Scene scene = new Scene(root);
-        // Kesalahan Anda di sini: Anda hanya menulis ".setFill(Color.TRANSPARENT);"
+        // Kesalahan Ada di sini: hanya menulis ".setFill(Color.TRANSPARENT);"
         scene.setFill(Color.TRANSPARENT); // Wajib agar area di sekitar shadow transparan
         stage.setScene(scene); // Set Scene harus dilakukan setelah scene dibuat
 
