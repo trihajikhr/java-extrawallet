@@ -56,7 +56,7 @@
                      <children>
                         <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../icons/income.png" />
+                              <Image url="@../icons/incomeB.png" />
                            </image>
                         </ImageView>
                         <Label fx:id="item2Label" ellipsisString="" text="Income">
@@ -76,7 +76,7 @@
                      <children>
                         <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@../icons/expense.png" />
+                              <Image url="@../icons/expenseB.png" />
                            </image>
                         </ImageView>
                         <Label fx:id="item3Label" ellipsisString="" text="Expense">
@@ -157,7 +157,7 @@
                            <children>
                               <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
-                                    <Image url="@../icons/add.png" />
+                                    <Image url="@../icons/addB.png" />
                                  </image>
                               </ImageView>
                               <Label text="Add Record">

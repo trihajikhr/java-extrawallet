@@ -18,7 +18,7 @@
     -fx-faint-focus-color: transparent;
 
     /* radius tidak mempengaruhi ukuran */
-    -fx-background-radius: 8;
+    -fx-background-radius: 4;
 }
 
 /* Hover — warna soft, tidak mengubah ukuran */
