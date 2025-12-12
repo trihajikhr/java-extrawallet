@@ -288,27 +288,7 @@
                         <Insets />
                      </GridPane.margin>
                   </HBox>
-                  <VBox alignment="TOP_CENTER" layoutX="23.0" layoutY="130.0" prefHeight="80.0" prefWidth="400.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <children>
-                        <HBox alignment="CENTER_LEFT" prefHeight="7.0" prefWidth="400.0">
-                           <children>
-                              <Label text="Payer" />
-                           </children>
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                        </HBox>
-                        <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
-                           <children>
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" promptText="someone name or yourself" HBox.hgrow="ALWAYS" />
-                           </children>
-                        </HBox>
-                     </children>
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </VBox>
-                  <VBox layoutX="23.0" layoutY="210.0" prefHeight="92.0" prefWidth="400.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <VBox layoutX="23.0" layoutY="210.0" prefHeight="92.0" prefWidth="400.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="400.0">
                            <children>
@@ -328,7 +308,7 @@
                         <Insets />
                      </GridPane.margin>
                   </VBox>
-                  <VBox alignment="TOP_CENTER" layoutX="417.0" layoutY="210.0" prefHeight="92.0" prefWidth="400.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <VBox alignment="TOP_CENTER" layoutX="417.0" layoutY="210.0" prefHeight="92.0" prefWidth="400.0" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="15.0" prefWidth="380.0">
                            <children>
