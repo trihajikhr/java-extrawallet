@@ -192,3 +192,110 @@
 .white-box {
     -fx-background-color: #FEFEFE;
 }
+
+
+/* =================================
+        BAGIAN: 3 TOMBOL
+  ================================= */
+
+/* Tombol modern putih tanpa aturan ukuran */
+.modern-btn-add {
+    -fx-background-color: #01AA71;
+    -fx-text-fill: #2c2c2c;
+
+    /* Hilangkan gaya jadul */
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    /* bentuk modern */
+
+    /* karena aku menggunakan tema tegas, maka tombolnya harus kotak! */
+    /* -fx-background-radius: 8; */
+
+    /* Shadow kecil yang tidak mengubah size */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 0);
+}
+
+/* Hover */
+.modern-btn-add:hover {
+    -fx-background-color: #019A66;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 0);
+}
+
+/* Pressed */
+.modern-btn-add:pressed {
+    -fx-background-color: #017F55;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 0);
+}
+
+
+
+/* Tombol modern merah untuk tombol close tanpa aturan ukuran */
+.modern-btn-close {
+    -fx-background-color: #F92222;
+    -fx-text-fill: #2c2c2c;
+
+    /* Hilangkan gaya jadul */
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    /* bentuk modern */
+
+    /* karena aku menggunakan tema tegas, maka tombolnya harus kotak! */
+    /* -fx-background-radius: 8; */
+
+    /* Shadow kecil yang tidak mengubah size */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 0);
+}
+
+/* Hover */
+.modern-btn-close:hover {
+    -fx-background-color: #E41E1E;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 10, 0, 0, 0);
+}
+
+/* Pressed */
+.modern-btn-close:pressed {
+    -fx-background-color: #C51818;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 0);
+}
+
+
+/* Default — putih semua */
+.choice-btn {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #2c2c2c;
+    /* -fx-border-color: #d0d0d0; */
+    -fx-border-radius: 4;
+    /* -fx-background-radius: 4; */
+}
+
+/* Hover saat belum dipilih */
+.choice-btn:hover {
+    -fx-background-color: #f0f0f0;
+}
+
+/* Pressed saat belum dipilih */
+.choice-btn:pressed {
+    -fx-background-color: #e0e0e0;
+}
+
+/* ————————————————————— */
+/* Selected state — ini yang bikin tombol berubah warna */
+/* -selected-color akan di-set dari Java sesuai tipe (income/expense/transfer) */
+.choice-btn-selected {
+    -fx-background-color: -selected-color;
+    -fx-text-fill: white;
+}
+
+/* Hover ketika dipilih → sedikit gelap */
+.choice-btn-selected:hover {
+    -fx-background-color: derive(-selected-color, -15%);
+}
+
+/* Pressed ketika dipilih → lebih gelap lagi */
+.choice-btn-selected:pressed {
+    -fx-background-color: derive(-selected-color, -30%);
+}

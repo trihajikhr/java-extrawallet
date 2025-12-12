@@ -14,26 +14,26 @@
                      <children>
                         <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
-                              <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
+                              <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
+                              <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                         <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
-                              <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
+                              <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
+                              <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
                            </children>
                         </HBox>
                      </children>
                   </VBox>
-                  <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
+                  <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
             <HBox spacing="10.0" VBox.vgrow="ALWAYS">
                <children>
-                  <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
-                  <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
-                  <AnchorPane styleClass="white-box" HBox.hgrow="ALWAYS" />
+                  <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
+                  <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
+                  <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </children>
