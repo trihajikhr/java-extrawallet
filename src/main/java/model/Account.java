@@ -1,6 +1,5 @@
 package model;
 
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class Account {
@@ -60,4 +59,3 @@ public class Account {
         this.amount = amount;
     }
 }
-
