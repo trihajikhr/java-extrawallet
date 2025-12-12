@@ -7,13 +7,15 @@ public class Account {
     private int id;
     private String name;
     private Color color;
-    private Image image;
+    private int idAccountType;
     private int amount;
 
-    public Account(int id, String name, Image image) {
+    public Account(int id, String name, Color color, int idAccountType, int amount) {
         this.id = id;
         this.name = name;
-        this.image = image;
+        this.color = color;
+        this.idAccountType = idAccountType;
+        this.amount = amount;
     }
 
     public Account() {}
@@ -34,12 +36,28 @@ public class Account {
         this.name = name;
     }
 
-    public Image getImage() {
-        return image;
+    public Color getColor() {
+        return color;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public int getIdAccountType() {
+        return idAccountType;
+    }
+
+    public void setIdAccountType(int idAccountType) {
+        this.idAccountType = idAccountType;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 }
 
