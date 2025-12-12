@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
@@ -27,18 +28,26 @@ public class TransactionControl implements Initializable {
     @FXML
     private AnchorPane rootPane;
 
-    @FXML private Button closeButton;
-    @FXML private Button incomeBtn;
-    @FXML private Button expenseBtn;
-    @FXML private Button transferBtn;
+    @FXML private Button incomeBtn_1;
+    @FXML private Button expenseBtn_1;
+    @FXML private Button transferBtn_1;
+
+    @FXML private Button incomeBtn_2;
+    @FXML private Button expenseBtn_2;
+    @FXML private Button transferBtn_2;
 
     @FXML private ImageView incomeImg;
     @FXML private ImageView expenseImg;
-    @FXML private ImageView transferImg;
+    @FXML private ImageView transferImg_1;
+    @FXML private ImageView transferImg_2;
 
     @FXML private Label incomeLbl;
     @FXML private Label expenseLbl;
-    @FXML private Label transferLbl;
+    @FXML private Label transferLbl_1;
+    @FXML private Label transferLbl_2;
+
+    @FXML private GridPane inoutForm;
+    @FXML private GridPane transForm;
 
     private Image[][] theImage;
 
@@ -89,8 +98,11 @@ public class TransactionControl implements Initializable {
                 }
         };
 
+        inoutForm.setVisible(true);   // default
+        transForm.setVisible(false);
+
         initButtons();
-        clearSelection(); // default: semua putih, teks hitam, icon hitam
+        clearSelection(1); // default: semua putih, teks hitam, icon hitam
 
         rootPane.setOpacity(0);
 
@@ -116,47 +128,99 @@ public class TransactionControl implements Initializable {
     private void initButtons() {
 
         // Set class dasar
-        incomeBtn.getStyleClass().add("choice-btn");
-        expenseBtn.getStyleClass().add("choice-btn");
-        transferBtn.getStyleClass().add("choice-btn");
+        incomeBtn_1.getStyleClass().add("choice-btn");
+        expenseBtn_1.getStyleClass().add("choice-btn");
+        transferBtn_1.getStyleClass().add("choice-btn");
 
-        incomeBtn.setOnAction(e -> select(0, incomeBtn, incomeImg, incomeLbl, "#01AA71"));
-        expenseBtn.setOnAction(e -> select(1, expenseBtn, expenseImg, expenseLbl, "#F92222"));
-        transferBtn.setOnAction(e -> select(2, transferBtn, transferImg, transferLbl, "#0176FE"));
+        incomeBtn_1.setOnAction(e -> select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
+        expenseBtn_1.setOnAction(e -> select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222"));
+        transferBtn_1.setOnAction(e -> select(1,2, transferBtn_2, transferImg_2, transferLbl_2, "#0176FE"));
+
+        incomeBtn_2.setOnAction(e -> select(2,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
+        expenseBtn_2.setOnAction(e -> select(2,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222"));
+        transferBtn_2.setOnAction(e -> select(2,2, transferBtn_2, transferImg_2, transferLbl_2, "#0176FE"));
     }
 
-    private void select(int index, Button btn, ImageView img, Label lbl, String color) {
+    private void showInOut() {
+        inoutForm.setVisible(true);
+        transForm.setVisible(false);
 
-        clearSelection(); // bersihkan semua dulu
-        valueChoosen = index + 1;
+        inoutForm.toFront();
+    }
 
-        // kasih warna ke tombol
-        btn.setStyle("-selected-color: " + color + ";");
-        btn.getStyleClass().add("choice-btn-selected");
+    private void showTransfer() {
+        transForm.setVisible(true);
+        inoutForm.setVisible(false);
 
-        // label & icon jadi putih
-        lbl.setStyle("-fx-text-fill: white;");
-        img.setImage(theImage[index][0]); // icon putih
+        transForm.toFront();
+    }
+
+    private void select(int layer, int index, Button btn, ImageView img, Label lbl, String color) {
+
+        if(layer == 1) {
+            if(index != 2) {
+                clearSelection(layer);
+            } else {
+                clearSelection(2);
+                showTransfer();
+            }
+
+            valueChoosen = index + 1;
+
+            // kasih warna ke tombol
+            btn.setStyle("-selected-color: " + color + ";");
+            btn.getStyleClass().add("choice-btn-selected");
+
+            // label & icon jadi putih
+            lbl.setStyle("-fx-text-fill: white;");
+            img.setImage(theImage[index][0]); // icon putih
+
+        } else if(layer == 2) {
+            if(index == 2) return;
+            showInOut();
+            clearSelection(1);
+            valueChoosen = index + 1;
+
+            // kasih warna ke tombol
+            btn.setStyle("-selected-color: " + color + ";");
+            btn.getStyleClass().add("choice-btn-selected");
+
+            // label & icon jadi putih
+            lbl.setStyle("-fx-text-fill: white;");
+            img.setImage(theImage[index][0]); // icon putih
+        }
         System.out.println("select: " + valueChoosen);
     }
 
-    private void clearSelection() {
+    private void clearSelection(int layer) {
 
-        // reset button
-        for (Button b : List.of(incomeBtn, expenseBtn, transferBtn)) {
-            b.getStyleClass().remove("choice-btn-selected");
-            b.setStyle("");  // hilangkan selected-color
+        if(layer == 1){
+            // reset button
+            for (Button b : List.of(incomeBtn_1, expenseBtn_1, transferBtn_1)) {
+                b.getStyleClass().remove("choice-btn-selected");
+                b.setStyle("");  // hilangkan selected-color
+            }
+
+            // reset label
+            for (Label l : List.of(incomeLbl, expenseLbl, transferLbl_1)) {
+                l.setStyle("-fx-text-fill: black;");
+            }
+
+            // reset icon ke hitam
+            incomeImg.setImage(theImage[0][1]);
+            expenseImg.setImage(theImage[1][1]);
+            transferImg_1.setImage(theImage[2][1]);
+
+        } else if(layer == 2) {
+            // reset button
+            for (Button b : List.of(incomeBtn_2, expenseBtn_2, transferBtn_2)) {
+                b.getStyleClass().remove("choice-btn-selected");
+                b.setStyle("");  // hilangkan selected-color
+            }
+
+            transferLbl_2.setStyle("-fx-text-fill: black;");
+            transferImg_2.setImage(theImage[2][1]);
         }
-
-        // reset label
-        for (Label l : List.of(incomeLbl, expenseLbl, transferLbl)) {
-            l.setStyle("-fx-text-fill: black;");
-        }
-
-        // reset icon ke hitam
-        incomeImg.setImage(theImage[0][1]);
-        expenseImg.setImage(theImage[1][1]);
-        transferImg.setImage(theImage[2][1]);
     }
 
     public int getValueChoosen() {
