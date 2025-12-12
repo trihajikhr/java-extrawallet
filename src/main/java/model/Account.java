@@ -1,6 +1,5 @@
 package model;
 
-import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
 public class Account {
@@ -44,12 +43,12 @@ public class Account {
         this.warna = warna;
     }
 
-    public Image getImage() {
-        return image;
+    public Color getColor() {
+        return color;
     }
 
-    public void setImage(Image image) {
-        this.image = image;
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public int getJumlah() {

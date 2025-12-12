@@ -5,6 +5,7 @@ import javafx.scene.paint.Color;
 
 public class Kategori {
     private int id;
+    private Color warna;
     private String tipe; // IN/OUT
     private Color warna;
     private String label;
