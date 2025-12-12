@@ -4,9 +4,11 @@ import java.time.LocalDateTime;
 
 public class Transaksi {
     protected int id;
-    protected  String tipe; // IN/OUT
+    protected String tipe; // [IN/OUT/TRS]
     protected int jumlah;
+    protected Account account;
     protected Kategori kategori;
+    protected Label label;
     protected LocalDateTime tanggalSet;
     protected LocalDateTime tanggalBuat;
     protected String keterangan;
