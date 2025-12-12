@@ -1,16 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            prefWidth="750" prefHeight="500">
 
-<HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Page 1" textAlignment="CENTER">
-         <font>
-            <Font size="45.0" />
-         </font>
-      </Text>
-   </children>
-</HBox>
+    <!-- TOP BAR TITLE -->
+    <top>
+        <HBox spacing="10" style="-fx-background-color: #4CAF50; -fx-padding: 15;">
+            <Label text="Income Manager"
+                   style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+        </HBox>
+    </top>
+
+    <!-- MAIN CONTENT -->
+    <center>
+        <VBox spacing="15" padding="20">
+
+            <!-- FORM INPUT INCOME -->
+            <GridPane hgap="10" vgap="10">
+                <columnConstraints>
+                    <ColumnConstraints halignment="RIGHT"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="Amount:" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                <TextField GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+
+                <Label text="Category:" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                <ComboBox prefWidth="200" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Date:" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                <DatePicker GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+
+                <Label text="Note:" GridPane.rowIndex="3" GridPane.columnIndex="0"/>
+                <TextField GridPane.rowIndex="3" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <!-- BUTTONS -->
+            <HBox spacing="10">
+                <Button text="Add Income" prefWidth="120"/>
+                <Button text="Clear" prefWidth="100"/>
+            </HBox>
+
+            <!-- TABLE VIEW -->
+            <TableView prefHeight="250">
+                <columns>
+                    <TableColumn text="Amount" prefWidth="150"/>
+                    <TableColumn text="Category" prefWidth="150"/>
+                    <TableColumn text="Date" prefWidth="150"/>
+                    <TableColumn text="Note" prefWidth="250"/>
+                </columns>
+            </TableView>
+
+        </VBox>
+    </center>
+
+</BorderPane>
