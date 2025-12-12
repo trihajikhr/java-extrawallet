@@ -69,7 +69,7 @@
                      <children>
                         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" HBox.hgrow="ALWAYS" />
+                              <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                               <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                  <font>
                                     <Font size="14.0" />
@@ -286,7 +286,7 @@
                         </VBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." HBox.hgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -353,7 +353,7 @@
                      <children>
                         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" HBox.hgrow="ALWAYS" />
+                              <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                               <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                  <font>
                                     <Font size="14.0" />
@@ -539,7 +539,7 @@
                         </VBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." HBox.hgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -599,7 +599,7 @@
                               <HBox alignment="TOP_CENTER" prefHeight="54.0" prefWidth="400.0" spacing="10.0">
                                  <children>
                                     <Spinner maxHeight="40.0" maxWidth="120.0" prefHeight="40.0" />
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" promptText="IDR" styleClass="modern-btn" />
+                                    <ComboBox maxHeight="40.0" maxWhttps://github.com/trihajikhr/java-extrawallet/pull/41/conflict?name=src%252Fmain%252Fjava%252Fcontroller%252FTransactionControl.java&ancestor_oid=49a8981ed92f346d9050ebfd652edfaeea9bc72b&base_oid=e883716a8c130094f38713574fd1d72c5a1696f2&head_oid=40da165f62c497874d0f074f487b3aa7f1595844idth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" promptText="IDR" styleClass="modern-btn" />
                                     <Spinner maxHeight="40.0" maxWidth="120.0" prefHeight="40.0" />
                                     <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" promptText="IDR" styleClass="modern-btn" />
                                  </children>
