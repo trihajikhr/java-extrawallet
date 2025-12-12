@@ -4,12 +4,12 @@ import javafx.scene.paint.Color;
 
 public class Label {
     private int id;
-    private String name;
-    Color color;
+    private String label;
+    private Color color;
 
-    public Label(int id, String name, Color color) {
+    public Label(int id, String label, Color color) {
         this.id = id;
-        this.name = name;
+        this.label = label;
         this.color = color;
     }
 
@@ -23,12 +23,12 @@ public class Label {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public Color getColor() {

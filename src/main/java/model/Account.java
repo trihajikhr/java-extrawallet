@@ -4,17 +4,17 @@ import javafx.scene.paint.Color;
 
 public class Account {
     private int id;
-    private String name;
-    private Color color;
-    private int idAccountType;
-    private int amount;
+    private String label;
+    private Color warna;
+    private Image image;
+    private int jumlah;
 
-    public Account(int id, String name, Color color, int idAccountType, int amount) {
+    public Account(int id, String label, Color warna, Image image, int jumlah) {
         this.id = id;
-        this.name = name;
-        this.color = color;
-        this.idAccountType = idAccountType;
-        this.amount = amount;
+        this.label = label;
+        this.warna = warna;
+        this.image = image;
+        this.jumlah = jumlah;
     }
 
     public Account() {}
@@ -27,12 +27,20 @@ public class Account {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getLabel() {
+        return label;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public Color getWarna() {
+        return warna;
+    }
+
+    public void setWarna(Color warna) {
+        this.warna = warna;
     }
 
     public Color getColor() {
@@ -43,19 +51,11 @@ public class Account {
         this.color = color;
     }
 
-    public int getIdAccountType() {
-        return idAccountType;
+    public int getJumlah() {
+        return jumlah;
     }
 
-    public void setIdAccountType(int idAccountType) {
-        this.idAccountType = idAccountType;
-    }
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
+    public void setJumlah(int jumlah) {
+        this.jumlah = jumlah;
     }
 }
