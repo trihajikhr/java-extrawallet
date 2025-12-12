@@ -10,12 +10,12 @@ public class Account {
     private Image image;
     private int jumlah;
 
-    public Account(int id, String label, Color warna, Image image, int jumlahAwal) {
+    public Account(int id, String label, Color warna, Image image, int jumlah) {
         this.id = id;
         this.label = label;
         this.warna = warna;
         this.image = image;
-        this.jumlah = jumlahAwal;
+        this.jumlah = jumlah;
     }
 
     public Account() {}
@@ -52,12 +52,11 @@ public class Account {
         this.image = image;
     }
 
-    public int getJumlahAwal() {
+    public int getJumlah() {
         return jumlah;
     }
 
-    public void setJumlahAwal(int jumlahAwal) {
-        this.jumlah = jumlahAwal;
+    public void setJumlah(int jumlah) {
+        this.jumlah = jumlah;
     }
 }
-

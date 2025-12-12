@@ -10,32 +10,24 @@ public class Transaksi {
     protected Kategori kategori;
     protected Label label;
     protected LocalDateTime tanggalSet;
-    protected LocalDateTime tanggalBuat;
     protected String keterangan;
+    protected String metodeTransaksi;
+    protected String status;
 
-    // contructor full
-    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggalSet, LocalDateTime tanggalBuat, String keterangan) {
+    public Transaksi(int id, String tipe, int jumlah, Account account, Kategori kategori, Label label, LocalDateTime tanggalSet, String keterangan, String metodeTransaksi, String status) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
+        this.account = account;
         this.kategori = kategori;
+        this.label = label;
         this.tanggalSet = tanggalSet;
-        this.tanggalBuat = tanggalBuat;
         this.keterangan = keterangan;
+        this.metodeTransaksi = metodeTransaksi;
+        this.status = status;
     }
 
-    // conostructor tanpa keterangan
-    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggalSet, LocalDateTime tanggalBuat) {
-        this.id = id;
-        this.tipe = tipe;
-        this.jumlah = jumlah;
-        this.kategori = kategori;
-        this.tanggalSet = tanggalSet;
-        this.tanggalBuat = tanggalBuat;
-    }
-
-    // contructor hanya buat objek
-    public Transaksi(){}
+    public Transaksi() {}
 
     public int getId() {
         return id;
@@ -61,12 +53,28 @@ public class Transaksi {
         this.jumlah = jumlah;
     }
 
-    public int getIdKategori() {
-        return kategori.getId();
+    public Account getAccount() {
+        return account;
     }
 
-    public void setIdKategori(int idKategori) {
-        this.kategori.setId(idKategori);
+    public void setAccount(Account account) {
+        this.account = account;
+    }
+
+    public Kategori getKategori() {
+        return kategori;
+    }
+
+    public void setKategori(Kategori kategori) {
+        this.kategori = kategori;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public void setLabel(Label label) {
+        this.label = label;
     }
 
     public LocalDateTime getTanggalSet() {
@@ -77,19 +85,27 @@ public class Transaksi {
         this.tanggalSet = tanggalSet;
     }
 
-    public LocalDateTime getTanggalBuat() {
-        return tanggalBuat;
-    }
-
-    public void setTanggalBuat(LocalDateTime tanggalBuat) {
-        this.tanggalBuat = tanggalBuat;
-    }
-
     public String getKeterangan() {
         return keterangan;
     }
 
     public void setKeterangan(String keterangan) {
         this.keterangan = keterangan;
+    }
+
+    public String getMetodeTransaksi() {
+        return metodeTransaksi;
+    }
+
+    public void setMetodeTransaksi(String metodeTransaksi) {
+        this.metodeTransaksi = metodeTransaksi;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
