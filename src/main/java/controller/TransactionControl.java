@@ -25,8 +25,7 @@ public class TransactionControl implements Initializable {
     private int valueChoosen = 0;
     private boolean closing = false;
 
-    @FXML
-    private AnchorPane rootPane;
+    @FXML private AnchorPane rootPane;
 
     @FXML private Button incomeBtn_1;
     @FXML private Button expenseBtn_1;
@@ -226,4 +225,6 @@ public class TransactionControl implements Initializable {
     public int getValueChoosen() {
         return valueChoosen;
     }
+
+    
 }

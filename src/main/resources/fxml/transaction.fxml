@@ -69,7 +69,7 @@
                      <children>
                         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" HBox.hgrow="ALWAYS" />
+                              <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                               <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                  <font>
                                     <Font size="14.0" />
@@ -286,7 +286,7 @@
                         </VBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." HBox.hgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -353,7 +353,7 @@
                      <children>
                         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" HBox.hgrow="ALWAYS" />
+                              <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                               <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                  <font>
                                     <Font size="14.0" />
@@ -539,7 +539,7 @@
                         </VBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." HBox.hgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
