@@ -1,19 +1,20 @@
 package model;
 
 import javafx.scene.paint.Color;
+import javafx.scene.image.Image;
 
 public class Account {
     private int id;
     private String label;
     private Color warna;
-    private Image image;
+    private Image icon;
     private int jumlah;
 
     public Account(int id, String label, Color warna, Image image, int jumlah) {
         this.id = id;
         this.label = label;
         this.warna = warna;
-        this.image = image;
+        this.icon = image;
         this.jumlah = jumlah;
     }
 
@@ -43,12 +44,12 @@ public class Account {
         this.warna = warna;
     }
 
-    public Color getColor() {
-        return color;
+    public Image getIcon() {
+        return icon;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setIcon(Image icon) {
+        this.icon = icon;
     }
 
     public int getJumlah() {
