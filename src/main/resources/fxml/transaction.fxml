@@ -172,7 +172,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Account" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -212,7 +212,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Labels" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                     <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                        <font>
                                           <Font size="14.0" />

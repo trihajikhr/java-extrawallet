@@ -4,6 +4,8 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -62,6 +64,8 @@ public class TransactionControl implements Initializable {
 
     @FXML private ComboBox<Kategori> categoryComboBox;
 
+    private final ObservableList<Kategori> allCategories = FXCollections.observableArrayList();
+
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -90,12 +94,25 @@ public class TransactionControl implements Initializable {
         hideAnim.play();
     }
 
+    private void updateCategoryCombo(String type) {
+        categoryComboBox.getSelectionModel().clearSelection();
+
+        List<Kategori> filtered = allCategories.stream()
+                .filter(k -> k.getTipe().equals(type))
+                .toList();
+
+        categoryComboBox.setItems(
+                FXCollections.observableArrayList(filtered)
+        );
+    }
+
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("Transaksi pop up terbuka");
 
         // load combobox kategori
-        categoryComboBox.getItems().addAll(
+        allCategories.addAll(
                 // IN
                 new Kategori(
                         1,
@@ -310,6 +327,7 @@ public class TransactionControl implements Initializable {
                         Color.web("#62718a") // Lavender
                 )
         );
+        categoryComboBox.setItems(allCategories);
 
         categoryComboBox.setCellFactory(list -> new ListCell<Kategori>() {
             @Override
@@ -406,8 +424,17 @@ public class TransactionControl implements Initializable {
         expenseBtn_1.getStyleClass().add("choice-btn");
         transferBtn_1.getStyleClass().add("choice-btn");
 
-        incomeBtn_1.setOnAction(e -> select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
-        expenseBtn_1.setOnAction(e -> select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222"));
+        // incomeBtn_1.setOnAction(e -> select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
+        // expenseBtn_1.setOnAction(e -> select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222"));
+
+        incomeBtn_1.setOnAction(e -> {
+            select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71");
+            updateCategoryCombo("IN");
+        });
+        expenseBtn_1.setOnAction(e -> {
+            select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222");
+            updateCategoryCombo("OUT");
+        });
         transferBtn_1.setOnAction(e -> select(1,2, transferBtn_2, transferImg_2, transferLbl_2, "#0176FE"));
 
         incomeBtn_2.setOnAction(e -> select(2,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
