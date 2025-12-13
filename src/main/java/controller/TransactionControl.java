@@ -6,20 +6,30 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.ListCell;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import model.Kategori;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class TransactionControl implements Initializable {
+
+    // logger
+    private static final Logger log = LoggerFactory.getLogger(TransactionControl.class);
 
     private Stage stage;
     private int valueChoosen = 0;
@@ -49,6 +59,8 @@ public class TransactionControl implements Initializable {
     @FXML private GridPane transForm;
 
     private Image[][] theImage;
+
+    @FXML private ComboBox<Kategori> categoryComboBox;
 
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
@@ -80,6 +92,269 @@ public class TransactionControl implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        log.info("Transaksi pop up terbuka");
+
+        // load combobox kategori
+        categoryComboBox.getItems().addAll(
+                // IN
+                new Kategori(
+                        1,
+                        "IN",
+                        "Salary",
+                        new Image(getClass().getResource("/category-icons/1_salary.png").toString()),
+                        Color.web("#D0006F")
+                ),
+                new Kategori(
+                        2,
+                        "IN",
+                        "Allowance",
+                        new Image(getClass().getResource("/category-icons/2_allowance.png").toString()),
+                        Color.web("#FF0000")
+                ),
+                new Kategori(
+                        3,
+                        "IN",
+                        "Bonuses",
+                        new Image(getClass().getResource("/category-icons/3_bonuses.png").toString()),
+                        Color.web("#FF7F00")
+                ),
+                new Kategori(
+                        4,
+                        "IN",
+                        "Busines",
+                        new Image(getClass().getResource("/category-icons/4_business.png").toString()),
+                        Color.web("#FFD700")
+                ),
+                new Kategori(
+                        5,
+                        "IN",
+                        "Freelance/project",
+                        new Image(getClass().getResource("/category-icons/5_freelance.png").toString()),
+                        Color.web("#808000")
+                ),
+                new Kategori(
+                        6,
+                        "IN",
+                        "Sales",
+                        new Image(getClass().getResource("/category-icons/6_sales.png").toString()),
+                        Color.web("#32CD32")
+                ),
+                new Kategori(
+                        7,
+                        "IN",
+                        "Dividends",
+                        new Image(getClass().getResource("/category-icons/7_dividends.png").toString()),
+                        Color.web("#3EB489")
+                ),
+                new Kategori(
+                        8,
+                        "IN",
+                        "Investment gains",
+                        new Image(getClass().getResource("/category-icons/8_investment.png").toString()),
+                        Color.web("#008000")
+                ),
+                new Kategori(
+                        9,
+                        "IN",
+                        "Incoming transfer",
+                        new Image(getClass().getResource("/category-icons/9_incoming-transfer.png").toString()),
+                        Color.web("#3EB489")
+                ),
+                new Kategori(
+                        10,
+                        "IN",
+                        "Gift",
+                        new Image(getClass().getResource("/category-icons/10_gift.png").toString()),
+                        Color.web("#008080") // Teal
+                ),
+                new Kategori(
+                        11,
+                        "IN",
+                        "Cashback",
+                        new Image(getClass().getResource("/category-icons/11_cashback.png").toString()),
+                        Color.web("#87CEEB") // Sky Blue
+                ),
+                new Kategori(
+                        12,
+                        "IN",
+                        "Commission",
+                        new Image(getClass().getResource("/category-icons/12_commission.png").toString()),
+                        Color.web("#ADD8E6") // Light Blue
+                ),
+                new Kategori(
+                        13,
+                        "IN",
+                        "Royalty",
+                        new Image(getClass().getResource("/category-icons/13_royalty.png").toString()),
+                        Color.web("#0000FF") // Blue
+                ),
+                new Kategori(
+                        14,
+                        "IN",
+                        "App Reward",
+                        new Image(getClass().getResource("/category-icons/14_app-reward.png").toString()),
+                        Color.web("#6F2DA8") // Grape
+                ),
+                new Kategori(
+                        15,
+                        "IN",
+                        "Others",
+                        new Image(getClass().getResource("/category-icons/15_others.png").toString()),
+                        Color.web("#62718a") // Violet
+                ),
+
+                // OUT
+                new Kategori(
+                        16,
+                        "OUT",
+                        "Food & Beverages",
+                        new Image(getClass().getResource("/category-icons/16_food.png").toString()),
+                        Color.web("#D0006F") // Berry Red
+                ),
+                new Kategori(
+                        17,
+                        "OUT",
+                        "Daily Shopping",
+                        new Image(getClass().getResource("/category-icons/17_shopping.png").toString()),
+                        Color.web("#FF0000") // Red
+                ),
+                new Kategori(
+                        18,
+                        "OUT",
+                        "Transportation",
+                        new Image(getClass().getResource("/category-icons/18_transportation.png").toString()),
+                        Color.web("#FF7F00") // Orange
+                ),
+                new Kategori(
+                        19,
+                        "OUT",
+                        "Bills & Utilities",
+                        new Image(getClass().getResource("/category-icons/19_bills.png").toString()),
+                        Color.web("#FFD700") // Yellow
+                ),
+                new Kategori(
+                        20,
+                        "OUT",
+                        "Personal Shopping",
+                        new Image(getClass().getResource("/category-icons/13_royalty.png").toString()),
+                        Color.web("#808000") // Olive Green
+                ),
+                new Kategori(
+                        21,
+                        "OUT",
+                        "Gadgets & Electronics",
+                        new Image(getClass().getResource("/category-icons/20_gadgets.png").toString()),
+                        Color.web("#32CD32") // Lime Green
+                ),
+                new Kategori(
+                        22,
+                        "OUT",
+                        "Health",
+                        new Image(getClass().getResource("/category-icons/21_health.png").toString()),
+                        Color.web("#3EB489") // Mint Green
+                ),
+                new Kategori(
+                        23,
+                        "OUT",
+                        "Entertainment & Lifestyle",
+                        new Image(getClass().getResource("/category-icons/22_entertainment.png").toString()),
+                        Color.web("#008000") // Green
+                ),
+                new Kategori(
+                        24,
+                        "OUT",
+                        "Education & Courses",
+                        new Image(getClass().getResource("/category-icons/23_education.png").toString()),
+                        Color.web("#008080") // Teal
+                ),
+                new Kategori(
+                        25,
+                        "OUT",
+                        "Financial Obligations",
+                        new Image(getClass().getResource("/category-icons/24_obligation.png").toString()),
+                        Color.web("#87CEEB") // Sky Blue
+                ),
+                new Kategori(
+                        26,
+                        "OUT",
+                        "Home & Appliances",
+                        new Image(getClass().getResource("/category-icons/25_home.png").toString()),
+                        Color.web("#ADD8E6") // Light Blue
+                ),
+                new Kategori(
+                        27,
+                        "OUT",
+                        "Family",
+                        new Image(getClass().getResource("/category-icons/28_family.png").toString()),
+                        Color.web("#0000FF") // Blue
+                ),
+                new Kategori(
+                        28,
+                        "OUT",
+                        "Gift",
+                        new Image(getClass().getResource("/category-icons/10_gift.png").toString()),
+                        Color.web("#6F2DA8") // Grape
+                ),
+                new Kategori(
+                        29,
+                        "OUT",
+                        "Donation",
+                        new Image(getClass().getResource("/category-icons/27_donation.png").toString()),
+                        Color.web("#8A2BE2") // Violet
+                ),
+                new Kategori(
+                        30,
+                        "OUT",
+                        "Others",
+                        new Image(getClass().getResource("/category-icons/15_others.png").toString()),
+                        Color.web("#62718a") // Lavender
+                )
+        );
+
+        categoryComboBox.setCellFactory(list -> new ListCell<Kategori>() {
+            @Override
+            protected void updateItem(Kategori item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                // icon
+                ImageView iconView = new ImageView(item.getIcon());
+                iconView.setFitWidth(14);
+                iconView.setFitHeight(14);
+                iconView.setPreserveRatio(true);
+
+                // background
+                StackPane iconBox = new StackPane(iconView);
+                iconBox.setPrefSize(28,28);;
+                iconBox.setMaxSize(28,28);
+
+                iconBox.setBackground(new Background(
+                        new BackgroundFill(
+                                item.getWarna(),
+                                new CornerRadii(8),
+                                Insets.EMPTY
+                        )
+                ));
+
+                // teks
+                Label label = new Label(item.getLabel());
+                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+                // gabung
+                HBox box = new HBox(10, iconBox, label);
+                box.setAlignment(Pos.CENTER_LEFT);
+
+                setGraphic(box);
+            }
+        });
+        categoryComboBox.setButtonCell(categoryComboBox.getCellFactory().call(null));
+
+        // ======================================================================================
 
         // Load icon: [0] = putih, [1] = hitam
         theImage = new Image[][] {

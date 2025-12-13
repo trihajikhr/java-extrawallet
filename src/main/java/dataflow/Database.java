@@ -59,39 +59,39 @@ public class Database {
             }
 
             String[][] kategoriData = {
-                    // IN
-                    {"IN", "gaji"},
-                    {"IN", "tunjangan"},
-                    {"IN", "bonus"},
-                    {"IN", "usaha"},
-                    {"IN", "freelance/proyek"},
-                    {"IN", "penjualan"},
-                    {"IN", "dividen"},
-                    {"IN", "keuntungan investasi"},
-                    {"IN", "transfer masuk"},
-                    {"IN", "hadiah"},
-                    {"IN", "cashback"},
-                    {"IN", "komisi"},
-                    {"IN", "royalti"},
-                    {"IN", "reward aplikasi"},
-                    {"IN", "lain-lain"},
+                // IN
+                {"IN", "salary"},
+                {"IN", "allowance"},
+                {"IN", "bonus"},
+                {"IN", "business"},
+                {"IN", "freelance/project"},
+                {"IN", "sales"},
+                {"IN", "dividends"},
+                {"IN", "investment gains"},
+                {"IN", "incoming transfer"},
+                {"IN", "gift"},
+                {"IN", "cashback"},
+                {"IN", "commission"},
+                {"IN", "royalty"},
+                {"IN", "app reward"},
+                {"IN", "others"},
 
-                    // OUT
-                    {"OUT", "makanan & minuman"},
-                    {"OUT", "belanja harian"},
-                    {"OUT", "transportasi"},
-                    {"OUT", "tagihan & utilitas"},
-                    {"OUT", "belanja pribadi"},
-                    {"OUT", "gadget & elektronik"},
-                    {"OUT", "kesehatan"},
-                    {"OUT", "hiburan & lifestyle"},
-                    {"OUT", "pendidikan & kursus"},
-                    {"OUT", "kewajiban keuangan"},
-                    {"OUT", "rumah & peralatan"},
-                    {"OUT", "keluarga"},
-                    {"OUT", "hadiah"},
-                    {"OUT", "donasi"},
-                    {"OUT", "lain-lain"}
+                // OUT
+                {"OUT", "food & beverages"},
+                {"OUT", "daily shopping"},
+                {"OUT", "transportation"},
+                {"OUT", "bills & utilities"},
+                {"OUT", "personal shopping"},
+                {"OUT", "gadgets & electronics"},
+                {"OUT", "health"},
+                {"OUT", "entertainment & lifestyle"},
+                {"OUT", "education & courses"},
+                {"OUT", "financial obligations"},
+                {"OUT", "home & appliances"},
+                {"OUT", "family"},
+                {"OUT", "gift"},
+                {"OUT", "donation"},
+                {"OUT", "others"}
             };
 
             try (PreparedStatement ps = koneksi.prepareStatement(

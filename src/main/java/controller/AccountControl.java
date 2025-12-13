@@ -212,10 +212,6 @@ public class AccountControl implements Initializable {
 //                        )
 //                ));
 
-//                iconBox.setBackground(new Background(
-//                        new BackgroundFill(item.getWarna(), new CornerRadii(8), Insets.EMPTY)
-//                ));
-
                 // BIND background ke property warna
                 iconBox.backgroundProperty().bind(
                         Bindings.createObjectBinding(
