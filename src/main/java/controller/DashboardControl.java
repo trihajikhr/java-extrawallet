@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -17,6 +18,7 @@ import javafx.fxml.FXMLLoader;
 import java.io.IOException;
 import javafx.scene.Parent;
 import javafx.fxml.FXML;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -26,6 +28,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 
 // logger library
+import model.Account;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,6 +111,54 @@ public class DashboardControl {
 
         // kasih akses stage ke controller
         TransactionControl ctrl = loader.getController();
+        ctrl.setStage(stage);
+
+        stage.showAndWait();
+    }
+
+    @FXML
+    private void addAccount(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/account.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+
+        // --- 1. PENGATURAN STYLE STAGE ---
+        // Hapus StageStyle.UNDECORATED yang bertentangan
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        // --- 2. APLIKASI DROPSHADOW KE ROOT ---
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(10.0);
+        dropShadow.setOffsetX(5.0);
+        dropShadow.setOffsetY(5.0);
+        dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+        root.setEffect(dropShadow);
+
+        // --- 3. PENGATURAN SCENE (Harus SETELAH root dimuat dan diberi efek) ---
+        Scene scene = new Scene(root);
+        // Kesalahan Ada di sini: hanya menulis ".setFill(Color.TRANSPARENT);"
+        scene.setFill(Color.TRANSPARENT); // Wajib agar area di sekitar shadow transparan
+        stage.setScene(scene); // Set Scene harus dilakukan setelah scene dibuat
+
+        stage.setMinWidth(450);
+        stage.setMinHeight(560);
+//        stage.setMaxWidth(800);
+//        stage.setMaxHeight(700);
+
+        // draggable pop up
+        root.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        root.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
+
+        // kasih akses stage ke controller
+        AccountControl ctrl = loader.getController();
         ctrl.setStage(stage);
 
         stage.showAndWait();

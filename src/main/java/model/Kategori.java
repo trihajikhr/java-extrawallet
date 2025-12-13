@@ -1,25 +1,21 @@
 package model;
 
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 
 public class Kategori {
     private int id;
-    private Color warna;
-    private String tipe; // IN/OUT
-    private Color warna;
+    private String tipe;
     private String label;
-    private Image gambar; // icon putih
+    private Image gambar;
 
-    public Kategori(int id, String tipe, Color warna, String label, Image gambar) {
+    public Kategori(int id, String tipe, String label, Image gambar) {
         this.id = id;
         this.tipe = tipe;
-        this.warna = warna;
         this.label = label;
         this.gambar = gambar;
     }
 
-    public Kategori(){}
+    public Kategori() {}
 
     public int getId() {
         return id;
@@ -35,14 +31,6 @@ public class Kategori {
 
     public void setTipe(String tipe) {
         this.tipe = tipe;
-    }
-
-    public Color getWarna() {
-        return warna;
-    }
-
-    public void setWarna(Color warna) {
-        this.warna = warna;
     }
 
     public String getLabel() {

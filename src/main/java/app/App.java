@@ -14,7 +14,12 @@ public class App extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
-        stage.setScene(new Scene(loader.load()));
+        Scene scene = new Scene(loader.load());
+        scene.getStylesheets().add(
+                getClass().getResource("/stylesheet/auto-card.css").toExternalForm()
+        );
+
+        stage.setScene(scene);
         stage.setTitle("Extra Wallet");
 
         // buat instance

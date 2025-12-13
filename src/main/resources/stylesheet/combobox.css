@@ -1,0 +1,23 @@
+/* ComboBox dropdown background */
+.combo-box-popup .list-view {
+    -fx-background-color: #f9f9f9;
+    -fx-padding: 4px;
+    -fx-background-radius: 8px;
+}
+
+/* Scrollbar track */
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-padding: 2px;
+}
+
+/* Scrollbar thumb */
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c0c0c0;
+    -fx-background-radius: 4px;
+}
+
+/* Scrollbar hover effect */
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #888;
+}

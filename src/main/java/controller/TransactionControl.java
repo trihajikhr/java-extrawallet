@@ -226,5 +226,33 @@ public class TransactionControl implements Initializable {
         return valueChoosen;
     }
 
-    
+    // OPSI COMBO BOX EDITABLE!
+//        accountComboBox.setEditable(true);
+//        ObservableList<AccountItem> allItems =
+//                FXCollections.observableArrayList(accountComboBox.getItems());
+//
+//        accountComboBox.getEditor().textProperty().addListener((obs, oldText, newText) -> {
+//            if (newText == null) return;
+//
+//            String keyword = newText.toLowerCase();
+//
+//            List<AccountItem> filtered = allItems.stream()
+//                    .filter(item -> item.getLabel().toLowerCase().contains(keyword))
+//                    .toList();
+//
+//            accountComboBox.getItems().setAll(filtered);
+//            accountComboBox.show();
+//        });
+//
+//        accountComboBox.setConverter(new StringConverter<>() {
+//            @Override
+//            public String toString(AccountItem item) {
+//                return item == null ? "" : item.getLabel();
+//            }
+//
+//            @Override
+//            public AccountItem fromString(String string) {
+//                return null; // nggak dipakai
+//            }
+//        });
 }
