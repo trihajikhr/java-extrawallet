@@ -47,8 +47,6 @@ public class DataInitialize {
     private static DataInitialize instance;
     private ArrayList<AccountType> accountType = new ArrayList<AccountType>();
 
-    // TODO: tambahkan [General, Cash, Credit, Savings]
-
     private DataInitialize() {
         accountType.add(new AccountType(new Image(getClass().getResource("/account-type/general.png").toString()),
                 Color.web("#84DA46"),

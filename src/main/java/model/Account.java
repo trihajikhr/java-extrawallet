@@ -18,6 +18,13 @@ public class Account {
         this.jumlah = jumlah;
     }
 
+    // TODO: hanya test, nanti refactor!
+    public Account(String label, int jumlah, Image icon) {
+        this.label = label;
+        this.icon = icon;
+        this.jumlah = jumlah;
+    }
+
     public Account() {}
 
     public int getId() {

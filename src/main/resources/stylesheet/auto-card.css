@@ -1,0 +1,16 @@
+.account-card {
+    -fx-background-color: #3deb74;
+    -fx-background-radius: 8;
+    -fx-padding: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+}
+
+.account-name {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.account-balance {
+    -fx-font-size: 12px;
+    -fx-text-fill: #4caf50;
+}
