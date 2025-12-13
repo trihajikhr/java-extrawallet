@@ -623,6 +623,7 @@
       <URL value="@../stylesheet/button.css" />
       <URL value="@../stylesheet/transaction.css" />
       <URL value="@../stylesheet/panel.css" />
+      <URL value="@../stylesheet/combobox.css" />
    </stylesheets>
    <styleClass>
       <String fx:value="white-box" />
