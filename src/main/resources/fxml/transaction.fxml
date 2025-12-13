@@ -304,7 +304,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Type" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="paymentType_1" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -324,7 +324,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Status" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="paymentStatus_1" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -557,7 +557,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Type" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="paymentType_2" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -577,7 +577,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Status" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="paymentStatus_2" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>

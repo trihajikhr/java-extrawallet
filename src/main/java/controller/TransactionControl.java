@@ -4,6 +4,8 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -63,8 +65,19 @@ public class TransactionControl implements Initializable {
     private Image[][] theImage;
 
     @FXML private ComboBox<Kategori> categoryComboBox;
+    @FXML private ComboBox<String> paymentType_1, paymentType_2;
+    @FXML private ComboBox<String> paymentStatus_1, paymentStatus_2;
 
     private final ObservableList<Kategori> allCategories = FXCollections.observableArrayList();
+    private final ObservableList<String> paymentTypeData = FXCollections.observableArrayList();
+    private final ObservableList<String> paymenttStatusData = FXCollections.observableArrayList();
+
+    private final ObjectProperty<String> selectedPaymentType =
+            new SimpleObjectProperty<>();
+
+    private final ObjectProperty<String> selectedPaymentStatus =
+            new SimpleObjectProperty<>();
+
 
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
@@ -106,10 +119,41 @@ public class TransactionControl implements Initializable {
         );
     }
 
+    private void initPaymentData() {
+        paymentTypeData.addAll(
+                "Cash",
+                "Debit card",
+                "Credit card",
+                "Transfer",
+                "Voucher",
+                "Mobile payment"
+        );
+
+        paymentType_1.setItems(paymentTypeData);
+        paymentType_2.setItems(paymentTypeData);
+
+        paymenttStatusData.addAll(
+                "Reconciled",
+                "Cleared",
+                "Uncleared"
+        );
+
+        paymentStatus_1.setItems(paymenttStatusData);
+        paymentStatus_2.setItems(paymenttStatusData);
+
+        paymentType_1.valueProperty().bindBidirectional(selectedPaymentType);
+        paymentType_2.valueProperty().bindBidirectional(selectedPaymentType);
+
+        paymentStatus_1.valueProperty().bindBidirectional(selectedPaymentStatus);
+        paymentStatus_2.valueProperty().bindBidirectional(selectedPaymentStatus);
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("Transaksi pop up terbuka");
+
+        // beberapa fungsi init
+        initPaymentData();
 
         // load combobox kategori
         allCategories.addAll(
@@ -166,14 +210,14 @@ public class TransactionControl implements Initializable {
                 new Kategori(
                         8,
                         "IN",
-                        "Investment gains",
+                        "Investment Gains",
                         new Image(getClass().getResource("/category-icons/8_investment.png").toString()),
                         Color.web("#008000")
                 ),
                 new Kategori(
                         9,
                         "IN",
-                        "Incoming transfer",
+                        "Incoming Transfer",
                         new Image(getClass().getResource("/category-icons/9_incoming-transfer.png").toString()),
                         Color.web("#3EB489")
                 ),
