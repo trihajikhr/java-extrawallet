@@ -6,18 +6,18 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1200.0" stylesheets="@../stylesheet/pane-style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="controller.HomeControl">
+<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" stylesheets="@../stylesheet/pane-style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="controller.HomeControl">
   <content>
-    <AnchorPane maxHeight="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="800.0" prefWidth="1200.0">
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="1200.0" prefWidth="1200.0">
          <children>
             <VBox maxHeight="1.7976931348623157E308" prefHeight="1200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <AnchorPane prefHeight="75.0" prefWidth="1200.0">
+                  <AnchorPane prefHeight="80.0" prefWidth="1200.0">
                      <children>
                         <FlowPane fx:id="accountPane" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                      </children>
                   </AnchorPane>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="900.0" prefHeight="800.0" prefWidth="1300.0">
+                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="900.0" prefHeight="800.0" prefWidth="1200.0">
                      <children>
                         <VBox layoutX="199.0" layoutY="80.0" prefHeight="587.0" prefWidth="1017.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
