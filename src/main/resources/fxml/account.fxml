@@ -24,7 +24,7 @@
    <children>
       <AnchorPane layoutY="-3.0" minHeight="75.0" prefHeight="75.0" styleClass="white-box" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label layoutX="25.0" layoutY="29.0" text="Add record" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
+            <Label layoutX="25.0" layoutY="29.0" text="Add Account" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
                <font>
                   <Font size="15.0" />
                </font>
@@ -104,7 +104,7 @@
                         </VBox>
                         <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" GridPane.rowIndex="5">
                            <children>
-                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" text="Add record" VBox.vgrow="ALWAYS" />
+                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" text="Add Account" VBox.vgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -153,6 +153,7 @@
       <URL value="@../stylesheet/button.css" />
       <URL value="@../stylesheet/transaction.css" />
       <URL value="@../stylesheet/panel.css" />
+      <URL value="@../stylesheet/combobox.css" />
    </stylesheets>
    <styleClass>
       <String fx:value="white-box" />
