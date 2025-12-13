@@ -6,19 +6,18 @@ import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
@@ -77,6 +76,9 @@ public class TransactionControl implements Initializable {
 
     private final ObjectProperty<String> selectedPaymentStatus =
             new SimpleObjectProperty<>();
+
+    private final StringProperty noteState = new SimpleStringProperty();
+    @FXML private TextField msgNotes_1, msgNotes_2;
 
 
     // DIPANGGIL dari controller lain
@@ -148,12 +150,18 @@ public class TransactionControl implements Initializable {
         paymentStatus_2.valueProperty().bindBidirectional(selectedPaymentStatus);
     }
 
+    private void messageNotesBinding() {
+        msgNotes_1.textProperty().bindBidirectional(noteState);
+        msgNotes_2.textProperty().bindBidirectional(noteState);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("Transaksi pop up terbuka");
 
         // beberapa fungsi init
         initPaymentData();
+        messageNotesBinding();
 
         // load combobox kategori
         allCategories.addAll(
