@@ -24,9 +24,17 @@ public class DataManager {
         return instance;
     }
 
+    public ArrayList<TipeLabel> coreDataTipeLabel() {
+        return dataTipeLabel;
+    }
+
     // [1] >> =============== DATA AKUN =============== //
     public void addAkun (Akun data) {
         dataAkun.add(data);
+    }
+
+    public ArrayList<Akun> coreDataAkun() {
+        return dataAkun;
     }
 
     // [1] >> =============== DATA TRANSAKSI =============== //
@@ -68,8 +76,11 @@ public class DataManager {
         return inList;
     }
 
-    public void addTransaksi(Transaksi t) {
-        Database.getInstance().insertTransaksi(t);
+    public void addTransaksi(Transaksi trans) {
+        int newId = Database.getInstance().insertTransaksi(trans);
+        if(newId > 0) {
+            dataTransaksi.add(trans);
+        }
     }
 
     // [3] >> =============== DATA PENGELUARAN =============== //
@@ -120,10 +131,10 @@ public class DataManager {
     }
 
     // [6] >> =============== TIPE LABEL FUNCTION =============== //
-    public void addLabel(String nama, Color warna){
-        int newId = Database.getInstance().insertTipeLabel(nama, Converter.getInstance().colorToHex(warna));
+    public void addLabel(TipeLabel tipelabel){
+        int newId = Database.getInstance().insertTipeLabel(tipelabel);
         if(newId > 0) {
-            dataTipeLabel.add(new TipeLabel(newId, nama, warna));
+            dataTipeLabel.add(tipelabel);
         }
     }
 }

@@ -4,13 +4,13 @@ import javafx.scene.paint.Color;
 
 public class TipeLabel {
     private int id;
-    private String label;
-    private Color color;
+    private String nama;
+    private Color warna;
 
-    public TipeLabel(int id, String label, Color color) {
+    public TipeLabel(int id, String nama, Color warna) {
         this.id = id;
-        this.label = label;
-        this.color = color;
+        this.nama = nama;
+        this.warna = warna;
     }
 
     public TipeLabel() {}
@@ -23,19 +23,19 @@ public class TipeLabel {
         this.id = id;
     }
 
-    public String getLabel() {
-        return label;
+    public String getNama() {
+        return nama;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 
-    public Color getColor() {
-        return color;
+    public Color getWarna() {
+        return warna;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setWarna(Color warna) {
+        this.warna = warna;
     }
 }
