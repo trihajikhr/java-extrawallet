@@ -34,12 +34,19 @@ public class Database {
 
             this.koneksi = DriverManager.getConnection(JDBC_URL + DATABASE_FOLDER + File.separator + DATABASE_NAME);
 
+            // aktifkan opsi foreign key (tidak aktif secara default!)
+            try (Statement perintah = koneksi.createStatement()) {
+                perintah.execute("PRAGMA foreign_keys = ON");
+            }
+
             createTableKategori();
             DataManager.getInstance().setDataKategori(DataSeeder.getInstance().seedArrayKategori());
             DataSeeder.getInstance().seedDatabaseKategori();
 
             createTableTipeLabel();
-
+            createTableAkun();
+            createTableTransaksi();
+            createTableTemplate();
 
         } catch (SQLException e) {
             log.error("Database gagal!",  e);
@@ -84,6 +91,87 @@ public class Database {
 
         } catch (SQLException e) {
             log.error("table tipelabel gagal dibuat: ", e);
+        }
+    }
+
+    private void createTableAkun() {
+        try (Statement perintah = koneksi.createStatement()) {
+            String querySql =
+            """
+            CREATE TABLE IF NOT EXISTS "akun" (
+                "id"	INTEGER NOT NULL UNIQUE,
+                "nama"	TEXT NOT NULL,
+                "warna"	TEXT NOT NULL,
+                "icon_path"	TEXT NOT NULL,
+                "jumlah"	INTEGER NOT NULL,
+                PRIMARY KEY("id" AUTOINCREMENT)
+            )
+            """;
+            perintah.executeUpdate(querySql);
+            log.info("table akun berhasil dibuat!");
+
+        } catch (SQLException e) {
+            log.error("table akun gagal dibuat: ", e);
+        }
+    }
+
+    private void createTableTransaksi() {
+        try (Statement perintah = koneksi.createStatement()) {
+            String querySql =
+            """
+            CREATE TABLE IF NOT EXISTS "transaksi" (
+                "id"	INTEGER NOT NULL UNIQUE,
+                "tipe"	TEXT NOT NULL,
+                "jumlah"	INTEGER NOT NULL,
+                "id_akun"	INTEGER NOT NULL,
+                "id_kategori"	INTEGER NOT NULL,
+                "id_tipelabel"	INTEGER,
+                "tanggal"	TEXT NOT NULL,
+                "keterangan"	TEXT,
+                "metode_transaksi"	TEXT,
+                "status"	TEXT,
+                PRIMARY KEY("id" AUTOINCREMENT),
+                CONSTRAINT "transaksi_akun" FOREIGN KEY("id_akun") REFERENCES "akun"("id") ON DELETE CASCADE,
+                CONSTRAINT "transaksi_kategori" FOREIGN KEY("id_kategori") REFERENCES "kategori"("id") ON DELETE RESTRICT,
+                CONSTRAINT "transaksi_label" FOREIGN KEY("id_tipelabel") REFERENCES "tipelabel"("id") ON DELETE RESTRICT
+            )
+            """;
+            perintah.executeUpdate(querySql);
+            log.info("table transaksi berhasil dibuat!");
+
+        } catch (SQLException e){
+            log.error("table transaksi gagal dibuat: ", e);
+        }
+    }
+
+    private void createTableTemplate() {
+        try (Statement perintah = koneksi.createStatement()) {
+            String querySql =
+            """
+            CREATE TABLE IF NOT EXISTS "template" (
+                "id"	INTEGER NOT NULL UNIQUE,
+                "tipe"	TEXT NOT NULL,
+                "jumlah_satu"	INTEGER NOT NULL,
+                "jumlah_dua"	INTEGER,
+                "id_akun_satu"	INTEGER NOT NULL,
+                "id_akun_dua"	INTEGER,
+                "id_kategori"	INTEGER,
+                "id_label"	INTEGER,
+                "keterangan"	TEXT,
+                "metode_transaksi"	TEXT,
+                "status"	TEXT,
+                PRIMARY KEY("id" AUTOINCREMENT),
+                CONSTRAINT "template_akun_dua" FOREIGN KEY("id_akun_dua") REFERENCES "akun"("id") ON DELETE CASCADE,
+                CONSTRAINT "template_akun_satu" FOREIGN KEY("id_akun_satu") REFERENCES "akun"("id") ON DELETE CASCADE,
+                CONSTRAINT "template_kategori" FOREIGN KEY("id_kategori") REFERENCES "kategori"("id") ON DELETE CASCADE,
+                CONSTRAINT "template_label" FOREIGN KEY("id_label") REFERENCES ""
+            )
+            """;
+            perintah.executeUpdate(querySql);
+            log.info("table template berhasil dibuat!");
+
+        } catch (SQLException e) {
+            log.error("table template gagal dibuat!");
         }
     }
 

@@ -6,7 +6,7 @@ public class Transaksi {
     protected int id;
     protected String tipe; // [IN/OUT/TRS]
     protected int jumlah;
-    protected Akun account;
+    protected Akun akun;
     protected Kategori kategori;
     protected TipeLabel label;
     protected LocalDateTime tanggal;
@@ -15,11 +15,11 @@ public class Transaksi {
     protected String status;
 
     // contructor full spek
-    public Transaksi(int id, String tipe, int jumlah, Akun account, Kategori kategori, TipeLabel label, LocalDateTime tanggal, String keterangan, String metodeTransaksi, String status) {
+    public Transaksi(int id, String tipe, int jumlah, Akun akun, Kategori kategori, TipeLabel label, LocalDateTime tanggal, String keterangan, String metodeTransaksi, String status) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
-        this.account = account;
+        this.akun = akun;
         this.kategori = kategori;
         this.label = label;
         this.tanggal = tanggal;
@@ -64,12 +64,12 @@ public class Transaksi {
         this.jumlah = jumlah;
     }
 
-    public Akun getAccount() {
-        return account;
+    public Akun getAkun() {
+        return akun;
     }
 
-    public void setAccount(Akun account) {
-        this.account = account;
+    public void setAkun(Akun akun) {
+        this.akun = akun;
     }
 
     public Kategori getKategori() {
