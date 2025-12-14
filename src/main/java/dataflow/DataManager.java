@@ -3,11 +3,12 @@ package dataflow;
 import java.util.ArrayList;
 import java.util.Comparator;
 
-// import package
+import dataflow.basedata.AccountItem;
+import dataflow.basedata.ColorItem;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.paint.Color;
+import javafx.scene.control.ComboBox;
 import model.*;
-import helper.Converter;
 
 public class DataManager {
     private static DataManager instance;
@@ -16,6 +17,20 @@ public class DataManager {
     private ArrayList<Akun> dataAkun;
     private ArrayList<Transaksi> dataTransaksi;
     private ArrayList<TipeLabel> dataTipeLabel;
+    private ObservableList<String> dataPeymentType = FXCollections.observableArrayList();
+    private ObservableList<String> dataStatusType = FXCollections.observableArrayList();
+    private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
+    private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
+
+    private DataManager() {}
+
+    public ObservableList<String> getDataPeymentType() {
+        return dataPeymentType;
+    }
+
+    public ObservableList<String> getDataStatusType() {
+        return dataStatusType;
+    }
 
     public static DataManager getInstance() {
         if(instance == null) {
@@ -26,6 +41,21 @@ public class DataManager {
 
     public ArrayList<TipeLabel> coreDataTipeLabel() {
         return dataTipeLabel;
+    }
+
+    public void initBaseData() {
+        dataPeymentType = DataSeeder.getInstance().seedTypeData();
+        dataStatusType = DataSeeder.getInstance().seedStatusData();
+        DataSeeder.getInstance().colorSeeder();
+        DataSeeder.getInstance().accountItemSeeder();
+    }
+
+    public ObservableList<ColorItem> getDataColor() {
+        return dataColor;
+    }
+
+    public ObservableList<AccountItem> getDataAccountItem() {
+        return dataAccountItem;
     }
 
     // [1] >> =============== DATA AKUN =============== //
@@ -126,7 +156,7 @@ public class DataManager {
         return dataKategori;
     }
 
-    public void setDataKategori(ObservableList<Kategori> data) {
+    public void setDataKategori() {
         dataKategori = new ArrayList<>(DataSeeder.getInstance().seedArrayKategori());
     }
 

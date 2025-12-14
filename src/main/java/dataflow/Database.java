@@ -55,9 +55,6 @@ public class Database {
             }
 
             createTableKategori();
-            DataManager.getInstance().setDataKategori(DataSeeder.getInstance().seedArrayKategori());
-            DataSeeder.getInstance().seedDatabaseKategori();
-
             createTableTipeLabel();
             createTableAkun();
             createTableTransaksi();
@@ -67,7 +64,6 @@ public class Database {
             log.error("Database gagal!",  e);
         }
     }
-
 
     // [3] >=== modularisasi statement create table
     private void createTableKategori() {

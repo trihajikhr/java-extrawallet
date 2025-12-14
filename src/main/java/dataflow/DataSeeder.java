@@ -1,8 +1,12 @@
 package dataflow;
 
+import dataflow.basedata.AccountItem;
+import dataflow.basedata.ColorItem;
 import helper.Converter;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
@@ -24,7 +28,7 @@ public class DataSeeder {
     public static DataSeeder getInstance() {
         if(instance == null) {
             instance = new DataSeeder();
-            log.info("data seeder berhasil dibuat!");
+            log.info("objek data seeder berhasil dibuat!");
         }
         return instance;
     }
@@ -306,5 +310,79 @@ public class DataSeeder {
         } catch (SQLException e) {
             log.error("gagal seed data kategori: ", e);
         }
+    }
+
+    public ObservableList<String> seedTypeData () {
+        ObservableList<String> data = FXCollections.observableArrayList();
+        data.addAll(
+            "Cash",
+            "Debit card",
+            "Credit card",
+            "Transfer",
+            "Voucher",
+            "Mobile payment"
+        );
+        log.info("mengisi data typedata!");
+        return data;
+    }
+
+    public ObservableList<String> seedStatusData () {
+        ObservableList<String> data = FXCollections.observableArrayList();
+        data.addAll(
+            "Reconciled",
+            "Cleared",
+            "Uncleared"
+
+        );
+        log.info("mengisi data statusdata!");
+        return data;
+    }
+
+    public void colorSeeder() {
+        DataManager.getInstance().getDataColor().setAll(
+                new ColorItem("Berry Red", Color.web("#D0006F")),
+                new ColorItem("Red", Color.web("#FF0000")),
+                new ColorItem("Orange", Color.web("#FF7F00")),
+                new ColorItem("Yellow", Color.web("#FFD700")),
+                new ColorItem("Olive Green", Color.web("#808000")),
+                new ColorItem("Lime Green", Color.web("#32CD32")),
+                new ColorItem("Mint Green", Color.web("#3EB489")),
+                new ColorItem("Green", Color.web("#008000")),
+                new ColorItem("Teal", Color.web("#008080")),
+                new ColorItem("Sky Blue", Color.web("#87CEEB")),
+                new ColorItem("Light Blue", Color.web("#ADD8E6")),
+                new ColorItem("Blue", Color.web("#0000FF")),
+                new ColorItem("Grape", Color.web("#6F2DA8")),
+                new ColorItem("Violet", Color.web("#8A2BE2")),
+                new ColorItem("Lavender", Color.web("#E6E6FA")),
+                new ColorItem("Magenta", Color.web("#FF00FF")),
+                new ColorItem("Salmon", Color.web("#FA8072")),
+                new ColorItem("Charcoal", Color.web("#36454F")),
+                new ColorItem("Grey", Color.web("#808080")),
+                new ColorItem("Taupe", Color.web("#483C32"))
+        );
+        log.info("data warna berhasil dibuat!");
+    }
+
+    public void accountItemSeeder() {
+        DataManager.getInstance().getDataAccountItem().setAll(
+                new AccountItem(
+                        "General",
+                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/general.png")).toString())
+                ),
+                new AccountItem(
+                        "Cash",
+                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/cash.png")).toString())
+                ),
+                new AccountItem(
+                        "Savings",
+                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/savings.png")).toString())
+                ),
+                new AccountItem(
+                        "Credit",
+                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/credit.png")).toString())
+                )
+        );
+        log.info("data jenis akun berhasil dibuat!");
     }
 }
