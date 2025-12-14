@@ -75,7 +75,7 @@ public class DataManager {
             data.setId(newId);
             dataAkun.add(data);
             log.info("akun baru [{}] berhasil dibuat!", data.getNama());
-            Popup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat");
+            Popup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat!");
         } else {
             Popup.showDanger("Gagal!", "Terjadi kesalahan!");
         }

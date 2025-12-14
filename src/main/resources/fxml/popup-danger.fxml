@@ -17,7 +17,7 @@
         </padding>
 
         <Label fx:id="titleLabel" styleClass="popup-title" />
-        <Label fx:id="messageLabel" styleClass="popup-message" wrapText="true" />
+        <Label fx:id="messageLabel" styleClass="popup-message" wrapText="true" VBox.vgrow="ALWAYS" />
 
         <Button onAction="#close" prefHeight="40.0" prefWidth="80.0" styleClass="modern-btn" text="OK">
          <VBox.margin>
