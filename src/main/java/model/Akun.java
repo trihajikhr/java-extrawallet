@@ -3,7 +3,7 @@ package model;
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
 
-public class Account {
+public class Akun {
     private int id;
     private String nama;
     private Color warna;
@@ -11,7 +11,7 @@ public class Account {
     private String iconPath;
     private int jumlah;
 
-    public Account(int id, String nama, Color warna, Image image, String iconPath, int jumlah) {
+    public Akun(int id, String nama, Color warna, Image image, String iconPath, int jumlah) {
         this.id = id;
         this.nama = nama;
         this.warna = warna;
@@ -21,13 +21,13 @@ public class Account {
     }
 
     // TODO: hanya test, nanti refactor!
-    public Account(String nama, int jumlah, Image icon) {
+    public Akun(String nama, int jumlah, Image icon) {
         this.nama = nama;
         this.icon = icon;
         this.jumlah = jumlah;
     }
 
-    public Account() {}
+    public Akun() {}
 
     public int getId() {
         return id;

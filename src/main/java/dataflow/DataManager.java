@@ -4,19 +4,18 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 // import package
+import javafx.collections.ObservableList;
 import javafx.scene.paint.Color;
-import model.Kategori;
-import model.Pengeluaran;
-import model.Pemasukan;
-import model.Transaksi;
-import model.TipeLabel;
+import model.*;
 import helper.Converter;
 
 public class DataManager {
     private static DataManager instance;
-    private ArrayList<Transaksi> dataTransaksi = Database.getInstance().fetchTransaksi();
-    private ArrayList<Kategori> dataKategori = Database.getInstance().fetchKategori();
-    private ArrayList<TipeLabel> dataTipeLabel = Database.getInstance().fetchTipeLabel();
+
+    private ArrayList<Kategori> dataKategori;
+    private ArrayList<Akun> dataAkun;
+    private ArrayList<Transaksi> dataTransaksi;
+    private ArrayList<TipeLabel> dataTipeLabel;
 
     public static DataManager getInstance() {
         if(instance == null) {
@@ -25,7 +24,12 @@ public class DataManager {
         return instance;
     }
 
-    // [1] >> =============== DATA TRANSAKSI MANAGER =============== //
+    // [1] >> =============== DATA AKUN =============== //
+    public void addAkun (Akun data) {
+        dataAkun.add(data);
+    }
+
+    // [1] >> =============== DATA TRANSAKSI =============== //
     public void sortingAscTanggal() {
         this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal));
     }
@@ -55,7 +59,7 @@ public class DataManager {
     }
 
 
-    // [2] >> =============== DATA PEMASUKAN MANAGER =============== //
+    // [2] >> =============== DATA PEMASUKAN =============== //
     public ArrayList<Pemasukan> getPemasukan() {
         ArrayList<Pemasukan> inList = new ArrayList<>();
         for (Transaksi t : dataTransaksi) {
@@ -68,7 +72,7 @@ public class DataManager {
         Database.getInstance().insertTransaksi(t);
     }
 
-    // [3] >> =============== DATA PENGELUARAN MANAGER =============== //
+    // [3] >> =============== DATA PENGELUARAN =============== //
     public ArrayList<Pengeluaran> getPengeluaran() {
         ArrayList<Pengeluaran> outList = new ArrayList<>();
         for (Transaksi t : dataTransaksi) {
@@ -77,7 +81,7 @@ public class DataManager {
         return outList;
     }
 
-    // [4] >> =============== DATA TOTAL JUMLAH MANAGER =============== //
+    // [4] >> =============== DATA TOTAL JUMLAH =============== //
     public int getTotalSaldo() {
         int total = 0;
         for(Transaksi t : dataTransaksi) {
@@ -102,7 +106,7 @@ public class DataManager {
         return total;
     }
 
-    // [5] >> =============== KATEGORI FUNCTION GROUP =============== //
+    // [5] >> =============== KATEGORI FUNCTION =============== //
     public ArrayList<Kategori> copyDataKategori() {
         return new ArrayList<>(dataKategori);
     }
@@ -111,7 +115,11 @@ public class DataManager {
         return dataKategori;
     }
 
-    // =============== TIPE LABEL FUNCTION GROUP =============== //
+    public void setDataKategori(ObservableList<Kategori> data) {
+        dataKategori = new ArrayList<>(DataSeeder.getInstance().seedArrayKategori());
+    }
+
+    // [6] >> =============== TIPE LABEL FUNCTION =============== //
     public void addLabel(String nama, Color warna){
         int newId = Database.getInstance().insertTipeLabel(nama, Converter.getInstance().colorToHex(warna));
         if(newId > 0) {

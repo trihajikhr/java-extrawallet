@@ -4,7 +4,7 @@ public class Template {
     private int id;
     private String tipe;
     private int jumlah;
-    private Account account;
+    private Akun account;
     private Kategori kategori;
     private TipeLabel label;
     private String keterangan;
@@ -12,7 +12,7 @@ public class Template {
     private String status;
 
     // constructor full atribut
-    public Template(int id, String tipe, int jumlah, Account account, Kategori kategori, TipeLabel label, String keterangan, String metodeBayar, String status) {
+    public Template(int id, String tipe, int jumlah, Akun account, Kategori kategori, TipeLabel label, String keterangan, String metodeBayar, String status) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
@@ -25,7 +25,7 @@ public class Template {
     }
 
     // constructor atribut wajib
-    public Template(Account account, int id, String tipe, int jumlah) {
+    public Template(Akun account, int id, String tipe, int jumlah) {
         this.account = account;
         this.id = id;
         this.tipe = tipe;

@@ -1,38 +1,30 @@
 package dataflow;
 
-// import sqlite library
 import java.io.File;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 
-// import logger
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-// import package
 import model.TipeLabel;
-import model.
+import model.Kategori;
+import helper.Converter;
 
-// SINGLETON CLASS!
 public class Database {
-    // logger
     private static final Logger log = LoggerFactory.getLogger(Database.class);
-
-    // instance
     private static Database instance;
 
     private final String JDBC_URL = "jdbc:sqlite:";
     private final String DATABASE_FOLDER = "database";
     private final String DATABASE_NAME = "finance.db";
 
-    // global variabel
     DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     private Connection koneksi;
 
-    // constructor
     private Database () {
         try {
             File folder = new File(DATABASE_FOLDER);
@@ -40,106 +32,58 @@ public class Database {
                 folder.mkdir();
             }
 
-            String querySql;
             this.koneksi = DriverManager.getConnection(JDBC_URL + DATABASE_FOLDER + File.separator + DATABASE_NAME);
 
-            querySql =
-            """
-            CREATE TABLE IF NOT EXISTS "kategori" (
-                "id"	INTEGER NOT NULL UNIQUE,
-                "tipe"	TEXT NOT NULL,
-                "label"	TEXT NOT NULL,
-                PRIMARY KEY("id" AUTOINCREMENT)
-            )
-            """;
+            createTableKategori();
+            DataManager.getInstance().setDataKategori(DataSeeder.getInstance().seedArrayKategori());
+            DataSeeder.getInstance().seedDatabaseKategori();
 
-            try (Statement perintah = koneksi.createStatement()) {
-                perintah.executeUpdate(querySql);
-            }
+            createTableTipeLabel();
 
-            querySql =
-            """
-            CREATE TABLE IF NOT EXISTS "tipelabel" (
-                "id"	INTEGER NOT NULL UNIQUE,
-                "nama"	TEXT NOT NULL UNIQUE,
-                "warna"	TEXT NOT NULL,
-                PRIMARY KEY("id" AUTOINCREMENT)
-            )
-            """;
 
-            try (Statement perintah = koneksi.createStatement()) {
-                perintah.executeUpdate(querySql);
-                log.info("table label terbuat!");
-            }
-
-            String[][] kategoriData = {
-                // IN
-                {"IN", "salary"},
-                {"IN", "allowance"},
-                {"IN", "bonus"},
-                {"IN", "business"},
-                {"IN", "freelance/project"},
-                {"IN", "sales"},
-                {"IN", "dividends"},
-                {"IN", "investment gains"},
-                {"IN", "incoming transfer"},
-                {"IN", "gift"},
-                {"IN", "cashback"},
-                {"IN", "commission"},
-                {"IN", "royalty"},
-                {"IN", "app reward"},
-                {"IN", "others"},
-
-                // OUT
-                {"OUT", "food & beverages"},
-                {"OUT", "daily shopping"},
-                {"OUT", "transportation"},
-                {"OUT", "bills & utilities"},
-                {"OUT", "personal shopping"},
-                {"OUT", "gadgets & electronics"},
-                {"OUT", "health"},
-                {"OUT", "entertainment & lifestyle"},
-                {"OUT", "education & courses"},
-                {"OUT", "financial obligations"},
-                {"OUT", "home & appliances"},
-                {"OUT", "family"},
-                {"OUT", "gift"},
-                {"OUT", "donation"},
-                {"OUT", "others"}
-            };
-
-            try (PreparedStatement ps = koneksi.prepareStatement(
-                    "INSERT OR IGNORE INTO kategori (tipe, label) VALUES (?,?)")) {
-                for (int i = 0; i < kategoriData.length; i++) {
-                    ps.setString(1, kategoriData[i][0]);
-                    ps.setString(2, kategoriData[i][1]);
-                    ps.addBatch();
-                }
-                ps.executeBatch();
-            }
-
-            querySql =
-            """
-            CREATE TABLE IF NOT EXISTS "transaksi" (
-                "id"	INTEGER NOT NULL UNIQUE,
-                "tipe"	TEXT NOT NULL,
-                "jumlah"	INTEGER NOT NULL,
-                "id_kategori"	INTEGER NOT NULL,
-                "tanggal_set"	TEXT NOT NULL,
-                "tanggal_buat"	TEXT NOT NULL,
-                "keterangan"	TEXT,
-                PRIMARY KEY("id" AUTOINCREMENT),
-                CONSTRAINT "fk_kategori" FOREIGN KEY("id_kategori") REFERENCES "kategori"("id")
-            )
-            """;
-
-            try (Statement perintah = koneksi.createStatement()) {
-                perintah.executeUpdate(querySql);
-            }
-
-            log.info("Database finance berhasil dibuat!");
         } catch (SQLException e) {
             log.error("Database gagal!",  e);
+        }
+    }
+
+    // =============== CREATE TABLE =============== //
+    private void createTableKategori() {
+        try (Statement perintah = koneksi.createStatement()){
+            String querySql =
+                """
+                CREATE TABLE IF NOT EXISTS "kategori" (
+                    "id"	INTEGER NOT NULL UNIQUE,
+                    "tipe"	TEXT NOT NULL,
+                    "nama"	TEXT NOT NULL,
+                    "icon_path"	TEXT NOT NULL,
+                    "warna"	TEXT NOT NULL,
+                    PRIMARY KEY("id" AUTOINCREMENT)
+                )
+                """;
+            perintah.executeUpdate(querySql);
+            log.info("table kategori berhasil dibuat!");
+
+        } catch (Exception e) {
+            log.error("table kategori gagal dibuat: " , e);
+        }
+    }
+
+    private void createTableTipeLabel() {
+        try (Statement perintah = koneksi.createStatement()){
+            String querySql =
+                """
+                CREATE TABLE IF NOT EXISTS "tipelabel" (
+                    "id"	INTEGER NOT NULL UNIQUE,
+                    "nama"	TEXT NOT NULL UNIQUE,
+                    "warna"	TEXT NOT NULL,
+                    PRIMARY KEY("id" AUTOINCREMENT)
+                )
+                """;
+            perintah.executeUpdate(querySql);
+            log.info("table tipelabel berhasil dibuat!");
+
+        } catch (SQLException e) {
+            log.error("table tipelabel gagal dibuat: ", e);
         }
     }
 
@@ -155,7 +99,7 @@ public class Database {
         return koneksi;
     }
 
-    // =============== TIPELABEL FUNCTION GROUP =============== //
+    // [3] >> =============== TIPELABEL FUNCTION GROUP =============== //
     public int insertTipeLabel(String nama, String warna) {
         String querySql = "INSERT INTO tipelabel (nama, warna) VALUES (?, ?)";
         try (PreparedStatement perintah = koneksi.prepareStatement(querySql)){
@@ -177,8 +121,6 @@ public class Database {
             return -1;
         }
     }
-
-    // fetching table [tipelabel
     public ArrayList<TipeLabel> fetchTipeLabel() {
         try (Statement stat = koneksi.createStatement()){
             ResultSet rs = stat.executeQuery("SELECT * FROM tipelabel");
@@ -187,21 +129,21 @@ public class Database {
             while(rs.next()) {
                 int id = rs.getInt("id");
                 String nama = rs.getString("nama");
-                String warnaTemp = rs.getString("warna");
+                String hex = rs.getString("warna");
 
-                Color warna = Color.web("#" + warnaTemp);
-
+                Color warna = Converter.getInstance().hexToColor(hex);
                 data.add(new TipeLabel(id, nama, warna));
             }
-
             return data;
+
         } catch (SQLException e) {
+
             log.error("Terjadi masalah: ", e);
             return null;
         }
     }
 
-//     fetching kategori
+    // [4] >> =============== KTEGORI FUNCTION GROUP =============== //
     public ArrayList<Kategori> fetchKategori() {
         try (Statement stat = koneksi.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM kategori");

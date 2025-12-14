@@ -8,17 +8,17 @@ public class Kategori {
     private String tipe;
     private String nama;
     private Image icon;
+    private String iconPath;
     private Color warna;
 
-    public Kategori(int id, String tipe, String label, Image gambar, Color warna) {
+    public Kategori(int id, String tipe, String nama, Image icon, String iconPath, Color warna) {
         this.id = id;
         this.tipe = tipe;
-        this.nama = label;
-        this.icon = gambar;
+        this.nama = nama;
+        this.icon = icon;
+        this.iconPath = iconPath;
         this.warna = warna;
     }
-
-    public Kategori() {}
 
     public int getId() {
         return id;
@@ -50,6 +50,14 @@ public class Kategori {
 
     public void setIcon(Image icon) {
         this.icon = icon;
+    }
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
     }
 
     public Color getWarna() {

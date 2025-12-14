@@ -3,7 +3,7 @@ package model;
 import java.time.LocalDateTime;
 
 public class Pengeluaran extends Transaksi {
-    public Pengeluaran(int id, String tipe, int jumlah, Account account, Kategori kategori, TipeLabel label, LocalDateTime tanggalSet, String keterangan, String metodeTransaksi, String status) {
+    public Pengeluaran(int id, String tipe, int jumlah, Akun account, Kategori kategori, TipeLabel label, LocalDateTime tanggalSet, String keterangan, String metodeTransaksi, String status) {
         super(id, tipe, jumlah, account, kategori, label, tanggalSet, keterangan, metodeTransaksi, status);
     }
 
