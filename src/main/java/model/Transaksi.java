@@ -9,20 +9,20 @@ public class Transaksi {
     protected Account account;
     protected Kategori kategori;
     protected TipeLabel label;
-    protected LocalDateTime tanggalSet;
+    protected LocalDateTime tanggal;
     protected String keterangan;
     protected String metodeTransaksi;
     protected String status;
 
     // contructor full spek
-    public Transaksi(int id, String tipe, int jumlah, Account account, Kategori kategori, TipeLabel label, LocalDateTime tanggalSet, String keterangan, String metodeTransaksi, String status) {
+    public Transaksi(int id, String tipe, int jumlah, Account account, Kategori kategori, TipeLabel label, LocalDateTime tanggal, String keterangan, String metodeTransaksi, String status) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
         this.account = account;
         this.kategori = kategori;
         this.label = label;
-        this.tanggalSet = tanggalSet;
+        this.tanggal = tanggal;
         this.keterangan = keterangan;
         this.metodeTransaksi = metodeTransaksi;
         this.status = status;
@@ -30,12 +30,12 @@ public class Transaksi {
 
     // constructor hanya spek wajib
 
-    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggalSet) {
+    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggal) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
         this.kategori = kategori;
-        this.tanggalSet = tanggalSet;
+        this.tanggal = tanggal;
     }
 
     public Transaksi() {}
@@ -88,12 +88,12 @@ public class Transaksi {
         this.label = label;
     }
 
-    public LocalDateTime getTanggalSet() {
-        return tanggalSet;
+    public LocalDateTime getTanggal() {
+        return tanggal;
     }
 
-    public void setTanggalSet(LocalDateTime tanggalSet) {
-        this.tanggalSet = tanggalSet;
+    public void setTanggal(LocalDateTime tanggal) {
+        this.tanggal = tanggal;
     }
 
     public String getKeterangan() {

@@ -10,6 +10,7 @@ import model.Pengeluaran;
 import model.Pemasukan;
 import model.Transaksi;
 import model.TipeLabel;
+import helper.Converter;
 
 public class DataManager {
     private static DataManager instance;
@@ -24,12 +25,13 @@ public class DataManager {
         return instance;
     }
 
+    // [1] >> =============== DATA TRANSAKSI MANAGER =============== //
     public void sortingAscTanggal() {
-        this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggalSet));
+        this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal));
     }
 
     public void sortingDscTanggal() {
-        this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggalSet).reversed());
+        this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal).reversed());
     }
 
     public void sortingJumlahAscending(){
@@ -40,24 +42,20 @@ public class DataManager {
         this.dataTransaksi.sort(Comparator.comparing(Transaksi::getJumlah).reversed());
     }
 
-    // return copy biar data asli aman
-    public ArrayList<Transaksi> getDataTransaksi() {
+    public ArrayList<Transaksi> copyDataTransaksi() {
         return new ArrayList<>(dataTransaksi);
     }
 
-    public ArrayList<Kategori> getDataKategori() {
-        return new ArrayList<>(dataKategori);
-    }
-
-    // akses data asli
     public ArrayList<Transaksi> coreDataTransaksi(){
         return dataTransaksi;
     }
 
-    public ArrayList<Kategori> coreDataKategori() {
-        return dataKategori;
+    public void removeTransaksi(int id) {
+        Database.getInstance().deleteTransaksi(id);
     }
 
+
+    // [2] >> =============== DATA PEMASUKAN MANAGER =============== //
     public ArrayList<Pemasukan> getPemasukan() {
         ArrayList<Pemasukan> inList = new ArrayList<>();
         for (Transaksi t : dataTransaksi) {
@@ -66,6 +64,11 @@ public class DataManager {
         return inList;
     }
 
+    public void addTransaksi(Transaksi t) {
+        Database.getInstance().insertTransaksi(t);
+    }
+
+    // [3] >> =============== DATA PENGELUARAN MANAGER =============== //
     public ArrayList<Pengeluaran> getPengeluaran() {
         ArrayList<Pengeluaran> outList = new ArrayList<>();
         for (Transaksi t : dataTransaksi) {
@@ -74,14 +77,7 @@ public class DataManager {
         return outList;
     }
 
-    public void addTransaksi(Transaksi t) {
-        Database.getInstance().insertTransaksi(t); // kalau mau langsung save
-    }
-
-    public void removeTransaksi(int id) {
-        Database.getInstance().deleteTransaksi(id);
-    }
-
+    // [4] >> =============== DATA TOTAL JUMLAH MANAGER =============== //
     public int getTotalSaldo() {
         int total = 0;
         for(Transaksi t : dataTransaksi) {
@@ -106,9 +102,18 @@ public class DataManager {
         return total;
     }
 
-    // =============== LABEL FUNCTION GROUP =============== //
+    // [5] >> =============== KATEGORI FUNCTION GROUP =============== //
+    public ArrayList<Kategori> copyDataKategori() {
+        return new ArrayList<>(dataKategori);
+    }
+
+    public ArrayList<Kategori> coreDataKategori() {
+        return dataKategori;
+    }
+
+    // =============== TIPE LABEL FUNCTION GROUP =============== //
     public void addLabel(String nama, Color warna){
-        int newId = Database.getInstance().insertTipeLabel(nama, warna.toString());
+        int newId = Database.getInstance().insertTipeLabel(nama, Converter.getInstance().colorToHex(warna));
         if(newId > 0) {
             dataTipeLabel.add(new TipeLabel(newId, nama, warna));
         }

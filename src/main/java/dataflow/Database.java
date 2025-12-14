@@ -155,7 +155,6 @@ public class Database {
         return koneksi;
     }
 
-    // TODO: SELESAIKAN INI DULU!
     // =============== TIPELABEL FUNCTION GROUP =============== //
     public int insertTipeLabel(String nama, String warna) {
         String querySql = "INSERT INTO tipelabel (nama, warna) VALUES (?, ?)";
@@ -244,7 +243,7 @@ public class Database {
                 LocalDateTime tanggalBuat = LocalDateTime.parse(tanggalBuatTemp, formatter);
 
                 Kategori kategori = null;
-                for(Kategori ktgr : DataManager.getInstance().getDataKategori()){
+                for(Kategori ktgr : DataManager.getInstance().copyDataKategori()){
                     if(ktgr.getId() == idKategori) {
                         kategori = ktgr;
                         break;
@@ -281,7 +280,7 @@ public class Database {
             perintah.setInt(2, trans.getJumlah());
             perintah.setInt(3, trans.getIdKategori());
 
-            String tanggalSet = trans.getTanggalSet().format(formatter);
+            String tanggalSet = trans.getTanggal().format(formatter);
             String tanggalBuat = trans.getTanggalBuat().format(formatter);
 
             perintah.setString(4, tanggalSet);
@@ -290,7 +289,7 @@ public class Database {
 
             perintah.executeUpdate();
             DataManager.getInstance().coreDataTransaksi().add(trans);
-            log.info("Data pertanggal: {} berhasil ditambahkan!", trans.getTanggalSet());
+            log.info("Data pertanggal: {} berhasil ditambahkan!", trans.getTanggal());
 
         } catch (SQLException e) {
             log.error("Data transaksi gagal ditambahkan! ", e);
