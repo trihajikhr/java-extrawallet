@@ -6,14 +6,14 @@ import javafx.scene.paint.Color;
 public class Kategori {
     private int id;
     private String tipe;
-    private String label;
+    private String nama;
     private Image icon;
     private Color warna;
 
     public Kategori(int id, String tipe, String label, Image gambar, Color warna) {
         this.id = id;
         this.tipe = tipe;
-        this.label = label;
+        this.nama = label;
         this.icon = gambar;
         this.warna = warna;
     }
@@ -36,12 +36,12 @@ public class Kategori {
         this.tipe = tipe;
     }
 
-    public String getLabel() {
-        return label;
+    public String getNama() {
+        return nama;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 
     public Image getIcon() {

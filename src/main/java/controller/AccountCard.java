@@ -18,7 +18,7 @@ public class AccountCard extends HBox {
         icon.setFitWidth(32);
         icon.setFitHeight(32);
 
-        Label name = new Label(account.getLabel());
+        Label name = new Label(account.getNama());
         name.getStyleClass().add("account-name");
 
         Label balance = new Label(formatCurrency(account.getJumlah()));

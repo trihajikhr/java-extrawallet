@@ -8,19 +8,18 @@ import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 
 // import logger
+import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 // import package
-import model.Kategori;
-import model.Pengeluaran;
-import model.Pemasukan;
-import model.Transaksi;
+import model.TipeLabel;
+import model.
 
 // SINGLETON CLASS!
 public class Database {
     // logger
-        private static final Logger log = LoggerFactory.getLogger(Database.class);
+    private static final Logger log = LoggerFactory.getLogger(Database.class);
 
     // instance
     private static Database instance;
@@ -56,6 +55,21 @@ public class Database {
 
             try (Statement perintah = koneksi.createStatement()) {
                 perintah.executeUpdate(querySql);
+            }
+
+            querySql =
+            """
+            CREATE TABLE IF NOT EXISTS "tipelabel" (
+                "id"	INTEGER NOT NULL UNIQUE,
+                "nama"	TEXT NOT NULL UNIQUE,
+                "warna"	TEXT NOT NULL,
+                PRIMARY KEY("id" AUTOINCREMENT)
+            )
+            """;
+
+            try (Statement perintah = koneksi.createStatement()) {
+                perintah.executeUpdate(querySql);
+                log.info("table label terbuat!");
             }
 
             String[][] kategoriData = {
@@ -141,116 +155,163 @@ public class Database {
         return koneksi;
     }
 
-    // fetching kategori
-//    public ArrayList<Kategori> fetchKategori() {
-//        try (Statement stat = koneksi.createStatement()) {
-//            ResultSet rs = stat.executeQuery("SELECT * FROM kategori");
-//            ArrayList<Kategori> data = new ArrayList<>();
-//
-//            while(rs.next()) {
-//                int id = rs.getInt("id");
-//                String tipe = rs.getString("tipe");
-//                String label = rs.getString("label");
-//
-//                data.add(new Kategori(id, tipe, label));
-//            }
-//
-//            log.info("Data kategori berhasil difetch!");
-//            return data;
-//
-//        } catch (SQLException e) {
-//            log.error("Gagal fetch data 'kategori'!", e);
-//            return null;
-//        }
-//    }
+    // TODO: SELESAIKAN INI DULU!
+    // =============== TIPELABEL FUNCTION GROUP =============== //
+    public int insertTipeLabel(String nama, String warna) {
+        String querySql = "INSERT INTO tipelabel (nama, warna) VALUES (?, ?)";
+        try (PreparedStatement perintah = koneksi.prepareStatement(querySql)){
 
-    // fetching transaksi
-//    public ArrayList<Transaksi> fetchTransaksi() {
-//        try (Statement stat = koneksi.createStatement()) {
-//            ResultSet rs = stat.executeQuery("SELECT * FROM transaksi");
-//
-//            ArrayList<Transaksi> data = new ArrayList<>();
-//
-//            while(rs.next()) {
-//                int id = rs.getInt("id");
-//                String tipe = rs.getString("tipe");
-//                int jumlah = rs.getInt("jumlah");
-//                int idKategori = rs.getInt("id_kategori");
-//                String tanggalSetTemp = rs.getString("tanggal_set");
-//                String tanggalBuatTemp = rs.getString("tanggal_buat");
-//
-//                LocalDateTime tanggalSet = LocalDateTime.parse(tanggalSetTemp, formatter);
-//                LocalDateTime tanggalBuat = LocalDateTime.parse(tanggalBuatTemp, formatter);
-//
-//                Kategori kategori = null;
-//                for(Kategori ktgr : DataManager.getInstance().getDataKategori()){
-//                    if(ktgr.getId() == idKategori) {
-//                        kategori = ktgr;
-//                        break;
-//                    }
-//                }
-//
-//                if (kategori == null) {
-//                    log.warn("Kategori id={} tidak ditemukan!", idKategori);
-//                    continue; // skip
-//                }
-//
-//                if(tipe.equals("IN")){
-//                    data.add(new Pemasukan(id,tipe,jumlah, kategori, tanggalSet, tanggalBuat));
-//                } else if(tipe.equals("OUT")) {
-//                    data.add(new Pengeluaran(id, tipe, jumlah, kategori, tanggalSet, tanggalBuat));
-//                }
-//            }
-//
-//            log.info("Data transaksi berhasil di fetch!");
-//            return data;
-//
-//        } catch (SQLException e) {
-//            log.error("Gagal fetch data 'transaksi'!", e);
-//            return null;
-//        }
-//    }
+            PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS);
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            int newId = rs.getInt(1);
 
-//    // insert transaksi baru
-//    public void insertTransaksi(Transaksi trans) {
-//        String querySql = "INSERT INTO transaksi (tipe, jumlah, id_kategori, tanggal_set, tanggal_buat, keterangan) VALUES (?,?,?,?,?,?)";
-//
-//        try (PreparedStatement perintah = koneksi.prepareStatement(querySql)){
-//            perintah.setString(1, trans.getTipe());
-//            perintah.setInt(2, trans.getJumlah());
-//            perintah.setInt(3, trans.getIdKategori());
-//
-//            String tanggalSet = trans.getTanggalSet().format(formatter);
-//            String tanggalBuat = trans.getTanggalBuat().format(formatter);
-//
-//            perintah.setString(4, tanggalSet);
-//            perintah.setString(5, tanggalBuat);
-//            perintah.setString(6, trans.getKeterangan());
-//
-//            perintah.executeUpdate();
-//            DataManager.getInstance().coreDataTransaksi().add(trans);
-//            log.info("Data pertanggal: {} berhasil ditambahkan!", trans.getTanggalSet());
-//
-//        } catch (SQLException e) {
-//            log.error("Data transaksi gagal ditambahkan! ", e);
-//        }
-//    }
+            perintah.setString(1, nama);
+            perintah.setString(2, warna);
 
-//    // delete transaksi [JIKA PERLU ya..]
-//    public void deleteTransaksi(int id) {
-//        String querySql = "DELETE FROM transaksi WHERE id = ?";
-//
-//        try (PreparedStatement perintah = Database.getInstance().koneksi.prepareStatement(querySql)){
-//            perintah.setInt(1, id);
-//            int affectedRows = perintah.executeUpdate();
-//
-//            if (affectedRows > 0) {
-//                DataManager.getInstance().coreDataTransaksi().removeIf(t -> t.getId() == id);
-//            }
-//            log.info("Data transaksi berhasil dihapus!");
-//        } catch (Exception e) {
-//            log.error("Data transaksi gagal dihapus!", e);
-//
-//        }
-//    }
+            perintah.executeUpdate();
+            log.info("tipe label berhasil ditambahkan!");
+            return newId;
+
+        } catch (SQLException e) {
+            log.error("tipe label gagal dibuat!");
+            return -1;
+        }
+    }
+
+    // fetching table [tipelabel
+    public ArrayList<TipeLabel> fetchTipeLabel() {
+        try (Statement stat = koneksi.createStatement()){
+            ResultSet rs = stat.executeQuery("SELECT * FROM tipelabel");
+            ArrayList<TipeLabel> data = new ArrayList<>();
+
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String nama = rs.getString("nama");
+                String warnaTemp = rs.getString("warna");
+
+                Color warna = Color.web("#" + warnaTemp);
+
+                data.add(new TipeLabel(id, nama, warna));
+            }
+
+            return data;
+        } catch (SQLException e) {
+            log.error("Terjadi masalah: ", e);
+            return null;
+        }
+    }
+
+//     fetching kategori
+    public ArrayList<Kategori> fetchKategori() {
+        try (Statement stat = koneksi.createStatement()) {
+            ResultSet rs = stat.executeQuery("SELECT * FROM kategori");
+            ArrayList<Kategori> data = new ArrayList<>();
+
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String tipe = rs.getString("tipe");
+                String label = rs.getString("label");
+
+                data.add(new Kategori(id, tipe, label));
+            }
+
+            log.info("Data kategori berhasil difetch!");
+            return data;
+
+        } catch (SQLException e) {
+            log.error("Gagal fetch data 'kategori'!", e);
+            return null;
+        }
+    }
+
+//     fetching transaksi
+    public ArrayList<Transaksi> fetchTransaksi() {
+        try (Statement stat = koneksi.createStatement()) {
+            ResultSet rs = stat.executeQuery("SELECT * FROM transaksi");
+
+            ArrayList<Transaksi> data = new ArrayList<>();
+
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String tipe = rs.getString("tipe");
+                int jumlah = rs.getInt("jumlah");
+                int idKategori = rs.getInt("id_kategori");
+                String tanggalSetTemp = rs.getString("tanggal_set");
+                String tanggalBuatTemp = rs.getString("tanggal_buat");
+
+                LocalDateTime tanggalSet = LocalDateTime.parse(tanggalSetTemp, formatter);
+                LocalDateTime tanggalBuat = LocalDateTime.parse(tanggalBuatTemp, formatter);
+
+                Kategori kategori = null;
+                for(Kategori ktgr : DataManager.getInstance().getDataKategori()){
+                    if(ktgr.getId() == idKategori) {
+                        kategori = ktgr;
+                        break;
+                    }
+                }
+
+                if (kategori == null) {
+                    log.warn("Kategori id={} tidak ditemukan!", idKategori);
+                    continue; // skip
+                }
+
+                if(tipe.equals("IN")){
+                    data.add(new Pemasukan(id,tipe,jumlah, kategori, tanggalSet, tanggalBuat));
+                } else if(tipe.equals("OUT")) {
+                    data.add(new Pengeluaran(id, tipe, jumlah, kategori, tanggalSet, tanggalBuat));
+                }
+            }
+
+            log.info("Data transaksi berhasil di fetch!");
+            return data;
+
+        } catch (SQLException e) {
+            log.error("Gagal fetch data 'transaksi'!", e);
+            return null;
+        }
+    }
+
+    // insert transaksi baru
+    public void insertTransaksi(Transaksi trans) {
+        String querySql = "INSERT INTO transaksi (tipe, jumlah, id_kategori, tanggal_set, tanggal_buat, keterangan) VALUES (?,?,?,?,?,?)";
+
+        try (PreparedStatement perintah = koneksi.prepareStatement(querySql)){
+            perintah.setString(1, trans.getTipe());
+            perintah.setInt(2, trans.getJumlah());
+            perintah.setInt(3, trans.getIdKategori());
+
+            String tanggalSet = trans.getTanggalSet().format(formatter);
+            String tanggalBuat = trans.getTanggalBuat().format(formatter);
+
+            perintah.setString(4, tanggalSet);
+            perintah.setString(5, tanggalBuat);
+            perintah.setString(6, trans.getKeterangan());
+
+            perintah.executeUpdate();
+            DataManager.getInstance().coreDataTransaksi().add(trans);
+            log.info("Data pertanggal: {} berhasil ditambahkan!", trans.getTanggalSet());
+
+        } catch (SQLException e) {
+            log.error("Data transaksi gagal ditambahkan! ", e);
+        }
+    }
+
+    // delete transaksi [JIKA PERLU ya..]
+    public void deleteTransaksi(int id) {
+        String querySql = "DELETE FROM transaksi WHERE id = ?";
+
+        try (PreparedStatement perintah = Database.getInstance().koneksi.prepareStatement(querySql)){
+            perintah.setInt(1, id);
+            int affectedRows = perintah.executeUpdate();
+
+            if (affectedRows > 0) {
+                DataManager.getInstance().coreDataTransaksi().removeIf(t -> t.getId() == id);
+            }
+            log.info("Data transaksi berhasil dihapus!");
+        } catch (Exception e) {
+            log.error("Data transaksi gagal dihapus!", e);
+
+        }
+    }
 }

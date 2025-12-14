@@ -5,22 +5,24 @@ import javafx.scene.image.Image;
 
 public class Account {
     private int id;
-    private String label;
+    private String nama;
     private Color warna;
     private Image icon;
+    private String iconPath;
     private int jumlah;
 
-    public Account(int id, String label, Color warna, Image image, int jumlah) {
+    public Account(int id, String nama, Color warna, Image image, String iconPath, int jumlah) {
         this.id = id;
-        this.label = label;
+        this.nama = nama;
         this.warna = warna;
         this.icon = image;
+        this.iconPath = iconPath;
         this.jumlah = jumlah;
     }
 
     // TODO: hanya test, nanti refactor!
-    public Account(String label, int jumlah, Image icon) {
-        this.label = label;
+    public Account(String nama, int jumlah, Image icon) {
+        this.nama = nama;
         this.icon = icon;
         this.jumlah = jumlah;
     }
@@ -35,12 +37,12 @@ public class Account {
         this.id = id;
     }
 
-    public String getLabel() {
-        return label;
+    public String getNama() {
+        return nama;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setNama(String nama) {
+        this.nama = nama;
     }
 
     public Color getWarna() {
@@ -57,6 +59,14 @@ public class Account {
 
     public void setIcon(Image icon) {
         this.icon = icon;
+    }
+
+    public String getIconPath() {
+        return iconPath;
+    }
+
+    public void setIconPath(String iconPath) {
+        this.iconPath = iconPath;
     }
 
     public int getJumlah() {

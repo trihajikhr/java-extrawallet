@@ -412,7 +412,7 @@ public class TransactionControl implements Initializable {
                 ));
 
                 // teks
-                Label label = new Label(item.getLabel());
+                Label label = new Label(item.getNama());
                 label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
                 // gabung
