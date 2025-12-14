@@ -2,18 +2,18 @@ package model;
 
 import javafx.scene.paint.Color;
 
-public class Label {
+public class TipeLabel {
     private int id;
     private String label;
     private Color color;
 
-    public Label(int id, String label, Color color) {
+    public TipeLabel(int id, String label, Color color) {
         this.id = id;
         this.label = label;
         this.color = color;
     }
 
-    public Label() {}
+    public TipeLabel() {}
 
     public int getId() {
         return id;

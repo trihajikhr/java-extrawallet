@@ -6,13 +6,13 @@ public class Template {
     private int jumlah;
     private Account account;
     private Kategori kategori;
-    private Label label;
+    private TipeLabel label;
     private String keterangan;
     private String metodeBayar;
     private String status;
 
     // constructor full atribut
-    public Template(int id, String tipe, int jumlah, Account account, Kategori kategori, Label label, String keterangan, String metodeBayar, String status) {
+    public Template(int id, String tipe, int jumlah, Account account, Kategori kategori, TipeLabel label, String keterangan, String metodeBayar, String status) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;

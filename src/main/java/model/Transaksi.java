@@ -8,14 +8,14 @@ public class Transaksi {
     protected int jumlah;
     protected Account account;
     protected Kategori kategori;
-    protected Label label;
+    protected TipeLabel label;
     protected LocalDateTime tanggalSet;
     protected String keterangan;
     protected String metodeTransaksi;
     protected String status;
 
     // contructor full spek
-    public Transaksi(int id, String tipe, int jumlah, Account account, Kategori kategori, Label label, LocalDateTime tanggalSet, String keterangan, String metodeTransaksi, String status) {
+    public Transaksi(int id, String tipe, int jumlah, Account account, Kategori kategori, TipeLabel label, LocalDateTime tanggalSet, String keterangan, String metodeTransaksi, String status) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
@@ -80,11 +80,11 @@ public class Transaksi {
         this.kategori = kategori;
     }
 
-    public Label getLabel() {
+    public TipeLabel getLabel() {
         return label;
     }
 
-    public void setLabel(Label label) {
+    public void setLabel(TipeLabel label) {
         this.label = label;
     }
 
