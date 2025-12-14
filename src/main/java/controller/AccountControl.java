@@ -4,6 +4,8 @@ import dataflow.DataManager;
 import dataflow.DataSeeder;
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
+import dataflow.basedata.CurrencyItem;
+import helper.IOLogic;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -13,9 +15,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -45,6 +45,18 @@ public class AccountControl implements Initializable {
     @FXML
     private ComboBox<ColorItem> colorComboBox;
 
+    @FXML
+    private ComboBox<CurrencyItem> currencyComboBox;
+
+    @FXML
+    private TextField accountText;
+
+    @FXML
+    private Spinner<Integer> accountSpinner;
+
+    @FXML
+    private Button submitButton;
+
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -73,11 +85,16 @@ public class AccountControl implements Initializable {
         hideAnim.play();
     }
 
+    private void buttonIsSubmitted() {
+
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("Popup account terbuka!");
         colorComboBox.setItems(DataManager.getInstance().getDataColor());
         accountComboBox.setItems(DataManager.getInstance().getDataAccountItem());
+        currencyComboBox.setItems(DataManager.getInstance().getDataCurrency());
 
         colorComboBox.setCellFactory(list -> new ListCell<>() {
             @Override
@@ -101,7 +118,7 @@ public class AccountControl implements Initializable {
         colorComboBox.setButtonCell(colorComboBox.getCellFactory().call(null));
 
         for (AccountItem item : accountComboBox.getItems()) {
-            item.setWarna(Color.WHITE);
+            item.setWarna(Color.GREY);
         }
 
         colorComboBox.valueProperty().addListener((obs, oldColor, newColor) -> {
@@ -111,7 +128,6 @@ public class AccountControl implements Initializable {
                 item.setWarna(newColor.getWarna());
             }
         });
-
 
         accountComboBox.setCellFactory(list -> new ListCell<>() {
             @Override
@@ -157,5 +173,19 @@ public class AccountControl implements Initializable {
 
         // INI PENTING BIAR YANG TERPILIH JUGA CANTIK
         accountComboBox.setButtonCell(accountComboBox.getCellFactory().call(null));
+
+        currencyComboBox.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(CurrencyItem c, boolean empty) {
+                super.updateItem(c, empty);
+                setText(empty || c == null
+                        ? null
+//                        : c.getCode() + " — " + c.getName());
+                          : c.getCode());
+            }
+        });
+        currencyComboBox.setButtonCell(currencyComboBox.getCellFactory().call(null));
+
+        IOLogic.makeIntegerOnly(accountSpinner, 0, 2_147_483_647, 0);
     }
 }

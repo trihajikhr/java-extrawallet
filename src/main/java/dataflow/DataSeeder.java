@@ -2,6 +2,7 @@ package dataflow;
 
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
+import dataflow.basedata.CurrencyItem;
 import helper.Converter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableArray;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Currency;
 import java.util.Objects;
 
 import model.Kategori;
@@ -384,5 +386,13 @@ public class DataSeeder {
                 )
         );
         log.info("data jenis akun berhasil dibuat!");
+    }
+
+    public void currencySeeder() {
+        DataManager.getInstance().getDataCurrency().setAll(
+                new CurrencyItem("IDR", "Rupiah", "Rp", 0),
+                new CurrencyItem("USD", "US Dollar", "$", 2),
+                new CurrencyItem("EUR", "Euro", "€", 2)
+        );
     }
 }

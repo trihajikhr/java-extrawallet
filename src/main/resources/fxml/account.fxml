@@ -73,8 +73,8 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <Spinner editable="true" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" promptText="IDR" styleClass="modern-btn" />
+                                    <Spinner fx:id="accountSpinner" editable="true" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="currencyComboBox" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="80.0" styleClass="modern-btn" />
                                  </children>
                               </HBox>
                            </children>
@@ -104,7 +104,7 @@
                         </VBox>
                         <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" GridPane.rowIndex="5">
                            <children>
-                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" text="Add Account" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="submitButton" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" text="Add Account" VBox.vgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -116,7 +116,7 @@
                         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
                            <children>
                               <Label text="Name *" />
-                              <TextField maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Account name" />
+                              <TextField fx:id="accountText" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Account name" />
                            </children>
                         </VBox>
                         <VBox layoutX="10.0" layoutY="164.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.rowIndex="1">

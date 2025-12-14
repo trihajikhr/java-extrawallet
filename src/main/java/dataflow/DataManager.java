@@ -5,9 +5,9 @@ import java.util.Comparator;
 
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
+import dataflow.basedata.CurrencyItem;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
 import model.*;
 
 public class DataManager {
@@ -21,6 +21,7 @@ public class DataManager {
     private ObservableList<String> dataStatusType = FXCollections.observableArrayList();
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
+    private ObservableList<CurrencyItem> dataCurrency = FXCollections.observableArrayList();
 
     private DataManager() {}
 
@@ -48,6 +49,7 @@ public class DataManager {
         dataStatusType = DataSeeder.getInstance().seedStatusData();
         DataSeeder.getInstance().colorSeeder();
         DataSeeder.getInstance().accountItemSeeder();
+        DataSeeder.getInstance().currencySeeder();
     }
 
     public ObservableList<ColorItem> getDataColor() {
@@ -56,6 +58,10 @@ public class DataManager {
 
     public ObservableList<AccountItem> getDataAccountItem() {
         return dataAccountItem;
+    }
+
+    public ObservableList<CurrencyItem> getDataCurrency() {
+        return dataCurrency;
     }
 
     // [1] >> =============== DATA AKUN =============== //
