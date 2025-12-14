@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
+import helper.Popup;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import model.*;
@@ -55,6 +56,7 @@ public class Database {
             }
 
             createTableKategori();
+            createTableMataUang();
             createTableTipeLabel();
             createTableAkun();
             createTableTransaksi();
@@ -87,6 +89,28 @@ public class Database {
         }
     }
 
+    private void createTableMataUang() {
+        try(Statement perintah = koneksi.createStatement()) {
+            String querySql =
+            """
+            CREATE TABLE IF NOT EXISTS "mata_uang" (
+                "id"	INTEGER NOT NULL UNIQUE,
+                "kode"	TEXT NOT NULL,
+                "nama"	TEXT NOT NULL,
+                "simbol"	TEXT NOT NULL,
+                "desimal"	INTEGER NOT NULL,
+                PRIMARY KEY("id" AUTOINCREMENT)
+            )
+            """;
+
+            perintah.executeUpdate(querySql);
+            log.info("table mata_uang berhasil dibuat!");
+
+        } catch (SQLException e){
+            log.error("table mata_uang gagal dibuat: ", e);
+        }
+    }
+
     private void createTableTipeLabel() {
         try (Statement perintah = koneksi.createStatement()){
             String querySql =
@@ -116,7 +140,9 @@ public class Database {
                 "warna"	TEXT NOT NULL,
                 "icon_path"	TEXT NOT NULL,
                 "jumlah"	INTEGER NOT NULL,
-                PRIMARY KEY("id" AUTOINCREMENT)
+                "id_mata_uang"	INTEGER NOT NULL,
+                PRIMARY KEY("id" AUTOINCREMENT),
+                CONSTRAINT "akun_mata_uang" FOREIGN KEY("id_mata_uang") REFERENCES "mata_uang"("id")
             )
             """;
             perintah.executeUpdate(querySql);
@@ -199,7 +225,7 @@ public class Database {
             int newId = rs.getInt(1);
 
             perintah.setString(1, tipelabel.getNama());
-            perintah.setString(2, Converter.getInstance().colorToHex(tipelabel.getWarna()));
+            perintah.setString(2, Converter.colorToHex(tipelabel.getWarna()));
 
             perintah.executeUpdate();
             log.info("tipe label berhasil ditambahkan!");
@@ -221,7 +247,7 @@ public class Database {
                 String nama = rs.getString("nama");
                 String hex = rs.getString("warna");
 
-                Color warna = Converter.getInstance().hexToColor(hex);
+                Color warna = Converter.hexToColor(hex);
                 data.add(new TipeLabel(id, nama, warna));
             }
             log.info("fetch data tipelabel berhasil!");
@@ -246,7 +272,7 @@ public class Database {
                 String tipe = rs.getString("tipe");
                 String nama = rs.getString("nama");
                 String iconPath = rs.getString("icon_path");
-                Color warna = Converter.getInstance().hexToColor(rs.getString("warna"));
+                Color warna = Converter.hexToColor(rs.getString("warna"));
 
                 data.add(
                     new Kategori (
@@ -351,29 +377,53 @@ public class Database {
                 "(tipe, jumlah, id_akun, id_kategori, id_tipelabel, tanggal, keterangan, metode_transaksi, status) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)";
 
-        try (PreparedStatement perintah = koneksi.prepareStatement(querySql)){
+        try {
+            koneksi.setAutoCommit(false); // mulai
+            try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, trans.getTipe());
+                ps.setInt(2, trans.getJumlah());
+                ps.setInt(3, trans.getAkun().getId());
+                ps.setInt(4, trans.getKategori().getId());
+                ps.setInt(5, trans.getTipelabel().getId());
+                ps.setString(6, trans.getTanggal().format(formatter));
+                ps.setString(7, trans.getKeterangan());
+                ps.setString(8, trans.getMetodeTransaksi());
+                ps.setString(9, trans.getStatus());
 
-            PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS);
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            int newId = rs.getInt(1);
+                int affected = ps.executeUpdate();
+                if (affected == 0) {
+                    koneksi.rollback();
+                    return -1;
+                }
 
-            perintah.setString(1, trans.getTipe());
-            perintah.setInt(2, trans.getJumlah());
-            perintah.setInt(3, trans.getAkun().getId());
-            perintah.setInt(4, trans.getKategori().getId());
-            perintah.setInt(5, trans.getTipelabel().getId());
-            perintah.setString(6, trans.getTanggal().format(formatter));
-            perintah.setString(7, trans.getKeterangan());
-            perintah.setString(8, trans.getMetodeTransaksi());
-            perintah.setString(9, trans.getStatus());
-            perintah.executeUpdate();
-            log.info("data transaksi pertanggal: {} berhasil ditambahkan!", trans.getTanggal());
-            return newId;
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        int newId = rs.getInt(1);
+                        koneksi.commit(); // aman
+                        return newId;
+                    }
+                }
+
+                // proteksi gagal
+                koneksi.rollback(); // batal insert
+                return -1;
+            }
 
         } catch (SQLException e) {
-            log.error("Data transaksi gagal ditambahkan! ", e);
+            try {
+                koneksi.rollback();
+            } catch (SQLException ex) {
+                log.error("rollback database gagal", ex);
+            }
+            log.error("insert akun gagal", e);
             return -1;
+
+        } finally {
+            try {
+                koneksi.setAutoCommit(true); // balikin normal
+            } catch (SQLException e) {
+                log.error("gagal reset autoCommit", e);
+            }
         }
     }
 
@@ -390,6 +440,56 @@ public class Database {
             log.info("Data transaksi berhasil dihapus!");
         } catch (Exception e) {
             log.error("Data transaksi gagal dihapus!", e);
+        }
+    }
+
+    // [7] >=== manipulasi data akun
+    public int insertAkun(Akun dataAkun) {
+        String sql = """
+        INSERT INTO akun (nama, warna, icon_path, jumlah, id_mata_uang)
+        VALUES (?, ?, ?, ?, ?)
+        """;
+
+        try {
+            koneksi.setAutoCommit(false); // mulai
+
+            try (PreparedStatement ps = koneksi.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+                ps.setString(1, dataAkun.getNama());
+                ps.setString(2, Converter.colorToHex(dataAkun.getWarna()));
+                ps.setString(3, dataAkun.getIconPath());
+                ps.setInt(4, dataAkun.getJumlah());
+                ps.setInt(5, dataAkun.getMataUang().getId());
+
+                if (ps.executeUpdate() == 0) {
+                    throw new SQLException("Insert tidak mengubah data");
+                }
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (!rs.next()) {
+                        throw new SQLException("Generated key tidak ditemukan");
+                    }
+
+                    int newId = rs.getInt(1);
+                    koneksi.commit();
+                    return newId;
+                }
+            }
+        } catch (SQLException e) {
+            try {
+                koneksi.rollback();
+            } catch (SQLException ex) {
+                log.error("rollback database gagal", ex);
+            }
+            log.error("insert akun gagal", e);
+            return -1;
+
+        } finally {
+            try {
+                koneksi.setAutoCommit(true);
+            } catch (SQLException e) {
+                log.error("gagal reset autoCommit", e);
+            }
         }
     }
 }

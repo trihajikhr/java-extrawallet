@@ -1,0 +1,28 @@
+/* Tombol modern putih tanpa aturan ukuran */
+.submit-button {
+    -fx-background-color: #01AA71;
+    -fx-text-fill: #FFFFFF;
+
+    /* Hilangkan gaya jadul */
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    /* bentuk modern menggunakan radius*/
+    -fx-background-radius: 4;
+
+    /* Shadow kecil yang tidak mengubah size */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 0);
+}
+
+/* Hover → sedikit lebih gelap */
+.submit-button:hover {
+    -fx-background-color: #019964;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.22), 10, 0, 0, 0);
+}
+
+/* Pressed → lebih gelap lagi */
+.submit-button:pressed {
+    -fx-background-color: #018255;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 6, 0, 0, 0);
+}

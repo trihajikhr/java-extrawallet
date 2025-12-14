@@ -5,23 +5,27 @@ import java.util.Comparator;
 
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
-import dataflow.basedata.CurrencyItem;
+import helper.Popup;
+import model.MataUang;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DataManager {
+    private static final Logger log = LoggerFactory.getLogger(DataManager.class);
     private static DataManager instance;
 
     private ArrayList<Kategori> dataKategori;
-    private ArrayList<Akun> dataAkun;
-    private ArrayList<Transaksi> dataTransaksi;
-    private ArrayList<TipeLabel> dataTipeLabel;
+    private ArrayList<Akun> dataAkun = new ArrayList<>();
+    private ArrayList<Transaksi> dataTransaksi = new ArrayList<>();
+    private ArrayList<TipeLabel> dataTipeLabel = new ArrayList<>();
     private ObservableList<String> dataPeymentType = FXCollections.observableArrayList();
     private ObservableList<String> dataStatusType = FXCollections.observableArrayList();
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
-    private ObservableList<CurrencyItem> dataCurrency = FXCollections.observableArrayList();
+    private ObservableList<MataUang> dataCurrency = FXCollections.observableArrayList();
 
     private DataManager() {}
 
@@ -47,9 +51,9 @@ public class DataManager {
     public void initBaseData() {
         dataPeymentType = DataSeeder.getInstance().seedTypeData();
         dataStatusType = DataSeeder.getInstance().seedStatusData();
-        DataSeeder.getInstance().colorSeeder();
-        DataSeeder.getInstance().accountItemSeeder();
-        DataSeeder.getInstance().currencySeeder();
+        DataSeeder.getInstance().seedColor();
+        DataSeeder.getInstance().seedAccountItem();
+        DataSeeder.getInstance().seedCurrency();
     }
 
     public ObservableList<ColorItem> getDataColor() {
@@ -60,13 +64,21 @@ public class DataManager {
         return dataAccountItem;
     }
 
-    public ObservableList<CurrencyItem> getDataCurrency() {
+    public ObservableList<MataUang> getDataCurrency() {
         return dataCurrency;
     }
 
     // [1] >> =============== DATA AKUN =============== //
     public void addAkun (Akun data) {
-        dataAkun.add(data);
+        int newId = Database.getInstance().insertAkun(data);
+        if(newId > 0) {
+            data.setId(newId);
+            dataAkun.add(data);
+            log.info("akun baru [{}] berhasil dibuat!", data.getNama());
+            Popup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat");
+        } else {
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+        }
     }
 
     public ArrayList<Akun> coreDataAkun() {
@@ -163,7 +175,7 @@ public class DataManager {
     }
 
     public void setDataKategori() {
-        dataKategori = new ArrayList<>(DataSeeder.getInstance().seedArrayKategori());
+        dataKategori = new ArrayList<>(DataSeeder.getInstance().seedKategori());
     }
 
     // [6] >> =============== TIPE LABEL FUNCTION =============== //

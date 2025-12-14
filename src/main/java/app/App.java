@@ -27,8 +27,9 @@ public class App extends Application {
         // buat instance [MENJALANKAN PROGRAM SETUP AWAL DISINI!]
         Database.getInstance();
         DataManager.getInstance().setDataKategori();
-        DataSeeder.getInstance().seedDatabaseKategori();
         DataManager.getInstance().initBaseData();
+        DataSeeder.getInstance().seedDatabaseKategori();
+        DataSeeder.getInstance().seedDatabaseCurrency();
 
         // load tampilan
         stage.show();

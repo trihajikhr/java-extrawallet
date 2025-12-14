@@ -1,16 +1,16 @@
 package controller;
 
 import dataflow.DataManager;
-import dataflow.DataSeeder;
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
-import dataflow.basedata.CurrencyItem;
+import model.MataUang;
 import helper.IOLogic;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -26,6 +26,7 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import model.Akun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,13 +47,13 @@ public class AccountControl implements Initializable {
     private ComboBox<ColorItem> colorComboBox;
 
     @FXML
-    private ComboBox<CurrencyItem> currencyComboBox;
+    private ComboBox<MataUang> currencyComboBox;
 
     @FXML
-    private TextField accountText;
+    private TextField accountName;
 
     @FXML
-    private Spinner<Integer> accountSpinner;
+    private Spinner<Integer> amountSpinner;
 
     @FXML
     private Button submitButton;
@@ -85,8 +86,52 @@ public class AccountControl implements Initializable {
         hideAnim.play();
     }
 
-    private void buttonIsSubmitted() {
+    private void isFormComplete() {
+        BooleanBinding nameValid =
+                Bindings.createBooleanBinding(
+                        () -> !accountName.getText().trim().isEmpty(),
+                        accountName.textProperty()
+                );
 
+        BooleanBinding accountValid = accountComboBox.valueProperty().isNotNull();
+        BooleanBinding colorValid = colorComboBox.valueProperty().isNotNull();
+        BooleanBinding currencyValid = currencyComboBox.valueProperty().isNotNull();
+        BooleanBinding amountValid =
+                Bindings.createBooleanBinding(
+                        () -> amountSpinner.getValue() != null && amountSpinner.getValue() >= 0,
+                        amountSpinner.valueProperty()
+                );
+
+        BooleanBinding formValid =
+                nameValid
+                        .and(accountValid)
+                        .and(colorValid)
+                        .and(currencyValid)
+                        .and(amountValid);
+
+        submitButton.disableProperty().bind(formValid.not());
+    }
+
+    @FXML
+    private void handleSubmitAction() {
+        String name = accountName.getText();
+        ColorItem warna = colorComboBox.getValue();
+        AccountItem accountItem = accountComboBox.getValue();
+        int jumlah = amountSpinner.getValue();
+        MataUang currencyItem = currencyComboBox.getValue();
+
+        Akun akunBaru = new Akun(
+                0,
+                name,
+                warna.getWarna(),
+                accountItem.getIcon(),
+                accountItem.getIconPath(),
+                jumlah,
+                currencyItem
+        );
+
+        DataManager.getInstance().addAkun(akunBaru);
+        closePopup();
     }
 
     @Override
@@ -95,6 +140,8 @@ public class AccountControl implements Initializable {
         colorComboBox.setItems(DataManager.getInstance().getDataColor());
         accountComboBox.setItems(DataManager.getInstance().getDataAccountItem());
         currencyComboBox.setItems(DataManager.getInstance().getDataCurrency());
+
+        isFormComplete();
 
         colorComboBox.setCellFactory(list -> new ListCell<>() {
             @Override
@@ -176,16 +223,16 @@ public class AccountControl implements Initializable {
 
         currencyComboBox.setCellFactory(cb -> new ListCell<>() {
             @Override
-            protected void updateItem(CurrencyItem c, boolean empty) {
+            protected void updateItem(MataUang c, boolean empty) {
                 super.updateItem(c, empty);
                 setText(empty || c == null
                         ? null
 //                        : c.getCode() + " — " + c.getName());
-                          : c.getCode());
+                          : c.getKode());
             }
         });
         currencyComboBox.setButtonCell(currencyComboBox.getCellFactory().call(null));
 
-        IOLogic.makeIntegerOnly(accountSpinner, 0, 2_147_483_647, 0);
+        IOLogic.makeIntegerOnly(amountSpinner, 0, 2_147_483_647, 0);
     }
 }

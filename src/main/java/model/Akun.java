@@ -10,14 +10,16 @@ public class Akun {
     private Image icon;
     private String iconPath;
     private int jumlah;
+    private MataUang mataUang;
 
-    public Akun(int id, String nama, Color warna, Image image, String iconPath, int jumlah) {
+    public Akun(int id, String nama, Color warna, Image image, String iconPath, int jumlah, MataUang mataUang) {
         this.id = id;
         this.nama = nama;
         this.warna = warna;
         this.icon = image;
         this.iconPath = iconPath;
         this.jumlah = jumlah;
+        this.mataUang = mataUang;
     }
 
     // TODO: hanya test, nanti refactor!
@@ -75,5 +77,13 @@ public class Akun {
 
     public void setJumlah(int jumlah) {
         this.jumlah = jumlah;
+    }
+
+    public MataUang getMataUang() {
+        return mataUang;
+    }
+
+    public void setMataUang(MataUang mataUang) {
+        this.mataUang = mataUang;
     }
 }

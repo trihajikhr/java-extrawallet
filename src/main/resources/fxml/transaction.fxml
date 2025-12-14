@@ -259,8 +259,8 @@
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" GridPane.rowIndex="8">
                            <children>
-                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" text="Add record" VBox.vgrow="ALWAYS" />
-                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
+                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add record" VBox.vgrow="ALWAYS" />
+                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />

@@ -2,12 +2,10 @@ package dataflow;
 
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
-import dataflow.basedata.CurrencyItem;
+import model.MataUang;
 import helper.Converter;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableArray;
 import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import org.slf4j.Logger;
@@ -15,7 +13,6 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Currency;
 import java.util.Objects;
 
 import model.Kategori;
@@ -35,7 +32,7 @@ public class DataSeeder {
         return instance;
     }
 
-    public ObservableList<Kategori> seedArrayKategori() {
+    public ObservableList<Kategori> seedKategori() {
         ObservableList<Kategori> data = FXCollections.observableArrayList();
 
         try {
@@ -303,7 +300,7 @@ public class DataSeeder {
                 stat.setString(2, ktr.getTipe());
                 stat.setString(3, ktr.getNama());
                 stat.setString(4, ktr.getIconPath());
-                stat.setString(5, Converter.getInstance().colorToHex(ktr.getWarna()));
+                stat.setString(5, Converter.colorToHex(ktr.getWarna()));
 
                 stat.executeUpdate();
             }
@@ -340,7 +337,7 @@ public class DataSeeder {
         return data;
     }
 
-    public void colorSeeder() {
+    public void seedColor() {
         DataManager.getInstance().getDataColor().setAll(
                 new ColorItem("Berry Red", Color.web("#D0006F")),
                 new ColorItem("Red", Color.web("#FF0000")),
@@ -366,33 +363,59 @@ public class DataSeeder {
         log.info("data warna berhasil dibuat!");
     }
 
-    public void accountItemSeeder() {
+    public void seedAccountItem() {
         DataManager.getInstance().getDataAccountItem().setAll(
                 new AccountItem(
                         "General",
-                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/general.png")).toString())
+                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/general.png")).toString()),
+                        "/account-type/general.png"
                 ),
                 new AccountItem(
                         "Cash",
-                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/cash.png")).toString())
+                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/cash.png")).toString()),
+                        "/account-type/cash.png"
                 ),
                 new AccountItem(
                         "Savings",
-                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/savings.png")).toString())
+                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/savings.png")).toString()),
+                        "/account-type/savings.png"
                 ),
                 new AccountItem(
                         "Credit",
-                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/credit.png")).toString())
+                        new Image(Objects.requireNonNull(getClass().getResource("/account-type/credit.png")).toString()),
+                        "/account-type/credit.png"
                 )
         );
         log.info("data jenis akun berhasil dibuat!");
     }
 
-    public void currencySeeder() {
+    public void seedCurrency() {
         DataManager.getInstance().getDataCurrency().setAll(
-                new CurrencyItem("IDR", "Rupiah", "Rp", 0),
-                new CurrencyItem("USD", "US Dollar", "$", 2),
-                new CurrencyItem("EUR", "Euro", "€", 2)
+                new MataUang(1, "IDR", "Rupiah", "Rp", 0),
+                new MataUang(2, "USD", "US Dollar", "$", 2),
+                new MataUang(3, "EUR", "Euro", "€", 2)
         );
+        log.info("data currency lokal berhasil dibuat!");
+    }
+
+    public void seedDatabaseCurrency() {
+        Database dataConnect = Database.getInstance();
+        String querySql = "INSERT OR IGNORE INTO mata_uang(id, kode, nama, simbol, desimal) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
+            for(MataUang mk : DataManager.getInstance().getDataCurrency()) {
+                stat.setInt(1, mk.getId());
+                stat.setString(2, mk.getKode());
+                stat.setString(3, mk.getNama());
+                stat.setString(4, mk.getSimbol());
+                stat.setInt(5, mk.getDesimal());
+
+                stat.executeUpdate();
+            }
+            log.info("table mata_uang berhasil di seed ke database!");
+
+        } catch (Exception e) {
+            log.error("data table mata_uang gagal diseed: ", e);
+        }
     }
 }
