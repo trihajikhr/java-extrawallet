@@ -6,23 +6,23 @@ public class Transaksi {
     protected int id;
     protected String tipe; // [IN/OUT/TRS]
     protected int jumlah;
-    protected Account account;
+    protected Akun akun;
     protected Kategori kategori;
-    protected Label label;
-    protected LocalDateTime tanggalSet;
+    protected TipeLabel tipelabel;
+    protected LocalDateTime tanggal;
     protected String keterangan;
     protected String metodeTransaksi;
     protected String status;
 
     // contructor full spek
-    public Transaksi(int id, String tipe, int jumlah, Account account, Kategori kategori, Label label, LocalDateTime tanggalSet, String keterangan, String metodeTransaksi, String status) {
+    public Transaksi(int id, String tipe, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDateTime tanggal, String keterangan, String metodeTransaksi, String status) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
-        this.account = account;
+        this.akun = akun;
         this.kategori = kategori;
-        this.label = label;
-        this.tanggalSet = tanggalSet;
+        this.tipelabel = tipelabel;
+        this.tanggal = tanggal;
         this.keterangan = keterangan;
         this.metodeTransaksi = metodeTransaksi;
         this.status = status;
@@ -30,12 +30,12 @@ public class Transaksi {
 
     // constructor hanya spek wajib
 
-    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggalSet) {
+    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggal) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
         this.kategori = kategori;
-        this.tanggalSet = tanggalSet;
+        this.tanggal = tanggal;
     }
 
     public Transaksi() {}
@@ -64,12 +64,12 @@ public class Transaksi {
         this.jumlah = jumlah;
     }
 
-    public Account getAccount() {
-        return account;
+    public Akun getAkun() {
+        return akun;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAkun(Akun akun) {
+        this.akun = akun;
     }
 
     public Kategori getKategori() {
@@ -80,20 +80,20 @@ public class Transaksi {
         this.kategori = kategori;
     }
 
-    public Label getLabel() {
-        return label;
+    public TipeLabel getTipelabel() {
+        return tipelabel;
     }
 
-    public void setLabel(Label label) {
-        this.label = label;
+    public void setTipelabel(TipeLabel tipelabel) {
+        this.tipelabel = tipelabel;
     }
 
-    public LocalDateTime getTanggalSet() {
-        return tanggalSet;
+    public LocalDateTime getTanggal() {
+        return tanggal;
     }
 
-    public void setTanggalSet(LocalDateTime tanggalSet) {
-        this.tanggalSet = tanggalSet;
+    public void setTanggal(LocalDateTime tanggal) {
+        this.tanggal = tanggal;
     }
 
     public String getKeterangan() {

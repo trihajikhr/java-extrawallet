@@ -2,69 +2,6 @@
            BAGIAN: TANGGAL
    ================================ */
 
-/* Container DatePicker */
-.date-picker {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #c0c0c0;
-    -fx-border-radius: 2;
-    -fx-background-radius: 2;
-}
-
-/* TextField di dalam DatePicker */
-.date-picker .text-field {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-padding: 6 8 6 8;
-    -fx-text-fill: #2c2c2c;
-    -fx-prompt-text-fill: #a0a0a0;
-}
-
-/* Tombol arrow */
-.date-picker .arrow-button {
-    -fx-background-color: #f2f3f5;
-    -fx-border-color: #c0c0c0;
-    -fx-border-radius: 2;
-    -fx-background-radius: 2;
-}
-
-/* Hover arrow */
-.date-picker .arrow-button:hover {
-    -fx-background-color: #e6e8eb;
-}
-
-/* Popup kalender */
-.date-picker .popup-content {
-    -fx-background-color: #ffffff;
-    -fx-border-color: #c0c0c0;
-    -fx-border-radius: 2;
-    -fx-background-radius: 2;
-}
-
-/* Hari di kalender */
-.date-picker .day-cell {
-    -fx-background-color: transparent;
-    -fx-text-fill: #2c2c2c;
-    -fx-border-radius: 2;
-    -fx-background-radius: 2;
-}
-
-/* Hover hari */
-.date-picker .day-cell:hover {
-    -fx-background-color: #f2f3f5;
-}
-
-/* Hari yang dipilih */
-.date-picker .day-cell:filled:selected,
-.date-picker .day-cell:selected {
-    -fx-background-color: #1a73e8;
-    -fx-text-fill: #ffffff;
-}
-
-/* Fokus popup (navigasi bulan) */
-.date-picker .month-year-pane,
-.date-picker .calendar-pane {
-    -fx-background-color: #ffffff;
-}
 
 
 /* ================================

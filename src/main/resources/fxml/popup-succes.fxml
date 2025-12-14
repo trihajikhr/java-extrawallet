@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="root" prefHeight="200.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="helper.PopupController">
+
+    <VBox alignment="CENTER" spacing="12" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+
+        <padding>
+            <Insets bottom="20" left="20" right="20" top="20" />
+        </padding>
+
+        <Label fx:id="titleLabel" styleClass="popup-title" />
+        <Label fx:id="messageLabel" styleClass="popup-message" wrapText="true" VBox.vgrow="ALWAYS" />
+
+        <Button onAction="#close" prefHeight="40.0" prefWidth="80.0" styleClass="modern-btn" text="OK">
+         <VBox.margin>
+            <Insets top="30.0" />
+         </VBox.margin></Button>
+    </VBox>
+   <styleClass>
+      <String fx:value="popup-root" />
+      <String fx:value="rootPane-dropshadow" />
+   </styleClass>
+   <stylesheets>
+      <URL value="@../stylesheet/panel.css" />
+      <URL value="@../stylesheet/popup-succes.css" />
+   </stylesheets>
+
+</AnchorPane>

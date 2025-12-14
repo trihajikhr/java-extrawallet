@@ -1,25 +1,37 @@
 package controller;
 
+import dataflow.DataManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import model.Kategori;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 public class TransactionControl implements Initializable {
+
+    private static final Logger log = LoggerFactory.getLogger(TransactionControl.class);
 
     private Stage stage;
     private int valueChoosen = 0;
@@ -50,6 +62,20 @@ public class TransactionControl implements Initializable {
 
     private Image[][] theImage;
 
+    @FXML private ComboBox<Kategori> categoryComboBox;
+    @FXML private ComboBox<String> paymentType_1, paymentType_2;
+    @FXML private ComboBox<String> paymentStatus_1, paymentStatus_2;
+
+    private final ObjectProperty<String> selectedPaymentType =
+            new SimpleObjectProperty<>();
+
+    private final ObjectProperty<String> selectedPaymentStatus =
+            new SimpleObjectProperty<>();
+
+    private final StringProperty noteState = new SimpleStringProperty();
+    @FXML private TextField msgNotes_1, msgNotes_2;
+
+
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
         this.stage = stage;
@@ -78,8 +104,93 @@ public class TransactionControl implements Initializable {
         hideAnim.play();
     }
 
+    private void updateCategoryCombo(String type) {
+        categoryComboBox.getSelectionModel().clearSelection();
+
+        List<Kategori> filtered = DataManager.getInstance().coreDataKategori().stream()
+                .filter(k -> k.getTipe().equals(type))
+                .toList();
+
+        categoryComboBox.setItems(
+                FXCollections.observableArrayList(filtered)
+        );
+    }
+
+    private void initPaymentData() {
+        paymentType_1.setItems(DataManager.getInstance().getDataPeymentType());
+        paymentType_2.setItems(DataManager.getInstance().getDataPeymentType());
+
+        paymentStatus_1.setItems(DataManager.getInstance().getDataStatusType());
+        paymentStatus_2.setItems(DataManager.getInstance().getDataStatusType());
+
+        paymentType_1.valueProperty().bindBidirectional(selectedPaymentType);
+        paymentType_2.valueProperty().bindBidirectional(selectedPaymentType);
+
+        paymentStatus_1.valueProperty().bindBidirectional(selectedPaymentStatus);
+        paymentStatus_2.valueProperty().bindBidirectional(selectedPaymentStatus);
+    }
+
+    private void messageNotesBinding() {
+        msgNotes_1.textProperty().bindBidirectional(noteState);
+        msgNotes_2.textProperty().bindBidirectional(noteState);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        log.info("Transaksi pop up terbuka");
+
+        // beberapa fungsi init
+        initPaymentData();
+        messageNotesBinding();
+
+        // load combobox kategori
+        ArrayList<Kategori> listKategori = DataManager.getInstance().coreDataKategori();
+        categoryComboBox.setItems(FXCollections.observableArrayList(listKategori));
+
+        categoryComboBox.setCellFactory(list -> new ListCell<Kategori>() {
+            @Override
+            protected void updateItem(Kategori item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                // icon
+                ImageView iconView = new ImageView(item.getIcon());
+                iconView.setFitWidth(14);
+                iconView.setFitHeight(14);
+                iconView.setPreserveRatio(true);
+
+                // background
+                StackPane iconBox = new StackPane(iconView);
+                iconBox.setPrefSize(28,28);;
+                iconBox.setMaxSize(28,28);
+
+                iconBox.setBackground(new Background(
+                        new BackgroundFill(
+                                item.getWarna(),
+                                new CornerRadii(8),
+                                Insets.EMPTY
+                        )
+                ));
+
+                // teks
+                Label label = new Label(item.getNama());
+                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+                // gabung
+                HBox box = new HBox(10, iconBox, label);
+                box.setAlignment(Pos.CENTER_LEFT);
+
+                setGraphic(box);
+            }
+        });
+        categoryComboBox.setButtonCell(categoryComboBox.getCellFactory().call(null));
+
+        // ======================================================================================
 
         // Load icon: [0] = putih, [1] = hitam
         theImage = new Image[][] {
@@ -131,8 +242,17 @@ public class TransactionControl implements Initializable {
         expenseBtn_1.getStyleClass().add("choice-btn");
         transferBtn_1.getStyleClass().add("choice-btn");
 
-        incomeBtn_1.setOnAction(e -> select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
-        expenseBtn_1.setOnAction(e -> select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222"));
+        // incomeBtn_1.setOnAction(e -> select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
+        // expenseBtn_1.setOnAction(e -> select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222"));
+
+        incomeBtn_1.setOnAction(e -> {
+            select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71");
+            updateCategoryCombo("IN");
+        });
+        expenseBtn_1.setOnAction(e -> {
+            select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222");
+            updateCategoryCombo("OUT");
+        });
         transferBtn_1.setOnAction(e -> select(1,2, transferBtn_2, transferImg_2, transferLbl_2, "#0176FE"));
 
         incomeBtn_2.setOnAction(e -> select(2,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
@@ -188,7 +308,7 @@ public class TransactionControl implements Initializable {
             lbl.setStyle("-fx-text-fill: white;");
             img.setImage(theImage[index][0]); // icon putih
         }
-        System.out.println("select: " + valueChoosen);
+        System.out.println("user memilih: " + (valueChoosen == 1 ? "income" : valueChoosen == 2 ? "expense" : "transfer"));
     }
 
     private void clearSelection(int layer) {
@@ -225,34 +345,4 @@ public class TransactionControl implements Initializable {
     public int getValueChoosen() {
         return valueChoosen;
     }
-
-    // OPSI COMBO BOX EDITABLE!
-//        accountComboBox.setEditable(true);
-//        ObservableList<AccountItem> allItems =
-//                FXCollections.observableArrayList(accountComboBox.getItems());
-//
-//        accountComboBox.getEditor().textProperty().addListener((obs, oldText, newText) -> {
-//            if (newText == null) return;
-//
-//            String keyword = newText.toLowerCase();
-//
-//            List<AccountItem> filtered = allItems.stream()
-//                    .filter(item -> item.getLabel().toLowerCase().contains(keyword))
-//                    .toList();
-//
-//            accountComboBox.getItems().setAll(filtered);
-//            accountComboBox.show();
-//        });
-//
-//        accountComboBox.setConverter(new StringConverter<>() {
-//            @Override
-//            public String toString(AccountItem item) {
-//                return item == null ? "" : item.getLabel();
-//            }
-//
-//            @Override
-//            public AccountItem fromString(String string) {
-//                return null; // nggak dipakai
-//            }
-//        });
 }

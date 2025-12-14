@@ -5,11 +5,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import model.Account;
+import model.Akun;
 
 public class AccountCard extends HBox {
 
-    public AccountCard(Account account) {
+    public AccountCard(Akun account) {
         setSpacing(10);
         setPadding(new Insets(10));
         getStyleClass().add("account-card");
@@ -18,7 +18,7 @@ public class AccountCard extends HBox {
         icon.setFitWidth(32);
         icon.setFitHeight(32);
 
-        Label name = new Label(account.getLabel());
+        Label name = new Label(account.getNama());
         name.getStyleClass().add("account-name");
 
         Label balance = new Label(formatCurrency(account.getJumlah()));

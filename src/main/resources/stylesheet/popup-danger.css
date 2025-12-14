@@ -1,0 +1,44 @@
+.popup-root {
+    -fx-background-color: white;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 20, 0.2, 0, 6);
+}
+
+.popup-title {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #222;
+}
+
+.popup-message {
+    -fx-font-size: 13px;
+    -fx-text-fill: #555;
+}
+
+/* Tombol modern hijau */
+.modern-btn {
+    -fx-background-color: #F92222;
+    -fx-text-fill: white;
+
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.18), 8, 0, 0, 0);
+}
+
+/* Hover → sedikit lebih gelap */
+.modern-btn:hover {
+    -fx-background-color: #E02020;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.22), 10, 0, 0, 0);
+}
+
+/* Pressed → lebih gelap lagi */
+.modern-btn:pressed {
+    -fx-background-color: #C71C1C;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 6, 0, 0, 0);
+}

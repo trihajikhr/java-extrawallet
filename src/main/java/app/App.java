@@ -1,5 +1,7 @@
 package app;
 
+import dataflow.DataManager;
+import dataflow.DataSeeder;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -22,8 +24,14 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("Extra Wallet");
 
-        // buat instance
+        // buat instance [MENJALANKAN PROGRAM SETUP AWAL DISINI!]
         Database.getInstance();
+        DataManager.getInstance().setDataKategori();
+        DataManager.getInstance().initBaseData();
+        DataSeeder.getInstance().seedDatabaseKategori();
+        DataSeeder.getInstance().seedDatabaseCurrency();
+
+        // load tampilan
         stage.show();
     }
 
