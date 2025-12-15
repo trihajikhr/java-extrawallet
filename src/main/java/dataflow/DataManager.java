@@ -139,7 +139,12 @@ public class DataManager {
     public void addTransaksi(Transaksi trans) {
         int newId = Database.getInstance().insertTransaksi(trans);
         if(newId > 0) {
+            trans.setId(newId);
             dataTransaksi.add(trans);
+            log.info("transaksi berhasil ditambahkan!");
+            Popup.showSucces("Operasi berhasil!", "Transaksi berhasil ditambahkan!");
+        } else {
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
 

@@ -256,7 +256,6 @@ public class AccountControl implements Initializable {
             }
         });
         currencyComboBox.setButtonCell(currencyComboBox.getCellFactory().call(null));
-
         IOLogic.makeIntegerOnly(amountSpinner, 0, 2_147_483_647, 0);
     }
 }

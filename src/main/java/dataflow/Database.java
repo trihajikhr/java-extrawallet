@@ -2,6 +2,7 @@ package dataflow;
 
 import java.io.File;
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
@@ -22,7 +23,8 @@ public class Database {
     private final String DATABASE_FOLDER = "database";
     private final String DATABASE_NAME = "finance.db";
 
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private Connection koneksi;
 
     // [1] >=== instance
@@ -334,7 +336,7 @@ public class Database {
                 String metodeTransaksi = rs.getString("metode_transaksi");
                 String status = rs.getString("status");
 
-                LocalDateTime tanggal = LocalDateTime.parse(tanggalSet, formatter);
+                LocalDate tanggal = LocalDate.parse(tanggalSet);
 
                 Akun akun = null;
                 for(Akun item : DataManager.getInstance().getDataAkun()){

@@ -1,13 +1,13 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Pengeluaran extends Transaksi {
-    public Pengeluaran(int id, String tipe, int jumlah, Akun account, Kategori kategori, TipeLabel label, LocalDateTime tanggalSet, String keterangan, String metodeTransaksi, String status) {
+    public Pengeluaran(int id, String tipe, int jumlah, Akun account, Kategori kategori, TipeLabel label, LocalDate tanggalSet, String keterangan, String metodeTransaksi, String status) {
         super(id, tipe, jumlah, account, kategori, label, tanggalSet, keterangan, metodeTransaksi, status);
     }
 
-    public Pengeluaran(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggalSet) {
+    public Pengeluaran(int id, String tipe, int jumlah, Kategori kategori, LocalDate tanggalSet) {
         super(id, tipe, jumlah, kategori, tanggalSet);
     }
 

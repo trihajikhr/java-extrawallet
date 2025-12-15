@@ -1,14 +1,14 @@
 package controller.transaction;
 
 import dataflow.DataManager;
+import helper.IOLogic;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -29,14 +29,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import model.Akun;
-import model.Kategori;
-import model.TipeLabel;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -47,7 +46,7 @@ public class TransactionControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(TransactionControl.class);
 
     private Stage stage;
-    private int valueChoosen = 0;
+    IntegerProperty valueChoosen = new SimpleIntegerProperty(0);
     private boolean closing = false;
 
     private double xOffset = 0;
@@ -77,8 +76,8 @@ public class TransactionControl implements Initializable {
     @FXML private GridPane transForm;
 
     @FXML private ComboBox<Kategori> categoryComboBox;
-    @FXML private ComboBox<String> paymentType_1, paymentType_2;
-    @FXML private ComboBox<String> paymentStatus_1, paymentStatus_2;
+    @FXML private ComboBox<String> paymentType_inout, paymentType_trans;
+    @FXML private ComboBox<String> paymentStatus_inout, paymentStatus_trans;
     @FXML private ComboBox<Akun> akunComboBox_inout, akunComboBox_from, akunComboBox_to;
 
     // combobox tipeLabel
@@ -93,9 +92,24 @@ public class TransactionControl implements Initializable {
             new SimpleObjectProperty<>();
 
     private final StringProperty noteState = new SimpleStringProperty();
-    @FXML private TextField msgNotes_1, msgNotes_2;
+    @FXML private TextField note_inout, note_trans;
 
     @FXML private Image[][] theImage;
+
+    // combobox mata uang
+    @FXML private ComboBox<MataUang> mataUangCombo_inout, mataUangCombo_from, mataUangCombo_to;
+
+    // spinner
+    @FXML Spinner<Integer> spinner_inout, spinner_from, spinner_to;
+
+    // tanggal
+    @FXML DatePicker date_inout, date_trans;
+
+    // submit button + add temlate
+    @FXML Button submit_inout;
+    @FXML Button submit_trans;
+    @FXML Button addTemplate_inout;
+    @FXML Button addTemplate_trans;
 
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
@@ -161,22 +175,22 @@ public class TransactionControl implements Initializable {
     }
 
     private void initPaymentData() {
-        paymentType_1.setItems(DataManager.getInstance().getDataPeymentType());
-        paymentType_2.setItems(DataManager.getInstance().getDataPeymentType());
+        paymentType_inout.setItems(DataManager.getInstance().getDataPeymentType());
+        paymentType_trans.setItems(DataManager.getInstance().getDataPeymentType());
 
-        paymentStatus_1.setItems(DataManager.getInstance().getDataStatusType());
-        paymentStatus_2.setItems(DataManager.getInstance().getDataStatusType());
+        paymentStatus_inout.setItems(DataManager.getInstance().getDataStatusType());
+        paymentStatus_trans.setItems(DataManager.getInstance().getDataStatusType());
 
-        paymentType_1.valueProperty().bindBidirectional(selectedPaymentType);
-        paymentType_2.valueProperty().bindBidirectional(selectedPaymentType);
+        paymentType_inout.valueProperty().bindBidirectional(selectedPaymentType);
+        paymentType_trans.valueProperty().bindBidirectional(selectedPaymentType);
 
-        paymentStatus_1.valueProperty().bindBidirectional(selectedPaymentStatus);
-        paymentStatus_2.valueProperty().bindBidirectional(selectedPaymentStatus);
+        paymentStatus_inout.valueProperty().bindBidirectional(selectedPaymentStatus);
+        paymentStatus_trans.valueProperty().bindBidirectional(selectedPaymentStatus);
     }
 
     private void messageNotesBinding() {
-        msgNotes_1.textProperty().bindBidirectional(noteState);
-        msgNotes_2.textProperty().bindBidirectional(noteState);
+        note_inout.textProperty().bindBidirectional(noteState);
+        note_trans.textProperty().bindBidirectional(noteState);
     }
 
     private void loadCategoryComboBox(){
@@ -320,6 +334,21 @@ public class TransactionControl implements Initializable {
         tipeLabelComboBox.setButtonCell(tipeLabelComboBox.getCellFactory().call(null));
     }
 
+    private void loadMataUangComboBox(ComboBox<MataUang> currencyComboBox) {
+        currencyComboBox.setItems(DataManager.getInstance().getDataMataUang());
+        currencyComboBox.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(MataUang c, boolean empty) {
+                super.updateItem(c, empty);
+                setText(empty || c == null
+                        ? null
+//                        : c.getCode() + " — " + c.getName());
+                        : c.getKode());
+            }
+        });
+        currencyComboBox.setButtonCell(currencyComboBox.getCellFactory().call(null));
+    }
+
     private void initTipeLabelList() {
         ArrayList<TipeLabel> data = DataManager.getInstance().getDataTipeLabel();
         tipeLabelList = FXCollections.observableArrayList(data);
@@ -337,6 +366,12 @@ public class TransactionControl implements Initializable {
 
     public ComboBox<TipeLabel> getTipeLabelTrans() {
         return tipeLabel_trans;
+    }
+
+    private void spinnerLogicHandler() {
+        IOLogic.makeIntegerOnly(spinner_inout, 1, 2_147_483_647, 0);
+        IOLogic.makeIntegerOnly(spinner_from, 1, 2_147_483_647, 0);
+        IOLogic.makeIntegerOnly(spinner_to, 1, 2_147_483_647, 0);
     }
 
     // stage scene handler [template, label, submit, addanother record, checkbox]
@@ -388,16 +423,26 @@ public class TransactionControl implements Initializable {
         log.info("Transaksi pop up terbuka");
         showPopup();
 
+        // isformcomplete function
+        isInOutFormComplete();
+        isTransFormComplete();
+
         // beberapa fungsi init
         initPaymentData();
         messageNotesBinding();
+        inoutListener();
+        defaultDate();
 
         // load data combobox
         loadCategoryComboBox();
+        loadMataUangComboBox(mataUangCombo_inout);
+        loadMataUangComboBox(mataUangCombo_from);
+        loadMataUangComboBox(mataUangCombo_to);
         loadAkunComboBox(akunComboBox_inout);
         loadAkunComboBox(akunComboBox_from);
         loadAkunComboBox(akunComboBox_to);
         initTipeLabelList();
+        spinnerLogicHandler();
 
         loadTipeLabelComboBox(tipeLabel_inout);
         loadTipeLabelComboBox(tipeLabel_trans);
@@ -481,7 +526,7 @@ public class TransactionControl implements Initializable {
                 showTransfer();
             }
 
-            valueChoosen = index + 1;
+            valueChoosen.setValue(index + 1);
 
             // kasih warna ke tombol
             btn.setStyle("-selected-color: " + color + ";");
@@ -495,7 +540,7 @@ public class TransactionControl implements Initializable {
             if(index == 2) return;
             showInOut();
             clearSelection(1);
-            valueChoosen = index + 1;
+            valueChoosen.setValue(index + 1);
 
             // kasih warna ke tombol
             btn.setStyle("-selected-color: " + color + ";");
@@ -505,7 +550,7 @@ public class TransactionControl implements Initializable {
             lbl.setStyle("-fx-text-fill: white;");
             img.setImage(theImage[index][0]); // icon putih
         }
-        System.out.println("user memilih: " + (valueChoosen == 1 ? "income" : valueChoosen == 2 ? "expense" : "transfer"));
+        System.out.println("user memilih: " + (valueChoosen.getValue() == 1 ? "income" : valueChoosen.getValue() == 2 ? "expense" : "transfer"));
     }
 
     private void clearSelection(int layer) {
@@ -539,7 +584,119 @@ public class TransactionControl implements Initializable {
         }
     }
 
+    private void isInOutFormComplete() {
+        BooleanBinding valueChoosenValid = valueChoosen.isNotEqualTo(0);
+        BooleanBinding amountValid =
+                Bindings.createBooleanBinding(
+                        () -> spinner_inout.getValue() != null && spinner_inout.getValue() > 0,
+                        spinner_inout.valueProperty()
+                );
+        BooleanBinding akunValid = akunComboBox_inout.valueProperty().isNotNull();
+        BooleanBinding kategoriValid = categoryComboBox.valueProperty().isNotNull();
+        BooleanBinding dateValid = date_inout.valueProperty().isNotNull();
+        BooleanBinding mataUangValid = mataUangCombo_inout.valueProperty().isNotNull();
+
+        BooleanBinding formValid =
+                valueChoosenValid
+                        .and(amountValid)
+                        .and(akunValid)
+                        .and(kategoriValid)
+                        .and(dateValid)
+                        .and(mataUangValid);
+
+        submit_inout.disableProperty().bind(formValid.not());
+        addTemplate_inout.disableProperty().bind(formValid.not());
+
+        // listener
+        formValid.addListener((obs, oldV, newV) ->
+                System.out.println("FORM VALID = " + newV)
+        );
+    }
+
+    private void isTransFormComplete() {
+        BooleanBinding valueChoosenValid = valueChoosen.isNotEqualTo(0);
+        BooleanBinding akunComboFrom = akunComboBox_from.valueProperty().isNotNull();
+        BooleanBinding akunComboTo = akunComboBox_to.valueProperty().isNotNull();
+
+        BooleanBinding amountFromValid =
+                Bindings.createBooleanBinding(
+                        () -> spinner_from.getValue() != null && spinner_from.getValue() > 0,
+                        spinner_from.valueProperty()
+                );
+
+        BooleanBinding amountToValid =
+                Bindings.createBooleanBinding(
+                        () -> spinner_to.getValue() != null && spinner_to.getValue() > 0,
+                        spinner_to.valueProperty()
+                );
+
+        BooleanBinding mataUangFrom = mataUangCombo_from.valueProperty().isNotNull();
+        BooleanBinding mataUangTo = mataUangCombo_to.valueProperty().isNotNull();
+        BooleanBinding dateValid = date_trans.valueProperty().isNotNull();
+
+        BooleanBinding formValid =
+                valueChoosenValid
+                        .and(akunComboFrom)
+                        .and(akunComboTo)
+                        .and(amountFromValid)
+                        .and(amountToValid)
+                        .and(mataUangFrom)
+                        .and(mataUangTo)
+                        .and(dateValid);
+
+        submit_trans.disableProperty().bind(formValid.not());
+        addTemplate_trans.disableProperty().bind(formValid.not());
+    }
+
+    // [8] >=== listener
+    private void inoutListener() {
+        akunComboBox_inout.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                onAccountSelected(newVal.getMataUang());
+            }
+        });
+    }
+
+    private void onAccountSelected(MataUang mataUang) {
+        mataUangCombo_inout.setValue(mataUang);
+    }
+
+    // [9] >=== tanggal default
+    private void defaultDate() {
+        date_inout.setValue(LocalDate.now());
+        date_trans.setValue(LocalDate.now());
+    }
+
+    // [10] >=== handle submit button
+    @FXML
+    private void inoutSubmitHandler() {
+        String tipe = getValueChoosen() == 1 ? "IN" : "OUT";
+        int jumlah = spinner_inout.getValue();
+        Akun akun = akunComboBox_inout.getValue();
+        Kategori kategori = categoryComboBox.getValue();
+        TipeLabel tipeLabel = tipeLabel_inout.getValue();
+        LocalDate tanggal = date_inout.getValue();
+        String keterangan = note_inout.getText();
+        String payment = paymentType_inout.getValue();
+        String status = paymentStatus_inout.getValue();
+
+        DataManager.getInstance().addTransaksi(new Transaksi(
+                0,
+                tipe,
+                jumlah,
+                akun,
+                kategori,
+                tipeLabel,
+                tanggal,
+                keterangan,
+                payment,
+                status
+        ));
+
+        closePopup();
+    }
+
     public int getValueChoosen() {
-        return valueChoosen;
+        return valueChoosen.getValue();
     }
 }

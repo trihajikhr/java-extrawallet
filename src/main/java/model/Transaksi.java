@@ -1,6 +1,6 @@
 package model;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public class Transaksi {
     protected int id;
@@ -9,13 +9,13 @@ public class Transaksi {
     protected Akun akun;
     protected Kategori kategori;
     protected TipeLabel tipelabel;
-    protected LocalDateTime tanggal;
+    protected LocalDate tanggal;
     protected String keterangan;
     protected String metodeTransaksi;
     protected String status;
 
     // contructor full spek
-    public Transaksi(int id, String tipe, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDateTime tanggal, String keterangan, String metodeTransaksi, String status) {
+    public Transaksi(int id, String tipe, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, String metodeTransaksi, String status) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
@@ -30,7 +30,7 @@ public class Transaksi {
 
     // constructor hanya spek wajib
 
-    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDateTime tanggal) {
+    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDate tanggal) {
         this.id = id;
         this.tipe = tipe;
         this.jumlah = jumlah;
@@ -88,11 +88,11 @@ public class Transaksi {
         this.tipelabel = tipelabel;
     }
 
-    public LocalDateTime getTanggal() {
+    public LocalDate getTanggal() {
         return tanggal;
     }
 
-    public void setTanggal(LocalDateTime tanggal) {
+    public void setTanggal(LocalDate tanggal) {
         this.tanggal = tanggal;
     }
 
