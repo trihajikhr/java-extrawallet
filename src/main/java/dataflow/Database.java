@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
-import helper.Popup;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import model.*;
@@ -318,7 +317,7 @@ public class Database {
                 LocalDateTime tanggal = LocalDateTime.parse(tanggalSet, formatter);
 
                 Akun akun = null;
-                for(Akun item : DataManager.getInstance().coreDataAkun()){
+                for(Akun item : DataManager.getInstance().getDataAkun()){
                     if(item.getId() == idAkun) {
                         akun = item;
                         break;
@@ -331,7 +330,7 @@ public class Database {
                 }
 
                 Kategori kategori = null;
-                for(Kategori item : DataManager.getInstance().coreDataKategori()){
+                for(Kategori item : DataManager.getInstance().getDataKategori()){
                     if(item.getId() == idKategori) {
                         kategori = item;
                         break;
@@ -490,6 +489,51 @@ public class Database {
             } catch (SQLException e) {
                 log.error("gagal reset autoCommit", e);
             }
+        }
+    }
+
+    public ArrayList<Akun> fetchAkun() {
+        try (Statement stat = koneksi.createStatement()) {
+            ResultSet rs = stat.executeQuery("SELECT * FROM akun");
+
+            ArrayList<Akun> data = new ArrayList<>();
+
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String nama = rs.getString("nama");
+                Color warna = Converter.hexToColor(rs.getString("warna"));
+                String iconPath = rs.getString("icon_path");
+                int jumlah = rs.getInt("jumlah");
+                int idMataUang = rs.getInt("id_mata_uang");
+
+                MataUang mataUang = null;
+                for(MataUang item : DataManager.getInstance().getDataMataUang()){
+                    if(item.getId() == idMataUang) {
+                        mataUang = item;
+                        break;
+                    }
+                }
+                if (mataUang == null ) {
+                    log.warn("fetch akun: id_mata_uang={} tidak ditemukan!", idMataUang);
+                    continue; // skip
+                }
+
+                data.add(new Akun(
+                        id,
+                        nama,
+                        warna,
+                        new Image(Objects.requireNonNull(getClass().getResource(iconPath)).toString()),
+                        iconPath,
+                        jumlah,
+                        mataUang)
+                );
+            }
+            log.info("data akun berhasil di fetch!");
+            return data;
+
+        } catch (SQLException e) {
+            log.error("gagal fetch data akun: ", e);
+            return null;
         }
     }
 }

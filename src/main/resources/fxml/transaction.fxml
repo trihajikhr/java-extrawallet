@@ -172,7 +172,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="akunComboBox_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -436,7 +436,7 @@
                               </HBox>
                               <HBox alignment="TOP_CENTER" prefHeight="54.0" prefWidth="400.0" spacing="10.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="173.0" prefHeight="40.0" promptText="Account" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="akunComboBox_from" maxHeight="40.0" maxWidth="173.0" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                                        <image>
                                           <Image url="@../icons/rightarrowB.png" />
@@ -445,7 +445,7 @@
                                           <Insets top="7.0" />
                                        </HBox.margin>
                                     </ImageView>
-                                    <ComboBox maxHeight="40.0" maxWidth="173.0" prefHeight="40.0" promptText="Account" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="akunComboBox_to" maxHeight="40.0" maxWidth="173.0" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>

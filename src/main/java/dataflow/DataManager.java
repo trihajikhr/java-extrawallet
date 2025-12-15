@@ -6,6 +6,7 @@ import java.util.Comparator;
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
 import helper.Popup;
+import javafx.scene.image.Image;
 import model.MataUang;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,9 +26,23 @@ public class DataManager {
     private ObservableList<String> dataStatusType = FXCollections.observableArrayList();
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
-    private ObservableList<MataUang> dataCurrency = FXCollections.observableArrayList();
+    private ObservableList<MataUang> dataMataUang = FXCollections.observableArrayList();
+    private Image[][] theImage;
 
     private DataManager() {}
+
+    public void initBaseData() {
+        dataPeymentType = DataSeeder.getInstance().seedTypeData();
+        dataStatusType = DataSeeder.getInstance().seedStatusData();
+        DataSeeder.getInstance().seedColor();
+        DataSeeder.getInstance().seedAccountItem();
+        DataSeeder.getInstance().seedCurrency();
+        theImage = DataSeeder.getInstance().seedImageTransactionForm();
+    }
+
+    public void fetchDataDatabase() {
+        dataAkun = Database.getInstance().fetchAkun();
+    }
 
     public ObservableList<String> getDataPeymentType() {
         return dataPeymentType;
@@ -48,12 +63,8 @@ public class DataManager {
         return dataTipeLabel;
     }
 
-    public void initBaseData() {
-        dataPeymentType = DataSeeder.getInstance().seedTypeData();
-        dataStatusType = DataSeeder.getInstance().seedStatusData();
-        DataSeeder.getInstance().seedColor();
-        DataSeeder.getInstance().seedAccountItem();
-        DataSeeder.getInstance().seedCurrency();
+    public Image[][] getImageTransactionForm() {
+        return theImage;
     }
 
     public ObservableList<ColorItem> getDataColor() {
@@ -64,8 +75,8 @@ public class DataManager {
         return dataAccountItem;
     }
 
-    public ObservableList<MataUang> getDataCurrency() {
-        return dataCurrency;
+    public ObservableList<MataUang> getDataMataUang() {
+        return dataMataUang;
     }
 
     // [1] >> =============== DATA AKUN =============== //
@@ -81,7 +92,7 @@ public class DataManager {
         }
     }
 
-    public ArrayList<Akun> coreDataAkun() {
+    public ArrayList<Akun> getDataAkun() {
         return dataAkun;
     }
 
@@ -170,7 +181,7 @@ public class DataManager {
         return new ArrayList<>(dataKategori);
     }
 
-    public ArrayList<Kategori> coreDataKategori() {
+    public ArrayList<Kategori> getDataKategori() {
         return dataKategori;
     }
 

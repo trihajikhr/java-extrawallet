@@ -139,7 +139,7 @@ public class AccountControl implements Initializable {
         log.info("Popup account terbuka!");
         colorComboBox.setItems(DataManager.getInstance().getDataColor());
         accountComboBox.setItems(DataManager.getInstance().getDataAccountItem());
-        currencyComboBox.setItems(DataManager.getInstance().getDataCurrency());
+        currencyComboBox.setItems(DataManager.getInstance().getDataMataUang());
 
         isFormComplete();
 

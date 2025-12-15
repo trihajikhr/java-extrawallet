@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
+import model.Akun;
 import model.Kategori;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,11 +61,10 @@ public class TransactionControl implements Initializable {
     @FXML private GridPane inoutForm;
     @FXML private GridPane transForm;
 
-    private Image[][] theImage;
-
     @FXML private ComboBox<Kategori> categoryComboBox;
     @FXML private ComboBox<String> paymentType_1, paymentType_2;
     @FXML private ComboBox<String> paymentStatus_1, paymentStatus_2;
+    @FXML private ComboBox<Akun> akunComboBox_inout, akunComboBox_from, akunComboBox_to;
 
     private final ObjectProperty<String> selectedPaymentType =
             new SimpleObjectProperty<>();
@@ -75,6 +75,7 @@ public class TransactionControl implements Initializable {
     private final StringProperty noteState = new SimpleStringProperty();
     @FXML private TextField msgNotes_1, msgNotes_2;
 
+    @FXML private Image[][] theImage;
 
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
@@ -107,7 +108,7 @@ public class TransactionControl implements Initializable {
     private void updateCategoryCombo(String type) {
         categoryComboBox.getSelectionModel().clearSelection();
 
-        List<Kategori> filtered = DataManager.getInstance().coreDataKategori().stream()
+        List<Kategori> filtered = DataManager.getInstance().getDataKategori().stream()
                 .filter(k -> k.getTipe().equals(type))
                 .toList();
 
@@ -135,16 +136,8 @@ public class TransactionControl implements Initializable {
         msgNotes_2.textProperty().bindBidirectional(noteState);
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        log.info("Transaksi pop up terbuka");
-
-        // beberapa fungsi init
-        initPaymentData();
-        messageNotesBinding();
-
-        // load combobox kategori
-        ArrayList<Kategori> listKategori = DataManager.getInstance().coreDataKategori();
+    private void loadCategoryComboBox(){
+        ArrayList<Kategori> listKategori = DataManager.getInstance().getDataKategori();
         categoryComboBox.setItems(FXCollections.observableArrayList(listKategori));
 
         categoryComboBox.setCellFactory(list -> new ListCell<Kategori>() {
@@ -189,24 +182,71 @@ public class TransactionControl implements Initializable {
             }
         });
         categoryComboBox.setButtonCell(categoryComboBox.getCellFactory().call(null));
+    }
 
-        // ======================================================================================
+    private void loadAkunComboBox(ComboBox<Akun> dataAkunComboBox) {
+        ArrayList<Akun> dataAkun = DataManager.getInstance().getDataAkun();
+        dataAkunComboBox.setItems(FXCollections.observableArrayList(dataAkun));
 
-        // Load icon: [0] = putih, [1] = hitam
-        theImage = new Image[][] {
-                {
-                        new Image(getClass().getResource("/icons/incomeW.png").toString()),
-                        new Image(getClass().getResource("/icons/incomeB.png").toString())
-                },
-                {
-                        new Image(getClass().getResource("/icons/expenseW.png").toString()),
-                        new Image(getClass().getResource("/icons/expenseB.png").toString())
-                },
-                {
-                        new Image(getClass().getResource("/icons/transferW.png").toString()),
-                        new Image(getClass().getResource("/icons/transferB.png").toString())
+        dataAkunComboBox.setCellFactory(list -> new ListCell<Akun>() {
+            @Override
+            protected void updateItem(Akun item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
                 }
-        };
+
+                // icon
+                ImageView iconView = new ImageView(item.getIcon());
+                iconView.setFitWidth(14);
+                iconView.setFitHeight(14);
+                iconView.setPreserveRatio(true);
+
+                // background
+                StackPane iconBox = new StackPane(iconView);
+                iconBox.setPrefSize(28,28);;
+                iconBox.setMaxSize(28,28);
+
+                iconBox.setBackground(new Background(
+                        new BackgroundFill(
+                                item.getWarna(),
+                                new CornerRadii(8),
+                                Insets.EMPTY
+                        )
+                ));
+
+                // teks
+                Label label = new Label(item.getNama());
+                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+                // gabung
+                HBox box = new HBox(10, iconBox, label);
+                box.setAlignment(Pos.CENTER_LEFT);
+
+                setGraphic(box);
+            }
+        });
+        dataAkunComboBox.setButtonCell(dataAkunComboBox.getCellFactory().call(null));
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        log.info("Transaksi pop up terbuka");
+
+        // beberapa fungsi init
+        initPaymentData();
+        messageNotesBinding();
+
+        // load data combobox
+        loadCategoryComboBox();
+        loadAkunComboBox(akunComboBox_inout);
+        loadAkunComboBox(akunComboBox_from);
+        loadAkunComboBox(akunComboBox_to);
+
+        theImage = DataManager.getInstance().getImageTransactionForm();
 
         inoutForm.setVisible(true);   // default
         transForm.setVisible(false);
@@ -338,7 +378,7 @@ public class TransactionControl implements Initializable {
             }
 
             transferLbl_2.setStyle("-fx-text-fill: black;");
-            transferImg_2.setImage(theImage[2][1]);
+            transferImg_2.setImage(DataManager.getInstance().getImageTransactionForm()[2][1]);
         }
     }
 
