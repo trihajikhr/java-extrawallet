@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500.0" minWidth="450.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AccountControl">
+<AnchorPane fx:id="rootPane" maxWidth="450.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AccountControl">
    <children>
       <AnchorPane layoutY="-3.0" minHeight="75.0" prefHeight="75.0" styleClass="white-box" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>

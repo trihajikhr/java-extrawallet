@@ -363,7 +363,7 @@ public class Database {
                 }
 
                 TipeLabel tipelabel = null;
-                for(TipeLabel item : DataManager.getInstance().coreDataTipeLabel()) {
+                for(TipeLabel item : DataManager.getInstance().getDataTipeLabel()) {
                     if(item.getId() == idTipeLabel) {
                         tipelabel = item;
                         break;

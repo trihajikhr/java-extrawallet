@@ -64,6 +64,29 @@ public class AccountControl implements Initializable {
     }
 
     @FXML
+    public void showPopup() {
+        if (stage == null) return;
+
+        rootPane.setOpacity(0);
+        rootPane.setScaleX(0.6);
+        rootPane.setScaleY(0.6);
+
+        FadeTransition fade = new FadeTransition(Duration.millis(250), rootPane);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(250), rootPane);
+        scale.setFromX(0.6);
+        scale.setFromY(0.6);
+        scale.setToX(1);
+        scale.setToY(1);
+
+        ParallelTransition pt = new ParallelTransition(fade, scale);
+        pt.setInterpolator(Interpolator.EASE_OUT);
+        pt.play();
+    }
+
+    @FXML
     private void closePopup() {
         if (closing) return;
         closing = true;
@@ -137,6 +160,7 @@ public class AccountControl implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("Popup account terbuka!");
+        showPopup();
         colorComboBox.setItems(DataManager.getInstance().getDataColor());
         accountComboBox.setItems(DataManager.getInstance().getDataAccountItem());
         currencyComboBox.setItems(DataManager.getInstance().getDataMataUang());

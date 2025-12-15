@@ -1,9 +1,7 @@
 package controller;
 
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import controller.transaction.TransactionControl;
+import javafx.animation.*;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -89,10 +87,10 @@ public class DashboardControl {
         scene.setFill(Color.TRANSPARENT); // Wajib agar area di sekitar shadow transparan
         stage.setScene(scene); // Set Scene harus dilakukan setelah scene dibuat
 
-        stage.setMinWidth(750);
-        stage.setMinHeight(650);
-//        stage.setMaxWidth(800);
-//        stage.setMaxHeight(700);
+        // stage.setMinWidth(750);
+        // stage.setMinHeight(650);
+        // stage.setMaxWidth(800);
+        // stage.setMaxHeight(700);
 
         // draggable pop up
         root.setOnMousePressed(event -> {
@@ -118,12 +116,9 @@ public class DashboardControl {
         Parent root = loader.load();
         Stage stage = new Stage();
 
-        // --- 1. PENGATURAN STYLE STAGE ---
-        // Hapus StageStyle.UNDECORATED yang bertentangan
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.initModality(Modality.APPLICATION_MODAL);
 
-        // --- 2. APLIKASI DROPSHADOW KE ROOT ---
         DropShadow dropShadow = new DropShadow();
         dropShadow.setRadius(10.0);
         dropShadow.setOffsetX(5.0);
@@ -131,18 +126,15 @@ public class DashboardControl {
         dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
         root.setEffect(dropShadow);
 
-        // --- 3. PENGATURAN SCENE (Harus SETELAH root dimuat dan diberi efek) ---
         Scene scene = new Scene(root);
-        // Kesalahan Ada di sini: hanya menulis ".setFill(Color.TRANSPARENT);"
-        scene.setFill(Color.TRANSPARENT); // Wajib agar area di sekitar shadow transparan
-        stage.setScene(scene); // Set Scene harus dilakukan setelah scene dibuat
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
 
-        stage.setMinWidth(450);
-        stage.setMinHeight(560);
+//        stage.setMinWidth(450);
+//        stage.setMinHeight(560);
 //        stage.setMaxWidth(800);
 //        stage.setMaxHeight(700);
 
-        // draggable pop up
         root.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
             yOffset = event.getSceneY();
@@ -153,7 +145,6 @@ public class DashboardControl {
             stage.setY(event.getScreenY() - yOffset);
         });
 
-        // kasih akses stage ke controller
         AccountControl ctrl = loader.getController();
         ctrl.setStage(stage);
 

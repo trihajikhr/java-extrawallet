@@ -32,6 +32,8 @@ public class LabelControl implements Initializable {
     @FXML private ComboBox<ColorItem> colorComboBox;
     @FXML private Button submitButton;
 
+    private TransactionControl parentController;
+
     private Stage stage;
     private boolean closing = false;
 
@@ -40,6 +42,7 @@ public class LabelControl implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        showPopup();
         loadColorComboBox();
         isTextFieldValid(labelName);
         isFormComplete();
@@ -100,19 +103,47 @@ public class LabelControl implements Initializable {
         String nama = labelName.getText();
         Color warna = colorComboBox.getValue().getWarna();
 
-        TipeLabel tipeLabel = new TipeLabel(
-                0,
-                nama,
-                warna
-        );
+        TipeLabel tipeLabel = new TipeLabel(0, nama, warna);
 
-        DataManager.getInstance().addLabel(tipeLabel);
+        boolean result = DataManager.getInstance().addLabel(tipeLabel);
+        if(result && parentController != null) {
+            parentController.getTipeLabelList().add(tipeLabel);
+            parentController.getTipeLabelInOut().getSelectionModel().select(tipeLabel);
+            parentController.getTipeLabelTrans().getSelectionModel().select(tipeLabel);
+        }
         closePopup();
     }
 
     // DIPANGGIL dari controller pemanggil
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void setParentController(TransactionControl parent) {
+        this.parentController = parent;
+    }
+
+    @FXML
+    public void showPopup() {
+        if (stage == null) return;
+
+        rootPane.setOpacity(0);
+        rootPane.setScaleX(0.6);
+        rootPane.setScaleY(0.6);
+
+        FadeTransition fade = new FadeTransition(Duration.millis(250), rootPane);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(250), rootPane);
+        scale.setFromX(0.6);
+        scale.setFromY(0.6);
+        scale.setToX(1);
+        scale.setToY(1);
+
+        ParallelTransition pt = new ParallelTransition(fade, scale);
+        pt.setInterpolator(Interpolator.EASE_OUT);
+        pt.play();
     }
 
     @FXML

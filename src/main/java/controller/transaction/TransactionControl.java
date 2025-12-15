@@ -1,6 +1,5 @@
-package controller;
+package controller.transaction;
 
-import controller.transaction.LabelControl;
 import dataflow.DataManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -11,6 +10,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,6 +31,7 @@ import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.Akun;
 import model.Kategori;
+import model.TipeLabel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class TransactionControl implements Initializable {
@@ -79,6 +81,11 @@ public class TransactionControl implements Initializable {
     @FXML private ComboBox<String> paymentStatus_1, paymentStatus_2;
     @FXML private ComboBox<Akun> akunComboBox_inout, akunComboBox_from, akunComboBox_to;
 
+    // combobox tipeLabel
+    private ObservableList<TipeLabel> tipeLabelList = FXCollections.observableArrayList();
+    @FXML private ComboBox<TipeLabel> tipeLabel_inout;
+    @FXML private ComboBox<TipeLabel> tipeLabel_trans;
+
     private final ObjectProperty<String> selectedPaymentType =
             new SimpleObjectProperty<>();
 
@@ -93,6 +100,29 @@ public class TransactionControl implements Initializable {
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    @FXML
+    public void showPopup() {
+        if (stage == null) return;
+
+        rootPane.setOpacity(0);
+        rootPane.setScaleX(0.6);
+        rootPane.setScaleY(0.6);
+
+        FadeTransition fade = new FadeTransition(Duration.millis(250), rootPane);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(250), rootPane);
+        scale.setFromX(0.6);
+        scale.setFromY(0.6);
+        scale.setToX(1);
+        scale.setToY(1);
+
+        ParallelTransition pt = new ParallelTransition(fade, scale);
+        pt.setInterpolator(Interpolator.EASE_OUT);
+        pt.play();
     }
 
     @FXML
@@ -245,6 +275,70 @@ public class TransactionControl implements Initializable {
         dataAkunComboBox.setButtonCell(dataAkunComboBox.getCellFactory().call(null));
     }
 
+    private void loadTipeLabelComboBox(ComboBox<TipeLabel> tipeLabelComboBox){
+        tipeLabelComboBox.setCellFactory(list -> new ListCell<TipeLabel>() {
+            @Override
+            protected void updateItem(TipeLabel item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                // icon
+                ImageView iconView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/icons/tagW.png")).toString()));
+                iconView.setFitWidth(14);
+                iconView.setFitHeight(14);
+                iconView.setPreserveRatio(true);
+
+                // background
+                StackPane iconBox = new StackPane(iconView);
+                iconBox.setPrefSize(28,28);;
+                iconBox.setMaxSize(28,28);
+
+                iconBox.setBackground(new Background(
+                        new BackgroundFill(
+                                item.getWarna(),
+                                new CornerRadii(8),
+                                Insets.EMPTY
+                        )
+                ));
+
+                // teks
+                Label label = new Label(item.getNama());
+                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+                // gabung
+                HBox box = new HBox(10, iconBox, label);
+                box.setAlignment(Pos.CENTER_LEFT);
+
+                setGraphic(box);
+            }
+        });
+        tipeLabelComboBox.setButtonCell(tipeLabelComboBox.getCellFactory().call(null));
+    }
+
+    private void initTipeLabelList() {
+        ArrayList<TipeLabel> data = DataManager.getInstance().getDataTipeLabel();
+        tipeLabelList = FXCollections.observableArrayList(data);
+        tipeLabel_inout.setItems(tipeLabelList);
+        tipeLabel_trans.setItems(tipeLabelList);
+    }
+
+    public ObservableList<TipeLabel> getTipeLabelList() {
+        return tipeLabelList;
+    }
+
+    public ComboBox<TipeLabel> getTipeLabelInOut() {
+        return tipeLabel_inout;
+    }
+
+    public ComboBox<TipeLabel> getTipeLabelTrans() {
+        return tipeLabel_trans;
+    }
+
     // stage scene handler [template, label, submit, addanother record, checkbox]
     @FXML
     private void addLabelOnTransaction(ActionEvent e) throws IOException {
@@ -266,8 +360,10 @@ public class TransactionControl implements Initializable {
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
 
-        stage.setMinWidth(450);
-        stage.setMinHeight(560);
+//        stage.setMinWidth(450);
+//        stage.setMinHeight(560);
+//        stage.setMaxWidth(800);
+//        stage.setMaxHeight(700);
 
         root.setOnMousePressed(event -> {
             xOffset = event.getSceneX();
@@ -281,6 +377,8 @@ public class TransactionControl implements Initializable {
 
         LabelControl ctrl = loader.getController();
         ctrl.setStage(stage);
+        ctrl.setParentController(this);
+
 
         stage.showAndWait();
     }
@@ -288,6 +386,7 @@ public class TransactionControl implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("Transaksi pop up terbuka");
+        showPopup();
 
         // beberapa fungsi init
         initPaymentData();
@@ -298,7 +397,12 @@ public class TransactionControl implements Initializable {
         loadAkunComboBox(akunComboBox_inout);
         loadAkunComboBox(akunComboBox_from);
         loadAkunComboBox(akunComboBox_to);
+        initTipeLabelList();
 
+        loadTipeLabelComboBox(tipeLabel_inout);
+        loadTipeLabelComboBox(tipeLabel_trans);
+
+        // load image
         theImage = DataManager.getInstance().getImageTransactionForm();
 
         inoutForm.setVisible(true);   // default
