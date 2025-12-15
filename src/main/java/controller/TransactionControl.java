@@ -1,5 +1,6 @@
 package controller;
 
+import controller.transaction.LabelControl;
 import dataflow.DataManager;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -10,21 +11,30 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.Akun;
 import model.Kategori;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +47,9 @@ public class TransactionControl implements Initializable {
     private Stage stage;
     private int valueChoosen = 0;
     private boolean closing = false;
+
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     @FXML private AnchorPane rootPane;
 
@@ -230,6 +243,46 @@ public class TransactionControl implements Initializable {
             }
         });
         dataAkunComboBox.setButtonCell(dataAkunComboBox.getCellFactory().call(null));
+    }
+
+    // stage scene handler [template, label, submit, addanother record, checkbox]
+    @FXML
+    private void addLabelOnTransaction(ActionEvent e) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/label.fxml"));
+        Parent root = loader.load();
+        Stage stage = new Stage();
+
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.initModality(Modality.APPLICATION_MODAL);
+
+        DropShadow dropShadow = new DropShadow();
+        dropShadow.setRadius(10.0);
+        dropShadow.setOffsetX(5.0);
+        dropShadow.setOffsetY(5.0);
+        dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+        root.setEffect(dropShadow);
+
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);
+        stage.setScene(scene);
+
+        stage.setMinWidth(450);
+        stage.setMinHeight(560);
+
+        root.setOnMousePressed(event -> {
+            xOffset = event.getSceneX();
+            yOffset = event.getSceneY();
+        });
+
+        root.setOnMouseDragged(event -> {
+            stage.setX(event.getScreenX() - xOffset);
+            stage.setY(event.getScreenY() - yOffset);
+        });
+
+        LabelControl ctrl = loader.getController();
+        ctrl.setStage(stage);
+
+        stage.showAndWait();
     }
 
     @Override

@@ -7,7 +7,6 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -20,11 +19,11 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="500.0" minWidth="450.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AccountControl">
+<AnchorPane fx:id="rootPane" maxWidth="-Infinity" minWidth="0.0" prefHeight="370.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.transaction.LabelControl">
    <children>
       <AnchorPane layoutY="-3.0" minHeight="75.0" prefHeight="75.0" styleClass="white-box" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label layoutX="25.0" layoutY="29.0" text="Add Account" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
+            <Label layoutX="25.0" layoutY="29.0" text="Add Label" AnchorPane.leftAnchor="5.0" AnchorPane.topAnchor="25.0">
                <font>
                   <Font size="15.0" />
                </font>
@@ -53,58 +52,15 @@
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                      </columnConstraints>
                      <rowConstraints>
-                        <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="70.0" minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="2.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
-                        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.rowIndex="3">
+                        <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" GridPane.rowIndex="3">
                            <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="7.0" prefWidth="400.0">
-                                 <children>
-                                    <Label text="Initial amount *" />
-                                 </children>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                              </HBox>
-                              <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
-                                 <children>
-                                    <Spinner fx:id="amountSpinner" editable="true" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
-                                    <ComboBox fx:id="currencyComboBox" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="80.0" styleClass="modern-btn" />
-                                 </children>
-                              </HBox>
-                           </children>
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </VBox>
-                        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.rowIndex="2">
-                           <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="400.0">
-                                 <children>
-                                    <Label text="Account type" />
-                                 </children>
-                                 <opaqueInsets>
-                                    <Insets />
-                                 </opaqueInsets>
-                              </HBox>
-                              <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
-                                 <children>
-                                    <ComboBox fx:id="accountComboBox" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
-                                 </children>
-                              </HBox>
-                           </children>
-                           <GridPane.margin>
-                              <Insets />
-                           </GridPane.margin>
-                        </VBox>
-                        <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" GridPane.rowIndex="5">
-                           <children>
-                              <Button fx:id="submitButton" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleSubmitAction" stylesheets="@../stylesheet/button.css" text="Add Account" VBox.vgrow="ALWAYS">
+                              <Button fx:id="submitButton" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#handleSubmitAction" stylesheets="@../stylesheet/button.css" text="Add Label" VBox.vgrow="ALWAYS">
                                  <styleClass>
                                     <String fx:value="modern-btn" />
                                     <String fx:value="submit-button" />
@@ -120,7 +76,7 @@
                         <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0">
                            <children>
                               <Label text="Name *" />
-                              <TextField fx:id="accountName" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Account name" />
+                              <TextField fx:id="labelName" maxHeight="40.0" maxWidth="1.7976931348623157E308" minHeight="40.0" prefHeight="40.0" promptText="Label name" />
                            </children>
                         </VBox>
                         <VBox layoutX="10.0" layoutY="164.0" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" GridPane.rowIndex="1">
@@ -135,7 +91,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox fx:id="colorComboBox" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="colorComboBox" maxHeight="40.0" maxWidth="1.7976931348623157E308" minHeight="40.0" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>

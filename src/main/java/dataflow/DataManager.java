@@ -193,7 +193,12 @@ public class DataManager {
     public void addLabel(TipeLabel tipelabel){
         int newId = Database.getInstance().insertTipeLabel(tipelabel);
         if(newId > 0) {
+            tipelabel.setId(newId);
             dataTipeLabel.add(tipelabel);
+            log.info("akun baru [{}] berhasil dibuat!", tipelabel.getNama());
+            Popup.showSucces("Label baru berhasil dibuat!", "Label " + tipelabel.getNama() + " berhasil dibuat!");
+        } else {
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
 }

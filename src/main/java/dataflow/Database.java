@@ -216,23 +216,43 @@ public class Database {
     // [4] >=== akses dan modifikasi data tipelabel
     public int insertTipeLabel(TipeLabel tipelabel) {
         String querySql = "INSERT INTO tipelabel (nama, warna) VALUES (?, ?)";
-        try (PreparedStatement perintah = koneksi.prepareStatement(querySql)){
 
-            PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS);
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            int newId = rs.getInt(1);
+        try {
+            koneksi.setAutoCommit(false);
+            try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
 
-            perintah.setString(1, tipelabel.getNama());
-            perintah.setString(2, Converter.colorToHex(tipelabel.getWarna()));
+                ps.setString(1, tipelabel.getNama());
+                ps.setString(2, Converter.colorToHex(tipelabel.getWarna()));
 
-            perintah.executeUpdate();
-            log.info("tipe label berhasil ditambahkan!");
-            return newId;
+                if (ps.executeUpdate() == 0) {
+                    throw new SQLException("Insert tidak mengubah data");
+                }
 
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (!rs.next()) {
+                        throw new SQLException("Generated key tidak ditemukan");
+                    }
+
+                    int newId = rs.getInt(1);
+                    koneksi.commit();
+                    return newId;
+                }
+            }
         } catch (SQLException e) {
-            log.error("tipe label gagal dibuat!");
+            try {
+                koneksi.rollback();
+            } catch (SQLException ex) {
+                log.error("rollback database gagal!", ex);
+            }
+            log.error("insert label gagal!", e);
             return -1;
+
+        } finally {
+            try {
+                koneksi.setAutoCommit(true);
+            } catch (SQLException e) {
+                log.error("gagal reset autoCommit!", e);
+            }
         }
     }
 
@@ -444,7 +464,7 @@ public class Database {
 
     // [7] >=== manipulasi data akun
     public int insertAkun(Akun dataAkun) {
-        String sql = """
+        String querySql = """
         INSERT INTO akun (nama, warna, icon_path, jumlah, id_mata_uang)
         VALUES (?, ?, ?, ?, ?)
         """;
@@ -452,7 +472,7 @@ public class Database {
         try {
             koneksi.setAutoCommit(false); // mulai
 
-            try (PreparedStatement ps = koneksi.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
 
                 ps.setString(1, dataAkun.getNama());
                 ps.setString(2, Converter.colorToHex(dataAkun.getWarna()));

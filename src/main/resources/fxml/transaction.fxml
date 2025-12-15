@@ -213,12 +213,12 @@
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
                                     <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
-                                    <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
+                                    <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" onAction="#addLabelOnTransaction" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                        <graphic>
-                                          <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="addLabelButton" fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../icons/addW.png" />
                                              </image>
