@@ -487,7 +487,14 @@ public class TransactionControl implements Initializable {
         ParallelTransition showAnim = new ParallelTransition(fade, scale);
         showAnim.setInterpolator(Interpolator.EASE_BOTH);
         showAnim.play();
+        activateIncome();
     }
+
+    private void activateIncome() {
+        select(1, 0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71");
+        updateCategoryCombo("IN");
+    }
+
 
     private void initButtons() {
 
@@ -499,10 +506,11 @@ public class TransactionControl implements Initializable {
         // incomeBtn_1.setOnAction(e -> select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
         // expenseBtn_1.setOnAction(e -> select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222"));
 
-        incomeBtn_1.setOnAction(e -> {
-            select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71");
-            updateCategoryCombo("IN");
-        });
+        incomeBtn_1.setOnAction(e -> activateIncome());
+//        incomeBtn_1.setOnAction(e -> {
+//            select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71");
+//            updateCategoryCombo("IN");
+//        });
         expenseBtn_1.setOnAction(e -> {
             select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222");
             updateCategoryCombo("OUT");
