@@ -433,6 +433,18 @@ public class TransactionControl implements Initializable {
         inoutListener();
         defaultDate();
 
+        // disable combobox
+        mataUangCombo_inout.setMouseTransparent(true);
+        mataUangCombo_inout.setFocusTraversable(false);
+        mataUangCombo_from.setMouseTransparent(true);
+        mataUangCombo_from.setFocusTraversable(false);
+        mataUangCombo_to.setMouseTransparent(true);
+        mataUangCombo_to.setFocusTraversable(false);
+
+        mataUangCombo_inout.getStyleClass().add("locked");
+        mataUangCombo_from.getStyleClass().add("locked");
+        mataUangCombo_to.getStyleClass().add("locked");
+
         // load data combobox
         loadCategoryComboBox();
         loadMataUangComboBox(mataUangCombo_inout);
@@ -648,17 +660,23 @@ public class TransactionControl implements Initializable {
         addTemplate_trans.disableProperty().bind(formValid.not());
     }
 
-    // [8] >=== listener
+    // [8] >=== listener combobox
     private void inoutListener() {
         akunComboBox_inout.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                onAccountSelected(newVal.getMataUang());
+                mataUangCombo_inout.setValue(newVal.getMataUang());
             }
         });
-    }
-
-    private void onAccountSelected(MataUang mataUang) {
-        mataUangCombo_inout.setValue(mataUang);
+        akunComboBox_from.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                mataUangCombo_from.setValue(newVal.getMataUang());
+            }
+        });
+        akunComboBox_to.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                mataUangCombo_to.setValue(newVal.getMataUang());
+            }
+        });
     }
 
     // [9] >=== tanggal default

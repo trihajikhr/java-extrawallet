@@ -50,7 +50,7 @@
          <children>
             <StackPane prefHeight="630.0" prefWidth="748.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <GridPane fx:id="inoutForm" hgap="14.0" vgap="7.0">
+                  <GridPane fx:id="inoutForm" hgap="14.0" vgap="7.0" visible="false">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -334,7 +334,7 @@
                         </VBox>
                      </children>
                   </GridPane>
-                  <GridPane fx:id="transForm" hgap="14.0" vgap="7.0" visible="false">
+                  <GridPane fx:id="transForm" hgap="14.0" vgap="7.0">
                      <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -599,9 +599,9 @@
                               <HBox alignment="TOP_CENTER" prefHeight="54.0" prefWidth="400.0" spacing="10.0">
                                  <children>
                                     <Spinner fx:id="spinner_from" maxHeight="40.0" maxWidth="120.0" prefHeight="40.0" />
-                                    <ComboBox fx:id="mataUangCombo_to" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" styleClass="modern-btn" />
-                                    <Spinner fx:id="spinner_to" maxHeight="40.0" maxWidth="120.0" prefHeight="40.0" />
                                     <ComboBox fx:id="mataUangCombo_from" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" styleClass="modern-btn" />
+                                    <Spinner fx:id="spinner_to" maxHeight="40.0" maxWidth="120.0" prefHeight="40.0" />
+                                    <ComboBox fx:id="mataUangCombo_to" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" styleClass="modern-btn" />
                                  </children>
                               </HBox>
                            </children>
