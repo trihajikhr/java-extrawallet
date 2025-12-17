@@ -2,6 +2,7 @@ package helper;
 
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 
@@ -54,5 +55,16 @@ public class IOLogic {
         });
 
         spinner.increment(0); // force init state
+    }
+
+    public static void isTextFieldValid(TextField theTextField, int length) {
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            if (change.getControlNewText().length() <= length) {
+                return change; // allow input
+            } else {
+                return null; // reject input
+            }
+        });
+        theTextField.setTextFormatter(formatter);
     }
 }

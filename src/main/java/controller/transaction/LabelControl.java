@@ -34,6 +34,7 @@ public class LabelControl implements Initializable {
 
     private TransactionControl parentTransaction;
     private TemplateControl parentTemplate;
+    private TransactionControl grandParent;
 
     private Stage stage;
     private boolean closing = false;
@@ -107,7 +108,11 @@ public class LabelControl implements Initializable {
         TipeLabel tipeLabel = new TipeLabel(0, nama, warna);
 
         boolean result = DataManager.getInstance().addLabel(tipeLabel);
-        if(result && parentTransaction != null) {
+        if(parentTemplate != null && result) {
+            parentTemplate.getTipeLabelList().add(tipeLabel);
+            parentTemplate.getTipeLabel().getSelectionModel().select(tipeLabel);
+            grandParent.getTipeLabelList().add(tipeLabel);
+        } else if(result && parentTransaction != null) {
             parentTransaction.getTipeLabelList().add(tipeLabel);
             parentTransaction.getTipeLabelInOut().getSelectionModel().select(tipeLabel);
             parentTransaction.getTipeLabelTrans().getSelectionModel().select(tipeLabel);
@@ -124,7 +129,8 @@ public class LabelControl implements Initializable {
         this.parentTransaction = parent;
     }
 
-    public void setParentTemplate(TemplateControl parent) {
+    public void setParentTemplate(TemplateControl parent, TransactionControl grandParent) {
+        this.grandParent = grandParent;
         this.parentTemplate = parent;
     }
 

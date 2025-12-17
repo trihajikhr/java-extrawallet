@@ -1,6 +1,7 @@
 package controller.transaction;
 
 import dataflow.DataManager;
+import helper.IOLogic;
 import helper.Popup;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
@@ -9,17 +10,20 @@ import javafx.animation.ScaleTransition;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -34,7 +38,9 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class TemplateControl implements Initializable {
@@ -72,16 +78,17 @@ public class TemplateControl implements Initializable {
     private ComboBox<Akun> akunComboBox;
 
     @FXML
-    private ComboBox<Kategori> kategoriComboBox;
+    private ComboBox<Kategori> categoryComboBox;
 
     @FXML
     private ComboBox<TipeLabel> tipeLabelComboBox;
+    private ObservableList<TipeLabel> tipeLabelList = FXCollections.observableArrayList();
 
     @FXML
     private TextField noteText;
 
-    @FXML
-    private ComboBox<String> paymentType, paymentStatus;
+    // payment type & status
+    @FXML private ComboBox<String> paymentType, paymentStatus;
 
     @FXML
     private Button addLabelBtn;
@@ -90,7 +97,7 @@ public class TemplateControl implements Initializable {
     public void initialize(URL url, ResourceBundle rb){
         log.info("template popup terbuka");
         showPopup();
-        theImage = DataManager.getInstance().getImageTransactionForm();
+        getAllInitFunction();
     }
 
     // DIPANGGIL dari controller pemanggil
@@ -100,6 +107,27 @@ public class TemplateControl implements Initializable {
 
     public void setParentController(TransactionControl parent) {
         this.parentController = parent;
+    }
+
+    // kumpulan init function
+    private void getAllInitFunction() {
+        initButtons();
+        theImage = DataManager.getInstance().getImageTransactionForm();
+        initPayment();
+        IOLogic.isTextFieldValid(nameText, 20);
+        IOLogic.isTextFieldValid(noteText, 50);
+
+        loadCategoryComboBox();
+        loadTipeLabelComboBox();
+        loadAkunComboBox();
+        loadMataUangComboBox();
+        activateIncome();
+        IOLogic.makeIntegerOnly(spinnerAmount, 1, 2_147_483_647, 0);
+
+        mataUangComboBox.setMouseTransparent(true);
+        mataUangComboBox.setFocusTraversable(false);
+        mataUangComboBox.getStyleClass().add("locked");
+        mataUangListener();
     }
 
     @FXML
@@ -186,7 +214,7 @@ public class TemplateControl implements Initializable {
 
             LabelControl ctrl = loader.getController();
             ctrl.setStage(stage);
-            ctrl.setParentTemplate(this);
+            ctrl.setParentTemplate(this, parentController);
 
             stage.showAndWait();
 
@@ -194,6 +222,14 @@ public class TemplateControl implements Initializable {
             log.error("gagal membuka panel tambah label!", e);
             Popup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
+    }
+
+    public ObservableList<TipeLabel> getTipeLabelList() {
+        return tipeLabelList;
+    }
+
+    public ComboBox<TipeLabel> getTipeLabel() {
+        return tipeLabelComboBox;
     }
 
     private void initButtons() {
@@ -207,19 +243,24 @@ public class TemplateControl implements Initializable {
         });
     }
 
+    private void initPayment() {
+        paymentType.setItems(DataManager.getInstance().getDataPeymentType());
+        paymentStatus.setItems(DataManager.getInstance().getDataStatusType());
+    }
+
     private void activateIncome() {
         select(0, incomeBtn, incomeImg, incomeLabel, "#01AA71");
         updateCategoryCombo("IN");
     }
 
     private void updateCategoryCombo(String type) {
-        kategoriComboBox.getSelectionModel().clearSelection();
+        categoryComboBox.getSelectionModel().clearSelection();
 
         List<Kategori> filtered = DataManager.getInstance().getDataKategori().stream()
                 .filter(k -> k.getTipe().equals(type))
                 .toList();
 
-        kategoriComboBox.setItems(
+        categoryComboBox.setItems(
                 FXCollections.observableArrayList(filtered)
         );
     }
@@ -252,5 +293,172 @@ public class TemplateControl implements Initializable {
         // reset icon ke hitam
         incomeImg.setImage(theImage[0][1]);
         expenseImg.setImage(theImage[1][1]);
+    }
+
+    private void loadCategoryComboBox(){
+        ArrayList<Kategori> listKategori = DataManager.getInstance().getDataKategori();
+        categoryComboBox.setItems(FXCollections.observableArrayList(listKategori));
+
+        categoryComboBox.setCellFactory(list -> new ListCell<Kategori>() {
+            @Override
+            protected void updateItem(Kategori item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                // icon
+                ImageView iconView = new ImageView(item.getIcon());
+                iconView.setFitWidth(14);
+                iconView.setFitHeight(14);
+                iconView.setPreserveRatio(true);
+
+                // background
+                StackPane iconBox = new StackPane(iconView);
+                iconBox.setPrefSize(28,28);;
+                iconBox.setMaxSize(28,28);
+
+                iconBox.setBackground(new Background(
+                        new BackgroundFill(
+                                item.getWarna(),
+                                new CornerRadii(8),
+                                Insets.EMPTY
+                        )
+                ));
+
+                // teks
+                Label label = new Label(item.getNama());
+                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+                // gabung
+                HBox box = new HBox(10, iconBox, label);
+                box.setAlignment(Pos.CENTER_LEFT);
+
+                setGraphic(box);
+            }
+        });
+        categoryComboBox.setButtonCell(categoryComboBox.getCellFactory().call(null));
+    }
+
+    private void loadTipeLabelComboBox(){
+        ArrayList<TipeLabel> dataTipelabel = DataManager.getInstance().getDataTipeLabel();
+        tipeLabelList = FXCollections.observableArrayList(dataTipelabel);
+
+        tipeLabelComboBox.setItems(tipeLabelList);
+        tipeLabelComboBox.setCellFactory(list -> new ListCell<TipeLabel>() {
+            @Override
+            protected void updateItem(TipeLabel item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                // icon
+                ImageView iconView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/icons/tagW.png")).toString()));
+                iconView.setFitWidth(14);
+                iconView.setFitHeight(14);
+                iconView.setPreserveRatio(true);
+
+                // background
+                StackPane iconBox = new StackPane(iconView);
+                iconBox.setPrefSize(28,28);;
+                iconBox.setMaxSize(28,28);
+
+                iconBox.setBackground(new Background(
+                        new BackgroundFill(
+                                item.getWarna(),
+                                new CornerRadii(8),
+                                Insets.EMPTY
+                        )
+                ));
+
+                // teks
+                Label label = new Label(item.getNama());
+                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+                // gabung
+                HBox box = new HBox(10, iconBox, label);
+                box.setAlignment(Pos.CENTER_LEFT);
+                setGraphic(box);
+            }
+        });
+        tipeLabelComboBox.setButtonCell(tipeLabelComboBox.getCellFactory().call(null));
+    }
+
+    private void loadAkunComboBox() {
+        ArrayList<Akun> dataAkun = DataManager.getInstance().getDataAkun();
+        akunComboBox.setItems(FXCollections.observableArrayList(dataAkun));
+
+        akunComboBox.setCellFactory(list -> new ListCell<Akun>() {
+            @Override
+            protected void updateItem(Akun item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                // icon
+                ImageView iconView = new ImageView(item.getIcon());
+                iconView.setFitWidth(14);
+                iconView.setFitHeight(14);
+                iconView.setPreserveRatio(true);
+
+                // background
+                StackPane iconBox = new StackPane(iconView);
+                iconBox.setPrefSize(28,28);;
+                iconBox.setMaxSize(28,28);
+
+                iconBox.setBackground(new Background(
+                        new BackgroundFill(
+                                item.getWarna(),
+                                new CornerRadii(8),
+                                Insets.EMPTY
+                        )
+                ));
+
+                // teks
+                Label label = new Label(item.getNama());
+                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+                // gabung
+                HBox box = new HBox(10, iconBox, label);
+                box.setAlignment(Pos.CENTER_LEFT);
+
+                setGraphic(box);
+            }
+        });
+        akunComboBox.setButtonCell(akunComboBox.getCellFactory().call(null));
+    }
+
+    private void loadMataUangComboBox() {
+        mataUangComboBox.setItems(DataManager.getInstance().getDataMataUang());
+        mataUangComboBox.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(MataUang c, boolean empty) {
+                super.updateItem(c, empty);
+                setText(empty || c == null
+                        ? null
+//                        : c.getCode() + " — " + c.getName());
+                        : c.getKode());
+            }
+        });
+        mataUangComboBox.setButtonCell(mataUangComboBox.getCellFactory().call(null));
+    }
+
+    private void mataUangListener() {
+        akunComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                mataUangComboBox.setValue(newVal.getMataUang());
+            }
+        });
     }
 }

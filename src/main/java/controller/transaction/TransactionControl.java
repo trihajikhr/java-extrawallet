@@ -548,7 +548,6 @@ public class TransactionControl implements Initializable {
         updateCategoryCombo("IN");
     }
 
-
     private void initButtons() {
 
         // Set class dasar
