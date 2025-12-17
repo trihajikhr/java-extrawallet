@@ -8,9 +8,10 @@
 .account-name {
     -fx-font-size: 14px;
     -fx-font-weight: bold;
+    -fx-text-fill: white;
 }
 
 .account-balance {
     -fx-font-size: 12px;
-    -fx-text-fill: #4caf50;
+    -fx-text-fill: white;
 }

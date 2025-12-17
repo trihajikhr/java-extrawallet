@@ -32,7 +32,8 @@ public class LabelControl implements Initializable {
     @FXML private ComboBox<ColorItem> colorComboBox;
     @FXML private Button submitButton;
 
-    private TransactionControl parentController;
+    private TransactionControl parentTransaction;
+    private TemplateControl parentTemplate;
 
     private Stage stage;
     private boolean closing = false;
@@ -106,10 +107,10 @@ public class LabelControl implements Initializable {
         TipeLabel tipeLabel = new TipeLabel(0, nama, warna);
 
         boolean result = DataManager.getInstance().addLabel(tipeLabel);
-        if(result && parentController != null) {
-            parentController.getTipeLabelList().add(tipeLabel);
-            parentController.getTipeLabelInOut().getSelectionModel().select(tipeLabel);
-            parentController.getTipeLabelTrans().getSelectionModel().select(tipeLabel);
+        if(result && parentTransaction != null) {
+            parentTransaction.getTipeLabelList().add(tipeLabel);
+            parentTransaction.getTipeLabelInOut().getSelectionModel().select(tipeLabel);
+            parentTransaction.getTipeLabelTrans().getSelectionModel().select(tipeLabel);
         }
         closePopup();
     }
@@ -119,8 +120,12 @@ public class LabelControl implements Initializable {
         this.stage = stage;
     }
 
-    public void setParentController(TransactionControl parent) {
-        this.parentController = parent;
+    public void setParentTransaction(TransactionControl parent) {
+        this.parentTransaction = parent;
+    }
+
+    public void setParentTemplate(TemplateControl parent) {
+        this.parentTemplate = parent;
     }
 
     @FXML

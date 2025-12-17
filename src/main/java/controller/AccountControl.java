@@ -157,6 +157,18 @@ public class AccountControl implements Initializable {
         closePopup();
     }
 
+    private void isTextFieldValid(TextField theTextField) {
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            if (change.getControlNewText().length() <= 15) {
+                return change; // allow input
+            } else {
+                return null; // reject input
+            }
+        });
+
+        theTextField.setTextFormatter(formatter);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("Popup account terbuka!");
@@ -164,6 +176,8 @@ public class AccountControl implements Initializable {
         colorComboBox.setItems(DataManager.getInstance().getDataColor());
         accountComboBox.setItems(DataManager.getInstance().getDataAccountItem());
         currencyComboBox.setItems(DataManager.getInstance().getDataMataUang());
+
+        isTextFieldValid(accountName);
 
         isFormComplete();
 

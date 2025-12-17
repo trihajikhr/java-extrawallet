@@ -279,6 +279,20 @@ public class DataSeeder {
                             new Image(Objects.requireNonNull(getClass().getResource("/category-icons/15_others.png")).toString()),
                             "/category-icons/15_others.png",
                             Color.web("#62718a")
+                    ), new Kategori (
+                            31,
+                        "IN",
+                            "Transfer, withdraw",
+                            new Image(Objects.requireNonNull(getClass().getResource("/category-icons/transfer_extra.png")).toString()),
+                            "/category-icons/transfer_extra.png",
+                            Color.web("#32CD32")
+                    ), new Kategori (
+                            32,
+                            "OUT",
+                            "Transfer, withdraw",
+                            new Image(Objects.requireNonNull(getClass().getResource("/category-icons/transfer_extra.png")).toString()),
+                            "/category-icons/transfer_extra.png",
+                            Color.web("#32CD32")
                     )
             );
             log.info("pembuatan data kategori berhasil!");

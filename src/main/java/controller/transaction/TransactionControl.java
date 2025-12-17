@@ -2,6 +2,7 @@ package controller.transaction;
 
 import dataflow.DataManager;
 import helper.IOLogic;
+import helper.Popup;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -32,7 +33,6 @@ import javafx.util.Duration;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -110,6 +110,78 @@ public class TransactionControl implements Initializable {
     @FXML Button submit_trans;
     @FXML Button addTemplate_inout;
     @FXML Button addTemplate_trans;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        log.info("Transaksi pop up terbuka");
+        showPopup();
+
+        // isformcomplete function
+        isInOutFormComplete();
+        isTransFormComplete();
+
+        // beberapa fungsi init
+        initPaymentData();
+        messageNotesBinding();
+        inoutListener();
+        defaultDate();
+
+        // disable combobox
+        mataUangCombo_inout.setMouseTransparent(true);
+        mataUangCombo_inout.setFocusTraversable(false);
+        mataUangCombo_from.setMouseTransparent(true);
+        mataUangCombo_from.setFocusTraversable(false);
+        mataUangCombo_to.setMouseTransparent(true);
+        mataUangCombo_to.setFocusTraversable(false);
+
+        mataUangCombo_inout.getStyleClass().add("locked");
+        mataUangCombo_from.getStyleClass().add("locked");
+        mataUangCombo_to.getStyleClass().add("locked");
+
+        // load data combobox
+        loadCategoryComboBox();
+        loadMataUangComboBox(mataUangCombo_inout);
+        loadMataUangComboBox(mataUangCombo_from);
+        loadMataUangComboBox(mataUangCombo_to);
+        loadAkunComboBox(akunComboBox_inout);
+        loadAkunComboBox(akunComboBox_from);
+        loadAkunComboBox(akunComboBox_to);
+        initTipeLabelList();
+        spinnerLogicHandler();
+
+        loadTipeLabelComboBox(tipeLabel_inout);
+        loadTipeLabelComboBox(tipeLabel_trans);
+
+        // load image
+        theImage = DataManager.getInstance().getImageTransactionForm();
+
+        inoutForm.setVisible(true);   // default
+        transForm.setVisible(false);
+
+        initButtons();
+        clearSelection(1); // default: semua putih, teks hitam, icon hitam
+
+        rootPane.setOpacity(0);
+
+        rootPane.setScaleX(0.8);
+        rootPane.setScaleY(0.8);
+        rootPane.setOpacity(0);
+
+        FadeTransition fade = new FadeTransition(Duration.millis(200), rootPane);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(200), rootPane);
+        scale.setFromX(0.8);
+        scale.setFromY(0.8);
+        scale.setToX(1);
+        scale.setToY(1);
+
+        ParallelTransition showAnim = new ParallelTransition(fade, scale);
+        showAnim.setInterpolator(Interpolator.EASE_BOTH);
+        showAnim.play();
+        activateIncome();
+    }
 
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
@@ -376,118 +448,99 @@ public class TransactionControl implements Initializable {
 
     // stage scene handler [template, label, submit, addanother record, checkbox]
     @FXML
-    private void addLabelOnTransaction(ActionEvent e) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/label.fxml"));
-        Parent root = loader.load();
-        Stage stage = new Stage();
+    private void addLabelOnTransaction(ActionEvent evt) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/label.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
 
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.initModality(Modality.APPLICATION_MODAL);
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
 
-        DropShadow dropShadow = new DropShadow();
-        dropShadow.setRadius(10.0);
-        dropShadow.setOffsetX(5.0);
-        dropShadow.setOffsetY(5.0);
-        dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
-        root.setEffect(dropShadow);
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setRadius(10.0);
+            dropShadow.setOffsetX(5.0);
+            dropShadow.setOffsetY(5.0);
+            dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+            root.setEffect(dropShadow);
 
-        Scene scene = new Scene(root);
-        scene.setFill(Color.TRANSPARENT);
-        stage.setScene(scene);
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
 
 //        stage.setMinWidth(450);
 //        stage.setMinHeight(560);
 //        stage.setMaxWidth(800);
 //        stage.setMaxHeight(700);
 
-        root.setOnMousePressed(event -> {
-            xOffset = event.getSceneX();
-            yOffset = event.getSceneY();
-        });
+            root.setOnMousePressed(event -> {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            });
 
-        root.setOnMouseDragged(event -> {
-            stage.setX(event.getScreenX() - xOffset);
-            stage.setY(event.getScreenY() - yOffset);
-        });
+            root.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            });
 
-        LabelControl ctrl = loader.getController();
-        ctrl.setStage(stage);
-        ctrl.setParentController(this);
+            LabelControl ctrl = loader.getController();
+            ctrl.setStage(stage);
+            ctrl.setParentTransaction(this);
 
+            stage.showAndWait();
 
-        stage.showAndWait();
+        } catch (IOException e) {
+            log.error("gagal membuka panel tambah label!", e);
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+        }
     }
 
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        log.info("Transaksi pop up terbuka");
-        showPopup();
+    @FXML
+    private void addTemplateOnTransaction(ActionEvent evt) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/template.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
 
-        // isformcomplete function
-        isInOutFormComplete();
-        isTransFormComplete();
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
 
-        // beberapa fungsi init
-        initPaymentData();
-        messageNotesBinding();
-        inoutListener();
-        defaultDate();
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setRadius(10.0);
+            dropShadow.setOffsetX(5.0);
+            dropShadow.setOffsetY(5.0);
+            dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+            root.setEffect(dropShadow);
 
-        // disable combobox
-        mataUangCombo_inout.setMouseTransparent(true);
-        mataUangCombo_inout.setFocusTraversable(false);
-        mataUangCombo_from.setMouseTransparent(true);
-        mataUangCombo_from.setFocusTraversable(false);
-        mataUangCombo_to.setMouseTransparent(true);
-        mataUangCombo_to.setFocusTraversable(false);
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
 
-        mataUangCombo_inout.getStyleClass().add("locked");
-        mataUangCombo_from.getStyleClass().add("locked");
-        mataUangCombo_to.getStyleClass().add("locked");
+//        stage.setMinWidth(450);
+//        stage.setMinHeight(560);
+//        stage.setMaxWidth(800);
+//        stage.setMaxHeight(700);
 
-        // load data combobox
-        loadCategoryComboBox();
-        loadMataUangComboBox(mataUangCombo_inout);
-        loadMataUangComboBox(mataUangCombo_from);
-        loadMataUangComboBox(mataUangCombo_to);
-        loadAkunComboBox(akunComboBox_inout);
-        loadAkunComboBox(akunComboBox_from);
-        loadAkunComboBox(akunComboBox_to);
-        initTipeLabelList();
-        spinnerLogicHandler();
+            root.setOnMousePressed(event -> {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            });
 
-        loadTipeLabelComboBox(tipeLabel_inout);
-        loadTipeLabelComboBox(tipeLabel_trans);
+            root.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            });
 
-        // load image
-        theImage = DataManager.getInstance().getImageTransactionForm();
+            TemplateControl ctrl = loader.getController();
+            ctrl.setStage(stage);
+            ctrl.setParentController(this);
 
-        inoutForm.setVisible(true);   // default
-        transForm.setVisible(false);
+            stage.showAndWait();
 
-        initButtons();
-        clearSelection(1); // default: semua putih, teks hitam, icon hitam
-
-        rootPane.setOpacity(0);
-
-        rootPane.setScaleX(0.8);
-        rootPane.setScaleY(0.8);
-        rootPane.setOpacity(0);
-
-        FadeTransition fade = new FadeTransition(Duration.millis(200), rootPane);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-
-        ScaleTransition scale = new ScaleTransition(Duration.millis(200), rootPane);
-        scale.setFromX(0.8);
-        scale.setFromY(0.8);
-        scale.setToX(1);
-        scale.setToY(1);
-
-        ParallelTransition showAnim = new ParallelTransition(fade, scale);
-        showAnim.setInterpolator(Interpolator.EASE_BOTH);
-        showAnim.play();
-        activateIncome();
+        } catch (IOException e) {
+            log.error("gagal membuka panel template!", e);
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+        }
     }
 
     private void activateIncome() {
@@ -666,6 +719,11 @@ public class TransactionControl implements Initializable {
 
         submit_trans.disableProperty().bind(formValid.not());
         addTemplate_trans.disableProperty().bind(formValid.not());
+
+        // listener
+        formValid.addListener((obs, oldV, newV) ->
+                System.out.println("FORM VALID = " + newV)
+        );
     }
 
     // [8] >=== listener combobox
@@ -693,7 +751,7 @@ public class TransactionControl implements Initializable {
         date_trans.setValue(LocalDate.now());
     }
 
-    // [10] >=== handle submit button
+    // [10] >=== submit button handler
     @FXML
     private void inoutSubmitHandler() {
         String tipe = getValueChoosen() == 1 ? "IN" : "OUT";
@@ -712,6 +770,73 @@ public class TransactionControl implements Initializable {
                 jumlah,
                 akun,
                 kategori,
+                tipeLabel,
+                tanggal,
+                keterangan,
+                payment,
+                status
+        ));
+
+        closePopup();
+    }
+
+    @FXML
+    private void transSubmitHandler() {
+        Akun fromAkun = akunComboBox_from.getValue();
+        Akun toAkun = akunComboBox_to.getValue();
+        int fromJumlah = spinner_from.getValue();
+        int toJumlah = spinner_to.getValue();
+        TipeLabel tipeLabel = tipeLabel_trans.getValue();
+        LocalDate tanggal = date_trans.getValue();
+        String keterangan = note_trans.getText();
+        String payment = paymentType_trans.getValue();
+        String status = paymentStatus_trans.getValue();
+
+        Kategori fromKategori = null;
+        for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
+            if(ktgr.getId() == 32) {
+                fromKategori = ktgr;
+                break;
+            }
+        }
+
+        if(fromKategori == null) {
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            return;
+        }
+
+        DataManager.getInstance().addTransaksi(new Transaksi(
+                0,
+                "OUT",
+                fromJumlah,
+                fromAkun,
+                fromKategori,
+                tipeLabel,
+                tanggal,
+                keterangan,
+                payment,
+                status
+        ));
+
+        Kategori toKategori = null;
+        for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
+            if(ktgr.getId() == 31) {
+                toKategori = ktgr;
+                break;
+            }
+        }
+
+        if(toKategori == null) {
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            return;
+        }
+
+        DataManager.getInstance().addTransaksi(new Transaksi(
+                0,
+                "IN",
+                toJumlah,
+                toAkun,
+                toKategori,
                 tipeLabel,
                 tanggal,
                 keterangan,

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Transaksi {
     protected int id;
-    protected String tipe; // [IN/OUT/TRS]
+    protected String tipe; // [IN/OUT]
     protected int jumlah;
     protected Akun akun;
     protected Kategori kategori;

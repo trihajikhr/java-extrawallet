@@ -14,6 +14,9 @@
       <assistant-state connection-id="034783bf-e4a1-417d-85e7-3be661288587" default-profile-name="" selected-conversation-id="" assistant-type="GENERIC" availability="UNAVAILABLE" acknowledgement="NONE">
         <conversations />
       </assistant-state>
+      <assistant-state connection-id="0bd0eea5-8509-4f24-a4e4-1550eb990735" default-profile-name="" selected-conversation-id="" assistant-type="GENERIC" availability="UNAVAILABLE" acknowledgement="NONE">
+        <conversations />
+      </assistant-state>
     </assistants>
   </component>
   <component name="DBNavigator.Project.DatabaseBrowserManager">
@@ -38,9 +41,11 @@
   </component>
   <component name="DBNavigator.Project.DatabaseSessionManager">
     <connection id="034783bf-e4a1-417d-85e7-3be661288587" />
+    <connection id="0bd0eea5-8509-4f24-a4e4-1550eb990735" />
   </component>
   <component name="DBNavigator.Project.DatasetFilterManager">
     <filter-actions connection-id="0bd0eea5-8509-4f24-a4e4-1550eb990735" dataset="main.akun" active-filter-id="" />
+    <filter-actions connection-id="0bd0eea5-8509-4f24-a4e4-1550eb990735" dataset="main.transaksi" active-filter-id="" />
   </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
