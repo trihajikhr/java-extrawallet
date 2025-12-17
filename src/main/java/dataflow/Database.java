@@ -648,7 +648,11 @@ public class Database {
                 ps.setInt(3, temp.getJumlah());
                 ps.setInt(4, temp.getAkun().getId());
                 ps.setInt(5, temp.getKategori().getId());
-                ps.setInt(6, temp.getLabel().getId());
+                if (temp.getLabel() != null) {
+                    ps.setInt(6, temp.getLabel().getId());
+                } else {
+                    ps.setNull(6, Types.INTEGER);
+                }
                 ps.setString(7, temp.getKeterangan());
                 ps.setString(8, temp.getMetodeBayar());
                 ps.setString(9, temp.getStatus());

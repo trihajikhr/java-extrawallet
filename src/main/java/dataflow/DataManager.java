@@ -39,13 +39,13 @@ public class DataManager {
         DataSeeder.getInstance().seedAccountItem();
         DataSeeder.getInstance().seedCurrency();
         theImage = DataSeeder.getInstance().seedImageTransactionForm();
-        dataTemplate = Database.getInstance().fetchTemplate();
-        dataTransaksi = Database.getInstance().fetchTransaksi();
     }
 
     public void fetchDataDatabase() {
         dataAkun = Database.getInstance().fetchAkun();
         dataTipeLabel = Database.getInstance().fetchTipeLabel();
+        dataTemplate = Database.getInstance().fetchTemplate();
+        dataTransaksi = Database.getInstance().fetchTransaksi();
     }
 
     public ArrayList<Template> getDataTemplate() {

@@ -152,7 +152,7 @@ public class TransactionControl implements Initializable {
         loadAkunComboBox(akunComboBox_to);
         initTipeLabelList();
         spinnerLogicHandler();
-        loadTemplate();
+        initTemplate();
 
         loadTipeLabelComboBox(tipeLabel_inout);
         loadTipeLabelComboBox(tipeLabel_trans);
@@ -426,14 +426,13 @@ public class TransactionControl implements Initializable {
         currencyComboBox.setButtonCell(currencyComboBox.getCellFactory().call(null));
     }
 
-    private void loadTemplate() {
-        ArrayList<Template> dataTemplate = DataManager.getInstance().getDataTemplate();
-
-        dataTemplateList = FXCollections.observableArrayList(dataTemplate);
+    private void initTemplate() {
+        dataTemplateList = FXCollections.observableArrayList(
+                DataManager.getInstance().getDataTemplate()
+        );
         dataTemplateComboBox.setItems(dataTemplateList);
-        dataTemplateComboBox.setItems(FXCollections.observableArrayList(dataTemplate));
 
-        dataTemplateComboBox.setCellFactory(item -> new ListCell<>() {
+        dataTemplateComboBox.setCellFactory(cb -> new ListCell<>() {
             @Override
             protected void updateItem(Template temp, boolean empty) {
                 super.updateItem(temp, empty);
@@ -441,7 +440,9 @@ public class TransactionControl implements Initializable {
             }
         });
 
-        dataTemplateComboBox.setButtonCell(dataTemplateComboBox.getCellFactory().call(null));
+        dataTemplateComboBox.setButtonCell(
+                dataTemplateComboBox.getCellFactory().call(null)
+        );
     }
 
     private void initTipeLabelList() {

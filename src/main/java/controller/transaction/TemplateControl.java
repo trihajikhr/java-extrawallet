@@ -521,5 +521,7 @@ public class TemplateControl implements Initializable {
             parentTransaction.getTemplateList().add(newData);
             parentTransaction.getTempleteComboBox().getSelectionModel().select(newData);
         }
+
+        closePopup();
     }
 }
