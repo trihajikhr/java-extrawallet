@@ -7,6 +7,8 @@ import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
@@ -29,10 +31,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
-import model.Akun;
-import model.Kategori;
-import model.MataUang;
-import model.TipeLabel;
+import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +52,7 @@ public class TemplateControl implements Initializable {
     private double xOffset = 0;
     private double yOffset = 0;
 
-    private TransactionControl parentController;
+    private TransactionControl parentTransaction;
 
     @FXML
     private AnchorPane rootPane;
@@ -91,7 +90,7 @@ public class TemplateControl implements Initializable {
     @FXML private ComboBox<String> paymentType, paymentStatus;
 
     @FXML
-    private Button addLabelBtn;
+    private Button submitButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb){
@@ -105,8 +104,8 @@ public class TemplateControl implements Initializable {
         this.stage = stage;
     }
 
-    public void setParentController(TransactionControl parent) {
-        this.parentController = parent;
+    public void setParentTransaction(TransactionControl parent) {
+        this.parentTransaction = parent;
     }
 
     // kumpulan init function
@@ -128,6 +127,7 @@ public class TemplateControl implements Initializable {
         mataUangComboBox.setFocusTraversable(false);
         mataUangComboBox.getStyleClass().add("locked");
         mataUangListener();
+        isFormComplete();
     }
 
     @FXML
@@ -214,7 +214,7 @@ public class TemplateControl implements Initializable {
 
             LabelControl ctrl = loader.getController();
             ctrl.setStage(stage);
-            ctrl.setParentTemplate(this, parentController);
+            ctrl.setParentTemplate(this, parentTransaction);
 
             stage.showAndWait();
 
@@ -224,12 +224,12 @@ public class TemplateControl implements Initializable {
         }
     }
 
-    public ObservableList<TipeLabel> getTipeLabelList() {
-        return tipeLabelList;
-    }
-
     public ComboBox<TipeLabel> getTipeLabel() {
         return tipeLabelComboBox;
+    }
+
+    public ObservableList<TipeLabel> getTipeLabelList() {
+        return tipeLabelList;
     }
 
     private void initButtons() {
@@ -460,5 +460,66 @@ public class TemplateControl implements Initializable {
                 mataUangComboBox.setValue(newVal.getMataUang());
             }
         });
+    }
+
+    private void isFormComplete() {
+        BooleanBinding valueChoosenValid = valueChoosen.isNotEqualTo(0);
+        BooleanBinding nameValid =
+                Bindings.createBooleanBinding(
+                () -> !nameText.getText().trim().isEmpty(),
+                nameText.textProperty()
+        );
+
+        BooleanBinding amountValid =
+                Bindings.createBooleanBinding(
+                () -> spinnerAmount.getValue() != null && spinnerAmount.getValue() > 0,
+                spinnerAmount.valueProperty()
+        );
+
+        BooleanBinding mataUangValid = mataUangComboBox.valueProperty().isNotNull();
+        BooleanBinding akunValid = akunComboBox.valueProperty().isNotNull();
+        BooleanBinding kategoriValid = categoryComboBox.valueProperty().isNotNull();
+
+        BooleanBinding formValid =
+                valueChoosenValid
+                .and(nameValid)
+                .and(amountValid)
+                .and(mataUangValid)
+                .and(akunValid)
+                .and(kategoriValid);
+        submitButton.disableProperty().bind(formValid.not());
+    }
+
+    // submit handler
+    @FXML
+    private void submitHandler() {
+        String tipe = valueChoosen.getValue() == 1 ? "IN" : "OUT";
+        String nama = nameText.getText();
+        int jumlah = spinnerAmount.getValue();
+        Akun dataAkun = akunComboBox.getValue();
+        Kategori dataKategori = categoryComboBox.getValue();
+        TipeLabel dataLabel = tipeLabelComboBox.getValue();
+        String keterangan = noteText.getText();
+        String payment = paymentType.getValue();
+        String status = paymentStatus.getValue();
+
+        Template newData = new Template(
+                0,
+                tipe,
+                nama,
+                jumlah,
+                dataAkun,
+                dataKategori,
+                dataLabel,
+                keterangan,
+                payment,
+                status
+        );
+
+        boolean result = DataManager.getInstance().addTemplate(newData);
+        if(result && parentTransaction != null) {
+            parentTransaction.getTemplateList().add(newData);
+            parentTransaction.getTempleteComboBox().getSelectionModel().select(newData);
+        }
     }
 }

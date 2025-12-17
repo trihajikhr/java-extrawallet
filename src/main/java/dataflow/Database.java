@@ -3,11 +3,9 @@ package dataflow;
 import java.io.File;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import model.*;
@@ -190,18 +188,16 @@ public class Database {
             CREATE TABLE IF NOT EXISTS "template" (
                 "id"	INTEGER NOT NULL UNIQUE,
                 "tipe"	TEXT NOT NULL,
-                "jumlah_satu"	INTEGER NOT NULL,
-                "jumlah_dua"	INTEGER,
-                "id_akun_satu"	INTEGER NOT NULL,
-                "id_akun_dua"	INTEGER,
-                "id_kategori"	INTEGER,
+                "nama"	TEXT NOT NULL,
+                "jumlah"	INTEGER NOT NULL,
+                "id_akun"	INTEGER NOT NULL,
+                "id_kategori"	INTEGER NOT NULL,
                 "id_tipelabel"	INTEGER,
                 "keterangan"	TEXT,
                 "metode_transaksi"	TEXT,
                 "status"	TEXT,
                 PRIMARY KEY("id" AUTOINCREMENT),
-                CONSTRAINT "template_akun_dua" FOREIGN KEY("id_akun_dua") REFERENCES "akun"("id") ON DELETE CASCADE,
-                CONSTRAINT "template_akun_satu" FOREIGN KEY("id_akun_satu") REFERENCES "akun"("id") ON DELETE CASCADE,
+                CONSTRAINT "template_akun" FOREIGN KEY("id_akun") REFERENCES "akun"("id") ON DELETE CASCADE,
                 CONSTRAINT "template_kategori" FOREIGN KEY("id_kategori") REFERENCES "kategori"("id") ON DELETE CASCADE,
                 CONSTRAINT "template_label" FOREIGN KEY("id_tipelabel") REFERENCES "tipelabel"("id") ON DELETE CASCADE
             )
@@ -336,7 +332,7 @@ public class Database {
                 String metodeTransaksi = rs.getString("metode_transaksi");
                 String status = rs.getString("status");
 
-                LocalDate tanggal = LocalDate.parse(tanggalSet);
+                LocalDate tanggal = LocalDate.parse(tanggalSet, formatter);
 
                 Akun akun = null;
                 for(Akun item : DataManager.getInstance().getDataAkun()){
@@ -556,6 +552,135 @@ public class Database {
         } catch (SQLException e) {
             log.error("gagal fetch data akun: ", e);
             return null;
+        }
+    }
+
+    public ArrayList<Template> fetchTemplate() {
+        try (Statement stat = koneksi.createStatement()) {
+            ResultSet rs = stat.executeQuery("SELECT * FROM template");
+
+            ArrayList<Template> dataTemplate = new ArrayList<>();
+
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String tipe = rs.getString("tipe");
+                String nama = rs.getString("nama");
+                int jumlah = rs.getInt("jumlah");
+                int idAkun = rs.getInt("id_akun");
+                int idKategori = rs.getInt("id_kategori");
+                int idTipeLabel = rs.getInt("id_tipelabel");
+                String keterangan = rs.getString("keterangan");
+                String metodeTransaksi = rs.getString("metode_transaksi");
+                String status = rs.getString("status");
+
+                Akun akun = null;
+                for(Akun item : DataManager.getInstance().getDataAkun()) {
+                    if(item.getId() == idAkun) {
+                        akun = item;
+                        break;
+                    }
+                }
+
+                if(akun == null) {
+                    log.error("id_akun {} tidak ditemukan!", idAkun);
+                    continue;
+                }
+
+                Kategori kategori = null;
+                for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
+                    if(ktgr.getId() == idKategori) {
+                        kategori = ktgr;
+                        break;
+                    }
+                }
+
+                if(kategori == null) {
+                    log.error("id_kategori {} tidak ditemukan!", idKategori);
+                    continue;
+                }
+
+                TipeLabel tipeLabel = null;
+                for(TipeLabel item : DataManager.getInstance().getDataTipeLabel()){
+                    if(item.getId() == idTipeLabel) {
+                        tipeLabel = item;
+                        break;
+                    }
+                }
+
+                if(tipeLabel == null) {
+                    log.error("id_tipelabel {} tidak ditemukan!", idTipeLabel);
+                    continue;
+                }
+
+                dataTemplate.add(new Template(
+                        id,
+                        tipe,
+                        nama,
+                        jumlah,
+                        akun,
+                        kategori,
+                        tipeLabel,
+                        keterangan,
+                        metodeTransaksi,
+                        status
+                ));
+            }
+
+            log.info("data template berhasil di fetch!");
+            return dataTemplate;
+
+        } catch (SQLException e) {
+            log.error("gagal fetch data template: ", e);
+            return null;
+        }
+    }
+
+    public int insertTemplate(Template temp) {
+        String quertSql = "INSERT INTO template (tipe, nama, jumlah, id_akun, id_kategori, id_tipelabel, keterangan, metode_transaksi, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            koneksi.setAutoCommit(false);
+
+            try (PreparedStatement ps = koneksi.prepareStatement(quertSql, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, temp.getTipe());
+                ps.setString(2, temp.getNama());
+                ps.setInt(3, temp.getJumlah());
+                ps.setInt(4, temp.getAkun().getId());
+                ps.setInt(5, temp.getKategori().getId());
+                ps.setInt(6, temp.getLabel().getId());
+                ps.setString(7, temp.getKeterangan());
+                ps.setString(8, temp.getMetodeBayar());
+                ps.setString(9, temp.getStatus());
+
+                if(ps.executeUpdate() == 0) {
+                    throw new SQLException("insert tidak mengubah data");
+                }
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if(!rs.next()) {
+                        throw new SQLException("generated key tidak ditemukan");
+                    }
+
+                    int newId = rs.getInt(1);
+                    koneksi.commit();
+                    return newId;
+                }
+            }
+        } catch (SQLException e) {
+            try {
+                koneksi.rollback();
+            } catch (SQLException ex) {
+                log.error("rollback database gagal", ex);
+            }
+            log.error("insert akun gagal", e);
+            return -1;
+        } finally {
+            try {
+                koneksi.setAutoCommit(true);
+            } catch (SQLException e) {
+                log.error("gagal reset autoCommit", e);
+            }
         }
     }
 }

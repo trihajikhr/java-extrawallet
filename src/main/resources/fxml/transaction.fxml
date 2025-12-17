@@ -69,7 +69,7 @@
                      <children>
                         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                              <ComboBox fx:id="dataTemplateComboBox" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                               <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" onAction="#addTemplateOnTransaction" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                  <font>
                                     <Font size="14.0" />

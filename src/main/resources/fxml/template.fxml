@@ -194,7 +194,7 @@
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" GridPane.rowIndex="7">
                            <children>
-                              <Button fx:id="submit" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add template" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="submitButton" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#submitHandler" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add template" VBox.vgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />

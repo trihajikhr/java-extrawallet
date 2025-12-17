@@ -85,6 +85,10 @@ public class TransactionControl implements Initializable {
     @FXML private ComboBox<TipeLabel> tipeLabel_inout;
     @FXML private ComboBox<TipeLabel> tipeLabel_trans;
 
+    // template
+    private ObservableList<Template> dataTemplateList = FXCollections.observableArrayList();
+    @FXML private ComboBox<Template> dataTemplateComboBox;
+
     private final ObjectProperty<String> selectedPaymentType =
             new SimpleObjectProperty<>();
 
@@ -148,6 +152,7 @@ public class TransactionControl implements Initializable {
         loadAkunComboBox(akunComboBox_to);
         initTipeLabelList();
         spinnerLogicHandler();
+        loadTemplate();
 
         loadTipeLabelComboBox(tipeLabel_inout);
         loadTipeLabelComboBox(tipeLabel_trans);
@@ -421,6 +426,24 @@ public class TransactionControl implements Initializable {
         currencyComboBox.setButtonCell(currencyComboBox.getCellFactory().call(null));
     }
 
+    private void loadTemplate() {
+        ArrayList<Template> dataTemplate = DataManager.getInstance().getDataTemplate();
+
+        dataTemplateList = FXCollections.observableArrayList(dataTemplate);
+        dataTemplateComboBox.setItems(dataTemplateList);
+        dataTemplateComboBox.setItems(FXCollections.observableArrayList(dataTemplate));
+
+        dataTemplateComboBox.setCellFactory(item -> new ListCell<>() {
+            @Override
+            protected void updateItem(Template temp, boolean empty) {
+                super.updateItem(temp, empty);
+                setText(empty || temp == null ? null : temp.getNama());
+            }
+        });
+
+        dataTemplateComboBox.setButtonCell(dataTemplateComboBox.getCellFactory().call(null));
+    }
+
     private void initTipeLabelList() {
         ArrayList<TipeLabel> data = DataManager.getInstance().getDataTipeLabel();
         tipeLabelList = FXCollections.observableArrayList(data);
@@ -438,6 +461,14 @@ public class TransactionControl implements Initializable {
 
     public ComboBox<TipeLabel> getTipeLabelTrans() {
         return tipeLabel_trans;
+    }
+
+    public ObservableList<Template> getTemplateList() {
+        return dataTemplateList;
+    }
+
+    public ComboBox<Template> getTempleteComboBox() {
+        return dataTemplateComboBox;
     }
 
     private void spinnerLogicHandler() {
@@ -533,8 +564,7 @@ public class TransactionControl implements Initializable {
 
             TemplateControl ctrl = loader.getController();
             ctrl.setStage(stage);
-            ctrl.setParentController(this);
-
+            ctrl.setParentTransaction(this);
             stage.showAndWait();
 
         } catch (IOException e) {

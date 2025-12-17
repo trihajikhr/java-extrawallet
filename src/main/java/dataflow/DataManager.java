@@ -27,6 +27,7 @@ public class DataManager {
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
     private ObservableList<MataUang> dataMataUang = FXCollections.observableArrayList();
+    private ArrayList<Template> dataTemplate;
     private Image[][] theImage;
 
     private DataManager() {}
@@ -38,11 +39,17 @@ public class DataManager {
         DataSeeder.getInstance().seedAccountItem();
         DataSeeder.getInstance().seedCurrency();
         theImage = DataSeeder.getInstance().seedImageTransactionForm();
+        dataTemplate = Database.getInstance().fetchTemplate();
+        dataTransaksi = Database.getInstance().fetchTransaksi();
     }
 
     public void fetchDataDatabase() {
         dataAkun = Database.getInstance().fetchAkun();
         dataTipeLabel = Database.getInstance().fetchTipeLabel();
+    }
+
+    public ArrayList<Template> getDataTemplate() {
+        return dataTemplate;
     }
 
     public ObservableList<String> getDataPeymentType() {
@@ -203,6 +210,20 @@ public class DataManager {
             dataTipeLabel.add(tipelabel);
             log.info("Label baru [{}] berhasil dibuat!", tipelabel.getNama());
             Popup.showSucces("Label baru berhasil dibuat!", "Label " + tipelabel.getNama() + " berhasil dibuat!");
+            return true;
+        } else {
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            return false;
+        }
+    }
+
+    public boolean addTemplate(Template temp) {
+        int newId = Database.getInstance().insertTemplate(temp);
+        if(newId > 0) {
+            temp.setId(newId);
+            dataTemplate.add(temp);
+            log.info("template {} berhasil ditambahkan!", temp.getNama());
+            Popup.showSucces("Template baru!", "Template " + temp.getNama() + " berhasil ditambahkan!");
             return true;
         } else {
             Popup.showDanger("Gagal!", "Terjadi kesalahan!");
