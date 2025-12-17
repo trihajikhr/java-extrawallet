@@ -2,12 +2,10 @@ package dataflow;
 
 import java.io.File;
 import java.sql.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
-
-import helper.Popup;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import model.*;
@@ -23,7 +21,8 @@ public class Database {
     private final String DATABASE_FOLDER = "database";
     private final String DATABASE_NAME = "finance.db";
 
-    DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private Connection koneksi;
 
     // [1] >=== instance
@@ -189,18 +188,16 @@ public class Database {
             CREATE TABLE IF NOT EXISTS "template" (
                 "id"	INTEGER NOT NULL UNIQUE,
                 "tipe"	TEXT NOT NULL,
-                "jumlah_satu"	INTEGER NOT NULL,
-                "jumlah_dua"	INTEGER,
-                "id_akun_satu"	INTEGER NOT NULL,
-                "id_akun_dua"	INTEGER,
-                "id_kategori"	INTEGER,
+                "nama"	TEXT NOT NULL,
+                "jumlah"	INTEGER NOT NULL,
+                "id_akun"	INTEGER NOT NULL,
+                "id_kategori"	INTEGER NOT NULL,
                 "id_tipelabel"	INTEGER,
                 "keterangan"	TEXT,
                 "metode_transaksi"	TEXT,
                 "status"	TEXT,
                 PRIMARY KEY("id" AUTOINCREMENT),
-                CONSTRAINT "template_akun_dua" FOREIGN KEY("id_akun_dua") REFERENCES "akun"("id") ON DELETE CASCADE,
-                CONSTRAINT "template_akun_satu" FOREIGN KEY("id_akun_satu") REFERENCES "akun"("id") ON DELETE CASCADE,
+                CONSTRAINT "template_akun" FOREIGN KEY("id_akun") REFERENCES "akun"("id") ON DELETE CASCADE,
                 CONSTRAINT "template_kategori" FOREIGN KEY("id_kategori") REFERENCES "kategori"("id") ON DELETE CASCADE,
                 CONSTRAINT "template_label" FOREIGN KEY("id_tipelabel") REFERENCES "tipelabel"("id") ON DELETE CASCADE
             )
@@ -217,23 +214,43 @@ public class Database {
     // [4] >=== akses dan modifikasi data tipelabel
     public int insertTipeLabel(TipeLabel tipelabel) {
         String querySql = "INSERT INTO tipelabel (nama, warna) VALUES (?, ?)";
-        try (PreparedStatement perintah = koneksi.prepareStatement(querySql)){
 
-            PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS);
-            ps.executeUpdate();
-            ResultSet rs = ps.getGeneratedKeys();
-            int newId = rs.getInt(1);
+        try {
+            koneksi.setAutoCommit(false);
+            try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
 
-            perintah.setString(1, tipelabel.getNama());
-            perintah.setString(2, Converter.colorToHex(tipelabel.getWarna()));
+                ps.setString(1, tipelabel.getNama());
+                ps.setString(2, Converter.colorToHex(tipelabel.getWarna()));
 
-            perintah.executeUpdate();
-            log.info("tipe label berhasil ditambahkan!");
-            return newId;
+                if (ps.executeUpdate() == 0) {
+                    throw new SQLException("Insert tidak mengubah data");
+                }
 
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if (!rs.next()) {
+                        throw new SQLException("Generated key tidak ditemukan");
+                    }
+
+                    int newId = rs.getInt(1);
+                    koneksi.commit();
+                    return newId;
+                }
+            }
         } catch (SQLException e) {
-            log.error("tipe label gagal dibuat!");
+            try {
+                koneksi.rollback();
+            } catch (SQLException ex) {
+                log.error("rollback database gagal!", ex);
+            }
+            log.error("insert label gagal!", e);
             return -1;
+
+        } finally {
+            try {
+                koneksi.setAutoCommit(true);
+            } catch (SQLException e) {
+                log.error("gagal reset autoCommit!", e);
+            }
         }
     }
 
@@ -315,10 +332,10 @@ public class Database {
                 String metodeTransaksi = rs.getString("metode_transaksi");
                 String status = rs.getString("status");
 
-                LocalDateTime tanggal = LocalDateTime.parse(tanggalSet, formatter);
+                LocalDate tanggal = LocalDate.parse(tanggalSet, formatter);
 
                 Akun akun = null;
-                for(Akun item : DataManager.getInstance().coreDataAkun()){
+                for(Akun item : DataManager.getInstance().getDataAkun()){
                     if(item.getId() == idAkun) {
                         akun = item;
                         break;
@@ -331,7 +348,7 @@ public class Database {
                 }
 
                 Kategori kategori = null;
-                for(Kategori item : DataManager.getInstance().coreDataKategori()){
+                for(Kategori item : DataManager.getInstance().getDataKategori()){
                     if(item.getId() == idKategori) {
                         kategori = item;
                         break;
@@ -344,7 +361,7 @@ public class Database {
                 }
 
                 TipeLabel tipelabel = null;
-                for(TipeLabel item : DataManager.getInstance().coreDataTipeLabel()) {
+                for(TipeLabel item : DataManager.getInstance().getDataTipeLabel()) {
                     if(item.getId() == idTipeLabel) {
                         tipelabel = item;
                         break;
@@ -445,7 +462,7 @@ public class Database {
 
     // [7] >=== manipulasi data akun
     public int insertAkun(Akun dataAkun) {
-        String sql = """
+        String querySql = """
         INSERT INTO akun (nama, warna, icon_path, jumlah, id_mata_uang)
         VALUES (?, ?, ?, ?, ?)
         """;
@@ -453,7 +470,7 @@ public class Database {
         try {
             koneksi.setAutoCommit(false); // mulai
 
-            try (PreparedStatement ps = koneksi.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
 
                 ps.setString(1, dataAkun.getNama());
                 ps.setString(2, Converter.colorToHex(dataAkun.getWarna()));
@@ -484,6 +501,184 @@ public class Database {
             log.error("insert akun gagal", e);
             return -1;
 
+        } finally {
+            try {
+                koneksi.setAutoCommit(true);
+            } catch (SQLException e) {
+                log.error("gagal reset autoCommit", e);
+            }
+        }
+    }
+
+    public ArrayList<Akun> fetchAkun() {
+        try (Statement stat = koneksi.createStatement()) {
+            ResultSet rs = stat.executeQuery("SELECT * FROM akun");
+
+            ArrayList<Akun> data = new ArrayList<>();
+
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String nama = rs.getString("nama");
+                Color warna = Converter.hexToColor(rs.getString("warna"));
+                String iconPath = rs.getString("icon_path");
+                int jumlah = rs.getInt("jumlah");
+                int idMataUang = rs.getInt("id_mata_uang");
+
+                MataUang mataUang = null;
+                for(MataUang item : DataManager.getInstance().getDataMataUang()){
+                    if(item.getId() == idMataUang) {
+                        mataUang = item;
+                        break;
+                    }
+                }
+                if (mataUang == null ) {
+                    log.warn("fetch akun: id_mata_uang={} tidak ditemukan!", idMataUang);
+                    continue; // skip
+                }
+
+                data.add(new Akun(
+                        id,
+                        nama,
+                        warna,
+                        new Image(Objects.requireNonNull(getClass().getResource(iconPath)).toString()),
+                        iconPath,
+                        jumlah,
+                        mataUang)
+                );
+            }
+            log.info("data akun berhasil di fetch!");
+            return data;
+
+        } catch (SQLException e) {
+            log.error("gagal fetch data akun: ", e);
+            return null;
+        }
+    }
+
+    public ArrayList<Template> fetchTemplate() {
+        try (Statement stat = koneksi.createStatement()) {
+            ResultSet rs = stat.executeQuery("SELECT * FROM template");
+
+            ArrayList<Template> dataTemplate = new ArrayList<>();
+
+            while(rs.next()) {
+                int id = rs.getInt("id");
+                String tipe = rs.getString("tipe");
+                String nama = rs.getString("nama");
+                int jumlah = rs.getInt("jumlah");
+                int idAkun = rs.getInt("id_akun");
+                int idKategori = rs.getInt("id_kategori");
+                int idTipeLabel = rs.getInt("id_tipelabel");
+                String keterangan = rs.getString("keterangan");
+                String metodeTransaksi = rs.getString("metode_transaksi");
+                String status = rs.getString("status");
+
+                Akun akun = null;
+                for(Akun item : DataManager.getInstance().getDataAkun()) {
+                    if(item.getId() == idAkun) {
+                        akun = item;
+                        break;
+                    }
+                }
+
+                if(akun == null) {
+                    log.error("id_akun {} tidak ditemukan!", idAkun);
+                    continue;
+                }
+
+                Kategori kategori = null;
+                for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
+                    if(ktgr.getId() == idKategori) {
+                        kategori = ktgr;
+                        break;
+                    }
+                }
+
+                if(kategori == null) {
+                    log.error("id_kategori {} tidak ditemukan!", idKategori);
+                    continue;
+                }
+
+                TipeLabel tipeLabel = null;
+                for(TipeLabel item : DataManager.getInstance().getDataTipeLabel()){
+                    if(item.getId() == idTipeLabel) {
+                        tipeLabel = item;
+                        break;
+                    }
+                }
+
+                if(tipeLabel == null) {
+                    log.error("id_tipelabel {} tidak ditemukan!", idTipeLabel);
+                    continue;
+                }
+
+                dataTemplate.add(new Template(
+                        id,
+                        tipe,
+                        nama,
+                        jumlah,
+                        akun,
+                        kategori,
+                        tipeLabel,
+                        keterangan,
+                        metodeTransaksi,
+                        status
+                ));
+            }
+
+            log.info("data template berhasil di fetch!");
+            return dataTemplate;
+
+        } catch (SQLException e) {
+            log.error("gagal fetch data template: ", e);
+            return null;
+        }
+    }
+
+    public int insertTemplate(Template temp) {
+        String quertSql = "INSERT INTO template (tipe, nama, jumlah, id_akun, id_kategori, id_tipelabel, keterangan, metode_transaksi, status) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try {
+            koneksi.setAutoCommit(false);
+
+            try (PreparedStatement ps = koneksi.prepareStatement(quertSql, Statement.RETURN_GENERATED_KEYS)) {
+                ps.setString(1, temp.getTipe());
+                ps.setString(2, temp.getNama());
+                ps.setInt(3, temp.getJumlah());
+                ps.setInt(4, temp.getAkun().getId());
+                ps.setInt(5, temp.getKategori().getId());
+                if (temp.getLabel() != null) {
+                    ps.setInt(6, temp.getLabel().getId());
+                } else {
+                    ps.setNull(6, Types.INTEGER);
+                }
+                ps.setString(7, temp.getKeterangan());
+                ps.setString(8, temp.getMetodeBayar());
+                ps.setString(9, temp.getStatus());
+
+                if(ps.executeUpdate() == 0) {
+                    throw new SQLException("insert tidak mengubah data");
+                }
+
+                try (ResultSet rs = ps.getGeneratedKeys()) {
+                    if(!rs.next()) {
+                        throw new SQLException("generated key tidak ditemukan");
+                    }
+
+                    int newId = rs.getInt(1);
+                    koneksi.commit();
+                    return newId;
+                }
+            }
+        } catch (SQLException e) {
+            try {
+                koneksi.rollback();
+            } catch (SQLException ex) {
+                log.error("rollback database gagal", ex);
+            }
+            log.error("insert akun gagal", e);
+            return -1;
         } finally {
             try {
                 koneksi.setAutoCommit(true);

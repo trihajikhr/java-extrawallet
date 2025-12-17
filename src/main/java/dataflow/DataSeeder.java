@@ -279,6 +279,20 @@ public class DataSeeder {
                             new Image(Objects.requireNonNull(getClass().getResource("/category-icons/15_others.png")).toString()),
                             "/category-icons/15_others.png",
                             Color.web("#62718a")
+                    ), new Kategori (
+                            31,
+                        "IN",
+                            "Transfer, withdraw",
+                            new Image(Objects.requireNonNull(getClass().getResource("/category-icons/transfer_extra.png")).toString()),
+                            "/category-icons/transfer_extra.png",
+                            Color.web("#32CD32")
+                    ), new Kategori (
+                            32,
+                            "OUT",
+                            "Transfer, withdraw",
+                            new Image(Objects.requireNonNull(getClass().getResource("/category-icons/transfer_extra.png")).toString()),
+                            "/category-icons/transfer_extra.png",
+                            Color.web("#32CD32")
                     )
             );
             log.info("pembuatan data kategori berhasil!");
@@ -295,7 +309,7 @@ public class DataSeeder {
         String querySql = "INSERT OR IGNORE INTO kategori (id, tipe, nama, icon_path, warna) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
-            for(Kategori ktr : DataManager.getInstance().coreDataKategori()) {
+            for(Kategori ktr : DataManager.getInstance().getDataKategori()) {
                 stat.setInt(1, ktr.getId());
                 stat.setString(2, ktr.getTipe());
                 stat.setString(3, ktr.getNama());
@@ -390,7 +404,7 @@ public class DataSeeder {
     }
 
     public void seedCurrency() {
-        DataManager.getInstance().getDataCurrency().setAll(
+        DataManager.getInstance().getDataMataUang().setAll(
                 new MataUang(1, "IDR", "Rupiah", "Rp", 0),
                 new MataUang(2, "USD", "US Dollar", "$", 2),
                 new MataUang(3, "EUR", "Euro", "€", 2)
@@ -403,7 +417,7 @@ public class DataSeeder {
         String querySql = "INSERT OR IGNORE INTO mata_uang(id, kode, nama, simbol, desimal) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
-            for(MataUang mk : DataManager.getInstance().getDataCurrency()) {
+            for(MataUang mk : DataManager.getInstance().getDataMataUang()) {
                 stat.setInt(1, mk.getId());
                 stat.setString(2, mk.getKode());
                 stat.setString(3, mk.getNama());
@@ -417,5 +431,24 @@ public class DataSeeder {
         } catch (Exception e) {
             log.error("data table mata_uang gagal diseed: ", e);
         }
+    }
+
+    public Image[][] seedImageTransactionForm() {
+        Image[][] theImage = new Image[][] {
+                {
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/incomeW.png")).toString()),
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/incomeB.png")).toString())
+                },
+                {
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/expenseW.png")).toString()),
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/expenseB.png")).toString())
+                },
+                {
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/transferW.png")).toString()),
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/transferB.png")).toString())
+                }
+        };
+        log.info("icon form transaksi berhasil di load");
+        return theImage;
     }
 }

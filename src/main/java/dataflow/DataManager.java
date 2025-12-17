@@ -6,6 +6,7 @@ import java.util.Comparator;
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
 import helper.Popup;
+import javafx.scene.image.Image;
 import model.MataUang;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,9 +26,31 @@ public class DataManager {
     private ObservableList<String> dataStatusType = FXCollections.observableArrayList();
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
-    private ObservableList<MataUang> dataCurrency = FXCollections.observableArrayList();
+    private ObservableList<MataUang> dataMataUang = FXCollections.observableArrayList();
+    private ArrayList<Template> dataTemplate;
+    private Image[][] theImage;
 
     private DataManager() {}
+
+    public void initBaseData() {
+        dataPeymentType = DataSeeder.getInstance().seedTypeData();
+        dataStatusType = DataSeeder.getInstance().seedStatusData();
+        DataSeeder.getInstance().seedColor();
+        DataSeeder.getInstance().seedAccountItem();
+        DataSeeder.getInstance().seedCurrency();
+        theImage = DataSeeder.getInstance().seedImageTransactionForm();
+    }
+
+    public void fetchDataDatabase() {
+        dataAkun = Database.getInstance().fetchAkun();
+        dataTipeLabel = Database.getInstance().fetchTipeLabel();
+        dataTemplate = Database.getInstance().fetchTemplate();
+        dataTransaksi = Database.getInstance().fetchTransaksi();
+    }
+
+    public ArrayList<Template> getDataTemplate() {
+        return dataTemplate;
+    }
 
     public ObservableList<String> getDataPeymentType() {
         return dataPeymentType;
@@ -44,16 +67,12 @@ public class DataManager {
         return instance;
     }
 
-    public ArrayList<TipeLabel> coreDataTipeLabel() {
+    public ArrayList<TipeLabel> getDataTipeLabel() {
         return dataTipeLabel;
     }
 
-    public void initBaseData() {
-        dataPeymentType = DataSeeder.getInstance().seedTypeData();
-        dataStatusType = DataSeeder.getInstance().seedStatusData();
-        DataSeeder.getInstance().seedColor();
-        DataSeeder.getInstance().seedAccountItem();
-        DataSeeder.getInstance().seedCurrency();
+    public Image[][] getImageTransactionForm() {
+        return theImage;
     }
 
     public ObservableList<ColorItem> getDataColor() {
@@ -64,8 +83,8 @@ public class DataManager {
         return dataAccountItem;
     }
 
-    public ObservableList<MataUang> getDataCurrency() {
-        return dataCurrency;
+    public ObservableList<MataUang> getDataMataUang() {
+        return dataMataUang;
     }
 
     // [1] >> =============== DATA AKUN =============== //
@@ -81,7 +100,7 @@ public class DataManager {
         }
     }
 
-    public ArrayList<Akun> coreDataAkun() {
+    public ArrayList<Akun> getDataAkun() {
         return dataAkun;
     }
 
@@ -127,7 +146,12 @@ public class DataManager {
     public void addTransaksi(Transaksi trans) {
         int newId = Database.getInstance().insertTransaksi(trans);
         if(newId > 0) {
+            trans.setId(newId);
             dataTransaksi.add(trans);
+            log.info("transaksi berhasil ditambahkan!");
+            Popup.showSucces("Operasi berhasil!", "Transaksi berhasil ditambahkan!");
+        } else {
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
 
@@ -170,7 +194,7 @@ public class DataManager {
         return new ArrayList<>(dataKategori);
     }
 
-    public ArrayList<Kategori> coreDataKategori() {
+    public ArrayList<Kategori> getDataKategori() {
         return dataKategori;
     }
 
@@ -179,10 +203,31 @@ public class DataManager {
     }
 
     // [6] >> =============== TIPE LABEL FUNCTION =============== //
-    public void addLabel(TipeLabel tipelabel){
+    public boolean addLabel(TipeLabel tipelabel){
         int newId = Database.getInstance().insertTipeLabel(tipelabel);
         if(newId > 0) {
+            tipelabel.setId(newId);
             dataTipeLabel.add(tipelabel);
+            log.info("Label baru [{}] berhasil dibuat!", tipelabel.getNama());
+            Popup.showSucces("Label baru berhasil dibuat!", "Label " + tipelabel.getNama() + " berhasil dibuat!");
+            return true;
+        } else {
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            return false;
+        }
+    }
+
+    public boolean addTemplate(Template temp) {
+        int newId = Database.getInstance().insertTemplate(temp);
+        if(newId > 0) {
+            temp.setId(newId);
+            dataTemplate.add(temp);
+            log.info("template {} berhasil ditambahkan!", temp.getNama());
+            Popup.showSucces("Template baru!", "Template " + temp.getNama() + " berhasil ditambahkan!");
+            return true;
+        } else {
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            return false;
         }
     }
 }

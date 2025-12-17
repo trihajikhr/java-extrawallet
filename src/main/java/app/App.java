@@ -28,6 +28,7 @@ public class App extends Application {
         Database.getInstance();
         DataManager.getInstance().setDataKategori();
         DataManager.getInstance().initBaseData();
+        DataManager.getInstance().fetchDataDatabase();
         DataSeeder.getInstance().seedDatabaseKategori();
         DataSeeder.getInstance().seedDatabaseCurrency();
 

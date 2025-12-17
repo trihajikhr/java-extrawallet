@@ -22,13 +22,6 @@ public class Akun {
         this.mataUang = mataUang;
     }
 
-    // TODO: hanya test, nanti refactor!
-    public Akun(String nama, int jumlah, Image icon) {
-        this.nama = nama;
-        this.icon = icon;
-        this.jumlah = jumlah;
-    }
-
     public Akun() {}
 
     public int getId() {

@@ -22,7 +22,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="700.0" minWidth="800.0" prefHeight="737.0" prefWidth="850.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.TransactionControl">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="700.0" minWidth="800.0" prefHeight="737.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.transaction.TransactionControl">
    <children>
       <AnchorPane layoutY="-3.0" prefHeight="75.0" prefWidth="800.0" styleClass="white-box" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -57,7 +57,7 @@
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="45.0" prefHeight="45.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="70.0" minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
@@ -69,8 +69,8 @@
                      <children>
                         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
-                              <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
-                              <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
+                              <ComboBox fx:id="dataTemplateComboBox" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                              <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" onAction="#addTemplateOnTransaction" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -151,8 +151,8 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <Spinner editable="true" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" promptText="IDR" styleClass="modern-btn" />
+                                    <Spinner fx:id="spinner_inout" editable="true" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="mataUangCombo_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" styleClass="modern-btn" />
                                  </children>
                               </HBox>
                            </children>
@@ -172,7 +172,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="akunComboBox_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -212,13 +212,13 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
-                                    <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
+                                    <ComboBox fx:id="tipeLabel_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" onAction="#addLabelOnTransaction" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
                                        <graphic>
-                                          <ImageView fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="addLabelButton" fitHeight="23.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../icons/addW.png" />
                                              </image>
@@ -244,7 +244,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <DatePicker maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                                    <DatePicker fx:id="date_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -259,8 +259,8 @@
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" GridPane.rowIndex="8">
                            <children>
-                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add record" VBox.vgrow="ALWAYS" />
-                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="submit_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#inoutSubmitHandler" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add record" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="addTemplate_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -286,7 +286,7 @@
                         </VBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <TextField fx:id="msgNotes_1" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="note_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." HBox.hgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -304,7 +304,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox fx:id="paymentType_1" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="paymentType_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -324,7 +324,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox fx:id="paymentStatus_1" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="paymentStatus_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -341,20 +341,20 @@
                      </columnConstraints>
                      <rowConstraints>
                         <RowConstraints maxHeight="47.0" minHeight="10.0" prefHeight="47.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="40.0" minHeight="45.0" prefHeight="45.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="70.0" minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="25.0" minHeight="10.0" prefHeight="25.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="150.0" minHeight="9.0" prefHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="25.0" minHeight="1.0" prefHeight="25.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="100.0" minHeight="10.0" prefHeight="100.0" vgrow="SOMETIMES" />
                      </rowConstraints>
                      <children>
                         <HBox alignment="TOP_CENTER" prefHeight="100.0" prefWidth="200.0" spacing="5.0">
                            <children>
                               <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Select template" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
-                              <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
+                              <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" onAction="#addTemplateOnTransaction" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -425,7 +425,7 @@
                         </HBox>
                         <VBox alignment="TOP_CENTER" prefHeight="80.0" prefWidth="400.0" spacing="10.0" GridPane.rowIndex="2">
                            <children>
-                              <HBox alignment="CENTER_LEFT" prefHeight="7.0" prefWidth="400.0" spacing="139.0">
+                              <HBox alignment="CENTER_LEFT" prefHeight="7.0" prefWidth="400.0" spacing="145.0">
                                  <children>
                                     <Label text="From account *" />
                                     <Label text="To account" />
@@ -436,7 +436,7 @@
                               </HBox>
                               <HBox alignment="TOP_CENTER" prefHeight="54.0" prefWidth="400.0" spacing="10.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="173.0" prefHeight="40.0" promptText="Account" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="akunComboBox_from" maxHeight="40.0" maxWidth="181.0" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                     <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" HBox.hgrow="ALWAYS">
                                        <image>
                                           <Image url="@../icons/rightarrowB.png" />
@@ -445,7 +445,7 @@
                                           <Insets top="7.0" />
                                        </HBox.margin>
                                     </ImageView>
-                                    <ComboBox maxHeight="40.0" maxWidth="173.0" prefHeight="40.0" promptText="Account" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="akunComboBox_to" maxHeight="40.0" maxWidth="181.0" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -453,7 +453,7 @@
                               <Insets />
                            </GridPane.margin>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="311.0" prefHeight="92.0" prefWidth="400.0" spacing="10.0" GridPane.rowIndex="4">
+                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="311.0" prefHeight="92.0" prefWidth="400.0" spacing="10.0" GridPane.rowIndex="5">
                            <children>
                               <HBox alignment="CENTER_LEFT" prefHeight="3.0" prefWidth="400.0">
                                  <children>
@@ -465,8 +465,8 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="Labels" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
-                                    <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
+                                    <ComboBox fx:id="tipeLabel_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" onAction="#addLabelOnTransaction" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                        <font>
                                           <Font size="14.0" />
                                        </font>
@@ -485,7 +485,7 @@
                               <Insets />
                            </GridPane.margin>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="311.0" prefHeight="92.0" prefWidth="400.0" spacing="10.0" GridPane.rowIndex="5">
+                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="311.0" prefHeight="92.0" prefWidth="400.0" spacing="10.0" GridPane.rowIndex="6">
                            <children>
                               <HBox prefHeight="9.0" prefWidth="400.0">
                                  <children>
@@ -497,7 +497,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <DatePicker maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                                    <DatePicker fx:id="date_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -505,15 +505,15 @@
                               <Insets />
                            </GridPane.margin>
                         </VBox>
-                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="6">
+                        <VBox prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="7">
                            <children>
                               <CheckBox mnemonicParsing="false" text="Create template from this record" />
                            </children>
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" GridPane.rowIndex="8">
                            <children>
-                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" text="Add record" VBox.vgrow="ALWAYS" />
-                              <Button maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="modern-btn" stylesheets="@../stylesheet/button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="submit_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#transSubmitHandler" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add record" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="addTemplate_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -539,7 +539,7 @@
                         </VBox>
                         <HBox prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <children>
-                              <TextField fx:id="msgNotes_2" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." HBox.hgrow="ALWAYS" />
+                              <TextField fx:id="note_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." HBox.hgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -557,7 +557,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox fx:id="paymentType_2" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="paymentType_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -577,7 +577,7 @@
                               </HBox>
                               <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                                  <children>
-                                    <ComboBox fx:id="paymentStatus_2" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="paymentStatus_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
                                  </children>
                               </HBox>
                            </children>
@@ -589,8 +589,7 @@
                            <children>
                               <HBox alignment="CENTER_LEFT" prefHeight="7.0" prefWidth="400.0" spacing="150.0">
                                  <children>
-                                    <Label text="Amount *" />
-                                    <Label text="Amount *" />
+                                    <Label text="Amount from  *" />
                                  </children>
                                  <opaqueInsets>
                                     <Insets />
@@ -598,10 +597,26 @@
                               </HBox>
                               <HBox alignment="TOP_CENTER" prefHeight="54.0" prefWidth="400.0" spacing="10.0">
                                  <children>
-                                    <Spinner maxHeight="40.0" maxWidth="120.0" prefHeight="40.0" />
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" promptText="IDR" styleClass="modern-btn" />
-                                    <Spinner maxHeight="40.0" maxWidth="120.0" prefHeight="40.0" />
-                                    <ComboBox maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" promptText="IDR" styleClass="modern-btn" />
+                                    <Spinner fx:id="spinner_from" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="mataUangCombo_from" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" styleClass="modern-btn" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" layoutX="10.0" layoutY="188.0" prefHeight="80.0" prefWidth="400.0" spacing="10.0" GridPane.rowIndex="4">
+                           <children>
+                              <HBox alignment="CENTER_LEFT" prefHeight="7.0" prefWidth="400.0" spacing="150.0">
+                                 <children>
+                                    <Label text="Amount to *" />
+                                 </children>
+                                 <opaqueInsets>
+                                    <Insets />
+                                 </opaqueInsets>
+                              </HBox>
+                              <HBox alignment="TOP_CENTER" prefHeight="54.0" prefWidth="400.0" spacing="10.0">
+                                 <children>
+                                    <Spinner fx:id="spinner_to" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                                    <ComboBox fx:id="mataUangCombo_to" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" styleClass="modern-btn" />
                                  </children>
                               </HBox>
                            </children>

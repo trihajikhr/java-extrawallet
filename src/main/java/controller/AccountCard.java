@@ -1,5 +1,6 @@
 package controller;
 
+import helper.Converter;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -10,9 +11,15 @@ import model.Akun;
 public class AccountCard extends HBox {
 
     public AccountCard(Akun account) {
+
         setSpacing(10);
         setPadding(new Insets(10));
         getStyleClass().add("account-card");
+
+        // override warna
+        setStyle(
+                "-fx-background-color: " + Converter.colorToHex(account.getWarna()) + ";"
+        );
 
         ImageView icon = new ImageView(account.getIcon());
         icon.setFitWidth(32);
@@ -28,11 +35,8 @@ public class AccountCard extends HBox {
         textBox.setSpacing(4);
 
         getChildren().addAll(icon, textBox);
-
-        getStyleClass().add("account-card");
-        name.getStyleClass().add("account-name");
-        balance.getStyleClass().add("account-balance");
     }
+
 
     private String formatCurrency(double value) {
         return "Rp " + String.format("%,.0f", value);
