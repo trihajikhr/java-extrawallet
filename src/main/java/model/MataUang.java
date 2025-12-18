@@ -5,7 +5,7 @@ public class MataUang {
     private String kode;        // ISO code: IDR, USD, EUR
     private String nama;        // Rupiah, US Dollar
     private String simbol;      // Rp, $, €
-    private int desimal; // 0 = IDR, 2 = USD
+    private int desimal;        // 0 = IDR, 2 = USD
 
     public MataUang(int id, String kode, String nama, String simbol, int desimal) {
         this.id = id;
