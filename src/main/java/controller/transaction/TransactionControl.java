@@ -1,5 +1,6 @@
 package controller.transaction;
 
+import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.IOLogic;
 import helper.Popup;
@@ -16,8 +17,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -38,7 +37,6 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class TransactionControl implements Initializable {
@@ -54,23 +52,23 @@ public class TransactionControl implements Initializable {
 
     @FXML private AnchorPane rootPane;
 
-    @FXML private Button incomeBtn_1;
-    @FXML private Button expenseBtn_1;
-    @FXML private Button transferBtn_1;
+    @FXML private Button incomeBtn_inout;
+    @FXML private Button expenseBtn_inout;
+    @FXML private Button transferBtn_inout;
 
-    @FXML private Button incomeBtn_2;
-    @FXML private Button expenseBtn_2;
-    @FXML private Button transferBtn_2;
+    @FXML private Button incomeBtn_trans;
+    @FXML private Button expenseBtn_trans;
+    @FXML private Button transferBtn_trans;
 
     @FXML private ImageView incomeImg;
     @FXML private ImageView expenseImg;
-    @FXML private ImageView transferImg_1;
-    @FXML private ImageView transferImg_2;
+    @FXML private ImageView transferImg_inout;
+    @FXML private ImageView transferImg_trans;
 
     @FXML private Label incomeLbl;
     @FXML private Label expenseLbl;
-    @FXML private Label transferLbl_1;
-    @FXML private Label transferLbl_2;
+    @FXML private Label transferLbl_inout;
+    @FXML private Label transferLbl_trans;
 
     @FXML private GridPane inoutForm;
     @FXML private GridPane transForm;
@@ -118,7 +116,6 @@ public class TransactionControl implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("Transaksi pop up terbuka");
-        showPopup();
 
         // isformcomplete function
         isInOutFormComplete();
@@ -126,9 +123,9 @@ public class TransactionControl implements Initializable {
 
         // beberapa fungsi init
         initPaymentData();
-        messageNotesBinding();
-        inoutListener();
-        defaultDate();
+        initMessageBinding();
+        akunToMataUangListener();
+        initDate();
 
         // disable combobox
         mataUangCombo_inout.setMouseTransparent(true);
@@ -137,25 +134,15 @@ public class TransactionControl implements Initializable {
         mataUangCombo_from.setFocusTraversable(false);
         mataUangCombo_to.setMouseTransparent(true);
         mataUangCombo_to.setFocusTraversable(false);
-
         mataUangCombo_inout.getStyleClass().add("locked");
         mataUangCombo_from.getStyleClass().add("locked");
         mataUangCombo_to.getStyleClass().add("locked");
 
         // load data combobox
-        loadCategoryComboBox();
-        loadMataUangComboBox(mataUangCombo_inout);
-        loadMataUangComboBox(mataUangCombo_from);
-        loadMataUangComboBox(mataUangCombo_to);
-        loadAkunComboBox(akunComboBox_inout);
-        loadAkunComboBox(akunComboBox_from);
-        loadAkunComboBox(akunComboBox_to);
+        initDataComboBox();
         initTipeLabelList();
         spinnerLogicHandler();
         initTemplate();
-
-        loadTipeLabelComboBox(tipeLabel_inout);
-        loadTipeLabelComboBox(tipeLabel_trans);
 
         // load image
         theImage = DataManager.getInstance().getImageTransactionForm();
@@ -165,9 +152,17 @@ public class TransactionControl implements Initializable {
 
         initButtons();
         clearSelection(1); // default: semua putih, teks hitam, icon hitam
+        activateIncome();
+        showPopup();
+    }
 
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    @FXML
+    public void showPopup() {
         rootPane.setOpacity(0);
-
         rootPane.setScaleX(0.8);
         rootPane.setScaleY(0.8);
         rootPane.setOpacity(0);
@@ -185,35 +180,6 @@ public class TransactionControl implements Initializable {
         ParallelTransition showAnim = new ParallelTransition(fade, scale);
         showAnim.setInterpolator(Interpolator.EASE_BOTH);
         showAnim.play();
-        activateIncome();
-    }
-
-    // DIPANGGIL dari controller lain
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    @FXML
-    public void showPopup() {
-        if (stage == null) return;
-
-        rootPane.setOpacity(0);
-        rootPane.setScaleX(0.6);
-        rootPane.setScaleY(0.6);
-
-        FadeTransition fade = new FadeTransition(Duration.millis(250), rootPane);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-
-        ScaleTransition scale = new ScaleTransition(Duration.millis(250), rootPane);
-        scale.setFromX(0.6);
-        scale.setFromY(0.6);
-        scale.setToX(1);
-        scale.setToY(1);
-
-        ParallelTransition pt = new ParallelTransition(fade, scale);
-        pt.setInterpolator(Interpolator.EASE_OUT);
-        pt.play();
     }
 
     @FXML
@@ -251,6 +217,7 @@ public class TransactionControl implements Initializable {
         );
     }
 
+    // [1] >=== FUNGSI INIT
     private void initPaymentData() {
         paymentType_inout.setItems(DataManager.getInstance().getDataPeymentType());
         paymentType_trans.setItems(DataManager.getInstance().getDataPeymentType());
@@ -264,168 +231,6 @@ public class TransactionControl implements Initializable {
         paymentStatus_inout.valueProperty().bindBidirectional(selectedPaymentStatus);
         paymentStatus_trans.valueProperty().bindBidirectional(selectedPaymentStatus);
     }
-
-    private void messageNotesBinding() {
-        note_inout.textProperty().bindBidirectional(noteState);
-        note_trans.textProperty().bindBidirectional(noteState);
-    }
-
-    private void loadCategoryComboBox(){
-        ArrayList<Kategori> listKategori = DataManager.getInstance().getDataKategori();
-        categoryComboBox.setItems(FXCollections.observableArrayList(listKategori));
-
-        categoryComboBox.setCellFactory(list -> new ListCell<Kategori>() {
-            @Override
-            protected void updateItem(Kategori item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if(empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                    return;
-                }
-
-                // icon
-                ImageView iconView = new ImageView(item.getIcon());
-                iconView.setFitWidth(14);
-                iconView.setFitHeight(14);
-                iconView.setPreserveRatio(true);
-
-                // background
-                StackPane iconBox = new StackPane(iconView);
-                iconBox.setPrefSize(28,28);;
-                iconBox.setMaxSize(28,28);
-
-                iconBox.setBackground(new Background(
-                        new BackgroundFill(
-                                item.getWarna(),
-                                new CornerRadii(8),
-                                Insets.EMPTY
-                        )
-                ));
-
-                // teks
-                Label label = new Label(item.getNama());
-                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
-
-                // gabung
-                HBox box = new HBox(10, iconBox, label);
-                box.setAlignment(Pos.CENTER_LEFT);
-
-                setGraphic(box);
-            }
-        });
-        categoryComboBox.setButtonCell(categoryComboBox.getCellFactory().call(null));
-    }
-
-    private void loadAkunComboBox(ComboBox<Akun> dataAkunComboBox) {
-        ArrayList<Akun> dataAkun = DataManager.getInstance().getDataAkun();
-        dataAkunComboBox.setItems(FXCollections.observableArrayList(dataAkun));
-
-        dataAkunComboBox.setCellFactory(list -> new ListCell<Akun>() {
-            @Override
-            protected void updateItem(Akun item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if(empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                    return;
-                }
-
-                // icon
-                ImageView iconView = new ImageView(item.getIcon());
-                iconView.setFitWidth(14);
-                iconView.setFitHeight(14);
-                iconView.setPreserveRatio(true);
-
-                // background
-                StackPane iconBox = new StackPane(iconView);
-                iconBox.setPrefSize(28,28);;
-                iconBox.setMaxSize(28,28);
-
-                iconBox.setBackground(new Background(
-                        new BackgroundFill(
-                                item.getWarna(),
-                                new CornerRadii(8),
-                                Insets.EMPTY
-                        )
-                ));
-
-                // teks
-                Label label = new Label(item.getNama());
-                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
-
-                // gabung
-                HBox box = new HBox(10, iconBox, label);
-                box.setAlignment(Pos.CENTER_LEFT);
-
-                setGraphic(box);
-            }
-        });
-        dataAkunComboBox.setButtonCell(dataAkunComboBox.getCellFactory().call(null));
-    }
-
-    private void loadTipeLabelComboBox(ComboBox<TipeLabel> tipeLabelComboBox){
-        tipeLabelComboBox.setCellFactory(list -> new ListCell<TipeLabel>() {
-            @Override
-            protected void updateItem(TipeLabel item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if(empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                    return;
-                }
-
-                // icon
-                ImageView iconView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/icons/tagW.png")).toString()));
-                iconView.setFitWidth(14);
-                iconView.setFitHeight(14);
-                iconView.setPreserveRatio(true);
-
-                // background
-                StackPane iconBox = new StackPane(iconView);
-                iconBox.setPrefSize(28,28);;
-                iconBox.setMaxSize(28,28);
-
-                iconBox.setBackground(new Background(
-                        new BackgroundFill(
-                                item.getWarna(),
-                                new CornerRadii(8),
-                                Insets.EMPTY
-                        )
-                ));
-
-                // teks
-                Label label = new Label(item.getNama());
-                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
-
-                // gabung
-                HBox box = new HBox(10, iconBox, label);
-                box.setAlignment(Pos.CENTER_LEFT);
-
-                setGraphic(box);
-            }
-        });
-        tipeLabelComboBox.setButtonCell(tipeLabelComboBox.getCellFactory().call(null));
-    }
-
-    private void loadMataUangComboBox(ComboBox<MataUang> currencyComboBox) {
-        currencyComboBox.setItems(DataManager.getInstance().getDataMataUang());
-        currencyComboBox.setCellFactory(cb -> new ListCell<>() {
-            @Override
-            protected void updateItem(MataUang c, boolean empty) {
-                super.updateItem(c, empty);
-                setText(empty || c == null
-                        ? null
-//                        : c.getCode() + " — " + c.getName());
-                        : c.getKode());
-            }
-        });
-        currencyComboBox.setButtonCell(currencyComboBox.getCellFactory().call(null));
-    }
-
     private void initTemplate() {
         dataTemplateList = FXCollections.observableArrayList(
                 DataManager.getInstance().getDataTemplate()
@@ -444,249 +249,64 @@ public class TransactionControl implements Initializable {
                 dataTemplateComboBox.getCellFactory().call(null)
         );
     }
-
     private void initTipeLabelList() {
         ArrayList<TipeLabel> data = DataManager.getInstance().getDataTipeLabel();
         tipeLabelList = FXCollections.observableArrayList(data);
         tipeLabel_inout.setItems(tipeLabelList);
         tipeLabel_trans.setItems(tipeLabelList);
     }
-
-    public ObservableList<TipeLabel> getTipeLabelList() {
-        return tipeLabelList;
-    }
-
-    public ComboBox<TipeLabel> getTipeLabelInOut() {
-        return tipeLabel_inout;
-    }
-
-    public ComboBox<TipeLabel> getTipeLabelTrans() {
-        return tipeLabel_trans;
-    }
-
-    public ObservableList<Template> getTemplateList() {
-        return dataTemplateList;
-    }
-
-    public ComboBox<Template> getTempleteComboBox() {
-        return dataTemplateComboBox;
-    }
-
-    private void spinnerLogicHandler() {
-        IOLogic.makeIntegerOnly(spinner_inout, 1, 2_147_483_647, 0);
-        IOLogic.makeIntegerOnly(spinner_from, 1, 2_147_483_647, 0);
-        IOLogic.makeIntegerOnly(spinner_to, 1, 2_147_483_647, 0);
-    }
-
-    // stage scene handler [template, label, submit, addanother record, checkbox]
-    @FXML
-    private void addLabelOnTransaction(ActionEvent evt) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/label.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-
-            stage.initStyle(StageStyle.TRANSPARENT);
-            stage.initModality(Modality.APPLICATION_MODAL);
-
-            DropShadow dropShadow = new DropShadow();
-            dropShadow.setRadius(10.0);
-            dropShadow.setOffsetX(5.0);
-            dropShadow.setOffsetY(5.0);
-            dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
-            root.setEffect(dropShadow);
-
-            Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);
-            stage.setScene(scene);
-
-//        stage.setMinWidth(450);
-//        stage.setMinHeight(560);
-//        stage.setMaxWidth(800);
-//        stage.setMaxHeight(700);
-
-            root.setOnMousePressed(event -> {
-                xOffset = event.getSceneX();
-                yOffset = event.getSceneY();
-            });
-
-            root.setOnMouseDragged(event -> {
-                stage.setX(event.getScreenX() - xOffset);
-                stage.setY(event.getScreenY() - yOffset);
-            });
-
-            LabelControl ctrl = loader.getController();
-            ctrl.setStage(stage);
-            ctrl.setParentTransaction(this);
-
-            stage.showAndWait();
-
-        } catch (IOException e) {
-            log.error("gagal membuka panel tambah label!", e);
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
-        }
-    }
-
-    @FXML
-    private void addTemplateOnTransaction(ActionEvent evt) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/template.fxml"));
-            Parent root = loader.load();
-            Stage stage = new Stage();
-
-            stage.initStyle(StageStyle.TRANSPARENT);
-            stage.initModality(Modality.APPLICATION_MODAL);
-
-            DropShadow dropShadow = new DropShadow();
-            dropShadow.setRadius(10.0);
-            dropShadow.setOffsetX(5.0);
-            dropShadow.setOffsetY(5.0);
-            dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
-            root.setEffect(dropShadow);
-
-            Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);
-            stage.setScene(scene);
-
-//        stage.setMinWidth(450);
-//        stage.setMinHeight(560);
-//        stage.setMaxWidth(800);
-//        stage.setMaxHeight(700);
-
-            root.setOnMousePressed(event -> {
-                xOffset = event.getSceneX();
-                yOffset = event.getSceneY();
-            });
-
-            root.setOnMouseDragged(event -> {
-                stage.setX(event.getScreenX() - xOffset);
-                stage.setY(event.getScreenY() - yOffset);
-            });
-
-            TemplateControl ctrl = loader.getController();
-            ctrl.setStage(stage);
-            ctrl.setParentTransaction(this);
-            stage.showAndWait();
-
-        } catch (IOException e) {
-            log.error("gagal membuka panel template!", e);
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
-        }
-    }
-
-    private void activateIncome() {
-        select(1, 0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71");
-        updateCategoryCombo("IN");
-    }
-
     private void initButtons() {
 
         // Set class dasar
-        incomeBtn_1.getStyleClass().add("choice-btn");
-        expenseBtn_1.getStyleClass().add("choice-btn");
-        transferBtn_1.getStyleClass().add("choice-btn");
+        incomeBtn_inout.getStyleClass().add("choice-btn");
+        expenseBtn_inout.getStyleClass().add("choice-btn");
+        transferBtn_inout.getStyleClass().add("choice-btn");
 
         // incomeBtn_1.setOnAction(e -> select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
         // expenseBtn_1.setOnAction(e -> select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222"));
 
-        incomeBtn_1.setOnAction(e -> activateIncome());
+        incomeBtn_inout.setOnAction(e -> activateIncome());
 //        incomeBtn_1.setOnAction(e -> {
 //            select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71");
 //            updateCategoryCombo("IN");
 //        });
-        expenseBtn_1.setOnAction(e -> {
-            select(1,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222");
+        expenseBtn_inout.setOnAction(e -> {
+            select(1,1, expenseBtn_inout, expenseImg, expenseLbl, "#F92222");
             updateCategoryCombo("OUT");
         });
-        transferBtn_1.setOnAction(e -> select(1,2, transferBtn_2, transferImg_2, transferLbl_2, "#0176FE"));
+        transferBtn_inout.setOnAction(e -> select(1,2, transferBtn_trans, transferImg_trans, transferLbl_trans, "#0176FE"));
 
-        incomeBtn_2.setOnAction(e -> select(2,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71"));
-        expenseBtn_2.setOnAction(e -> select(2,1, expenseBtn_1, expenseImg, expenseLbl, "#F92222"));
-        transferBtn_2.setOnAction(e -> select(2,2, transferBtn_2, transferImg_2, transferLbl_2, "#0176FE"));
+        incomeBtn_trans.setOnAction(e -> select(2,0, incomeBtn_inout, incomeImg, incomeLbl, "#01AA71"));
+        expenseBtn_trans.setOnAction(e -> select(2,1, expenseBtn_inout, expenseImg, expenseLbl, "#F92222"));
+        transferBtn_trans.setOnAction(e -> select(2,2, transferBtn_trans, transferImg_trans, transferLbl_trans, "#0176FE"));
+    }
+    private void initDate() {
+        date_inout.setValue(LocalDate.now());
+        date_trans.setValue(LocalDate.now());
+    }
+    private void initMessageBinding() {
+        note_inout.textProperty().bindBidirectional(noteState);
+        note_trans.textProperty().bindBidirectional(noteState);
+    }
+    private void initDataComboBox() {
+        DataLoader.getInstance().akunComboBoxLoader(akunComboBox_inout);
+        DataLoader.getInstance().akunComboBoxLoader(akunComboBox_from);
+        DataLoader.getInstance().akunComboBoxLoader(akunComboBox_to);
+
+        DataLoader.getInstance().kategoriComboBoxLoader(categoryComboBox);
+        DataLoader.getInstance().tipeLabelComboBoxLoader(tipeLabel_inout);
+        DataLoader.getInstance().tipeLabelComboBoxLoader(tipeLabel_trans);
+
+        DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo_inout);
+        DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo_from);
+        DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo_to);
+    }
+    private void activateIncome() {
+        select(1, 0, incomeBtn_inout, incomeImg, incomeLbl, "#01AA71");
+        updateCategoryCombo("IN");
     }
 
-    private void showInOut() {
-        inoutForm.setVisible(true);
-        transForm.setVisible(false);
-
-        inoutForm.toFront();
-    }
-
-    private void showTransfer() {
-        transForm.setVisible(true);
-        inoutForm.setVisible(false);
-
-        transForm.toFront();
-    }
-
-    private void select(int layer, int index, Button btn, ImageView img, Label lbl, String color) {
-
-        if(layer == 1) {
-            if(index != 2) {
-                clearSelection(layer);
-            } else {
-                clearSelection(2);
-                showTransfer();
-            }
-
-            valueChoosen.setValue(index + 1);
-
-            // kasih warna ke tombol
-            btn.setStyle("-selected-color: " + color + ";");
-            btn.getStyleClass().add("choice-btn-selected");
-
-            // label & icon jadi putih
-            lbl.setStyle("-fx-text-fill: white;");
-            img.setImage(theImage[index][0]); // icon putih
-
-        } else if(layer == 2) {
-            if(index == 2) return;
-            showInOut();
-            clearSelection(1);
-            valueChoosen.setValue(index + 1);
-
-            // kasih warna ke tombol
-            btn.setStyle("-selected-color: " + color + ";");
-            btn.getStyleClass().add("choice-btn-selected");
-
-            // label & icon jadi putih
-            lbl.setStyle("-fx-text-fill: white;");
-            img.setImage(theImage[index][0]); // icon putih
-        }
-        System.out.println("user memilih: " + (valueChoosen.getValue() == 1 ? "income" : valueChoosen.getValue() == 2 ? "expense" : "transfer"));
-    }
-
-    private void clearSelection(int layer) {
-
-        if(layer == 1){
-            // reset button
-            for (Button b : List.of(incomeBtn_1, expenseBtn_1, transferBtn_1)) {
-                b.getStyleClass().remove("choice-btn-selected");
-                b.setStyle("");  // hilangkan selected-color
-            }
-
-            // reset label
-            for (Label l : List.of(incomeLbl, expenseLbl, transferLbl_1)) {
-                l.setStyle("-fx-text-fill: black;");
-            }
-
-            // reset icon ke hitam
-            incomeImg.setImage(theImage[0][1]);
-            expenseImg.setImage(theImage[1][1]);
-            transferImg_1.setImage(theImage[2][1]);
-
-        } else if(layer == 2) {
-            // reset button
-            for (Button b : List.of(incomeBtn_2, expenseBtn_2, transferBtn_2)) {
-                b.getStyleClass().remove("choice-btn-selected");
-                b.setStyle("");  // hilangkan selected-color
-            }
-
-            transferLbl_2.setStyle("-fx-text-fill: black;");
-            transferImg_2.setImage(DataManager.getInstance().getImageTransactionForm()[2][1]);
-        }
-    }
-
+    // [2] >=== FORM VALIDATION & SUBMIT HANDLER
     private void isInOutFormComplete() {
         BooleanBinding valueChoosenValid = valueChoosen.isNotEqualTo(0);
         BooleanBinding amountValid =
@@ -715,7 +335,6 @@ public class TransactionControl implements Initializable {
                 System.out.println("FORM VALID = " + newV)
         );
     }
-
     private void isTransFormComplete() {
         BooleanBinding valueChoosenValid = valueChoosen.isNotEqualTo(0);
         BooleanBinding akunComboFrom = akunComboBox_from.valueProperty().isNotNull();
@@ -755,33 +374,6 @@ public class TransactionControl implements Initializable {
                 System.out.println("FORM VALID = " + newV)
         );
     }
-
-    // [8] >=== listener combobox
-    private void inoutListener() {
-        akunComboBox_inout.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                mataUangCombo_inout.setValue(newVal.getMataUang());
-            }
-        });
-        akunComboBox_from.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                mataUangCombo_from.setValue(newVal.getMataUang());
-            }
-        });
-        akunComboBox_to.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal != null) {
-                mataUangCombo_to.setValue(newVal.getMataUang());
-            }
-        });
-    }
-
-    // [9] >=== tanggal default
-    private void defaultDate() {
-        date_inout.setValue(LocalDate.now());
-        date_trans.setValue(LocalDate.now());
-    }
-
-    // [10] >=== submit button handler
     @FXML
     private void inoutSubmitHandler() {
         String tipe = getValueChoosen() == 1 ? "IN" : "OUT";
@@ -809,7 +401,6 @@ public class TransactionControl implements Initializable {
 
         closePopup();
     }
-
     @FXML
     private void transSubmitHandler() {
         Akun fromAkun = akunComboBox_from.getValue();
@@ -876,6 +467,230 @@ public class TransactionControl implements Initializable {
 
         closePopup();
     }
+
+    // [3] >=== BUTTON HANDLER
+    @FXML
+    private void addLabelOnTransaction(ActionEvent evt) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/label.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setRadius(10.0);
+            dropShadow.setOffsetX(5.0);
+            dropShadow.setOffsetY(5.0);
+            dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+            root.setEffect(dropShadow);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+
+//        stage.setMinWidth(450);
+//        stage.setMinHeight(560);
+//        stage.setMaxWidth(800);
+//        stage.setMaxHeight(700);
+
+            root.setOnMousePressed(event -> {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            });
+
+            root.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            });
+
+            LabelControl ctrl = loader.getController();
+            ctrl.setStage(stage);
+            ctrl.setParentTransaction(this);
+
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            log.error("gagal membuka panel tambah label!", e);
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+        }
+    }
+    @FXML
+    private void addTemplateOnTransaction(ActionEvent evt) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/template.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setRadius(10.0);
+            dropShadow.setOffsetX(5.0);
+            dropShadow.setOffsetY(5.0);
+            dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+            root.setEffect(dropShadow);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+
+//        stage.setMinWidth(450);
+//        stage.setMinHeight(560);
+//        stage.setMaxWidth(800);
+//        stage.setMaxHeight(700);
+
+            root.setOnMousePressed(event -> {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            });
+
+            root.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            });
+
+            TemplateControl ctrl = loader.getController();
+            ctrl.setStage(stage);
+            ctrl.setParentTransaction(this);
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            log.error("gagal membuka panel template!", e);
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+        }
+    }
+
+    // [4] >=== CONNECTOR FUNCTION
+    public ObservableList<TipeLabel> getTipeLabelList() {
+        return tipeLabelList;
+    }
+    public ComboBox<TipeLabel> getTipeLabelInOut() {
+        return tipeLabel_inout;
+    }
+    public ComboBox<TipeLabel> getTipeLabelTrans() {
+        return tipeLabel_trans;
+    }
+    public ObservableList<Template> getTemplateList() {
+        return dataTemplateList;
+    }
+    public ComboBox<Template> getTempleteComboBox() {
+        return dataTemplateComboBox;
+    }
+
+    // [5] >=== HELPER FUNCTION
+    private void spinnerLogicHandler() {
+        IOLogic.makeIntegerOnly(spinner_inout, 1, 2_147_483_647, 1);
+        IOLogic.makeIntegerOnly(spinner_from, 1, 2_147_483_647, 1);
+        IOLogic.makeIntegerOnly(spinner_to, 1, 2_147_483_647, 1);
+    }
+    private void showInOut() {
+        inoutForm.setVisible(true);
+        transForm.setVisible(false);
+
+        inoutForm.toFront();
+    }
+    private void showTransfer() {
+        transForm.setVisible(true);
+        inoutForm.setVisible(false);
+
+        transForm.toFront();
+    }
+
+    // [6] >===
+
+
+
+    private void select(int layer, int index, Button btn, ImageView img, Label lbl, String color) {
+
+        if(layer == 1) {
+            if(index != 2) {
+                clearSelection(layer);
+            } else {
+                clearSelection(2);
+                showTransfer();
+            }
+
+            valueChoosen.setValue(index + 1);
+
+            // kasih warna ke tombol
+            btn.setStyle("-selected-color: " + color + ";");
+            btn.getStyleClass().add("choice-btn-selected");
+
+            // label & icon jadi putih
+            lbl.setStyle("-fx-text-fill: white;");
+            img.setImage(theImage[index][0]); // icon putih
+
+        } else if(layer == 2) {
+            if(index == 2) return;
+            showInOut();
+            clearSelection(1);
+            valueChoosen.setValue(index + 1);
+
+            // kasih warna ke tombol
+            btn.setStyle("-selected-color: " + color + ";");
+            btn.getStyleClass().add("choice-btn-selected");
+
+            // label & icon jadi putih
+            lbl.setStyle("-fx-text-fill: white;");
+            img.setImage(theImage[index][0]); // icon putih
+        }
+        System.out.println("user memilih: " + (valueChoosen.getValue() == 1 ? "income" : valueChoosen.getValue() == 2 ? "expense" : "transfer"));
+    }
+
+    private void clearSelection(int layer) {
+
+        if(layer == 1){
+            // reset button
+            for (Button b : List.of(incomeBtn_inout, expenseBtn_inout, transferBtn_inout)) {
+                b.getStyleClass().remove("choice-btn-selected");
+                b.setStyle("");  // hilangkan selected-color
+            }
+
+            // reset label
+            for (Label l : List.of(incomeLbl, expenseLbl, transferLbl_inout)) {
+                l.setStyle("-fx-text-fill: black;");
+            }
+
+            // reset icon ke hitam
+            incomeImg.setImage(theImage[0][1]);
+            expenseImg.setImage(theImage[1][1]);
+            transferImg_inout.setImage(theImage[2][1]);
+
+        } else if(layer == 2) {
+            // reset button
+            for (Button b : List.of(incomeBtn_trans, expenseBtn_trans, transferBtn_trans)) {
+                b.getStyleClass().remove("choice-btn-selected");
+                b.setStyle("");  // hilangkan selected-color
+            }
+
+            transferLbl_trans.setStyle("-fx-text-fill: black;");
+            transferImg_trans.setImage(DataManager.getInstance().getImageTransactionForm()[2][1]);
+        }
+    }
+
+
+    private void akunToMataUangListener() {
+        akunComboBox_inout.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                mataUangCombo_inout.setValue(newVal.getMataUang());
+            }
+        });
+        akunComboBox_from.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                mataUangCombo_from.setValue(newVal.getMataUang());
+            }
+        });
+        akunComboBox_to.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                mataUangCombo_to.setValue(newVal.getMataUang());
+            }
+        });
+    }
+
+    // [10] >=== submit button handler
 
     public int getValueChoosen() {
         return valueChoosen.getValue();
