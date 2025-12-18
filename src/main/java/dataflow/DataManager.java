@@ -33,8 +33,8 @@ public class DataManager {
     private DataManager() {}
 
     public void initBaseData() {
-        dataPeymentType = DataSeeder.getInstance().seedTypeData();
-        dataStatusType = DataSeeder.getInstance().seedStatusData();
+        dataPeymentType = DataSeeder.getInstance().seedPaymentType();
+        dataStatusType = DataSeeder.getInstance().seedPaymentStatus();
         DataSeeder.getInstance().seedColor();
         DataSeeder.getInstance().seedAccountItem();
         DataSeeder.getInstance().seedCurrency();

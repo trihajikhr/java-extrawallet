@@ -25,7 +25,7 @@ public class Database {
 
     private Connection koneksi;
 
-    // [1] >=== instance
+    // [0] >=== instance
     public static Database getInstance() {
         if(instance == null) {
             instance = new Database();
@@ -33,13 +33,11 @@ public class Database {
         }
         return instance;
     }
-
     public Connection getConnection() {
         return koneksi;
     }
 
-
-    // [2] >=== objek database singleton
+    // [1] >=== objek database singleton
     private Database () {
         try {
             File folder = new File(DATABASE_FOLDER);
@@ -66,7 +64,7 @@ public class Database {
         }
     }
 
-    // [3] >=== modularisasi statement create table
+    // [2] >=== modularisasi statement create table
     private void createTableKategori() {
         try (Statement perintah = koneksi.createStatement()){
             String querySql =
@@ -87,7 +85,6 @@ public class Database {
             log.error("table kategori gagal dibuat: " , e);
         }
     }
-
     private void createTableMataUang() {
         try(Statement perintah = koneksi.createStatement()) {
             String querySql =
@@ -109,7 +106,6 @@ public class Database {
             log.error("table mata_uang gagal dibuat: ", e);
         }
     }
-
     private void createTableTipeLabel() {
         try (Statement perintah = koneksi.createStatement()){
             String querySql =
@@ -128,7 +124,6 @@ public class Database {
             log.error("table tipelabel gagal dibuat: ", e);
         }
     }
-
     private void createTableAkun() {
         try (Statement perintah = koneksi.createStatement()) {
             String querySql =
@@ -151,7 +146,6 @@ public class Database {
             log.error("table akun gagal dibuat: ", e);
         }
     }
-
     private void createTableTransaksi() {
         try (Statement perintah = koneksi.createStatement()) {
             String querySql =
@@ -180,7 +174,6 @@ public class Database {
             log.error("table transaksi gagal dibuat: ", e);
         }
     }
-
     private void createTableTemplate() {
         try (Statement perintah = koneksi.createStatement()) {
             String querySql =
@@ -210,8 +203,7 @@ public class Database {
         }
     }
 
-
-    // [4] >=== akses dan modifikasi data tipelabel
+    // [3] >=== manipulasi data tipelabel
     public int insertTipeLabel(TipeLabel tipelabel) {
         String querySql = "INSERT INTO tipelabel (nama, warna) VALUES (?, ?)";
 
@@ -253,7 +245,6 @@ public class Database {
             }
         }
     }
-
     public ArrayList<TipeLabel> fetchTipeLabel() {
         try (Statement stat = koneksi.createStatement()){
             ResultSet rs = stat.executeQuery("SELECT * FROM tipelabel");
@@ -277,8 +268,7 @@ public class Database {
         }
     }
 
-
-    // [5] >=== akses data kategori
+    // [4] >=== manipulasi data kategori
     public ArrayList<Kategori> fetchKategori() {
         try (Statement stat = koneksi.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM kategori");
@@ -312,8 +302,7 @@ public class Database {
         }
     }
 
-
-    // [6] >=== fetching, insert, dan hapus data transaksi
+    // [5] >=== manipulasi data transaksi
     public ArrayList<Transaksi> fetchTransaksi() {
         try (Statement stat = koneksi.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM transaksi");
@@ -388,7 +377,6 @@ public class Database {
             return null;
         }
     }
-
     public int insertTransaksi(Transaksi trans) {
         String querySql = "INSERT INTO transaksi " +
                 "(tipe, jumlah, id_akun, id_kategori, id_tipelabel, tanggal, keterangan, metode_transaksi, status) " +
@@ -443,7 +431,6 @@ public class Database {
             }
         }
     }
-
     public void deleteTransaksi(int id) {
         String querySql = "DELETE FROM transaksi WHERE id = ?";
 
@@ -460,7 +447,7 @@ public class Database {
         }
     }
 
-    // [7] >=== manipulasi data akun
+    // [6] >=== manipulasi data akun
     public int insertAkun(Akun dataAkun) {
         String querySql = """
         INSERT INTO akun (nama, warna, icon_path, jumlah, id_mata_uang)
@@ -509,7 +496,6 @@ public class Database {
             }
         }
     }
-
     public ArrayList<Akun> fetchAkun() {
         try (Statement stat = koneksi.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM akun");
@@ -555,6 +541,7 @@ public class Database {
         }
     }
 
+    // [7] >=== manipulasi data template
     public ArrayList<Template> fetchTemplate() {
         try (Statement stat = koneksi.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM template");
@@ -634,7 +621,6 @@ public class Database {
             return null;
         }
     }
-
     public int insertTemplate(Template temp) {
         String quertSql = "INSERT INTO template (tipe, nama, jumlah, id_akun, id_kategori, id_tipelabel, keterangan, metode_transaksi, status) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";

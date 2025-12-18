@@ -24,6 +24,7 @@ public class DataSeeder {
 
     public DataSeeder() {}
 
+    // [0] >=== INSTANCE
     public static DataSeeder getInstance() {
         if(instance == null) {
             instance = new DataSeeder();
@@ -32,6 +33,7 @@ public class DataSeeder {
         return instance;
     }
 
+    // [1] >=== SEED LOCAL DATA
     public ObservableList<Kategori> seedKategori() {
         ObservableList<Kategori> data = FXCollections.observableArrayList();
 
@@ -303,54 +305,30 @@ public class DataSeeder {
             return null;
         }
     }
-
-    public void seedDatabaseKategori() {
-        Database dataConnect = Database.getInstance();
-        String querySql = "INSERT OR IGNORE INTO kategori (id, tipe, nama, icon_path, warna) VALUES (?, ?, ?, ?, ?)";
-
-        try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
-            for(Kategori ktr : DataManager.getInstance().getDataKategori()) {
-                stat.setInt(1, ktr.getId());
-                stat.setString(2, ktr.getTipe());
-                stat.setString(3, ktr.getNama());
-                stat.setString(4, ktr.getIconPath());
-                stat.setString(5, Converter.colorToHex(ktr.getWarna()));
-
-                stat.executeUpdate();
-            }
-            log.info("data kategori berhasil di seed ke database!");
-
-        } catch (SQLException e) {
-            log.error("gagal seed data kategori: ", e);
-        }
-    }
-
-    public ObservableList<String> seedTypeData () {
+    public ObservableList<String> seedPaymentType() {
         ObservableList<String> data = FXCollections.observableArrayList();
         data.addAll(
-            "Cash",
-            "Debit card",
-            "Credit card",
-            "Transfer",
-            "Voucher",
-            "Mobile payment"
+                "Cash",
+                "Debit card",
+                "Credit card",
+                "Transfer",
+                "Voucher",
+                "Mobile payment"
         );
         log.info("mengisi data typedata!");
         return data;
     }
-
-    public ObservableList<String> seedStatusData () {
+    public ObservableList<String> seedPaymentStatus() {
         ObservableList<String> data = FXCollections.observableArrayList();
         data.addAll(
-            "Reconciled",
-            "Cleared",
-            "Uncleared"
+                "Reconciled",
+                "Cleared",
+                "Uncleared"
 
         );
         log.info("mengisi data statusdata!");
         return data;
     }
-
     public void seedColor() {
         DataManager.getInstance().getDataColor().setAll(
                 new ColorItem("Berry Red", Color.web("#D0006F")),
@@ -376,7 +354,6 @@ public class DataSeeder {
         );
         log.info("data warna berhasil dibuat!");
     }
-
     public void seedAccountItem() {
         DataManager.getInstance().getDataAccountItem().setAll(
                 new AccountItem(
@@ -402,7 +379,6 @@ public class DataSeeder {
         );
         log.info("data jenis akun berhasil dibuat!");
     }
-
     public void seedCurrency() {
         DataManager.getInstance().getDataMataUang().setAll(
                 new MataUang(1, "IDR", "Rupiah", "Rp", 0),
@@ -411,7 +387,46 @@ public class DataSeeder {
         );
         log.info("data currency lokal berhasil dibuat!");
     }
+    public Image[][] seedImageTransactionForm() {
+        Image[][] theImage = new Image[][] {
+                {
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/incomeW.png")).toString()),
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/incomeB.png")).toString())
+                },
+                {
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/expenseW.png")).toString()),
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/expenseB.png")).toString())
+                },
+                {
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/transferW.png")).toString()),
+                        new Image(Objects.requireNonNull(getClass().getResource("/icons/transferB.png")).toString())
+                }
+        };
+        log.info("icon form transaksi berhasil di load");
+        return theImage;
+    }
 
+    // [2] >=== SEED DATA DATABASE
+    public void seedDatabaseKategori() {
+        Database dataConnect = Database.getInstance();
+        String querySql = "INSERT OR IGNORE INTO kategori (id, tipe, nama, icon_path, warna) VALUES (?, ?, ?, ?, ?)";
+
+        try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
+            for(Kategori ktr : DataManager.getInstance().getDataKategori()) {
+                stat.setInt(1, ktr.getId());
+                stat.setString(2, ktr.getTipe());
+                stat.setString(3, ktr.getNama());
+                stat.setString(4, ktr.getIconPath());
+                stat.setString(5, Converter.colorToHex(ktr.getWarna()));
+
+                stat.executeUpdate();
+            }
+            log.info("data kategori berhasil di seed ke database!");
+
+        } catch (SQLException e) {
+            log.error("gagal seed data kategori: ", e);
+        }
+    }
     public void seedDatabaseCurrency() {
         Database dataConnect = Database.getInstance();
         String querySql = "INSERT OR IGNORE INTO mata_uang(id, kode, nama, simbol, desimal) VALUES (?, ?, ?, ?, ?)";
@@ -431,24 +446,5 @@ public class DataSeeder {
         } catch (Exception e) {
             log.error("data table mata_uang gagal diseed: ", e);
         }
-    }
-
-    public Image[][] seedImageTransactionForm() {
-        Image[][] theImage = new Image[][] {
-                {
-                        new Image(Objects.requireNonNull(getClass().getResource("/icons/incomeW.png")).toString()),
-                        new Image(Objects.requireNonNull(getClass().getResource("/icons/incomeB.png")).toString())
-                },
-                {
-                        new Image(Objects.requireNonNull(getClass().getResource("/icons/expenseW.png")).toString()),
-                        new Image(Objects.requireNonNull(getClass().getResource("/icons/expenseB.png")).toString())
-                },
-                {
-                        new Image(Objects.requireNonNull(getClass().getResource("/icons/transferW.png")).toString()),
-                        new Image(Objects.requireNonNull(getClass().getResource("/icons/transferB.png")).toString())
-                }
-        };
-        log.info("icon form transaksi berhasil di load");
-        return theImage;
     }
 }

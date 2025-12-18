@@ -25,6 +25,7 @@ public class DataLoader {
     private static DataLoader instance;
     private static final Logger log = LoggerFactory.getLogger(DataLoader.class);
 
+    // [0] >=== INSTANCE
     public static DataLoader getInstance() {
         if(instance == null) {
             instance = new DataLoader();
@@ -33,6 +34,7 @@ public class DataLoader {
         return instance;
     }
 
+    // [1] COMBOBOX LOADER
     public void kategoriComboBoxLoader(ComboBox<Kategori> dataKategoriComboBox) {
         ArrayList<Kategori> listKategori = DataManager.getInstance().getDataKategori();
         dataKategoriComboBox.setItems(FXCollections.observableArrayList(listKategori));
@@ -80,7 +82,6 @@ public class DataLoader {
         });
         dataKategoriComboBox.setButtonCell(dataKategoriComboBox.getCellFactory().call(null));
     }
-
     public void tipeLabelComboBoxLoader(ComboBox<TipeLabel> dataTipeLabelComboBox) {
         dataTipeLabelComboBox.setCellFactory(list -> new ListCell<TipeLabel>() {
             @Override
@@ -125,7 +126,6 @@ public class DataLoader {
         });
         dataTipeLabelComboBox.setButtonCell(dataTipeLabelComboBox.getCellFactory().call(null));
     }
-
     public void akunComboBoxLoader(ComboBox<Akun> dataAkunComboBox) {
         ArrayList<Akun> dataAkun = DataManager.getInstance().getDataAkun();
         dataAkunComboBox.setItems(FXCollections.observableArrayList(dataAkun));
@@ -173,7 +173,6 @@ public class DataLoader {
         });
         dataAkunComboBox.setButtonCell(dataAkunComboBox.getCellFactory().call(null));
     }
-
     public void mataUangComboBoxLoader(ComboBox<MataUang> dataMataUangComboBox) {
         dataMataUangComboBox.setItems(DataManager.getInstance().getDataMataUang());
         dataMataUangComboBox.setCellFactory(cb -> new ListCell<>() {
@@ -187,7 +186,6 @@ public class DataLoader {
         });
         dataMataUangComboBox.setButtonCell(dataMataUangComboBox.getCellFactory().call(null));
     }
-
     public void warnaComboBoxLoader(ComboBox<ColorItem> dataWarnaComboBox) {
         dataWarnaComboBox.setItems(DataManager.getInstance().getDataColor());
         dataWarnaComboBox.setCellFactory(list -> new ListCell<>() {
