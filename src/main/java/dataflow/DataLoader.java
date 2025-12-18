@@ -1,5 +1,6 @@
 package dataflow;
 
+import dataflow.basedata.ColorItem;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -9,6 +10,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import model.Akun;
 import model.Kategori;
 import model.MataUang;
@@ -184,5 +186,28 @@ public class DataLoader {
             }
         });
         dataMataUangComboBox.setButtonCell(dataMataUangComboBox.getCellFactory().call(null));
+    }
+
+    public void warnaComboBoxLoader(ComboBox<ColorItem> dataWarnaComboBox) {
+        dataWarnaComboBox.setItems(DataManager.getInstance().getDataColor());
+        dataWarnaComboBox.setCellFactory(list -> new ListCell<>() {
+            @Override
+            protected void updateItem(ColorItem item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    Circle circle = new Circle(8, item.getWarna());
+                    Label label = new Label(item.getLabel());
+                    label.setStyle("-fx-text-fill: black;");
+                    HBox box = new HBox(8, circle, label);
+                    box.setAlignment(Pos.CENTER_LEFT);
+                    setGraphic(box);
+                }
+            }
+        });
+
+        dataWarnaComboBox.setButtonCell(dataWarnaComboBox.getCellFactory().call(null));
     }
 }
