@@ -124,8 +124,14 @@ public class TransactionControl implements Initializable {
         // beberapa fungsi init
         initPaymentData();
         initMessageBinding();
-        akunToMataUangListener();
         initDate();
+        initDataComboBox();
+        initTipeLabelList();
+        initTemplate();
+        initButtonImage();
+        initButtons();
+        clearSelection(1); // default: semua putih, teks hitam, icon hitam
+        activateIncome();
 
         // disable combobox
         mataUangCombo_inout.setMouseTransparent(true);
@@ -138,28 +144,24 @@ public class TransactionControl implements Initializable {
         mataUangCombo_from.getStyleClass().add("locked");
         mataUangCombo_to.getStyleClass().add("locked");
 
-        // load data combobox
-        initDataComboBox();
-        initTipeLabelList();
-        spinnerLogicHandler();
-        initTemplate();
-
-        // load image
-        theImage = DataManager.getInstance().getImageTransactionForm();
-
-        inoutForm.setVisible(true);   // default
+        // default scene ke inout layer
+        inoutForm.setVisible(true);
         transForm.setVisible(false);
 
-        initButtons();
-        clearSelection(1); // default: semua putih, teks hitam, icon hitam
-        activateIncome();
+        // helper
+        spinnerLogicHandler();
+
+        // listener
+        akunToMataUangListener();
+
+        // scene controller
         showPopup();
     }
 
+    // [0] >=== SCENE CONTROLLER
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-
     @FXML
     public void showPopup() {
         rootPane.setOpacity(0);
@@ -181,7 +183,6 @@ public class TransactionControl implements Initializable {
         showAnim.setInterpolator(Interpolator.EASE_BOTH);
         showAnim.play();
     }
-
     @FXML
     private void closePopup() {
         if (closing) return;
@@ -204,20 +205,14 @@ public class TransactionControl implements Initializable {
         hideAnim.setOnFinished(e -> stage.close());
         hideAnim.play();
     }
-
-    private void updateCategoryCombo(String type) {
-        categoryComboBox.getSelectionModel().clearSelection();
-
-        List<Kategori> filtered = DataManager.getInstance().getDataKategori().stream()
-                .filter(k -> k.getTipe().equals(type))
-                .toList();
-
-        categoryComboBox.setItems(
-                FXCollections.observableArrayList(filtered)
-        );
+    public int getValueChoosen() {
+        return valueChoosen.getValue();
     }
 
-    // [1] >=== FUNGSI INIT
+    // [1] >=== INIT FUNCTION
+    private void initButtonImage() {
+        theImage = DataManager.getInstance().getImageTransactionForm();
+    }
     private void initPaymentData() {
         paymentType_inout.setItems(DataManager.getInstance().getDataPeymentType());
         paymentType_trans.setItems(DataManager.getInstance().getDataPeymentType());
@@ -598,11 +593,6 @@ public class TransactionControl implements Initializable {
 
         transForm.toFront();
     }
-
-    // [6] >===
-
-
-
     private void select(int layer, int index, Button btn, ImageView img, Label lbl, String color) {
 
         if(layer == 1) {
@@ -639,7 +629,17 @@ public class TransactionControl implements Initializable {
         }
         System.out.println("user memilih: " + (valueChoosen.getValue() == 1 ? "income" : valueChoosen.getValue() == 2 ? "expense" : "transfer"));
     }
+    private void updateCategoryCombo(String type) {
+        categoryComboBox.getSelectionModel().clearSelection();
 
+        List<Kategori> filtered = DataManager.getInstance().getDataKategori().stream()
+                .filter(k -> k.getTipe().equals(type))
+                .toList();
+
+        categoryComboBox.setItems(
+                FXCollections.observableArrayList(filtered)
+        );
+    }
     private void clearSelection(int layer) {
 
         if(layer == 1){
@@ -671,7 +671,7 @@ public class TransactionControl implements Initializable {
         }
     }
 
-
+    // [6] >=== LISTENER
     private void akunToMataUangListener() {
         akunComboBox_inout.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
@@ -688,11 +688,5 @@ public class TransactionControl implements Initializable {
                 mataUangCombo_to.setValue(newVal.getMataUang());
             }
         });
-    }
-
-    // [10] >=== submit button handler
-
-    public int getValueChoosen() {
-        return valueChoosen.getValue();
     }
 }
