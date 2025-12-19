@@ -92,7 +92,7 @@
                         </HBox>
                         <HBox alignment="TOP_CENTER" prefHeight="62.0" prefWidth="380.0" spacing="5.0" GridPane.rowIndex="1">
                            <children>
-                              <Button fx:id="incomeBtn_1" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
+                              <Button fx:id="incomeBtn_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <HBox alignment="CENTER" spacing="5.0">
                                        <children>
@@ -106,7 +106,7 @@
                                     </HBox>
                                  </graphic>
                               </Button>
-                              <Button fx:id="expenseBtn_1" layoutX="10.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
+                              <Button fx:id="expenseBtn_inout" layoutX="10.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <HBox alignment="CENTER" spacing="5.0">
                                        <children>
@@ -120,16 +120,16 @@
                                     </HBox>
                                  </graphic>
                               </Button>
-                              <Button fx:id="transferBtn_1" layoutX="305.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
+                              <Button fx:id="transferBtn_inout" layoutX="305.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <HBox alignment="CENTER" spacing="5.0">
                                        <children>
-                                          <ImageView fx:id="transferImg_1" fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="transferImg_inout" fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../icons/transferB.png" />
                                              </image>
                                           </ImageView>
-                                          <Label fx:id="transferLbl_1" text="Transfer" />
+                                          <Label fx:id="transferLbl_inout" text="Transfer" />
                                        </children>
                                     </HBox>
                                  </graphic>
@@ -376,7 +376,7 @@
                         </HBox>
                         <HBox alignment="TOP_CENTER" prefHeight="62.0" prefWidth="380.0" spacing="5.0" GridPane.rowIndex="1">
                            <children>
-                              <Button fx:id="incomeBtn_2" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
+                              <Button fx:id="incomeBtn_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <HBox alignment="CENTER" spacing="5.0">
                                        <children>
@@ -390,7 +390,7 @@
                                     </HBox>
                                  </graphic>
                               </Button>
-                              <Button fx:id="expenseBtn_2" layoutX="10.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
+                              <Button fx:id="expenseBtn_trans" layoutX="10.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <HBox alignment="CENTER" spacing="5.0">
                                        <children>
@@ -404,16 +404,16 @@
                                     </HBox>
                                  </graphic>
                               </Button>
-                              <Button fx:id="transferBtn_2" layoutX="305.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
+                              <Button fx:id="transferBtn_trans" layoutX="305.0" layoutY="10.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS">
                                  <graphic>
                                     <HBox alignment="CENTER" spacing="5.0">
                                        <children>
-                                          <ImageView fx:id="transferImg_2" fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
+                                          <ImageView fx:id="transferImg_trans" fitHeight="21.0" fitWidth="21.0" pickOnBounds="true" preserveRatio="true">
                                              <image>
                                                 <Image url="@../icons/transferB.png" />
                                              </image>
                                           </ImageView>
-                                          <Label fx:id="transferLbl_2" text="Transfer" />
+                                          <Label fx:id="transferLbl_trans" text="Transfer" />
                                        </children>
                                     </HBox>
                                  </graphic>

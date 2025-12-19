@@ -1,5 +1,6 @@
 package controller.transaction;
 
+import dataflow.DataLoader;
 import dataflow.DataManager;
 import dataflow.basedata.ColorItem;
 import javafx.animation.FadeTransition;
@@ -45,95 +46,12 @@ public class LabelControl implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         showPopup();
-        loadColorComboBox();
+        DataLoader.getInstance().warnaComboBoxLoader(colorComboBox);
         isTextFieldValid(labelName);
         isFormComplete();
     }
 
-    private void loadColorComboBox() {
-        colorComboBox.setItems(DataManager.getInstance().getDataColor());
-        colorComboBox.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(ColorItem item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    Circle circle = new Circle(8, item.getWarna());
-                    Label label = new Label(item.getLabel());
-                    label.setStyle("-fx-text-fill: black;");
-                    HBox box = new HBox(8, circle, label);
-                    box.setAlignment(Pos.CENTER_LEFT);
-                    setGraphic(box);
-                }
-            }
-        });
-
-        colorComboBox.setButtonCell(colorComboBox.getCellFactory().call(null));
-    }
-
-    private void isFormComplete() {
-        BooleanBinding nameValid =
-                Bindings.createBooleanBinding(
-                        () -> !labelName.getText().trim().isEmpty(),
-                        labelName.textProperty()
-                );
-
-        BooleanBinding colorValid = colorComboBox.valueProperty().isNotNull();
-
-        BooleanBinding formValid =
-                nameValid.and(colorValid);
-
-        submitButton.disableProperty().bind(formValid.not());
-    }
-
-    private void isTextFieldValid(TextField theTextField) {
-        TextFormatter<String> formatter = new TextFormatter<>(change -> {
-            if (change.getControlNewText().length() <= 20) {
-                return change; // allow input
-            } else {
-                return null; // reject input
-            }
-        });
-
-        theTextField.setTextFormatter(formatter);
-    }
-
-    @FXML
-    private void handleSubmitAction() {
-        String nama = labelName.getText();
-        Color warna = colorComboBox.getValue().getWarna();
-
-        TipeLabel tipeLabel = new TipeLabel(0, nama, warna);
-
-        boolean result = DataManager.getInstance().addLabel(tipeLabel);
-        if(parentTemplate != null && result) {
-            parentTemplate.getTipeLabelList().add(tipeLabel);
-            parentTemplate.getTipeLabel().getSelectionModel().select(tipeLabel);
-            grandParent.getTipeLabelList().add(tipeLabel);
-        } else if(result && parentTransaction != null) {
-            parentTransaction.getTipeLabelList().add(tipeLabel);
-            parentTransaction.getTipeLabelInOut().getSelectionModel().select(tipeLabel);
-            parentTransaction.getTipeLabelTrans().getSelectionModel().select(tipeLabel);
-        }
-        closePopup();
-    }
-
-    // DIPANGGIL dari controller pemanggil
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public void setParentTransaction(TransactionControl parent) {
-        this.parentTransaction = parent;
-    }
-
-    public void setParentTemplate(TemplateControl parent, TransactionControl grandParent) {
-        this.grandParent = grandParent;
-        this.parentTemplate = parent;
-    }
-
+    // [0] >=== SCENE CONTROLLER
     @FXML
     public void showPopup() {
         if (stage == null) return;
@@ -156,7 +74,6 @@ public class LabelControl implements Initializable {
         pt.setInterpolator(Interpolator.EASE_OUT);
         pt.play();
     }
-
     @FXML
     private void closePopup() {
         if (closing) return;
@@ -178,5 +95,63 @@ public class LabelControl implements Initializable {
 
         hideAnim.setOnFinished(e -> stage.close());
         hideAnim.play();
+    }
+
+    // [1] >=== FORM VALIDATION & SUBMIT HANDLER
+    private void isFormComplete() {
+        BooleanBinding nameValid =
+                Bindings.createBooleanBinding(
+                        () -> !labelName.getText().trim().isEmpty(),
+                        labelName.textProperty()
+                );
+
+        BooleanBinding colorValid = colorComboBox.valueProperty().isNotNull();
+
+        BooleanBinding formValid =
+                nameValid.and(colorValid);
+
+        submitButton.disableProperty().bind(formValid.not());
+    }
+    private void isTextFieldValid(TextField theTextField) {
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            if (change.getControlNewText().length() <= 20) {
+                return change; // allow input
+            } else {
+                return null; // reject input
+            }
+        });
+
+        theTextField.setTextFormatter(formatter);
+    }
+    @FXML
+    private void handleSubmitAction() {
+        String nama = labelName.getText();
+        Color warna = colorComboBox.getValue().getWarna();
+
+        TipeLabel tipeLabel = new TipeLabel(0, nama, warna);
+
+        boolean result = DataManager.getInstance().addLabel(tipeLabel);
+        if(parentTemplate != null && result) {
+            parentTemplate.getTipeLabelList().add(tipeLabel);
+            parentTemplate.getTipeLabel().getSelectionModel().select(tipeLabel);
+            grandParent.getTipeLabelList().add(tipeLabel);
+        } else if(result && parentTransaction != null) {
+            parentTransaction.getTipeLabelList().add(tipeLabel);
+            parentTransaction.getTipeLabelInOut().getSelectionModel().select(tipeLabel);
+            parentTransaction.getTipeLabelTrans().getSelectionModel().select(tipeLabel);
+        }
+        closePopup();
+    }
+
+    // [2] >=== SCENE CONNECTION FUNCTION
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+    public void setParentTransaction(TransactionControl parent) {
+        this.parentTransaction = parent;
+    }
+    public void setParentTemplate(TemplateControl parent, TransactionControl grandParent) {
+        this.grandParent = grandParent;
+        this.parentTemplate = parent;
     }
 }

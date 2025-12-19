@@ -14,7 +14,7 @@ public class Transaksi {
     protected String metodeTransaksi;
     protected String status;
 
-    // contructor full spek
+    // contructor full atribut
     public Transaksi(int id, String tipe, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, String metodeTransaksi, String status) {
         this.id = id;
         this.tipe = tipe;
@@ -28,8 +28,7 @@ public class Transaksi {
         this.status = status;
     }
 
-    // constructor hanya spek wajib
-
+    // constructor hanya atribut wajib
     public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDate tanggal) {
         this.id = id;
         this.tipe = tipe;
