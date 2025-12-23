@@ -111,36 +111,39 @@
                                                 <Label style="-fx-font-size: 11;" text="TOTAL: -IDR 24,000.00" textFill="#BDC3C7" />
                                             </children>
                                         </HBox>
-
-                                        <HBox alignment="CENTER_LEFT" prefHeight="85.0" spacing="20.0" style="-fx-padding: 0 20 0 20;">
-                                            <children>
-                                                <CheckBox mnemonicParsing="false" />
-                                                <StackPane>
-                                                    <children>
-                                                        <Circle fill="#E8F6F1" radius="25.0" stroke="#01AA71" strokeType="INSIDE" strokeWidth="0.5" />
-                                                        <Label style="-fx-font-size: 20;" text="🍕" />
-                                                    </children>
-                                                </StackPane>
-                                                <VBox alignment="CENTER_LEFT">
-                                                    <children>
-                                                        <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Food &amp; Drinks" textFill="#2C3E50" />
-                                                        <HBox alignment="CENTER_LEFT" spacing="8.0">
-                                                            <children>
-                                                                <Label style="-fx-background-color: #01AA71; -fx-text-fill: white; -fx-padding: 2 10 2 10; -fx-background-radius: 10; -fx-font-size: 10; -fx-font-weight: bold;" text="CASH" />
-                                                                <Label style="-fx-font-size: 12;" text="di toleransi" textFill="#95A5A6" />
-                                                            </children>
-                                                        </HBox>
-                                                    </children>
-                                                </VBox>
-                                                <Region HBox.hgrow="ALWAYS" />
-                                                <VBox alignment="CENTER_RIGHT">
-                                                    <children>
-                                                        <Label style="-fx-font-weight: bold; -fx-font-size: 18;" text="-IDR 24,000.00" textFill="#E74C3C" />
-                                                        <Label style="-fx-font-size: 12;" text="09:40 PM" textFill="#BDC3C7" />
-                                                    </children>
-                                                </VBox>
-                                            </children>
-                                        </HBox>
+                              <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                                 <children>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="85.0" spacing="20.0" style="-fx-padding: 0 20 0 20;">
+                                       <children>
+                                          <CheckBox mnemonicParsing="false" />
+                                          <StackPane>
+                                             <children>
+                                                <Circle fill="#E8F6F1" radius="25.0" stroke="#01AA71" strokeType="INSIDE" strokeWidth="0.5" />
+                                                <Label style="-fx-font-size: 20;" text="🍕" />
+                                             </children>
+                                          </StackPane>
+                                          <VBox alignment="CENTER_LEFT">
+                                             <children>
+                                                <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Food &amp; Drinks" textFill="#2C3E50" />
+                                                <HBox alignment="CENTER_LEFT" spacing="8.0">
+                                                   <children>
+                                                      <Label style="-fx-background-color: #01AA71; -fx-text-fill: white; -fx-padding: 2 10 2 10; -fx-background-radius: 10; -fx-font-size: 10; -fx-font-weight: bold;" text="CASH" />
+                                                      <Label style="-fx-font-size: 12;" text="di toleransi" textFill="#95A5A6" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <Region HBox.hgrow="ALWAYS" />
+                                          <VBox alignment="CENTER_RIGHT">
+                                             <children>
+                                                <Label style="-fx-font-weight: bold; -fx-font-size: 18;" text="-IDR 24,000.00" textFill="#E74C3C" />
+                                                <Label style="-fx-font-size: 12;" text="09:40 PM" textFill="#BDC3C7" />
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
                                     </children>
                                 </VBox>
                             </children>
