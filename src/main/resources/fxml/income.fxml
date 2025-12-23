@@ -114,7 +114,7 @@
                                         </HBox>
                               <VBox fx:id="recordPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                  <children>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="85.0" spacing="20.0" style="-fx-padding: 0 20 0 20;">
+                                    <HBox alignment="CENTER_LEFT" prefHeight="85.0" spacing="20.0" style="-fx-padding: 0 20 0 20;" visible="false">
                                        <children>
                                           <CheckBox mnemonicParsing="false" />
                                           <StackPane>

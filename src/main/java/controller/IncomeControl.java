@@ -4,49 +4,35 @@ import controller.transaction.TransactionControl;
 import dataflow.DataManager;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 import model.Pemasukan;
-import model.Transaksi;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class IncomeControl implements Initializable {
-
+    private static final Logger log = LoggerFactory.getLogger(IncomeControl.class);
     @FXML private VBox recordPanel;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        recordPanel.getChildren().add(
-                createTransaction("🍕", "Food & Drinks", "CASH", "di toleransi",
-                        "-IDR 24,000.00", "09:40 PM")
-        );
-
-        recordPanel.getChildren().add(
-                createTransaction("🚕", "Transport", "E-WALLET", "",
-                        "-IDR 15,000.00", "08:10 AM")
-        );
+        log.info("panel record income berhasil terbuka");
+        fetchTransactionData();
     }
 
     private HBox createTransaction(Pemasukan income) {
+        HBox transList = new HBox(10);
+        transList.setPrefHeight(65);
 
-        HBox root = new HBox(20);
-        root.setPrefHeight(85);
-        root.setStyle("""
+
+        transList.setStyle("""
             -fx-padding: 0 20;
             -fx-background-color: white;
             -fx-border-color: #E5E7EB;
@@ -54,72 +40,21 @@ public class IncomeControl implements Initializable {
             -fx-background-radius: 12;
         """);
 
-        CheckBox checkBox = new CheckBox();
-
-        // ICON
-        Circle circle = new Circle(25);
-        circle.setFill(javafx.scene.paint.Color.web("#E8F6F1"));
-        circle.setStroke(javafx.scene.paint.Color.web("#01AA71"));
-
-        Label icon = new Label(emoji);
-        icon.setStyle("-fx-font-size: 20;");
-
-        StackPane iconPane = new StackPane(circle, icon);
-
-        // TEXT
-        Label titleLabel = new Label(title);
-        titleLabel.setStyle("-fx-font-size: 16; -fx-font-weight: bold;");
-        titleLabel.setTextFill(javafx.scene.paint.Color.web("#2C3E50"));
-
-        Label paymentLabel = new Label(payment);
-        paymentLabel.setStyle("""
-            -fx-background-color: #01AA71;
-            -fx-text-fill: white;
-            -fx-padding: 2 10;
-            -fx-background-radius: 10;
-            -fx-font-size: 10;
-            -fx-font-weight: bold;
-        """);
-
-        Label noteLabel = new Label(note);
-        noteLabel.setStyle("-fx-font-size: 12;");
-        noteLabel.setTextFill(javafx.scene.paint.Color.web("#95A5A6"));
-
-        HBox infoRow = new HBox(8, paymentLabel, noteLabel);
-        VBox textBox = new VBox(6, titleLabel, infoRow);
-
-        // SPACER
-        Region spacer = new Region();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        // AMOUNT
-        Label amountLabel = new Label(amount);
-        amountLabel.setStyle("-fx-font-size: 18; -fx-font-weight: bold;");
-        amountLabel.setTextFill(javafx.scene.paint.Color.web("#E74C3C"));
-
-        Label timeLabel = new Label(time);
-        timeLabel.setStyle("-fx-font-size: 12;");
-        timeLabel.setTextFill(javafx.scene.paint.Color.web("#BDC3C7"));
-
-        VBox rightBox = new VBox(amountLabel, timeLabel);
-        rightBox.setAlignment(javafx.geometry.Pos.CENTER_RIGHT);
-
-        root.getChildren().addAll(
-                checkBox,
-                iconPane,
-                textBox,
-                spacer,
-                rightBox
-        );
-
-        return root;
+        CheckBox checklist = new CheckBox();
+        Label kategoriLabel = new Label(income.getKategori().getNama());
+        transList.getChildren().add(checklist);
+        transList.getChildren().add(kategoriLabel);
+        return transList;
     }
 
-    private void fetchTransacctionData() {
+    private void fetchTransactionData() {
+        log.info("DATA TERPANGGIL GUYS");
         ArrayList<Pemasukan> incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
 
+        log.info("Data BERHASIL DI FETCHING");
         for(Pemasukan in : incomeTransaction) {
-            createTransaction(in);
+            recordPanel.getChildren().add(createTransaction(in));
+            log.info("memasukan data baru! Ke record Panel!");
         }
     }
 
