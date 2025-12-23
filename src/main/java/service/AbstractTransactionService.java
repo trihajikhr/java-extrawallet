@@ -1,24 +1,24 @@
 package service;
 
-import dataflow.DataManager;
 import model.Akun;
 import model.Kategori;
 import model.TipeLabel;
 import model.Transaksi;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class ExpensManager implements TransactionService {
+public abstract class AbstractTransactionService implements TransactionService {
+    protected final List<Transaksi> dataTransaksi;
 
-    private static final Logger log = LoggerFactory.getLogger(ExpensManager.class);
-    private final List<Transaksi> data;
+    protected AbstractTransactionService(List<Transaksi> data){
+        this.dataTransaksi = data;
+    }
 
     @Override
     public List<Transaksi> filterByDate(LocalDate startDate, LocalDate endDate) {
-        return DataManager.getInstance().getDataTransaksi().stream()
+        return dataTransaksi.stream()
+                .filter(this::isTargetType)
                 .filter(t ->
                         !t.getTanggal().isBefore(startDate) &&
                                 !t.getTanggal().isAfter(endDate)
@@ -28,17 +28,19 @@ public class ExpensManager implements TransactionService {
 
     @Override
     public int sumBetween(LocalDate startDate, LocalDate endDate) {
-        return filterByDate(startDate, endDate).stream()
-                .mapToInt(Transaksi::getJumlah)
-                .sum();
+        int sum = 0;
+        for(Transaksi t : filterByDate(startDate, endDate)) {
+            sum += t.getJumlah();
+        }
+        return sum;
     }
 
     @Override
     public int sumByCategory(Kategori kategori, LocalDate startDate, LocalDate endDate) {
         int sum = 0;
-        for(Transaksi trans : filterByDate(startDate, endDate)) {
-            if(trans.getKategori().equals(kategori)) {
-                sum += trans.getJumlah();
+        for(Transaksi t : filterByDate(startDate, endDate)){
+            if(t.getKategori().equals(kategori)) {
+                sum += t.getJumlah();
             }
         }
         return sum;
@@ -47,9 +49,9 @@ public class ExpensManager implements TransactionService {
     @Override
     public int sumByAccount(Akun akun, LocalDate startDate, LocalDate endDate) {
         int sum = 0;
-        for(Transaksi trans : filterByDate(startDate, endDate)) {
-            if(trans.getAkun().equals(akun)) {
-                sum += trans.getJumlah();
+        for(Transaksi t : filterByDate(startDate,endDate)) {
+            if(t.getAkun().equals(akun)) {
+                sum += t.getJumlah();
             }
         }
         return sum;
@@ -58,11 +60,13 @@ public class ExpensManager implements TransactionService {
     @Override
     public int sumByLabel(TipeLabel label, LocalDate startDate, LocalDate endDate) {
         int sum = 0;
-        for(Transaksi trans : filterByDate(startDate, endDate)) {
-            if(trans.getTipelabel().equals(label)) {
-                sum += trans.getJumlah();
+        for(Transaksi t : filterByDate(startDate,endDate)) {
+            if(t.getTipelabel().equals(label)) {
+                sum += t.getJumlah();
             }
         }
         return sum;
     }
+
+    protected abstract boolean isTargetType(Transaksi t);
 }
