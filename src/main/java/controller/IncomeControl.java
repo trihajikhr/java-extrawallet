@@ -5,6 +5,7 @@ import dataflow.DataManager;
 import javafx.scene.control.CheckBox;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
+import model.Pemasukan;
 import model.Transaksi;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +31,6 @@ public class IncomeControl implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // contoh tambah 2 transaksi
         recordPanel.getChildren().add(
                 createTransaction("🍕", "Food & Drinks", "CASH", "di toleransi",
                         "-IDR 24,000.00", "09:40 PM")
@@ -42,14 +42,7 @@ public class IncomeControl implements Initializable {
         );
     }
 
-    private HBox createTransaction(
-            String emoji,
-            String title,
-            String payment,
-            String note,
-            String amount,
-            String time
-    ) {
+    private HBox createTransaction(Pemasukan income) {
 
         HBox root = new HBox(20);
         root.setPrefHeight(85);
@@ -120,9 +113,16 @@ public class IncomeControl implements Initializable {
         );
 
         return root;
-    }/**
-     * Mengambil data dari DataManager dan menampilkannya ke UI
-     */
+    }
+
+    private void fetchTransacctionData() {
+        ArrayList<Pemasukan> incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
+
+        for(Pemasukan in : incomeTransaction) {
+            createTransaction(in);
+        }
+    }
+
 //    public void loadDataFromDatabase() {
 //        if (transactionContainer == null) return;
 //

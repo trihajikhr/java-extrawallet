@@ -139,7 +139,7 @@ public class DataManager {
 
 
     // [2] >> =============== DATA PEMASUKAN =============== //
-    public ArrayList<Pemasukan> getPemasukan() {
+    public ArrayList<Pemasukan> getDataTransaksiPemasukan() {
         ArrayList<Pemasukan> inList = new ArrayList<>();
         for (Transaksi t : dataTransaksi) {
             if (t instanceof Pemasukan) inList.add((Pemasukan) t);
@@ -160,7 +160,7 @@ public class DataManager {
     }
 
     // [3] >> =============== DATA PENGELUARAN =============== //
-    public ArrayList<Pengeluaran> getPengeluaran() {
+    public ArrayList<Pengeluaran> getDataTransaksiPengeluaran() {
         ArrayList<Pengeluaran> outList = new ArrayList<>();
         for (Transaksi t : dataTransaksi) {
             if (t instanceof Pengeluaran) outList.add((Pengeluaran) t);
