@@ -311,7 +311,7 @@ public class Database {
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                String tipe = rs.getString("tipe");
+                TipeTransaksi tipe = TipeTransaksi.valueOf(rs.getString("tipe"));
                 int jumlah = rs.getInt("jumlah");
                 int idAkun = rs.getInt("id_akun");
                 int idKategori = rs.getInt("id_kategori");
@@ -385,7 +385,7 @@ public class Database {
         try {
             koneksi.setAutoCommit(false); // mulai
             try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, trans.getTipe());
+                ps.setString(1, trans.getTipeTransaksi().name());
                 ps.setInt(2, trans.getJumlah());
                 ps.setInt(3, trans.getAkun().getId());
                 ps.setInt(4, trans.getKategori().getId());

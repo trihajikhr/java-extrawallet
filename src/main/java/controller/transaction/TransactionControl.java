@@ -371,7 +371,7 @@ public class TransactionControl implements Initializable {
     }
     @FXML
     private void inoutSubmitHandler() {
-        String tipe = getValueChoosen() == 1 ? "IN" : "OUT";
+        TipeTransaksi tipe = getValueChoosen() == 1 ? TipeTransaksi.IN : TipeTransaksi.OUT;
         int jumlah = spinner_inout.getValue();
         Akun akun = akunComboBox_inout.getValue();
         Kategori kategori = categoryComboBox.getValue();
@@ -423,7 +423,7 @@ public class TransactionControl implements Initializable {
 
         DataManager.getInstance().addTransaksi(new Transaksi(
                 0,
-                "OUT",
+                TipeTransaksi.OUT,
                 fromJumlah,
                 fromAkun,
                 fromKategori,
@@ -449,7 +449,7 @@ public class TransactionControl implements Initializable {
 
         DataManager.getInstance().addTransaksi(new Transaksi(
                 0,
-                "IN",
+                TipeTransaksi.IN,
                 toJumlah,
                 toAkun,
                 toKategori,

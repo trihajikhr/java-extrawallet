@@ -105,6 +105,10 @@ public class DataManager {
     }
 
     // [1] >> =============== DATA TRANSAKSI =============== //
+    public ArrayList<Transaksi> getDataTransaksi() {
+        return dataTransaksi;
+    }
+
     public void sortingAscTanggal() {
         this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal));
     }

@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class Transaksi {
     protected int id;
-    protected String tipe; // [IN/OUT]
+    protected TipeTransaksi tipeTransaksi; // [IN/OUT]
     protected int jumlah;
     protected Akun akun;
     protected Kategori kategori;
@@ -15,9 +15,9 @@ public class Transaksi {
     protected String status;
 
     // contructor full atribut
-    public Transaksi(int id, String tipe, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, String metodeTransaksi, String status) {
+    public Transaksi(int id, TipeTransaksi tipeTransaksi, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, String metodeTransaksi, String status) {
         this.id = id;
-        this.tipe = tipe;
+        this.tipeTransaksi = tipeTransaksi;
         this.jumlah = jumlah;
         this.akun = akun;
         this.kategori = kategori;
@@ -29,9 +29,9 @@ public class Transaksi {
     }
 
     // constructor hanya atribut wajib
-    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDate tanggal) {
+    public Transaksi(int id, TipeTransaksi tipeTransaksi, int jumlah, Kategori kategori, LocalDate tanggal) {
         this.id = id;
-        this.tipe = tipe;
+        this.tipeTransaksi = tipeTransaksi;
         this.jumlah = jumlah;
         this.kategori = kategori;
         this.tanggal = tanggal;
@@ -47,12 +47,12 @@ public class Transaksi {
         this.id = id;
     }
 
-    public String getTipe() {
-        return tipe;
+    public TipeTransaksi getTipeTransaksi() {
+        return tipeTransaksi;
     }
 
-    public void setTipe(String tipe) {
-        this.tipe = tipe;
+    public void setTipeTransaksi(TipeTransaksi tipeTransaksi) {
+        this.tipeTransaksi = tipeTransaksi;
     }
 
     public int getJumlah() {
