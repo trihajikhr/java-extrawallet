@@ -111,7 +111,7 @@
                                                 <Label style="-fx-font-size: 11;" text="TOTAL: -IDR 24,000.00" textFill="#BDC3C7" />
                                             </children>
                                         </HBox>
-                              <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                              <VBox fx:id="recordPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                                  <children>
                                     <HBox alignment="CENTER_LEFT" prefHeight="85.0" spacing="20.0" style="-fx-padding: 0 20 0 20;">
                                        <children>
