@@ -362,9 +362,9 @@ public class Database {
                     continue; // skip
                 }
 
-                if(tipe.equals("IN")){
+                if(tipe == TipeTransaksi.IN){
                     data.add(new Pemasukan(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, metodeTransaksi, status));
-                } else if(tipe.equals("OUT")) {
+                } else if(tipe == TipeTransaksi.OUT) {
                     data.add(new Pengeluaran(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, metodeTransaksi, status));
                 }
             }
@@ -392,8 +392,8 @@ public class Database {
                 ps.setInt(5, trans.getTipelabel().getId());
                 ps.setString(6, trans.getTanggal().format(formatter));
                 ps.setString(7, trans.getKeterangan());
-                ps.setString(8, trans.getMetodeTransaksi());
-                ps.setString(9, trans.getStatus());
+                ps.setString(8, trans.getPaymentType());
+                ps.setString(9, trans.getPaymentStatus());
 
                 int affected = ps.executeUpdate();
                 if (affected == 0) {

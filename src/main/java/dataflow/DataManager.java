@@ -139,10 +139,14 @@ public class DataManager {
 
 
     // [2] >> =============== DATA PEMASUKAN =============== //
-    public ArrayList<Pemasukan> getDataTransaksiPemasukan() {
-        ArrayList<Pemasukan> inList = new ArrayList<>();
-        for (Transaksi t : dataTransaksi) {
-            if (t instanceof Pemasukan) inList.add((Pemasukan) t);
+    public ArrayList<Transaksi> getDataTransaksiPemasukan() {
+        System.out.println(dataTransaksi.size());
+
+        ArrayList<Transaksi> inList = new ArrayList<>();
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
+                inList.add(trans);
+            }
         }
         return inList;
     }

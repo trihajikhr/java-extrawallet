@@ -11,11 +11,11 @@ public class Transaksi {
     protected TipeLabel tipelabel;
     protected LocalDate tanggal;
     protected String keterangan;
-    protected String metodeTransaksi;
-    protected String status;
+    protected String paymentType;
+    protected String paymentStatus;
 
     // contructor full atribut
-    public Transaksi(int id, TipeTransaksi tipeTransaksi, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, String metodeTransaksi, String status) {
+    public Transaksi(int id, TipeTransaksi tipeTransaksi, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, String paymentType, String paymentStatus) {
         this.id = id;
         this.tipeTransaksi = tipeTransaksi;
         this.jumlah = jumlah;
@@ -24,8 +24,8 @@ public class Transaksi {
         this.tipelabel = tipelabel;
         this.tanggal = tanggal;
         this.keterangan = keterangan;
-        this.metodeTransaksi = metodeTransaksi;
-        this.status = status;
+        this.paymentType = paymentType;
+        this.paymentStatus = paymentStatus;
     }
 
     // constructor hanya atribut wajib
@@ -103,19 +103,19 @@ public class Transaksi {
         this.keterangan = keterangan;
     }
 
-    public String getMetodeTransaksi() {
-        return metodeTransaksi;
+    public String getPaymentType() {
+        return paymentType;
     }
 
-    public void setMetodeTransaksi(String metodeTransaksi) {
-        this.metodeTransaksi = metodeTransaksi;
+    public void setPaymentType(String paymentType) {
+        this.paymentType = paymentType;
     }
 
-    public String getStatus() {
-        return status;
+    public String getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPaymentStatus(String paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

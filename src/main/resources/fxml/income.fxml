@@ -5,16 +5,13 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="653.0" prefWidth="863.0" style="-fx-background-color: #F2F7F5;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.IncomeControl">
@@ -112,49 +109,7 @@
                                                 <Label style="-fx-font-size: 11;" text="TOTAL: -IDR 24,000.00" textFill="#BDC3C7" />
                                             </children>
                                         </HBox>
-                              <VBox fx:id="recordPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
-                                 <children>
-                                    <HBox alignment="CENTER_LEFT" prefHeight="85.0" spacing="20.0" style="-fx-padding: 0 20 0 20;" visible="false">
-                                       <children>
-                                          <CheckBox mnemonicParsing="false" />
-                                          <StackPane>
-                                             <children>
-                                                <Circle fill="#E8F6F1" radius="25.0" stroke="#01AA71" strokeType="INSIDE" strokeWidth="0.5" />
-                                                <Label style="-fx-font-size: 20;" text="🍕" />
-                                             </children>
-                                          </StackPane>
-                                          <VBox alignment="CENTER_LEFT">
-                                             <children>
-                                                <Label style="-fx-font-weight: bold; -fx-font-size: 16;" text="Food &amp; Drinks" textFill="#2C3E50" />
-                                                <HBox alignment="CENTER_LEFT" spacing="8.0">
-                                                   <children>
-                                                      <Label style="-fx-background-color: #01AA71; -fx-text-fill: white; -fx-padding: 2 10 2 10; -fx-background-radius: 10; -fx-font-size: 10; -fx-font-weight: bold;" text="CASH" />
-                                                      <Label style="-fx-font-size: 12;" text="di toleransi" textFill="#95A5A6" />
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                          </VBox>
-                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" HBox.hgrow="ALWAYS">
-                                             <children>
-                                                <Label text="halo guys" textFill="#080808" />
-                                                <Label text="nge cafe" textFill="#0d0d0d" />
-                                             </children>
-                                          </HBox>
-                                          <VBox alignment="CENTER_RIGHT">
-                                             <children>
-                                                <Label style="-fx-font-weight: bold; -fx-font-size: 18;" text="-IDR 24,000.00" textFill="#E74C3C" />
-                                                <HBox alignment="CENTER_RIGHT" spacing="10.0">
-                                                   <children>
-                                                      <Label style="-fx-font-size: 12;" text="10 January 2025" textFill="#BDC3C7" />
-                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
-                                                   </children>
-                                                </HBox>
-                                             </children>
-                                          </VBox>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                              </VBox>
+                              <VBox fx:id="recordPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
                                     </children>
                                 </VBox>
                             </children>

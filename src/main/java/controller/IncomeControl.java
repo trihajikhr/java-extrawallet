@@ -2,23 +2,30 @@ package controller;
 
 import controller.transaction.TransactionControl;
 import dataflow.DataManager;
+import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import model.Pemasukan;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Label;
+import model.Transaksi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class IncomeControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(IncomeControl.class);
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     @FXML private VBox recordPanel;
 
     @Override
@@ -27,34 +34,96 @@ public class IncomeControl implements Initializable {
         fetchTransactionData();
     }
 
-    private HBox createTransaction(Pemasukan income) {
+    private HBox createTransaction(Transaksi income) {
         HBox transList = new HBox(10);
+        transList.setAlignment(Pos.CENTER_LEFT);
         transList.setPrefHeight(65);
-
-
         transList.setStyle("""
             -fx-padding: 0 20;
             -fx-background-color: white;
-            -fx-border-color: #E5E7EB;
             -fx-border-radius: 12;
             -fx-background-radius: 12;
+            -fx-border-color: transparent transparent #E5E7EB transparent;
+            -fx-border-width: 0 0 1 0;
         """);
 
+        // [1] checklist:
         CheckBox checklist = new CheckBox();
-        Label kategoriLabel = new Label(income.getKategori().getNama());
         transList.getChildren().add(checklist);
-        transList.getChildren().add(kategoriLabel);
+
+        // [2] icon dengan stackpane:
+        Circle bgCircle = new Circle(20, Color.DARKBLUE);
+        ImageView kategoriIcon = new ImageView(income.getKategori().getIcon());
+        kategoriIcon.setFitWidth(24);
+        kategoriIcon.setFitHeight(24);
+
+        Circle clip = new Circle(12, 12, 12);
+        kategoriIcon.setClip(clip);
+
+        StackPane iconStack = new StackPane(bgCircle, kategoriIcon);
+        transList.getChildren().add(iconStack);
+
+        // [3] vbox untuk label, kategori, dan keterangan
+        VBox infoDasar = new VBox(5);
+        infoDasar.setAlignment(Pos.CENTER_LEFT);
+        Label namaKategori = new Label(income.getKategori().getNama());
+        namaKategori.setStyle("-fx-text-fill: #000000");
+        infoDasar.getChildren().add(namaKategori);
+
+        HBox infoDasarHelper = new HBox(5);
+        Label metodeBayar = new Label(income.getPaymentType());
+        metodeBayar.setStyle("-fx-text-fill: #000000");
+        infoDasarHelper.getChildren().add(metodeBayar);
+        Label keterangan = new Label(income.getKeterangan());
+        keterangan.setStyle("-fx-text-fill: #000000");
+        infoDasarHelper.getChildren().add(keterangan);
+        infoDasar.getChildren().add(infoDasarHelper);
+
+        transList.getChildren().add(infoDasar);
+
+        // [4] menampilkan bank dan tipelabel pilihan user
+        HBox infoDukung = new HBox(15);
+        HBox.setHgrow(infoDukung, Priority.ALWAYS);
+        infoDukung.setAlignment(Pos.CENTER);
+        Label namaAkun = new Label(income.getAkun().getNama());
+        namaAkun.setStyle("-fx-text-fill: #000000");
+        infoDukung.getChildren().add(namaAkun);
+
+        Label namaTipeLabel = new Label(income.getTipelabel().getNama());
+        namaTipeLabel.setStyle("-fx-text-fill: #000000");
+        infoDukung.getChildren().add(namaTipeLabel);
+        transList.getChildren().add(infoDukung);
+
+        // [5] menampilkan harga dan tanggal
+        VBox infoTransaksi = new VBox(5);
+        infoTransaksi.setPrefWidth(100);
+        infoTransaksi.setAlignment(Pos.CENTER_RIGHT);
+        infoTransaksi.setPrefWidth(75);
+        Label harga = new Label(Integer.toString(income.getJumlah()));
+        harga.setStyle("-fx-text-fill: #000000");
+        infoTransaksi.getChildren().add(harga);
+
+        HBox tanggalDanStatus = new HBox(5);
+        tanggalDanStatus.setAlignment(Pos.CENTER_RIGHT);
+        Label tanggal = new Label(income.getTanggal().format(formatter));
+        tanggal.setStyle("-fx-text-fill: #000000");
+        // icon payment status belum dibuat!
+        ImageView iconStatus = new ImageView();
+        iconStatus.setFitWidth(25);
+        iconStatus.setFitHeight(25);
+        tanggalDanStatus.getChildren().addAll(tanggal, iconStatus);
+        infoTransaksi.getChildren().add(tanggalDanStatus);
+        transList.getChildren().add(infoTransaksi);
+
         return transList;
     }
 
     private void fetchTransactionData() {
-        log.info("DATA TERPANGGIL GUYS");
-        ArrayList<Pemasukan> incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
+        log.info("report income berhasil terbuka");
+        ArrayList<Transaksi> incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
 
-        log.info("Data BERHASIL DI FETCHING");
-        for(Pemasukan in : incomeTransaction) {
+        for(Transaksi in : incomeTransaction) {
             recordPanel.getChildren().add(createTransaction(in));
-            log.info("memasukan data baru! Ke record Panel!");
         }
     }
 
