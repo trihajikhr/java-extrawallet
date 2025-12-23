@@ -36,7 +36,7 @@ public class IncomeControl implements Initializable {
     }
 
     private HBox createTransaction(Transaksi income) {
-        HBox transList = new HBox(10);
+        HBox transList = new HBox(20);
         transList.setAlignment(Pos.CENTER_LEFT);
         transList.setPrefHeight(65);
         transList.setStyle("""
@@ -53,7 +53,7 @@ public class IncomeControl implements Initializable {
         transList.getChildren().add(checklist);
 
         // [2] icon dengan stackpane:
-        Circle bgCircle = new Circle(20, Color.DARKBLUE);
+        Circle bgCircle = new Circle(20, income.getKategori().getWarna());
         ImageView kategoriIcon = new ImageView(income.getKategori().getIcon());
         kategoriIcon.setFitWidth(24);
         kategoriIcon.setFitHeight(24);
@@ -80,8 +80,12 @@ public class IncomeControl implements Initializable {
         keterangan.setStyle("-fx-text-fill: #000000");
         infoDasarHelper.getChildren().add(keterangan);
         infoDasar.getChildren().add(infoDasarHelper);
-
         transList.getChildren().add(infoDasar);
+
+        // Spacer sebelum bagian tengah
+        Region spacerLeft = new Region();
+        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
+        transList.getChildren().add(spacerLeft);
 
         // [4] menampilkan bank dan tipelabel pilihan user
         HBox infoDukung = new HBox(15);
@@ -95,6 +99,11 @@ public class IncomeControl implements Initializable {
         namaTipeLabel.setStyle("-fx-text-fill: #000000");
         infoDukung.getChildren().add(namaTipeLabel);
         transList.getChildren().add(infoDukung);
+
+        // Spacer sebelum bagian kanan
+        Region spacerRight = new Region();
+        HBox.setHgrow(spacerRight, Priority.ALWAYS);
+        transList.getChildren().add(spacerRight);
 
         // [5] menampilkan harga dan tanggal
         VBox infoTransaksi = new VBox(5);
