@@ -4,18 +4,18 @@ import java.time.LocalDate;
 
 public class Transaksi {
     protected int id;
-    protected TipeTransaksi tipeTransaksi; // [IN/OUT]
+    protected TipeTransaksi tipeTransaksi;
     protected int jumlah;
     protected Akun akun;
     protected Kategori kategori;
     protected TipeLabel tipelabel;
     protected LocalDate tanggal;
     protected String keterangan;
-    protected String paymentType;
-    protected String paymentStatus;
+    protected PaymentType paymentType;
+    protected PaymentStatus paymentStatus;
 
     // contructor full atribut
-    public Transaksi(int id, TipeTransaksi tipeTransaksi, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, String paymentType, String paymentStatus) {
+    public Transaksi(int id, TipeTransaksi tipeTransaksi, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, PaymentType paymentType, PaymentStatus paymentStatus) {
         this.id = id;
         this.tipeTransaksi = tipeTransaksi;
         this.jumlah = jumlah;
@@ -103,19 +103,19 @@ public class Transaksi {
         this.keterangan = keterangan;
     }
 
-    public String getPaymentType() {
+    public PaymentType getPaymentType() {
         return paymentType;
     }
 
-    public void setPaymentType(String paymentType) {
+    public void setPaymentType(PaymentType paymentType) {
         this.paymentType = paymentType;
     }
 
-    public String getPaymentStatus() {
+    public PaymentStatus getPaymentStatus() {
         return paymentStatus;
     }
 
-    public void setPaymentStatus(String paymentStatus) {
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
         this.paymentStatus = paymentStatus;
     }
 }

@@ -2,18 +2,18 @@ package model;
 
 public class Template {
     private int id;
-    private String tipe;
+    private TipeTransaksi tipe;
     private String nama;
     private int jumlah;
     private Akun akun;
     private Kategori kategori;
     private TipeLabel label;
     private String keterangan;
-    private String metodeBayar;
-    private String status;
+    private PaymentType metodeBayar;
+    private PaymentStatus status;
 
     // constructor full atribut
-    public Template(int id, String tipe, String nama, int jumlah, Akun akun, Kategori kategori, TipeLabel label, String keterangan, String metodeBayar, String status) {
+    public Template(int id, TipeTransaksi tipe, String nama, int jumlah, Akun akun, Kategori kategori, TipeLabel label, String keterangan, PaymentType metodeBayar, PaymentStatus status) {
         this.id = id;
         this.tipe = tipe;
         this.nama = nama;
@@ -27,7 +27,7 @@ public class Template {
     }
 
     // constructor atribut wajib
-    public Template(int id, String nama, Akun akun, String tipe, int jumlah) {
+    public Template(int id, String nama, Akun akun, TipeTransaksi tipe, int jumlah) {
         this.id = id;
         this.nama = nama;
         this.akun = akun;
@@ -46,11 +46,11 @@ public class Template {
         this.id = id;
     }
 
-    public String getTipe() {
+    public TipeTransaksi getTipe() {
         return tipe;
     }
 
-    public void setTipe(String tipe) {
+    public void setTipe(TipeTransaksi tipe) {
         this.tipe = tipe;
     }
 
@@ -102,19 +102,19 @@ public class Template {
         this.keterangan = keterangan;
     }
 
-    public String getMetodeBayar() {
+    public PaymentType getMetodeBayar() {
         return metodeBayar;
     }
 
-    public void setMetodeBayar(String metodeBayar) {
+    public void setMetodeBayar(PaymentType metodeBayar) {
         this.metodeBayar = metodeBayar;
     }
 
-    public String getStatus() {
+    public PaymentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(PaymentStatus status) {
         this.status = status;
     }
 }

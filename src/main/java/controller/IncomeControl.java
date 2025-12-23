@@ -1,14 +1,14 @@
 package controller;
 
-import controller.transaction.TransactionControl;
 import dataflow.DataManager;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import model.Pemasukan;
+import model.PaymentStatus;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class IncomeControl implements Initializable {
@@ -71,7 +72,7 @@ public class IncomeControl implements Initializable {
         infoDasar.getChildren().add(namaKategori);
 
         HBox infoDasarHelper = new HBox(5);
-        Label metodeBayar = new Label(income.getPaymentType());
+        Label metodeBayar = new Label(income.getPaymentType().name());
         metodeBayar.setStyle("-fx-text-fill: #000000");
         infoDasarHelper.getChildren().add(metodeBayar);
         Label keterangan = new Label(income.getKeterangan());
@@ -107,8 +108,21 @@ public class IncomeControl implements Initializable {
         tanggalDanStatus.setAlignment(Pos.CENTER_RIGHT);
         Label tanggal = new Label(income.getTanggal().format(formatter));
         tanggal.setStyle("-fx-text-fill: #000000");
-        // icon payment status belum dibuat!
-        ImageView iconStatus = new ImageView();
+
+        // kondisional icon payment
+        ImageView iconStatus = null;
+
+        // menentukan status icon
+        Image newImage = null;
+        if(income.getPaymentStatus() == PaymentStatus.RECONCILED) {
+            newImage = new Image(Objects.requireNonNull(getClass().getResource("icons/reconciled.png").toString()));
+        } else if(income.getPaymentStatus() == PaymentStatus.CLEARED) {
+            newImage = new Image(Objects.requireNonNull(getClass().getResource("icons/cleared.png").toString()));
+        } else if(income.getPaymentStatus() == PaymentStatus.UNCLEARED) {
+            newImage = new Image(Objects.requireNonNull(getClass().getResource("icons/uncleared.png").toString()));
+        }
+        iconStatus = new ImageView(newImage);
+
         iconStatus.setFitWidth(25);
         iconStatus.setFitHeight(25);
         tanggalDanStatus.getChildren().addAll(tanggal, iconStatus);

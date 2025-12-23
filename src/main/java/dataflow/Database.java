@@ -318,8 +318,8 @@ public class Database {
                 int idTipeLabel = rs.getInt("id_tipelabel");
                 String tanggalSet = rs.getString("tanggal");
                 String keterangan = rs.getString("keterangan");
-                String metodeTransaksi = rs.getString("metode_transaksi");
-                String status = rs.getString("status");
+                PaymentType paymentType = PaymentType.valueOf(rs.getString("metode_transaksi"));
+                PaymentStatus status = PaymentStatus.valueOf(rs.getString("status"));
 
                 LocalDate tanggal = LocalDate.parse(tanggalSet, formatter);
 
@@ -363,9 +363,9 @@ public class Database {
                 }
 
                 if(tipe == TipeTransaksi.IN){
-                    data.add(new Pemasukan(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, metodeTransaksi, status));
+                    data.add(new Pemasukan(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, paymentType, status));
                 } else if(tipe == TipeTransaksi.OUT) {
-                    data.add(new Pengeluaran(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, metodeTransaksi, status));
+                    data.add(new Pengeluaran(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, paymentType, status));
                 }
             }
 
@@ -392,8 +392,8 @@ public class Database {
                 ps.setInt(5, trans.getTipelabel().getId());
                 ps.setString(6, trans.getTanggal().format(formatter));
                 ps.setString(7, trans.getKeterangan());
-                ps.setString(8, trans.getPaymentType());
-                ps.setString(9, trans.getPaymentStatus());
+                ps.setString(8, trans.getPaymentType().name());
+                ps.setString(9, trans.getPaymentStatus().name());
 
                 int affected = ps.executeUpdate();
                 if (affected == 0) {
@@ -550,15 +550,15 @@ public class Database {
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                String tipe = rs.getString("tipe");
+                TipeTransaksi tipe = TipeTransaksi.valueOf(rs.getString("tipe"));
                 String nama = rs.getString("nama");
                 int jumlah = rs.getInt("jumlah");
                 int idAkun = rs.getInt("id_akun");
                 int idKategori = rs.getInt("id_kategori");
                 int idTipeLabel = rs.getInt("id_tipelabel");
                 String keterangan = rs.getString("keterangan");
-                String metodeTransaksi = rs.getString("metode_transaksi");
-                String status = rs.getString("status");
+                PaymentType metodeTransaksi = PaymentType.valueOf(rs.getString("metode_transaksi").toUpperCase());
+                PaymentStatus status = PaymentStatus.valueOf(rs.getString("status").toUpperCase());
 
                 Akun akun = null;
                 for(Akun item : DataManager.getInstance().getDataAkun()) {
@@ -629,7 +629,7 @@ public class Database {
             koneksi.setAutoCommit(false);
 
             try (PreparedStatement ps = koneksi.prepareStatement(quertSql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, temp.getTipe());
+                ps.setString(1, temp.getTipe().name());
                 ps.setString(2, temp.getNama());
                 ps.setInt(3, temp.getJumlah());
                 ps.setInt(4, temp.getAkun().getId());
@@ -640,8 +640,8 @@ public class Database {
                     ps.setNull(6, Types.INTEGER);
                 }
                 ps.setString(7, temp.getKeterangan());
-                ps.setString(8, temp.getMetodeBayar());
-                ps.setString(9, temp.getStatus());
+                ps.setString(8, temp.getMetodeBayar().name());
+                ps.setString(9, temp.getStatus().name());
 
                 if(ps.executeUpdate() == 0) {
                     throw new SQLException("insert tidak mengubah data");
