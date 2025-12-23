@@ -318,8 +318,8 @@ public class Database {
                 int idTipeLabel = rs.getInt("id_tipelabel");
                 String tanggalSet = rs.getString("tanggal");
                 String keterangan = rs.getString("keterangan");
-                PaymentType paymentType = PaymentType.valueOf(rs.getString("metode_transaksi"));
-                PaymentStatus status = PaymentStatus.valueOf(rs.getString("status"));
+                PaymentType paymentType = PaymentType.fromString(rs.getString("metode_transaksi"));
+                PaymentStatus status = PaymentStatus.fromString(rs.getString("status"));
 
                 LocalDate tanggal = LocalDate.parse(tanggalSet, formatter);
 
@@ -557,8 +557,8 @@ public class Database {
                 int idKategori = rs.getInt("id_kategori");
                 int idTipeLabel = rs.getInt("id_tipelabel");
                 String keterangan = rs.getString("keterangan");
-                PaymentType metodeTransaksi = PaymentType.valueOf(rs.getString("metode_transaksi").toUpperCase());
-                PaymentStatus status = PaymentStatus.valueOf(rs.getString("status").toUpperCase());
+                PaymentType paymentType = PaymentType.fromString(rs.getString("metode_transaksi"));
+                PaymentStatus paymentStatus = PaymentStatus.fromString(rs.getString("status"));
 
                 Akun akun = null;
                 for(Akun item : DataManager.getInstance().getDataAkun()) {
@@ -608,8 +608,8 @@ public class Database {
                         kategori,
                         tipeLabel,
                         keterangan,
-                        metodeTransaksi,
-                        status
+                        paymentType,
+                        paymentStatus
                 ));
             }
 

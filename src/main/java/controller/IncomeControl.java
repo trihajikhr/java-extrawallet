@@ -26,7 +26,7 @@ import java.util.ResourceBundle;
 
 public class IncomeControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(IncomeControl.class);
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
     @FXML private VBox recordPanel;
 
     @Override
@@ -72,7 +72,8 @@ public class IncomeControl implements Initializable {
         infoDasar.getChildren().add(namaKategori);
 
         HBox infoDasarHelper = new HBox(5);
-        Label metodeBayar = new Label(income.getPaymentType().name());
+        String paymentTypeLabel = income.getPaymentType() == null ? "-" : income.getPaymentType().getLabel();
+        Label metodeBayar = new Label(paymentTypeLabel);
         metodeBayar.setStyle("-fx-text-fill: #000000");
         infoDasarHelper.getChildren().add(metodeBayar);
         Label keterangan = new Label(income.getKeterangan());
@@ -97,10 +98,8 @@ public class IncomeControl implements Initializable {
 
         // [5] menampilkan harga dan tanggal
         VBox infoTransaksi = new VBox(5);
-        infoTransaksi.setPrefWidth(100);
         infoTransaksi.setAlignment(Pos.CENTER_RIGHT);
-        infoTransaksi.setPrefWidth(75);
-        Label harga = new Label(Integer.toString(income.getJumlah()));
+        Label harga = new Label(income.getAkun().getMataUang().getSimbol() + " " + Integer.toString(income.getJumlah()));
         harga.setStyle("-fx-text-fill: #000000");
         infoTransaksi.getChildren().add(harga);
 
@@ -111,21 +110,24 @@ public class IncomeControl implements Initializable {
 
         // kondisional icon payment
         ImageView iconStatus = null;
-
         // menentukan status icon
         Image newImage = null;
-        if(income.getPaymentStatus() == PaymentStatus.RECONCILED) {
-            newImage = new Image(Objects.requireNonNull(getClass().getResource("icons/reconciled.png").toString()));
-        } else if(income.getPaymentStatus() == PaymentStatus.CLEARED) {
-            newImage = new Image(Objects.requireNonNull(getClass().getResource("icons/cleared.png").toString()));
-        } else if(income.getPaymentStatus() == PaymentStatus.UNCLEARED) {
-            newImage = new Image(Objects.requireNonNull(getClass().getResource("icons/uncleared.png").toString()));
-        }
-        iconStatus = new ImageView(newImage);
+        if(income.getPaymentStatus() != null) {
+            if (income.getPaymentStatus() == PaymentStatus.RECONCILED) {
+                newImage = new Image(Objects.requireNonNull(getClass().getResource("/icons/reconciled.png")).toString());
+            } else if (income.getPaymentStatus() == PaymentStatus.CLEARED) {
+                newImage = new Image(Objects.requireNonNull(getClass().getResource("/icons/cleared.png")).toString());
+            } else if (income.getPaymentStatus() == PaymentStatus.UNCLEARED) {
+                newImage = new Image(Objects.requireNonNull(getClass().getResource("/icons/uncleared.png")).toString());
+            }
 
-        iconStatus.setFitWidth(25);
-        iconStatus.setFitHeight(25);
-        tanggalDanStatus.getChildren().addAll(tanggal, iconStatus);
+            iconStatus = new ImageView(newImage);
+            iconStatus.setFitWidth(25);
+            iconStatus.setFitHeight(25);
+            tanggalDanStatus.getChildren().addAll(tanggal, iconStatus);
+        } else {
+            tanggalDanStatus.getChildren().add(tanggal);
+        }
         infoTransaksi.getChildren().add(tanggalDanStatus);
         transList.getChildren().add(infoTransaksi);
 

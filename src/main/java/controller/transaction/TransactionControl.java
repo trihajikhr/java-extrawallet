@@ -378,8 +378,8 @@ public class TransactionControl implements Initializable {
         TipeLabel tipeLabel = tipeLabel_inout.getValue();
         LocalDate tanggal = date_inout.getValue();
         String keterangan = note_inout.getText();
-        PaymentType payment = PaymentType.valueOf(paymentType_inout.getValue());
-        PaymentStatus status = PaymentStatus.valueOf(paymentStatus_inout.getValue());
+        PaymentType payment = PaymentType.fromString(paymentType_inout.getValue());
+        PaymentStatus status = PaymentStatus.fromString(paymentStatus_inout.getValue());
 
         DataManager.getInstance().addTransaksi(new Transaksi(
                 0,
@@ -405,8 +405,8 @@ public class TransactionControl implements Initializable {
         TipeLabel tipeLabel = tipeLabel_trans.getValue();
         LocalDate tanggal = date_trans.getValue();
         String keterangan = note_trans.getText();
-        PaymentType payment = PaymentType.valueOf(paymentType_trans.getValue());
-        PaymentStatus status = PaymentStatus.valueOf(paymentStatus_trans.getValue());
+        PaymentType payment = PaymentType.fromString(paymentType_trans.getValue());
+        PaymentStatus status = PaymentStatus.fromString(paymentStatus_trans.getValue());
 
         Kategori fromKategori = null;
         for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {

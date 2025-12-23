@@ -19,8 +19,9 @@ public enum PaymentType {
     }
 
     public static PaymentType fromString(String input) {
-        for (PaymentType t : values()) {
-            if (t.label.equalsIgnoreCase(input)) return t;
+        if (input == null) return null;
+        for (PaymentType type : values()) {
+            if (type.label.equalsIgnoreCase(input.trim())) return type;
         }
         throw new IllegalArgumentException("Unknown payment type: " + input);
     }
