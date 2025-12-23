@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
@@ -133,11 +134,21 @@
                                                 </HBox>
                                              </children>
                                           </VBox>
-                                          <Region HBox.hgrow="ALWAYS" />
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0" HBox.hgrow="ALWAYS">
+                                             <children>
+                                                <Label text="halo guys" textFill="#080808" />
+                                                <Label text="nge cafe" textFill="#0d0d0d" />
+                                             </children>
+                                          </HBox>
                                           <VBox alignment="CENTER_RIGHT">
                                              <children>
                                                 <Label style="-fx-font-weight: bold; -fx-font-size: 18;" text="-IDR 24,000.00" textFill="#E74C3C" />
-                                                <Label style="-fx-font-size: 12;" text="09:40 PM" textFill="#BDC3C7" />
+                                                <HBox alignment="CENTER_RIGHT" spacing="10.0">
+                                                   <children>
+                                                      <Label style="-fx-font-size: 12;" text="10 January 2025" textFill="#BDC3C7" />
+                                                      <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" />
+                                                   </children>
+                                                </HBox>
                                              </children>
                                           </VBox>
                                        </children>
