@@ -105,6 +105,10 @@ public class DataManager {
     }
 
     // [1] >> =============== DATA TRANSAKSI =============== //
+    public ArrayList<Transaksi> getDataTransaksi() {
+        return dataTransaksi;
+    }
+
     public void sortingAscTanggal() {
         this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal));
     }
@@ -135,10 +139,14 @@ public class DataManager {
 
 
     // [2] >> =============== DATA PEMASUKAN =============== //
-    public ArrayList<Pemasukan> getPemasukan() {
-        ArrayList<Pemasukan> inList = new ArrayList<>();
-        for (Transaksi t : dataTransaksi) {
-            if (t instanceof Pemasukan) inList.add((Pemasukan) t);
+    public ArrayList<Transaksi> getDataTransaksiPemasukan() {
+        System.out.println(dataTransaksi.size());
+
+        ArrayList<Transaksi> inList = new ArrayList<>();
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
+                inList.add(trans);
+            }
         }
         return inList;
     }
@@ -156,7 +164,7 @@ public class DataManager {
     }
 
     // [3] >> =============== DATA PENGELUARAN =============== //
-    public ArrayList<Pengeluaran> getPengeluaran() {
+    public ArrayList<Pengeluaran> getDataTransaksiPengeluaran() {
         ArrayList<Pengeluaran> outList = new ArrayList<>();
         for (Transaksi t : dataTransaksi) {
             if (t instanceof Pengeluaran) outList.add((Pengeluaran) t);

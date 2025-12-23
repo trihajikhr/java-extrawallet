@@ -384,15 +384,15 @@ public class TemplateControl implements Initializable {
     }
     @FXML
     private void submitHandler() {
-        String tipe = valueChoosen.getValue() == 1 ? "IN" : "OUT";
+        TipeTransaksi tipe = valueChoosen.getValue() == 1 ? TipeTransaksi.IN : TipeTransaksi.OUT;
         String nama = nameText.getText();
         int jumlah = spinnerAmount.getValue();
         Akun dataAkun = akunComboBox.getValue();
         Kategori dataKategori = categoryComboBox.getValue();
         TipeLabel dataLabel = tipeLabelComboBox.getValue();
         String keterangan = noteText.getText();
-        String payment = paymentType.getValue();
-        String status = paymentStatus.getValue();
+        PaymentType payment = PaymentType.valueOf(paymentType.getValue());
+        PaymentStatus status = PaymentStatus.valueOf(paymentStatus.getValue());
 
         Template newData = new Template(
                 0,

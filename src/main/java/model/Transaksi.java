@@ -4,34 +4,34 @@ import java.time.LocalDate;
 
 public class Transaksi {
     protected int id;
-    protected String tipe; // [IN/OUT]
+    protected TipeTransaksi tipeTransaksi;
     protected int jumlah;
     protected Akun akun;
     protected Kategori kategori;
     protected TipeLabel tipelabel;
     protected LocalDate tanggal;
     protected String keterangan;
-    protected String metodeTransaksi;
-    protected String status;
+    protected PaymentType paymentType;
+    protected PaymentStatus paymentStatus;
 
     // contructor full atribut
-    public Transaksi(int id, String tipe, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, String metodeTransaksi, String status) {
+    public Transaksi(int id, TipeTransaksi tipeTransaksi, int jumlah, Akun akun, Kategori kategori, TipeLabel tipelabel, LocalDate tanggal, String keterangan, PaymentType paymentType, PaymentStatus paymentStatus) {
         this.id = id;
-        this.tipe = tipe;
+        this.tipeTransaksi = tipeTransaksi;
         this.jumlah = jumlah;
         this.akun = akun;
         this.kategori = kategori;
         this.tipelabel = tipelabel;
         this.tanggal = tanggal;
         this.keterangan = keterangan;
-        this.metodeTransaksi = metodeTransaksi;
-        this.status = status;
+        this.paymentType = paymentType;
+        this.paymentStatus = paymentStatus;
     }
 
     // constructor hanya atribut wajib
-    public Transaksi(int id, String tipe, int jumlah, Kategori kategori, LocalDate tanggal) {
+    public Transaksi(int id, TipeTransaksi tipeTransaksi, int jumlah, Kategori kategori, LocalDate tanggal) {
         this.id = id;
-        this.tipe = tipe;
+        this.tipeTransaksi = tipeTransaksi;
         this.jumlah = jumlah;
         this.kategori = kategori;
         this.tanggal = tanggal;
@@ -47,12 +47,12 @@ public class Transaksi {
         this.id = id;
     }
 
-    public String getTipe() {
-        return tipe;
+    public TipeTransaksi getTipeTransaksi() {
+        return tipeTransaksi;
     }
 
-    public void setTipe(String tipe) {
-        this.tipe = tipe;
+    public void setTipeTransaksi(TipeTransaksi tipeTransaksi) {
+        this.tipeTransaksi = tipeTransaksi;
     }
 
     public int getJumlah() {
@@ -103,19 +103,19 @@ public class Transaksi {
         this.keterangan = keterangan;
     }
 
-    public String getMetodeTransaksi() {
-        return metodeTransaksi;
+    public PaymentType getPaymentType() {
+        return paymentType;
     }
 
-    public void setMetodeTransaksi(String metodeTransaksi) {
-        this.metodeTransaksi = metodeTransaksi;
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
     }
 
-    public String getStatus() {
-        return status;
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

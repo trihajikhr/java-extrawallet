@@ -311,15 +311,15 @@ public class Database {
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                String tipe = rs.getString("tipe");
+                TipeTransaksi tipe = TipeTransaksi.valueOf(rs.getString("tipe"));
                 int jumlah = rs.getInt("jumlah");
                 int idAkun = rs.getInt("id_akun");
                 int idKategori = rs.getInt("id_kategori");
                 int idTipeLabel = rs.getInt("id_tipelabel");
                 String tanggalSet = rs.getString("tanggal");
                 String keterangan = rs.getString("keterangan");
-                String metodeTransaksi = rs.getString("metode_transaksi");
-                String status = rs.getString("status");
+                PaymentType paymentType = PaymentType.fromString(rs.getString("metode_transaksi"));
+                PaymentStatus status = PaymentStatus.fromString(rs.getString("status"));
 
                 LocalDate tanggal = LocalDate.parse(tanggalSet, formatter);
 
@@ -362,10 +362,10 @@ public class Database {
                     continue; // skip
                 }
 
-                if(tipe.equals("IN")){
-                    data.add(new Pemasukan(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, metodeTransaksi, status));
-                } else if(tipe.equals("OUT")) {
-                    data.add(new Pengeluaran(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, metodeTransaksi, status));
+                if(tipe == TipeTransaksi.IN){
+                    data.add(new Pemasukan(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, paymentType, status));
+                } else if(tipe == TipeTransaksi.OUT) {
+                    data.add(new Pengeluaran(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, paymentType, status));
                 }
             }
 
@@ -385,15 +385,15 @@ public class Database {
         try {
             koneksi.setAutoCommit(false); // mulai
             try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, trans.getTipe());
+                ps.setString(1, trans.getTipeTransaksi().name());
                 ps.setInt(2, trans.getJumlah());
                 ps.setInt(3, trans.getAkun().getId());
                 ps.setInt(4, trans.getKategori().getId());
                 ps.setInt(5, trans.getTipelabel().getId());
                 ps.setString(6, trans.getTanggal().format(formatter));
                 ps.setString(7, trans.getKeterangan());
-                ps.setString(8, trans.getMetodeTransaksi());
-                ps.setString(9, trans.getStatus());
+                ps.setString(8, trans.getPaymentType().name());
+                ps.setString(9, trans.getPaymentStatus().name());
 
                 int affected = ps.executeUpdate();
                 if (affected == 0) {
@@ -550,15 +550,15 @@ public class Database {
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                String tipe = rs.getString("tipe");
+                TipeTransaksi tipe = TipeTransaksi.valueOf(rs.getString("tipe"));
                 String nama = rs.getString("nama");
                 int jumlah = rs.getInt("jumlah");
                 int idAkun = rs.getInt("id_akun");
                 int idKategori = rs.getInt("id_kategori");
                 int idTipeLabel = rs.getInt("id_tipelabel");
                 String keterangan = rs.getString("keterangan");
-                String metodeTransaksi = rs.getString("metode_transaksi");
-                String status = rs.getString("status");
+                PaymentType paymentType = PaymentType.fromString(rs.getString("metode_transaksi"));
+                PaymentStatus paymentStatus = PaymentStatus.fromString(rs.getString("status"));
 
                 Akun akun = null;
                 for(Akun item : DataManager.getInstance().getDataAkun()) {
@@ -608,8 +608,8 @@ public class Database {
                         kategori,
                         tipeLabel,
                         keterangan,
-                        metodeTransaksi,
-                        status
+                        paymentType,
+                        paymentStatus
                 ));
             }
 
@@ -629,7 +629,7 @@ public class Database {
             koneksi.setAutoCommit(false);
 
             try (PreparedStatement ps = koneksi.prepareStatement(quertSql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, temp.getTipe());
+                ps.setString(1, temp.getTipe().name());
                 ps.setString(2, temp.getNama());
                 ps.setInt(3, temp.getJumlah());
                 ps.setInt(4, temp.getAkun().getId());
@@ -640,8 +640,8 @@ public class Database {
                     ps.setNull(6, Types.INTEGER);
                 }
                 ps.setString(7, temp.getKeterangan());
-                ps.setString(8, temp.getMetodeBayar());
-                ps.setString(9, temp.getStatus());
+                ps.setString(8, temp.getMetodeBayar().name());
+                ps.setString(9, temp.getStatus().name());
 
                 if(ps.executeUpdate() == 0) {
                     throw new SQLException("insert tidak mengubah data");
