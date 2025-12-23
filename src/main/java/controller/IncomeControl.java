@@ -1,13 +1,16 @@
 package controller;
 
 import dataflow.DataManager;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Line;
 import model.PaymentStatus;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -68,7 +71,12 @@ public class IncomeControl implements Initializable {
         VBox infoDasar = new VBox(5);
         infoDasar.setAlignment(Pos.CENTER_LEFT);
         Label namaKategori = new Label(income.getKategori().getNama());
-        namaKategori.setStyle("-fx-text-fill: #000000");
+        namaKategori.setStyle("""
+            -fx-text-fill: #000000;
+            -fx-font-size: 18px;
+            -fx-font-weight: bold;
+            """
+        );
         infoDasar.getChildren().add(namaKategori);
 
         HBox infoDasarHelper = new HBox(5);
@@ -77,7 +85,7 @@ public class IncomeControl implements Initializable {
         metodeBayar.setStyle("-fx-text-fill: #000000");
         infoDasarHelper.getChildren().add(metodeBayar);
         Label keterangan = new Label(income.getKeterangan());
-        keterangan.setStyle("-fx-text-fill: #000000");
+        keterangan.setStyle("-fx-text-fill: #6B7280");
         infoDasarHelper.getChildren().add(keterangan);
         infoDasar.getChildren().add(infoDasarHelper);
         transList.getChildren().add(infoDasar);
@@ -108,14 +116,20 @@ public class IncomeControl implements Initializable {
         // [5] menampilkan harga dan tanggal
         VBox infoTransaksi = new VBox(5);
         infoTransaksi.setAlignment(Pos.CENTER_RIGHT);
-        Label harga = new Label(income.getAkun().getMataUang().getSimbol() + " " + Integer.toString(income.getJumlah()));
-        harga.setStyle("-fx-text-fill: #000000");
+        Label harga = new Label("-" + income.getAkun().getMataUang().getSimbol() + " " + Integer.toString(income.getJumlah()));
+        harga.setStyle(
+                """
+                -fx-text-fill: #F92222;
+                -fx-font-size: 18px;
+                -fx-font-weight: bold;
+                """
+        );
         infoTransaksi.getChildren().add(harga);
 
         HBox tanggalDanStatus = new HBox(5);
         tanggalDanStatus.setAlignment(Pos.CENTER_RIGHT);
         Label tanggal = new Label(income.getTanggal().format(formatter));
-        tanggal.setStyle("-fx-text-fill: #000000");
+        tanggal.setStyle("-fx-text-fill: #6B7280");
 
         // kondisional icon payment
         ImageView iconStatus = null;
@@ -131,9 +145,17 @@ public class IncomeControl implements Initializable {
             }
 
             iconStatus = new ImageView(newImage);
-            iconStatus.setFitWidth(25);
-            iconStatus.setFitHeight(25);
-            tanggalDanStatus.getChildren().addAll(tanggal, iconStatus);
+            iconStatus.setFitWidth(20);
+            iconStatus.setFitHeight(20);
+
+            Line separator = new Line();
+            separator.setStartX(0);
+            separator.setStartY(0);
+            separator.setEndX(0); // tetap di X yang sama
+            separator.setEndY(20);
+            separator.setStroke(Color.web("#E5E7EB"));
+            separator.setStrokeWidth(1);
+            tanggalDanStatus.getChildren().addAll(tanggal, separator, iconStatus);
         } else {
             tanggalDanStatus.getChildren().add(tanggal);
         }
