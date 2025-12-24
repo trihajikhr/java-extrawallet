@@ -1,9 +1,10 @@
 package controller;
 
+import controller.option.SortOption;
 import dataflow.DataManager;
 import helper.Converter;
-import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -28,6 +29,9 @@ public class IncomeControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(IncomeControl.class);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
     DateTimeFormatter formatterNow = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
+
+    // data sumber kebenaran
+    List<Transaksi> incomeTransaction  = new ArrayList<>();
     HashMap<Transaksi, HBox> recordCardBoard = new HashMap<>();
 
     @FXML private VBox recordPanel;
@@ -37,7 +41,7 @@ public class IncomeControl implements Initializable {
     @FXML private Label labelTanggalSekarang;
 
     // combobox filter
-    @FXML private ComboBox<String> comboBoxSort;
+    @FXML private ComboBox<SortOption> comboBoxSort;
     @FXML private ComboBox<Akun> comboBoxAccount;
     @FXML private ComboBox<Kategori> comboBoxCategories;
     @FXML private ComboBox<TipeLabel> comboBoxLabel;
@@ -54,11 +58,13 @@ public class IncomeControl implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("panel record income berhasil terbuka");
-        initAll();
+        initBaseData();
         fetchTransactionData();
+        initAllComboBox();
+        initAllListener();
     }
 
-    private void initAll() {
+    private void initBaseData() {
         setDateNow();
     }
 
@@ -74,7 +80,7 @@ public class IncomeControl implements Initializable {
         """);
     }
 
-    // [2] >=== CARDBOARD UI/UX & HANDLER
+    // [2] >=== CARDBOARD UI/UX & DATA FETCHING
     private HBox createTransaction(Transaksi income) {
         HBox transList = new HBox(20);
         transList.setAlignment(Pos.CENTER_LEFT);
@@ -238,7 +244,7 @@ public class IncomeControl implements Initializable {
     }
     private void fetchTransactionData() {
         log.info("report income berhasil terbuka");
-        ArrayList<Transaksi> incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
+        incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
 
         for(Transaksi in : incomeTransaction) {
             recordCardBoard.put(in, createTransaction(in));
@@ -250,14 +256,70 @@ public class IncomeControl implements Initializable {
     }
 
     // [3] >=== COMBOBOX DATA INIT
+    private void initAllComboBox() {
+        initComboBoxSort();
+    }
     private void initComboBoxSort() {
-
+        ObservableList<SortOption> sortItems =
+                FXCollections.observableArrayList(SortOption.values());
+        comboBoxSort.setItems(sortItems);
     }
 
-    // [3] >=== FILTER HANDLER
+    // [4] >=== FILTER LISTENER
+    private void initAllListener() {
+        sortFilterListener();
+    }
     @FXML
-    private void categoryComboBoxListener() {
+    private void sortFilterListener() {
+        comboBoxSort.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal == null) return;
 
+            switch (newVal) {
+                case TIME_NEWEST -> sortByTimeDesc();
+                case TIME_OLDEST -> sortByTimeAsc();
+                case AMOUNT_HIGHEST -> sortByAmountDesc();
+                case AMOUNT_LOWEST -> sortByAmountAsc();
+            }
+        });
+    }
+
+    // [5] >=== FILTER HANDLER
+    private void refreshView(List<Transaksi> data) {
+        recordPanel.getChildren().clear();
+
+        for (Transaksi trans : data) {
+            recordPanel.getChildren().add(recordCardBoard.get(trans));
+        }
+    }
+    private void sortByTimeDesc() {
+       incomeTransaction.sort(
+                Comparator.comparing(Transaksi::getTanggal)
+                        .reversed()
+                        .thenComparing(Transaksi::getId)
+                );
+       refreshView(incomeTransaction);
+    }
+    private void sortByTimeAsc() {
+        incomeTransaction.sort(
+                Comparator.comparing(Transaksi::getTanggal)
+                        .thenComparing(Transaksi::getId)
+        );
+        refreshView(incomeTransaction);
+    }
+    private void sortByAmountDesc() {
+        incomeTransaction.sort(
+                Comparator.comparing(Transaksi::getJumlah)
+                        .reversed()
+                        .thenComparing(Transaksi::getId)
+        );
+        refreshView(incomeTransaction);
+    }
+    private void sortByAmountAsc() {
+        incomeTransaction.sort(
+                Comparator.comparing(Transaksi::getJumlah)
+                        .thenComparing(Transaksi::getId)
+        );
+        refreshView(incomeTransaction);
     }
 
     @FXML
