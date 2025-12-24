@@ -48,10 +48,10 @@ public class IncomeControl implements Initializable {
     @FXML private ComboBox<SortOption> comboBoxSort;
     @FXML private MenuButton menuButtonAccount;
     @FXML private MenuButton menuButtonCategory;
-    @FXML private ComboBox<TipeLabel> comboBoxLabel;
-    @FXML private ComboBox<MataUang> comboBoxCurrencies;
+    @FXML private MenuButton menuButtonLabel;
+    @FXML private ComboBox<MataUang> comboBoxCurrencie;
     @FXML private ComboBox<PaymentType> comboBoxType;
-    @FXML private ComboBox<PaymentStatus> comboBoxStates;
+    @FXML private ComboBox<PaymentStatus> comboBoxState;
 
     private final ObservableSet<Akun> selectedAccounts =
             FXCollections.observableSet(new LinkedHashSet<>());
@@ -65,10 +65,10 @@ public class IncomeControl implements Initializable {
     private final ObservableSet<MataUang> selectedCurrencies =
             FXCollections.observableSet(new LinkedHashSet<>());
 
-    private final ObservableSet<PaymentType> selectedType =
+    private final ObservableSet<PaymentType> selectedTypes =
             FXCollections.observableSet(new LinkedHashSet<>());
 
-    private final ObservableSet<PaymentStatus> selectedState =
+    private final ObservableSet<PaymentStatus> selectedStates =
             FXCollections.observableSet(new LinkedHashSet<>());
 
 
@@ -277,6 +277,7 @@ public class IncomeControl implements Initializable {
         initComboBoxSort();
         initMenuButtonAccount();
         initMenuButtonCategory();
+        initMenuButtonLabel();
     }
     private void initComboBoxSort() {
         ObservableList<SortOption> sortItems =
@@ -431,6 +432,77 @@ public class IncomeControl implements Initializable {
         menuButtonCategory.setText(text);
         menuButtonCategory.setStyle("-fx-text-fill: -fx-text-base-color;");
     }
+    private void initMenuButtonLabel() {
+        menuButtonLabel.getItems().clear();
+        menuButtonLabel.setText("Category");
+        menuButtonLabel.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+        List<TipeLabel> dataTipeLabel = DataManager.getInstance().getFilteredLabel();
+
+        menuButtonLabel.getItems().clear();
+
+        for (TipeLabel tipeLabel : dataTipeLabel) {
+            // Icon
+            ImageView iconView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/icons/tagW.png").toString())));
+            iconView.setFitWidth(14);
+            iconView.setFitHeight(14);
+            iconView.setPreserveRatio(true);
+            StackPane iconBox = new StackPane(iconView);
+            iconBox.setPrefSize(28, 28);
+            iconBox.setBackground(new Background(new BackgroundFill(
+                    tipeLabel.getWarna(), new CornerRadii(8), Insets.EMPTY)));
+
+            // Label
+            Label label = new Label(tipeLabel.getNama());
+            label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+            // Centang
+            Label checkMark = new Label("✓");
+            checkMark.setTextFill(Color.GREEN);
+            checkMark.setVisible(selectedCategories.contains(tipeLabel));
+
+            // Spacer
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            // HBox wrapper
+            HBox wrapper = new HBox(5, checkMark, iconBox, label, spacer);
+            wrapper.setAlignment(Pos.CENTER_LEFT);
+            wrapper.setPadding(new Insets(2, 5, 2, 5));
+            wrapper.setMaxWidth(Double.MAX_VALUE); // biar expand
+            wrapper.prefWidthProperty().bind(menuButtonCategory.widthProperty().subtract(2));
+
+            // CustomMenuItem
+            CustomMenuItem menuItem = new CustomMenuItem(wrapper);
+            menuItem.setHideOnClick(false);
+
+            // Klik seluruh area menuItem
+            menuItem.setOnAction(e -> {
+                boolean selected = !selectedLabels.contains(tipeLabel);
+                if (selected) selectedLabels.add(tipeLabel);
+                else selectedLabels.remove(tipeLabel);
+
+                checkMark.setVisible(selected);
+                updateLabelMenuText();
+                applyFilterAndSort();
+            });
+
+            menuButtonLabel.getItems().add(menuItem);
+        }
+    }
+    private void updateLabelMenuText() {
+        if (selectedLabels.isEmpty()) {
+            // prompt-like state
+            menuButtonLabel.setText("Labels");
+            menuButtonLabel.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+            return;
+        }
+        String text = selectedLabels.stream()
+                .map(TipeLabel::getNama)
+                .collect(Collectors.joining(", "));
+
+        menuButtonLabel.setText(text);
+        menuButtonLabel.setStyle("-fx-text-fill: -fx-text-base-color;");
+    }
 
     // [4] >=== FILTER LISTENER
     private Predicate<Transaksi> accountFilter() {
@@ -443,12 +515,18 @@ public class IncomeControl implements Initializable {
                 selectedCategories.isEmpty()
                         || selectedCategories.contains(t.getKategori());
     }
+    private Predicate<Transaksi> labelFilter() {
+        return t ->
+                selectedLabels.isEmpty()
+                        || selectedLabels.contains(t.getTipelabel());
+    }
 
     // [5] >=== FILTER HANDLER
     private void applyFilterAndSort() {
         List<Transaksi> result = incomeTransaction.stream()
                 .filter(accountFilter())
                 .filter(categoryFilter())
+                .filter(labelFilter())
                 // filter lainnya...
                 .sorted(activeComparator())  // sort sesuai pilihan user
                 .toList();

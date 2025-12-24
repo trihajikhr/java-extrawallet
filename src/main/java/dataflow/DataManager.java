@@ -248,4 +248,15 @@ public class DataManager {
             return false;
         }
     }
+
+    public ArrayList<TipeLabel> getFilteredLabel() {
+        Set<TipeLabel> filteredLabel = new LinkedHashSet<>();
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getTipelabel() != null) {
+                filteredLabel.add(trans.getTipelabel());
+            }
+        }
+
+        return new ArrayList<>(filteredLabel);
+    }
 }
