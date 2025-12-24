@@ -5,41 +5,51 @@ import helper.Converter;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Separator;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import model.PaymentStatus;
+import model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Label;
-import model.Transaksi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class IncomeControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(IncomeControl.class);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
     DateTimeFormatter formatterNow = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
+    HashMap<Transaksi, HBox> recordCardBoard = new HashMap<>();
 
     @FXML private VBox recordPanel;
 
     // label tampilan
     @FXML private Label labelTotalRecords;
     @FXML private Label labelTanggalSekarang;
+
+    // combobox filter
+    @FXML private ComboBox<String> comboBoxSort;
+    @FXML private ComboBox<Akun> comboBoxAccount;
+    @FXML private ComboBox<Kategori> comboBoxCategories;
+    @FXML private ComboBox<TipeLabel> comboBoxLabel;
+    @FXML private ComboBox<MataUang> comboBoxCurrencies;
+    @FXML private ComboBox<PaymentType> comboBoxType;
+    @FXML private ComboBox<PaymentStatus> comboBoxStates;
+    Set<Akun> setAkun;
+    Set<Kategori> setKategori;
+    Set<TipeLabel> setTipeLabel;
+    Set<MataUang> setMataUang;
+    Set<PaymentType> setPaymentType;
+    Set<PaymentStatus> setPaymentStatus;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -64,6 +74,7 @@ public class IncomeControl implements Initializable {
         """);
     }
 
+    // [2] >=== CARDBOARD UI/UX & HANDLER
     private HBox createTransaction(Transaksi income) {
         HBox transList = new HBox(20);
         transList.setAlignment(Pos.CENTER_LEFT);
@@ -225,16 +236,29 @@ public class IncomeControl implements Initializable {
 
         return transList;
     }
-
     private void fetchTransactionData() {
         log.info("report income berhasil terbuka");
         ArrayList<Transaksi> incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
 
         for(Transaksi in : incomeTransaction) {
-            recordPanel.getChildren().add(createTransaction(in));
+            recordCardBoard.put(in, createTransaction(in));
+        }
+
+        for(HBox card : recordCardBoard.values()) {
+            recordPanel.getChildren().add(card);
         }
     }
 
+    // [3] >=== COMBOBOX DATA INIT
+    private void initComboBoxSort() {
+
+    }
+
+    // [3] >=== FILTER HANDLER
+    @FXML
+    private void categoryComboBoxListener() {
+
+    }
 
     @FXML
     private void handleEdit() {
