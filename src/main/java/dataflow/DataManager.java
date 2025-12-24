@@ -86,6 +86,15 @@ public class DataManager {
         return dataMataUang;
     }
 
+    public ArrayList<MataUang> getFilteredMataUang() {
+        Set<MataUang> filteredCurrency = new LinkedHashSet<>();
+        for(Transaksi trans : dataTransaksi) {
+            filteredCurrency.add(trans.getAkun().getMataUang());
+        }
+
+        return new ArrayList<>(filteredCurrency);
+    }
+
     // [1] >> =============== DATA AKUN =============== //
     public void addAkun (Akun data) {
         int newId = Database.getInstance().insertAkun(data);

@@ -49,9 +49,9 @@ public class IncomeControl implements Initializable {
     @FXML private MenuButton menuButtonAccount;
     @FXML private MenuButton menuButtonCategory;
     @FXML private MenuButton menuButtonLabel;
-    @FXML private ComboBox<MataUang> comboBoxCurrencie;
-    @FXML private ComboBox<PaymentType> comboBoxType;
-    @FXML private ComboBox<PaymentStatus> comboBoxState;
+    @FXML private MenuButton menuButtonCurrencie;
+    @FXML private MenuButton menuButtonType;
+    @FXML private MenuButton menuButtonState;
 
     private final ObservableSet<Akun> selectedAccounts =
             FXCollections.observableSet(new LinkedHashSet<>());
@@ -278,6 +278,7 @@ public class IncomeControl implements Initializable {
         initMenuButtonAccount();
         initMenuButtonCategory();
         initMenuButtonLabel();
+        initMenuButtonCurrency();
     }
     private void initComboBoxSort() {
         ObservableList<SortOption> sortItems =
@@ -295,8 +296,6 @@ public class IncomeControl implements Initializable {
         menuButtonAccount.setText("Account");
         menuButtonAccount.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
         List<Akun> dataAkun = DataManager.getInstance().getDataAkun();
-
-        menuButtonAccount.getItems().clear();
 
         for (Akun akun : dataAkun) {
             // Icon
@@ -367,8 +366,6 @@ public class IncomeControl implements Initializable {
         menuButtonCategory.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
         List<Kategori> dataKategori = DataManager.getInstance().getFilteredCategory();
 
-        menuButtonCategory.getItems().clear();
-
         for (Kategori kategori : dataKategori) {
             // Icon
             ImageView iconView = new ImageView(kategori.getIcon());
@@ -434,11 +431,9 @@ public class IncomeControl implements Initializable {
     }
     private void initMenuButtonLabel() {
         menuButtonLabel.getItems().clear();
-        menuButtonLabel.setText("Category");
+        menuButtonLabel.setText("Label");
         menuButtonLabel.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
         List<TipeLabel> dataTipeLabel = DataManager.getInstance().getFilteredLabel();
-
-        menuButtonLabel.getItems().clear();
 
         for (TipeLabel tipeLabel : dataTipeLabel) {
             // Icon
@@ -503,6 +498,64 @@ public class IncomeControl implements Initializable {
         menuButtonLabel.setText(text);
         menuButtonLabel.setStyle("-fx-text-fill: -fx-text-base-color;");
     }
+    private void initMenuButtonCurrency() {
+        menuButtonCurrencie.getItems().clear();
+        menuButtonCurrencie.setText("Currency");
+        menuButtonCurrencie.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+        List<MataUang> dataMataUang = DataManager.getInstance().getFilteredMataUang();
+
+        for (MataUang mataUang : dataMataUang) {
+            // Label teks mata uang
+            Label label = new Label(mataUang.getNama());
+            label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+            // Centang
+            Label checkMark = new Label("✓");
+            checkMark.setTextFill(Color.GREEN);
+            checkMark.setVisible(selectedCurrencies.contains(mataUang));
+
+            // Spacer supaya full row clickable
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            // Wrapper HBox
+            HBox wrapper = new HBox(5, checkMark, label, spacer);
+            wrapper.setAlignment(Pos.CENTER_LEFT);
+            wrapper.setPadding(new Insets(2, 5, 2, 5));
+            wrapper.setMaxWidth(Double.MAX_VALUE);
+            wrapper.prefWidthProperty().bind(menuButtonCurrencie.widthProperty().subtract(2));
+
+            // CustomMenuItem
+            CustomMenuItem menuItem = new CustomMenuItem(wrapper);
+            menuItem.setHideOnClick(false);
+
+            // Klik seluruh area menuItem
+            menuItem.setOnAction(e -> {
+                boolean selected = !selectedCurrencies.contains(mataUang);
+                if (selected) selectedCurrencies.add(mataUang);
+                else selectedCurrencies.remove(mataUang);
+
+                checkMark.setVisible(selected);
+                updateCurrencyMenuText();
+                applyFilterAndSort();
+            });
+
+            menuButtonCurrencie.getItems().add(menuItem);
+        }
+    }
+    private void updateCurrencyMenuText() {
+        if (selectedCurrencies.isEmpty()) {
+            menuButtonCurrencie.setText("Currency");
+            menuButtonCurrencie.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+            return;
+        }
+        String text = selectedCurrencies.stream()
+                .map(MataUang::getNama)
+                .collect(Collectors.joining(", "));
+        menuButtonCurrencie.setText(text);
+        menuButtonCurrencie.setStyle("-fx-text-fill: -fx-text-base-color;");
+    }
+
 
     // [4] >=== FILTER LISTENER
     private Predicate<Transaksi> accountFilter() {
@@ -520,6 +573,11 @@ public class IncomeControl implements Initializable {
                 selectedLabels.isEmpty()
                         || selectedLabels.contains(t.getTipelabel());
     }
+    private Predicate<Transaksi> currencyFilter() {
+        return t ->
+                selectedCurrencies.isEmpty()
+                        || selectedCurrencies.contains(t.getAkun().getMataUang());
+    }
 
     // [5] >=== FILTER HANDLER
     private void applyFilterAndSort() {
@@ -527,6 +585,7 @@ public class IncomeControl implements Initializable {
                 .filter(accountFilter())
                 .filter(categoryFilter())
                 .filter(labelFilter())
+                .filter(currencyFilter())
                 // filter lainnya...
                 .sorted(activeComparator())  // sort sesuai pilihan user
                 .toList();

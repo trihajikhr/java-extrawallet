@@ -104,7 +104,12 @@
                                     <Font size="11.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="comboBoxCurrencies" prefWidth="150.0" />
+                              <MenuButton fx:id="menuButtonCurrencie" mnemonicParsing="false" prefWidth="150.0">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Action 1" />
+                                    <MenuItem mnemonicParsing="false" text="Action 2" />
+                                 </items>
+                              </MenuButton>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="105.0" prefWidth="80.0" spacing="8.0" GridPane.columnIndex="2">
@@ -114,7 +119,12 @@
                                     <Font size="11.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="comboBoxType" prefWidth="150.0" />
+                              <MenuButton fx:id="menuButtonType" mnemonicParsing="false" prefWidth="150.0">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Action 1" />
+                                    <MenuItem mnemonicParsing="false" text="Action 2" />
+                                 </items>
+                              </MenuButton>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" layoutX="594.0" layoutY="10.0" prefWidth="80.0" spacing="8.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
@@ -124,7 +134,12 @@
                                     <Font size="11.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="comboBoxStates" prefWidth="150.0" />
+                              <MenuButton fx:id="menuButtonState" mnemonicParsing="false" prefWidth="150.0">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Action 1" />
+                                    <MenuItem mnemonicParsing="false" text="Action 2" />
+                                 </items>
+                              </MenuButton>
                            </children>
                         </HBox>
                             </children>
