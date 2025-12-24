@@ -6,10 +6,14 @@ import helper.Converter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
+import javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -25,6 +29,8 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class IncomeControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(IncomeControl.class);
@@ -33,7 +39,7 @@ public class IncomeControl implements Initializable {
 
     // data sumber kebenaran
     List<Transaksi> incomeTransaction  = new ArrayList<>();
-    HashMap<Transaksi, HBox> recordCardBoard = new HashMap<>();
+    private final Map<Transaksi, HBox> recordCardBoard = new HashMap<>();
 
     @FXML private VBox recordPanel;
 
@@ -43,7 +49,7 @@ public class IncomeControl implements Initializable {
 
     // combobox filter
     @FXML private ComboBox<SortOption> comboBoxSort;
-    @FXML private ComboBox<Akun> comboBoxAccount;
+    @FXML private MenuButton menuButtonAccount;
     @FXML private ComboBox<Kategori> comboBoxCategories;
     @FXML private ComboBox<TipeLabel> comboBoxLabel;
     @FXML private ComboBox<MataUang> comboBoxCurrencies;
@@ -69,13 +75,13 @@ public class IncomeControl implements Initializable {
             FXCollections.observableSet(new LinkedHashSet<>());
 
 
+    // [0] >=== INIT FUNCTION
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("panel record income berhasil terbuka");
         initBaseData();
         fetchTransactionData();
         initAllComboBox();
-        initAllListener();
     }
 
     private void initBaseData() {
@@ -272,68 +278,152 @@ public class IncomeControl implements Initializable {
     // [3] >=== COMBOBOX DATA INIT
     private void initAllComboBox() {
         initComboBoxSort();
+        initMenuButtonAccount();
     }
     private void initComboBoxSort() {
         ObservableList<SortOption> sortItems =
                 FXCollections.observableArrayList(SortOption.values());
         comboBoxSort.setItems(sortItems);
-    }
 
-    // [4] >=== FILTER LISTENER
-    private void initAllListener() {
-        sortFilterListener();
-    }
-    @FXML
-    private void sortFilterListener() {
-        comboBoxSort.valueProperty().addListener((obs, oldVal, newVal) -> {
-            if (newVal == null) return;
+        // Optional: set default value
+        comboBoxSort.getSelectionModel().select(SortOption.TIME_NEWEST);
 
-            switch (newVal) {
-                case TIME_NEWEST -> sortByTimeDesc();
-                case TIME_OLDEST -> sortByTimeAsc();
-                case AMOUNT_HIGHEST -> sortByAmountDesc();
-                case AMOUNT_LOWEST -> sortByAmountAsc();
-            }
+        // listener untuk langsung memanggil filter & sort
+        comboBoxSort.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            applyFilterAndSort();
         });
     }
 
+    private void initMenuButtonAccount() {
+        menuButtonAccount.getItems().clear();
+        menuButtonAccount.setText("Account");
+        menuButtonAccount.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+        List<Akun> dataAkun = DataManager.getInstance().getDataAkun();
+
+        menuButtonAccount.getItems().clear();
+
+        for (Akun akun : dataAkun) {
+            // Icon
+            ImageView iconView = new ImageView(akun.getIcon());
+            iconView.setFitWidth(14);
+            iconView.setFitHeight(14);
+            iconView.setPreserveRatio(true);
+            StackPane iconBox = new StackPane(iconView);
+            iconBox.setPrefSize(28, 28);
+            iconBox.setBackground(new Background(new BackgroundFill(
+                    akun.getWarna(), new CornerRadii(8), Insets.EMPTY)));
+
+            // Label
+            Label label = new Label(akun.getNama());
+            label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+            // Centang
+            Label checkMark = new Label("✓");
+            checkMark.setTextFill(Color.GREEN);
+            checkMark.setVisible(selectedAccounts.contains(akun));
+
+            // Spacer
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            // HBox wrapper
+            HBox wrapper = new HBox(5, checkMark, iconBox, label, spacer);
+            wrapper.setAlignment(Pos.CENTER_LEFT);
+            wrapper.setPadding(new Insets(2, 5, 2, 5));
+            wrapper.setMaxWidth(Double.MAX_VALUE); // biar expand
+            wrapper.prefWidthProperty().bind(menuButtonAccount.widthProperty().subtract(2));
+
+            // CustomMenuItem
+            CustomMenuItem menuItem = new CustomMenuItem(wrapper);
+            menuItem.setHideOnClick(false);
+
+            // Klik seluruh area menuItem
+            menuItem.setOnAction(e -> {
+                boolean selected = !selectedAccounts.contains(akun);
+                if (selected) selectedAccounts.add(akun);
+                else selectedAccounts.remove(akun);
+
+                checkMark.setVisible(selected);
+                updateAccountMenuText();
+                applyFilterAndSort();
+            });
+
+            menuButtonAccount.getItems().add(menuItem);
+        }
+    }
+    private void updateAccountMenuText() {
+        if (selectedAccounts.isEmpty()) {
+            // prompt-like state
+            menuButtonAccount.setText("Account");
+            menuButtonAccount.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+            return;
+        }
+        String text = selectedAccounts.stream()
+                .map(Akun::getNama)
+                .collect(Collectors.joining(", "));
+
+        menuButtonAccount.setText(text);
+        menuButtonAccount.setStyle("-fx-text-fill: -fx-text-base-color;");
+    }
+
+    // [4] >=== FILTER LISTENER
+    private Predicate<Transaksi> accountFilter() {
+        return t ->
+                selectedAccounts.isEmpty()
+                        || selectedAccounts.contains(t.getAkun());
+    }
+    private Predicate<Transaksi> categoryFilter() {
+        return t ->
+                selectedCategories.isEmpty()
+                        || selectedCategories.contains(t.getKategori());
+    }
+
     // [5] >=== FILTER HANDLER
+    private void applyFilterAndSort() {
+        List<Transaksi> result = incomeTransaction.stream()
+                .filter(accountFilter())
+                .filter(categoryFilter())
+                // filter lainnya...
+                .sorted(activeComparator())  // sort sesuai pilihan user
+                .toList();
+
+        refreshView(result);
+    }
+
+    // Comparator aktif sesuai combobox sort
+    private Comparator<Transaksi> activeComparator() {
+        SortOption sort = comboBoxSort.getValue();
+        if (sort == null) {
+            return Comparator.comparing(Transaksi::getTanggal).reversed()
+                    .thenComparing(Transaksi::getId); // default
+        }
+
+        switch (sort) {
+            case TIME_NEWEST:
+                return Comparator.comparing(Transaksi::getTanggal).reversed()
+                        .thenComparing(Transaksi::getId);
+            case TIME_OLDEST:
+                return Comparator.comparing(Transaksi::getTanggal)
+                        .thenComparing(Transaksi::getId);
+            case AMOUNT_HIGHEST:
+                return Comparator.comparing(Transaksi::getJumlah).reversed()
+                        .thenComparing(Transaksi::getId);
+            case AMOUNT_LOWEST:
+                return Comparator.comparing(Transaksi::getJumlah)
+                        .thenComparing(Transaksi::getId);
+            default:
+                return Comparator.comparing(Transaksi::getTanggal).reversed()
+                        .thenComparing(Transaksi::getId);
+        }
+    }
+
+
     private void refreshView(List<Transaksi> data) {
         recordPanel.getChildren().clear();
 
         for (Transaksi trans : data) {
             recordPanel.getChildren().add(recordCardBoard.get(trans));
         }
-    }
-    private void sortByTimeDesc() {
-       incomeTransaction.sort(
-                Comparator.comparing(Transaksi::getTanggal)
-                        .reversed()
-                        .thenComparing(Transaksi::getId)
-                );
-       refreshView(incomeTransaction);
-    }
-    private void sortByTimeAsc() {
-        incomeTransaction.sort(
-                Comparator.comparing(Transaksi::getTanggal)
-                        .thenComparing(Transaksi::getId)
-        );
-        refreshView(incomeTransaction);
-    }
-    private void sortByAmountDesc() {
-        incomeTransaction.sort(
-                Comparator.comparing(Transaksi::getJumlah)
-                        .reversed()
-                        .thenComparing(Transaksi::getId)
-        );
-        refreshView(incomeTransaction);
-    }
-    private void sortByAmountAsc() {
-        incomeTransaction.sort(
-                Comparator.comparing(Transaksi::getJumlah)
-                        .thenComparing(Transaksi::getId)
-        );
-        refreshView(incomeTransaction);
     }
 
     @FXML
