@@ -1,7 +1,6 @@
 package dataflow;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
@@ -208,6 +207,17 @@ public class DataManager {
 
     public void setDataKategori() {
         dataKategori = new ArrayList<>(DataSeeder.getInstance().seedKategori());
+    }
+
+    public ArrayList<Kategori> getFilteredCategory() {
+        Set<Kategori> filteredCategory = new LinkedHashSet<>();
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getKategori() != null) {
+                filteredCategory.add(trans.getKategori());
+            }
+        }
+
+        return new ArrayList<>(filteredCategory);
     }
 
     // [6] >> =============== TIPE LABEL FUNCTION =============== //

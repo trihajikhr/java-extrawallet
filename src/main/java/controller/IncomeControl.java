@@ -6,14 +6,11 @@ import helper.Converter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.control.skin.ComboBoxListViewSkin;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -50,7 +47,7 @@ public class IncomeControl implements Initializable {
     // combobox filter
     @FXML private ComboBox<SortOption> comboBoxSort;
     @FXML private MenuButton menuButtonAccount;
-    @FXML private ComboBox<Kategori> comboBoxCategories;
+    @FXML private MenuButton menuButtonCategory;
     @FXML private ComboBox<TipeLabel> comboBoxLabel;
     @FXML private ComboBox<MataUang> comboBoxCurrencies;
     @FXML private ComboBox<PaymentType> comboBoxType;
@@ -88,7 +85,7 @@ public class IncomeControl implements Initializable {
         setDateNow();
     }
 
-    // [1] >=== FIRST INIT
+    // [1] >=== BASE INIT
     private void setDateNow() {
         LocalDate dateNow = LocalDate.now();
         String dateStringNow = dateNow.format(formatterNow);
@@ -279,21 +276,19 @@ public class IncomeControl implements Initializable {
     private void initAllComboBox() {
         initComboBoxSort();
         initMenuButtonAccount();
+        initMenuButtonCategory();
     }
     private void initComboBoxSort() {
         ObservableList<SortOption> sortItems =
                 FXCollections.observableArrayList(SortOption.values());
         comboBoxSort.setItems(sortItems);
 
-        // Optional: set default value
         comboBoxSort.getSelectionModel().select(SortOption.TIME_NEWEST);
 
-        // listener untuk langsung memanggil filter & sort
         comboBoxSort.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             applyFilterAndSort();
         });
     }
-
     private void initMenuButtonAccount() {
         menuButtonAccount.getItems().clear();
         menuButtonAccount.setText("Account");
@@ -365,6 +360,77 @@ public class IncomeControl implements Initializable {
         menuButtonAccount.setText(text);
         menuButtonAccount.setStyle("-fx-text-fill: -fx-text-base-color;");
     }
+    private void initMenuButtonCategory() {
+        menuButtonCategory.getItems().clear();
+        menuButtonCategory.setText("Category");
+        menuButtonCategory.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+        List<Kategori> dataKategori = DataManager.getInstance().getFilteredCategory();
+
+        menuButtonCategory.getItems().clear();
+
+        for (Kategori kategori : dataKategori) {
+            // Icon
+            ImageView iconView = new ImageView(kategori.getIcon());
+            iconView.setFitWidth(14);
+            iconView.setFitHeight(14);
+            iconView.setPreserveRatio(true);
+            StackPane iconBox = new StackPane(iconView);
+            iconBox.setPrefSize(28, 28);
+            iconBox.setBackground(new Background(new BackgroundFill(
+                    kategori.getWarna(), new CornerRadii(8), Insets.EMPTY)));
+
+            // Label
+            Label label = new Label(kategori.getNama());
+            label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+            // Centang
+            Label checkMark = new Label("✓");
+            checkMark.setTextFill(Color.GREEN);
+            checkMark.setVisible(selectedCategories.contains(kategori));
+
+            // Spacer
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            // HBox wrapper
+            HBox wrapper = new HBox(5, checkMark, iconBox, label, spacer);
+            wrapper.setAlignment(Pos.CENTER_LEFT);
+            wrapper.setPadding(new Insets(2, 5, 2, 5));
+            wrapper.setMaxWidth(Double.MAX_VALUE); // biar expand
+            wrapper.prefWidthProperty().bind(menuButtonCategory.widthProperty().subtract(2));
+
+            // CustomMenuItem
+            CustomMenuItem menuItem = new CustomMenuItem(wrapper);
+            menuItem.setHideOnClick(false);
+
+            // Klik seluruh area menuItem
+            menuItem.setOnAction(e -> {
+                boolean selected = !selectedCategories.contains(kategori);
+                if (selected) selectedCategories.add(kategori);
+                else selectedCategories.remove(kategori);
+
+                checkMark.setVisible(selected);
+                updateCategoriesMenuText();
+                applyFilterAndSort();
+            });
+
+            menuButtonCategory.getItems().add(menuItem);
+        }
+    }
+    private void updateCategoriesMenuText() {
+        if (selectedCategories.isEmpty()) {
+            // prompt-like state
+            menuButtonCategory.setText("Categories");
+            menuButtonCategory.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+            return;
+        }
+        String text = selectedCategories.stream()
+                .map(Kategori::getNama)
+                .collect(Collectors.joining(", "));
+
+        menuButtonCategory.setText(text);
+        menuButtonCategory.setStyle("-fx-text-fill: -fx-text-base-color;");
+    }
 
     // [4] >=== FILTER LISTENER
     private Predicate<Transaksi> accountFilter() {
@@ -389,8 +455,6 @@ public class IncomeControl implements Initializable {
 
         refreshView(result);
     }
-
-    // Comparator aktif sesuai combobox sort
     private Comparator<Transaksi> activeComparator() {
         SortOption sort = comboBoxSort.getValue();
         if (sort == null) {
@@ -416,8 +480,6 @@ public class IncomeControl implements Initializable {
                         .thenComparing(Transaksi::getId);
         }
     }
-
-
     private void refreshView(List<Transaksi> data) {
         recordPanel.getChildren().clear();
 
@@ -426,6 +488,7 @@ public class IncomeControl implements Initializable {
         }
     }
 
+    // [6] >=== CONTROLLER LAINYA...
     @FXML
     private void handleEdit() {
         showNotification("Info", "Fitur Edit akan segera hadir.");

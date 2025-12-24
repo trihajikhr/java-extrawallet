@@ -74,7 +74,12 @@
                                     <Font size="11.0" />
                                  </font>
                               </Label>
-                              <ComboBox fx:id="comboBoxCategories" prefWidth="150.0" />
+                              <MenuButton fx:id="menuButtonCategory" mnemonicParsing="false" prefWidth="150.0">
+                                 <items>
+                                    <MenuItem mnemonicParsing="false" text="Action 1" />
+                                    <MenuItem mnemonicParsing="false" text="Action 2" />
+                                 </items>
+                              </MenuButton>
                            </children>
                         </HBox>
                         <HBox alignment="CENTER_LEFT" layoutX="290.0" layoutY="10.0" spacing="8.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
