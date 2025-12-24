@@ -5,6 +5,7 @@ import dataflow.DataManager;
 import helper.Converter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableSet;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -48,12 +49,25 @@ public class IncomeControl implements Initializable {
     @FXML private ComboBox<MataUang> comboBoxCurrencies;
     @FXML private ComboBox<PaymentType> comboBoxType;
     @FXML private ComboBox<PaymentStatus> comboBoxStates;
-    Set<Akun> setAkun;
-    Set<Kategori> setKategori;
-    Set<TipeLabel> setTipeLabel;
-    Set<MataUang> setMataUang;
-    Set<PaymentType> setPaymentType;
-    Set<PaymentStatus> setPaymentStatus;
+
+    private final ObservableSet<Akun> selectedAccounts =
+            FXCollections.observableSet(new LinkedHashSet<>());
+
+    private final ObservableSet<Kategori> selectedCategories =
+            FXCollections.observableSet(new LinkedHashSet<>());
+
+    private final ObservableSet<TipeLabel> selectedLabels =
+            FXCollections.observableSet(new LinkedHashSet<>());
+
+    private final ObservableSet<MataUang> selectedCurrencies =
+            FXCollections.observableSet(new LinkedHashSet<>());
+
+    private final ObservableSet<PaymentType> selectedType =
+            FXCollections.observableSet(new LinkedHashSet<>());
+
+    private final ObservableSet<PaymentStatus> selectedState =
+            FXCollections.observableSet(new LinkedHashSet<>());
+
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
