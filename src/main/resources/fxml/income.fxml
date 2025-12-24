@@ -134,7 +134,7 @@
                                     <Font size="11.0" />
                                  </font>
                               </Label>
-                              <MenuButton fx:id="menuButtonState" mnemonicParsing="false" prefWidth="150.0">
+                              <MenuButton fx:id="menuButtonPaymentState" mnemonicParsing="false" prefWidth="150.0">
                                  <items>
                                     <MenuItem mnemonicParsing="false" text="Action 1" />
                                     <MenuItem mnemonicParsing="false" text="Action 2" />

@@ -51,7 +51,7 @@ public class IncomeControl implements Initializable {
     @FXML private MenuButton menuButtonLabel;
     @FXML private MenuButton menuButtonCurrencie;
     @FXML private MenuButton menuButtonPaymentType;
-    @FXML private MenuButton menuButtonState;
+    @FXML private MenuButton menuButtonPaymentState;
 
     private final ObservableSet<Akun> selectedAccounts =
             FXCollections.observableSet(new LinkedHashSet<>());
@@ -68,7 +68,7 @@ public class IncomeControl implements Initializable {
     private final ObservableSet<PaymentType> selectedPaymentTypes =
             FXCollections.observableSet(new LinkedHashSet<>());
 
-    private final ObservableSet<PaymentStatus> selectedStates =
+    private final ObservableSet<PaymentStatus> selectedPaymentStates =
             FXCollections.observableSet(new LinkedHashSet<>());
 
 
@@ -280,6 +280,7 @@ public class IncomeControl implements Initializable {
         initMenuButtonLabel();
         initMenuButtonCurrency();
         initMenuButtonPaymentType();
+        initMenuButtonPaymentState();
     }
     private void initComboBoxSort() {
         ObservableList<SortOption> sortItems =
@@ -593,14 +594,14 @@ public class IncomeControl implements Initializable {
                 else selectedPaymentTypes.remove(paymentType);
 
                 checkMark.setVisible(selected);
-                updateTypeMenuText();
+                updatePaymentTypeMenuText();
                 applyFilterAndSort();
             });
 
             menuButtonPaymentType.getItems().add(menuItem);
         }
     }
-    private void updateTypeMenuText() {
+    private void updatePaymentTypeMenuText() {
         if (selectedPaymentTypes.isEmpty()) {
             menuButtonPaymentType.setText("Type");
             menuButtonPaymentType.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
@@ -611,6 +612,62 @@ public class IncomeControl implements Initializable {
                 .collect(Collectors.joining(", "));
         menuButtonPaymentType.setText(text);
         menuButtonPaymentType.setStyle("-fx-text-fill: -fx-text-base-color;");
+    }
+    private void initMenuButtonPaymentState() {
+        menuButtonPaymentState.getItems().clear();
+        menuButtonPaymentState.setText("State");
+        menuButtonPaymentState.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+        List<PaymentStatus> dataStatus = Arrays.asList(PaymentStatus.values());
+
+        for (PaymentStatus paymentStatus : dataStatus) {
+            Label label = new Label(paymentStatus.getLabel());
+            label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+            // Centang
+            Label checkMark = new Label("✓");
+            checkMark.setTextFill(Color.GREEN);
+            checkMark.setVisible(selectedPaymentStates.contains(paymentStatus));
+
+            // Spacer supaya full row clickable
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            // Wrapper HBox
+            HBox wrapper = new HBox(5, checkMark, label, spacer);
+            wrapper.setAlignment(Pos.CENTER_LEFT);
+            wrapper.setPadding(new Insets(2, 5, 2, 5));
+            wrapper.setMaxWidth(Double.MAX_VALUE);
+            wrapper.prefWidthProperty().bind(menuButtonPaymentState.widthProperty().subtract(2));
+
+            // CustomMenuItem
+            CustomMenuItem menuItem = new CustomMenuItem(wrapper);
+            menuItem.setHideOnClick(false);
+
+            // Klik seluruh area menuItem
+            menuItem.setOnAction(e -> {
+                boolean selected = !selectedPaymentStates.contains(paymentStatus);
+                if (selected) selectedPaymentStates.add(paymentStatus);
+                else selectedPaymentStates.remove(paymentStatus);
+
+                checkMark.setVisible(selected);
+                updatePaymentStateMenuText();
+                applyFilterAndSort();
+            });
+
+            menuButtonPaymentState.getItems().add(menuItem);
+        }
+    }
+    private void updatePaymentStateMenuText() {
+        if (selectedPaymentStates.isEmpty()) {
+            menuButtonPaymentState.setText("State");
+            menuButtonPaymentState.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+            return;
+        }
+        String text = selectedPaymentStates.stream()
+                .map(PaymentStatus::getLabel)
+                .collect(Collectors.joining(", "));
+        menuButtonPaymentState.setText(text);
+        menuButtonPaymentState.setStyle("-fx-text-fill: -fx-text-base-color;");
     }
 
     // [4] >=== FILTER LISTENER
@@ -639,6 +696,11 @@ public class IncomeControl implements Initializable {
                 selectedPaymentTypes.isEmpty()
                         || selectedPaymentTypes.contains(t.getPaymentType());
     }
+    private Predicate<Transaksi> paymentStateFilter() {
+        return t ->
+                selectedPaymentStates.isEmpty()
+                        || selectedPaymentStates.contains(t.getPaymentStatus());
+    }
 
     // [5] >=== FILTER HANDLER
     private void applyFilterAndSort() {
@@ -648,6 +710,7 @@ public class IncomeControl implements Initializable {
                 .filter(labelFilter())
                 .filter(currencyFilter())
                 .filter(paymentTypeFilter())
+                .filter(paymentStateFilter())
                 // filter lainnya...
                 .sorted(activeComparator())  // sort sesuai pilihan user
                 .toList();
