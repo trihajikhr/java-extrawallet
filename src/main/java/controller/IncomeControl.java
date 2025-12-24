@@ -50,7 +50,7 @@ public class IncomeControl implements Initializable {
     @FXML private MenuButton menuButtonCategory;
     @FXML private MenuButton menuButtonLabel;
     @FXML private MenuButton menuButtonCurrencie;
-    @FXML private MenuButton menuButtonType;
+    @FXML private MenuButton menuButtonPaymentType;
     @FXML private MenuButton menuButtonState;
 
     private final ObservableSet<Akun> selectedAccounts =
@@ -65,7 +65,7 @@ public class IncomeControl implements Initializable {
     private final ObservableSet<MataUang> selectedCurrencies =
             FXCollections.observableSet(new LinkedHashSet<>());
 
-    private final ObservableSet<PaymentType> selectedTypes =
+    private final ObservableSet<PaymentType> selectedPaymentTypes =
             FXCollections.observableSet(new LinkedHashSet<>());
 
     private final ObservableSet<PaymentStatus> selectedStates =
@@ -279,6 +279,7 @@ public class IncomeControl implements Initializable {
         initMenuButtonCategory();
         initMenuButtonLabel();
         initMenuButtonCurrency();
+        initMenuButtonPaymentType();
     }
     private void initComboBoxSort() {
         ObservableList<SortOption> sortItems =
@@ -555,7 +556,62 @@ public class IncomeControl implements Initializable {
         menuButtonCurrencie.setText(text);
         menuButtonCurrencie.setStyle("-fx-text-fill: -fx-text-base-color;");
     }
+    private void initMenuButtonPaymentType() {
+        menuButtonPaymentType.getItems().clear();
+        menuButtonPaymentType.setText("Type");
+        menuButtonPaymentType.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+        List<PaymentType> dataType = Arrays.asList(PaymentType.values());
 
+        for (PaymentType paymentType : dataType) {
+            Label label = new Label(paymentType.getLabel());
+            label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+            // Centang
+            Label checkMark = new Label("✓");
+            checkMark.setTextFill(Color.GREEN);
+            checkMark.setVisible(selectedPaymentTypes.contains(paymentType));
+
+            // Spacer supaya full row clickable
+            Region spacer = new Region();
+            HBox.setHgrow(spacer, Priority.ALWAYS);
+
+            // Wrapper HBox
+            HBox wrapper = new HBox(5, checkMark, label, spacer);
+            wrapper.setAlignment(Pos.CENTER_LEFT);
+            wrapper.setPadding(new Insets(2, 5, 2, 5));
+            wrapper.setMaxWidth(Double.MAX_VALUE);
+            wrapper.prefWidthProperty().bind(menuButtonPaymentType.widthProperty().subtract(2));
+
+            // CustomMenuItem
+            CustomMenuItem menuItem = new CustomMenuItem(wrapper);
+            menuItem.setHideOnClick(false);
+
+            // Klik seluruh area menuItem
+            menuItem.setOnAction(e -> {
+                boolean selected = !selectedPaymentTypes.contains(paymentType);
+                if (selected) selectedPaymentTypes.add(paymentType);
+                else selectedPaymentTypes.remove(paymentType);
+
+                checkMark.setVisible(selected);
+                updateTypeMenuText();
+                applyFilterAndSort();
+            });
+
+            menuButtonPaymentType.getItems().add(menuItem);
+        }
+    }
+    private void updateTypeMenuText() {
+        if (selectedPaymentTypes.isEmpty()) {
+            menuButtonPaymentType.setText("Type");
+            menuButtonPaymentType.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
+            return;
+        }
+        String text = selectedPaymentTypes.stream()
+                .map(PaymentType::getLabel)
+                .collect(Collectors.joining(", "));
+        menuButtonPaymentType.setText(text);
+        menuButtonPaymentType.setStyle("-fx-text-fill: -fx-text-base-color;");
+    }
 
     // [4] >=== FILTER LISTENER
     private Predicate<Transaksi> accountFilter() {
@@ -578,6 +634,11 @@ public class IncomeControl implements Initializable {
                 selectedCurrencies.isEmpty()
                         || selectedCurrencies.contains(t.getAkun().getMataUang());
     }
+    private Predicate<Transaksi> paymentTypeFilter() {
+        return t ->
+                selectedPaymentTypes.isEmpty()
+                        || selectedPaymentTypes.contains(t.getPaymentType());
+    }
 
     // [5] >=== FILTER HANDLER
     private void applyFilterAndSort() {
@@ -586,6 +647,7 @@ public class IncomeControl implements Initializable {
                 .filter(categoryFilter())
                 .filter(labelFilter())
                 .filter(currencyFilter())
+                .filter(paymentTypeFilter())
                 // filter lainnya...
                 .sorted(activeComparator())  // sort sesuai pilihan user
                 .toList();
