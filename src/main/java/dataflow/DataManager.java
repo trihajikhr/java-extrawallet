@@ -21,8 +21,8 @@ public class DataManager {
     private ArrayList<Akun> dataAkun = new ArrayList<>();
     private ArrayList<Transaksi> dataTransaksi = new ArrayList<>();
     private ArrayList<TipeLabel> dataTipeLabel = new ArrayList<>();
-    private ObservableList<String> dataPeymentType = FXCollections.observableArrayList();
-    private ObservableList<String> dataStatusType = FXCollections.observableArrayList();
+    private ObservableList<PaymentType> dataPeymentType = FXCollections.observableArrayList();
+    private ObservableList<PaymentStatus> dataStatusType = FXCollections.observableArrayList();
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
     private ObservableList<MataUang> dataMataUang = FXCollections.observableArrayList();
@@ -51,11 +51,11 @@ public class DataManager {
         return dataTemplate;
     }
 
-    public ObservableList<String> getDataPeymentType() {
+    public ObservableList<PaymentType> getDataPeymentType() {
         return dataPeymentType;
     }
 
-    public ObservableList<String> getDataStatusType() {
+    public ObservableList<PaymentStatus> getDataStatusType() {
         return dataStatusType;
     }
 

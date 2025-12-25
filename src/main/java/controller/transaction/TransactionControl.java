@@ -74,8 +74,8 @@ public class TransactionControl implements Initializable {
     @FXML private GridPane transForm;
 
     @FXML private ComboBox<Kategori> categoryComboBox;
-    @FXML private ComboBox<String> paymentType_inout, paymentType_trans;
-    @FXML private ComboBox<String> paymentStatus_inout, paymentStatus_trans;
+    @FXML private ComboBox<PaymentType> paymentType_inout, paymentType_trans;
+    @FXML private ComboBox<PaymentStatus> paymentStatus_inout, paymentStatus_trans;
     @FXML private ComboBox<Akun> akunComboBox_inout, akunComboBox_from, akunComboBox_to;
 
     // combobox tipeLabel
@@ -87,10 +87,10 @@ public class TransactionControl implements Initializable {
     private ObservableList<Template> dataTemplateList = FXCollections.observableArrayList();
     @FXML private ComboBox<Template> dataTemplateComboBox;
 
-    private final ObjectProperty<String> selectedPaymentType =
+    private final ObjectProperty<PaymentType> selectedPaymentType =
             new SimpleObjectProperty<>();
 
-    private final ObjectProperty<String> selectedPaymentStatus =
+    private final ObjectProperty<PaymentStatus> selectedPaymentStatus =
             new SimpleObjectProperty<>();
 
     private final StringProperty noteState = new SimpleStringProperty();
@@ -106,6 +106,9 @@ public class TransactionControl implements Initializable {
 
     // tanggal
     @FXML DatePicker date_inout, date_trans;
+
+    // checkbox
+    @FXML CheckBox checkTemplate_inout;
 
     // submit button + add temlate
     @FXML Button submit_inout;
@@ -370,7 +373,7 @@ public class TransactionControl implements Initializable {
         );
     }
     @FXML
-    private void inoutSubmitHandler() {
+    private void inoutSubmitHandler(boolean closeAfterSubmit) {
         TipeTransaksi tipe = getValueChoosen() == 1 ? TipeTransaksi.IN : TipeTransaksi.OUT;
         int jumlah = spinner_inout.getValue();
         Akun akun = akunComboBox_inout.getValue();
@@ -378,8 +381,8 @@ public class TransactionControl implements Initializable {
         TipeLabel tipeLabel = tipeLabel_inout.getValue();
         LocalDate tanggal = date_inout.getValue();
         String keterangan = note_inout.getText();
-        PaymentType payment = PaymentType.fromString(paymentType_inout.getValue());
-        PaymentStatus status = PaymentStatus.fromString(paymentStatus_inout.getValue());
+        PaymentType payment = paymentType_inout.getValue();
+        PaymentStatus status = paymentStatus_inout.getValue();
 
         DataManager.getInstance().addTransaksi(new Transaksi(
                 0,
@@ -394,8 +397,66 @@ public class TransactionControl implements Initializable {
                 status
         ));
 
-        closePopup();
+        if(checkTemplate_inout.isSelected()){
+            openTemplateSceneWithPrefill();
+        }
+
+        if(closeAfterSubmit) {
+            closePopup();
+        } else {
+            clearInoutForm();
+        }
     }
+    private void openTemplateSceneWithPrefill() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/template.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setRadius(10.0);
+            dropShadow.setOffsetX(5.0);
+            dropShadow.setOffsetY(5.0);
+            dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+            root.setEffect(dropShadow);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+
+//        stage.setMinWidth(450);
+//        stage.setMinHeight(560);
+//        stage.setMaxWidth(800);
+//        stage.setMaxHeight(700);
+
+            root.setOnMousePressed(event -> {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            });
+
+            root.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            });
+
+            TemplateControl ctrl = loader.getController();
+            ctrl.setStage(stage);
+            ctrl.setParentTransaction(this);
+
+            Transaksi draft = buildDraftTransaksi();
+            ctrl.prefillFromTransaksi(draft);
+
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            log.error("gagal membuka panel template!", e);
+            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+        }
+    }
+
     @FXML
     private void transSubmitHandler() {
         Akun fromAkun = akunComboBox_from.getValue();
@@ -405,8 +466,8 @@ public class TransactionControl implements Initializable {
         TipeLabel tipeLabel = tipeLabel_trans.getValue();
         LocalDate tanggal = date_trans.getValue();
         String keterangan = note_trans.getText();
-        PaymentType payment = PaymentType.fromString(paymentType_trans.getValue());
-        PaymentStatus status = PaymentStatus.fromString(paymentStatus_trans.getValue());
+        PaymentType payment = paymentType_trans.getValue();
+        PaymentStatus status = paymentStatus_trans.getValue();
 
         Kategori fromKategori = null;
         for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
@@ -461,6 +522,26 @@ public class TransactionControl implements Initializable {
         ));
 
         closePopup();
+    }
+    @FXML
+    private void inouSubmitButton() {
+        inoutSubmitHandler(true);
+    }
+    @FXML
+    private void inoutSubmitAndAnotherRecord() {
+        inoutSubmitHandler(false);
+    }
+    private void clearInoutForm() {
+        dataTemplateComboBox.setValue(null);
+        spinner_inout.getEditor().clear();
+        akunComboBox_inout.setValue(null);
+        categoryComboBox.setValue(null);
+        tipeLabel_inout.setValue(null);
+        date_inout.setValue(LocalDate.now());
+        checkTemplate_inout.setSelected(false);
+        note_inout.setText(null);
+        paymentType_inout.setValue(null);
+        paymentStatus_inout.setValue(null);
     }
 
     // [3] >=== BUTTON HANDLER
@@ -577,9 +658,9 @@ public class TransactionControl implements Initializable {
 
     // [5] >=== HELPER FUNCTION
     private void spinnerLogicHandler() {
-        IOLogic.makeIntegerOnly(spinner_inout, 1, 2_147_483_647, 1);
-        IOLogic.makeIntegerOnly(spinner_from, 1, 2_147_483_647, 1);
-        IOLogic.makeIntegerOnly(spinner_to, 1, 2_147_483_647, 1);
+        IOLogic.makeIntegerOnlyBlankInitial(spinner_inout, 1, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(spinner_from, 1, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(spinner_to, 1, 2_147_483_647);
     }
     private void showInOut() {
         inoutForm.setVisible(true);
@@ -669,6 +750,32 @@ public class TransactionControl implements Initializable {
             transferLbl_trans.setStyle("-fx-text-fill: black;");
             transferImg_trans.setImage(DataManager.getInstance().getImageTransactionForm()[2][1]);
         }
+    }
+    private Transaksi buildDraftTransaksi() {
+        TipeTransaksi tipe = getValueChoosen() == 1 ? TipeTransaksi.IN : TipeTransaksi.OUT;
+        int jumlah = spinner_inout.getValue();
+        Akun akun = akunComboBox_inout.getValue();
+        Kategori kategori = categoryComboBox.getValue();
+        TipeLabel tipeLabel = tipeLabel_inout.getValue();
+        LocalDate tanggal = date_inout.getValue();
+        String keterangan = note_inout.getText();
+        PaymentType payment = paymentType_inout.getValue();
+        PaymentStatus status = paymentStatus_inout.getValue();
+
+        Transaksi draft = new Transaksi(
+                0,
+                tipe,
+                jumlah,
+                akun,
+                kategori,
+                tipeLabel,
+                tanggal,
+                keterangan,
+                payment,
+                status
+        );
+
+        return draft;
     }
 
     // [6] >=== LISTENER

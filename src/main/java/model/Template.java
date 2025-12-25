@@ -7,23 +7,23 @@ public class Template {
     private int jumlah;
     private Akun akun;
     private Kategori kategori;
-    private TipeLabel label;
+    private TipeLabel tipeLabel;
     private String keterangan;
-    private PaymentType metodeBayar;
-    private PaymentStatus status;
+    private PaymentType paymentType;
+    private PaymentStatus paymentStatus;
 
     // constructor full atribut
-    public Template(int id, TipeTransaksi tipe, String nama, int jumlah, Akun akun, Kategori kategori, TipeLabel label, String keterangan, PaymentType metodeBayar, PaymentStatus status) {
+    public Template(int id, TipeTransaksi tipe, String nama, int jumlah, Akun akun, Kategori kategori, TipeLabel tipeLabel, String keterangan, PaymentType paymentType, PaymentStatus paymentStatus) {
         this.id = id;
         this.tipe = tipe;
         this.nama = nama;
         this.jumlah = jumlah;
         this.akun = akun;
         this.kategori = kategori;
-        this.label = label;
+        this.tipeLabel = tipeLabel;
         this.keterangan = keterangan;
-        this.metodeBayar = metodeBayar;
-        this.status = status;
+        this.paymentType = paymentType;
+        this.paymentStatus = paymentStatus;
     }
 
     // constructor atribut wajib
@@ -86,12 +86,12 @@ public class Template {
         this.kategori = kategori;
     }
 
-    public TipeLabel getLabel() {
-        return label;
+    public TipeLabel getTipeLabel() {
+        return tipeLabel;
     }
 
-    public void setLabel(TipeLabel label) {
-        this.label = label;
+    public void setTipeLabel(TipeLabel tipeLabel) {
+        this.tipeLabel = tipeLabel;
     }
 
     public String getKeterangan() {
@@ -102,19 +102,19 @@ public class Template {
         this.keterangan = keterangan;
     }
 
-    public PaymentType getMetodeBayar() {
-        return metodeBayar;
+    public PaymentType getPaymentType() {
+        return paymentType;
     }
 
-    public void setMetodeBayar(PaymentType metodeBayar) {
-        this.metodeBayar = metodeBayar;
+    public void setPaymentType(PaymentType paymentType) {
+        this.paymentType = paymentType;
     }
 
-    public PaymentStatus getStatus() {
-        return status;
+    public PaymentStatus getPaymentStatus() {
+        return paymentStatus;
     }
 
-    public void setStatus(PaymentStatus status) {
-        this.status = status;
+    public void setPaymentStatus(PaymentStatus paymentStatus) {
+        this.paymentStatus = paymentStatus;
     }
 }

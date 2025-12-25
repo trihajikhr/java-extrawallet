@@ -88,7 +88,8 @@ public class TemplateControl implements Initializable {
     private TextField noteText;
 
     // payment type & status
-    @FXML private ComboBox<String> paymentType, paymentStatus;
+    @FXML private ComboBox<PaymentType> paymentTypeComboBox;
+    @FXML private ComboBox<PaymentStatus>  paymentStatusComboBox;
 
     @FXML
     private Button submitButton;
@@ -118,7 +119,7 @@ public class TemplateControl implements Initializable {
         loadTipeLabelComboBox();
 
         // uncategorized
-        IOLogic.makeIntegerOnly(spinnerAmount, 1, 2_147_483_647, 0);
+        IOLogic.makeIntegerOnlyBlankInitial(spinnerAmount, 1, 2_147_483_647);
         mataUangComboBox.setMouseTransparent(true);
         mataUangComboBox.setFocusTraversable(false);
         mataUangComboBox.getStyleClass().add("locked");
@@ -196,11 +197,15 @@ public class TemplateControl implements Initializable {
         });
     }
     private void initPayment() {
-        paymentType.setItems(DataManager.getInstance().getDataPeymentType());
-        paymentStatus.setItems(DataManager.getInstance().getDataStatusType());
+        paymentTypeComboBox.setItems(DataManager.getInstance().getDataPeymentType());
+        paymentStatusComboBox.setItems(DataManager.getInstance().getDataStatusType());
     }
     private void activateIncome() {
         select(0, incomeBtn, incomeImg, incomeLabel, "#01AA71");
+        updateCategoryCombo("IN");
+    }
+    private void activateExpense() {
+        select(0, expenseBtn, expenseImg, expenseLabel, "#F92222");
         updateCategoryCombo("IN");
     }
     private void initDataComboBox() {
@@ -334,7 +339,7 @@ public class TemplateControl implements Initializable {
         submitButton.disableProperty().bind(formValid.not());
     }
 
-    // [5] >=== BUTTON ADD LABEL & SUBMIT HANDLER
+    // [5] >=== BUTTON ADD LABEL & SUBMIT HANDLER & PREFILL FUNCTION
     @FXML
     private void addLabelOnTemplate(ActionEvent evt) {
         try {
@@ -391,8 +396,8 @@ public class TemplateControl implements Initializable {
         Kategori dataKategori = categoryComboBox.getValue();
         TipeLabel dataLabel = tipeLabelComboBox.getValue();
         String keterangan = noteText.getText();
-        PaymentType payment = PaymentType.valueOf(paymentType.getValue());
-        PaymentStatus status = PaymentStatus.valueOf(paymentStatus.getValue());
+        PaymentType payment = paymentTypeComboBox.getValue();
+        PaymentStatus status = paymentStatusComboBox.getValue();
 
         Template newData = new Template(
                 0,
@@ -414,6 +419,23 @@ public class TemplateControl implements Initializable {
         }
 
         closePopup();
+    }
+    public void prefillFromTransaksi(Transaksi trans) {
+        TipeTransaksi tipe = trans.getTipeTransaksi();
+        if(tipe == TipeTransaksi.IN) {
+            activateIncome();
+        } else if(tipe == TipeTransaksi.OUT){
+            activateExpense();
+        }
+
+        spinnerAmount.getEditor().setText(Integer.toString(trans.getJumlah()));
+        akunComboBox.setValue(trans.getAkun());
+        categoryComboBox.setValue(trans.getKategori());
+
+        tipeLabelComboBox.setValue(trans.getTipelabel());
+        noteText.setText(trans.getKeterangan());
+        paymentTypeComboBox.setValue(trans.getPaymentType());
+        paymentStatusComboBox.setValue(trans.getPaymentStatus());
     }
 
     // [6] >=== LISTENER
