@@ -357,11 +357,6 @@ public class Database {
                     }
                 }
 
-                if (tipelabel == null ) {
-                    log.warn("fetch transaksi:  idTipeLabel={} tidak ditemukan!", idTipeLabel);
-                    continue; // skip
-                }
-
                 if(tipe == TipeTransaksi.IN){
                     data.add(new Pemasukan(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, paymentType, status));
                 } else if(tipe == TipeTransaksi.OUT) {
@@ -389,11 +384,31 @@ public class Database {
                 ps.setInt(2, trans.getJumlah());
                 ps.setInt(3, trans.getAkun().getId());
                 ps.setInt(4, trans.getKategori().getId());
-                ps.setInt(5, trans.getTipelabel().getId());
+
+                if (trans.getTipelabel() != null) {
+                    ps.setInt(5, trans.getTipelabel().getId());
+                } else {
+                    ps.setNull(5, Types.INTEGER);
+                }
                 ps.setString(6, trans.getTanggal().format(formatter));
-                ps.setString(7, trans.getKeterangan());
-                ps.setString(8, trans.getPaymentType().name());
-                ps.setString(9, trans.getPaymentStatus().name());
+
+                if (trans.getKeterangan() != null) {
+                    ps.setString(7, trans.getKeterangan());
+                } else {
+                    ps.setNull(7, Types.VARCHAR);
+                }
+
+                if(trans.getPaymentType() != null) {
+                    ps.setString(8, trans.getPaymentType().name());
+                } else {
+                    ps.setNull(8, Types.VARCHAR);
+                }
+
+                if(trans.getPaymentStatus() != null) {
+                    ps.setString(9, trans.getPaymentStatus().name());
+                } else {
+                    ps.setNull(9, Types.VARCHAR);
+                }
 
                 int affected = ps.executeUpdate();
                 if (affected == 0) {
@@ -420,7 +435,7 @@ public class Database {
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
-            log.error("insert akun gagal", e);
+            log.error("insert transaksi gagal", e);
             return -1;
 
         } finally {
@@ -594,11 +609,6 @@ public class Database {
                     }
                 }
 
-                if(tipeLabel == null) {
-                    log.error("id_tipelabel {} tidak ditemukan!", idTipeLabel);
-                    continue;
-                }
-
                 dataTemplate.add(new Template(
                         id,
                         tipe,
@@ -629,19 +639,35 @@ public class Database {
             koneksi.setAutoCommit(false);
 
             try (PreparedStatement ps = koneksi.prepareStatement(quertSql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, temp.getTipe().name());
+                ps.setString(1, temp.getTipeTransaksi().name());
                 ps.setString(2, temp.getNama());
                 ps.setInt(3, temp.getJumlah());
                 ps.setInt(4, temp.getAkun().getId());
                 ps.setInt(5, temp.getKategori().getId());
-                if (temp.getLabel() != null) {
-                    ps.setInt(6, temp.getLabel().getId());
+
+                if (temp.getTipeLabel() != null) {
+                    ps.setInt(6, temp.getTipeLabel().getId());
                 } else {
                     ps.setNull(6, Types.INTEGER);
                 }
-                ps.setString(7, temp.getKeterangan());
-                ps.setString(8, temp.getMetodeBayar().name());
-                ps.setString(9, temp.getStatus().name());
+
+                if (temp.getKeterangan() != null) {
+                    ps.setString(7, temp.getKeterangan());
+                } else {
+                    ps.setNull(7, Types.VARCHAR);
+                }
+
+                if (temp.getPaymentType() != null) {
+                    ps.setString(8, temp.getPaymentType().name());
+                } else {
+                    ps.setNull(8, Types.VARCHAR);
+                }
+
+                if (temp.getPaymentStatus() != null) {
+                    ps.setString(9, temp.getPaymentStatus().name());
+                } else {
+                    ps.setNull(9, Types.VARCHAR);
+                }
 
                 if(ps.executeUpdate() == 0) {
                     throw new SQLException("insert tidak mengubah data");
@@ -663,7 +689,7 @@ public class Database {
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
-            log.error("insert akun gagal", e);
+            log.error("insert template gagal", e);
             return -1;
         } finally {
             try {

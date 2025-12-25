@@ -1,0 +1,75 @@
+.menu-button {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #374151;
+}
+
+.menu-button:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+.menu-button:pressed,
+.menu-button:showing {
+    -fx-background-color: #F3F4F6;
+    -fx-border-color: #D1D5DB;
+}
+
+/* arrow — warna doang, no padding, no scale */
+.menu-button .arrow {
+    -fx-background-color: #6B7280;
+}
+
+.menu-button:hover .arrow {
+    -fx-background-color: #374151;
+}
+
+/* popup menu — tampilan aja */
+.context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.menu-item:hover {
+    -fx-background-color: #F3F4F6;
+}
+
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+    -fx-text-fill: #374151;
+}
+
+.combo-box:hover {
+    -fx-background-color: #F9FAFB;
+}
+
+.combo-box:focused,
+.combo-box:showing {
+    -fx-background-color: #F3F4F6;
+    -fx-border-color: #D1D5DB;
+}
+
+.combo-box .arrow {
+    -fx-background-color: #6B7280;
+}
+
+.combo-box:hover .arrow {
+    -fx-background-color: #374151;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 8;
+    -fx-background-radius: 8;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #F3F4F6;
+}

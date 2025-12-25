@@ -2,8 +2,9 @@ package controller.transaction;
 
 import dataflow.DataLoader;
 import dataflow.DataManager;
+import helper.Converter;
 import helper.IOLogic;
-import helper.Popup;
+import helper.MyPopup;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -88,7 +89,8 @@ public class TemplateControl implements Initializable {
     private TextField noteText;
 
     // payment type & status
-    @FXML private ComboBox<String> paymentType, paymentStatus;
+    @FXML private ComboBox<PaymentType> paymentTypeComboBox;
+    @FXML private ComboBox<PaymentStatus>  paymentStatusComboBox;
 
     @FXML
     private Button submitButton;
@@ -118,7 +120,7 @@ public class TemplateControl implements Initializable {
         loadTipeLabelComboBox();
 
         // uncategorized
-        IOLogic.makeIntegerOnly(spinnerAmount, 1, 2_147_483_647, 0);
+        IOLogic.makeIntegerOnlyBlankInitial(spinnerAmount, 0, 2_147_483_647);
         mataUangComboBox.setMouseTransparent(true);
         mataUangComboBox.setFocusTraversable(false);
         mataUangComboBox.getStyleClass().add("locked");
@@ -196,12 +198,19 @@ public class TemplateControl implements Initializable {
         });
     }
     private void initPayment() {
-        paymentType.setItems(DataManager.getInstance().getDataPeymentType());
-        paymentStatus.setItems(DataManager.getInstance().getDataStatusType());
+        paymentTypeComboBox.setItems(DataManager.getInstance().getDataPaymentType());
+        paymentStatusComboBox.setItems(DataManager.getInstance().getDataPaymentStatus());
+
+        Converter.bindEnumComboBox(paymentTypeComboBox, PaymentType::getLabel);
+        Converter.bindEnumComboBox(paymentStatusComboBox, PaymentStatus::getLabel);
     }
     private void activateIncome() {
         select(0, incomeBtn, incomeImg, incomeLabel, "#01AA71");
         updateCategoryCombo("IN");
+    }
+    private void activateExpense() {
+        select(0, expenseBtn, expenseImg, expenseLabel, "#F92222");
+        updateCategoryCombo("OUT");
     }
     private void initDataComboBox() {
         DataLoader.getInstance().kategoriComboBoxLoader(categoryComboBox);
@@ -334,7 +343,7 @@ public class TemplateControl implements Initializable {
         submitButton.disableProperty().bind(formValid.not());
     }
 
-    // [5] >=== BUTTON ADD LABEL & SUBMIT HANDLER
+    // [5] >=== BUTTON ADD LABEL & SUBMIT HANDLER & PREFILL FUNCTION
     @FXML
     private void addLabelOnTemplate(ActionEvent evt) {
         try {
@@ -379,20 +388,27 @@ public class TemplateControl implements Initializable {
 
         } catch (IOException e) {
             log.error("gagal membuka panel tambah label!", e);
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
     @FXML
     private void submitHandler() {
         TipeTransaksi tipe = valueChoosen.getValue() == 1 ? TipeTransaksi.IN : TipeTransaksi.OUT;
-        String nama = nameText.getText();
+        String nama = IOLogic.normalizeSpaces(nameText.getText());
+
+        if(!uniqueNameValidation(nama)){
+            MyPopup.showDanger("Duplikasi Nama!", "Nama sudah digunakan!");
+            nameText.clear();
+            return;
+        }
+
         int jumlah = spinnerAmount.getValue();
         Akun dataAkun = akunComboBox.getValue();
         Kategori dataKategori = categoryComboBox.getValue();
         TipeLabel dataLabel = tipeLabelComboBox.getValue();
-        String keterangan = noteText.getText();
-        PaymentType payment = PaymentType.valueOf(paymentType.getValue());
-        PaymentStatus status = PaymentStatus.valueOf(paymentStatus.getValue());
+        String keterangan = IOLogic.normalizeSpaces(noteText.getText());
+        PaymentType payment = paymentTypeComboBox.getValue();
+        PaymentStatus status = paymentStatusComboBox.getValue();
 
         Template newData = new Template(
                 0,
@@ -414,6 +430,31 @@ public class TemplateControl implements Initializable {
         }
 
         closePopup();
+    }
+    private boolean uniqueNameValidation(String nama) {
+        for(Template temp : DataManager.getInstance().getDataTemplate()) {
+            if(nama.equalsIgnoreCase(temp.getNama())){
+                return false;
+            }
+        }
+        return true;
+    }
+    public void prefillFromTransaksi(Transaksi trans) {
+        TipeTransaksi tipe = trans.getTipeTransaksi();
+        if(tipe == TipeTransaksi.IN) {
+            activateIncome();
+        } else if(tipe == TipeTransaksi.OUT){
+            activateExpense();
+        }
+
+        spinnerAmount.getEditor().setText(Integer.toString(trans.getJumlah()));
+        akunComboBox.setValue(trans.getAkun());
+        categoryComboBox.setValue(trans.getKategori());
+
+        tipeLabelComboBox.setValue(trans.getTipelabel());
+        noteText.setText(trans.getKeterangan());
+        paymentTypeComboBox.setValue(trans.getPaymentType());
+        paymentStatusComboBox.setValue(trans.getPaymentStatus());
     }
 
     // [6] >=== LISTENER

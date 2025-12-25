@@ -14,10 +14,14 @@ public enum TipeTransaksi {
         return label;
     }
 
-    public static TipeTransaksi fromString(String input) {
-        for (TipeTransaksi t : values()) {
-            if (t.label.equalsIgnoreCase(input)) return t;
+    public static TipeTransaksi  fromString(String input) {
+        if (input == null) return null;
+        String val = input.trim();
+        for (TipeTransaksi type : values()) {
+            if (type.name().equalsIgnoreCase(val) || type.label.equalsIgnoreCase(val)) {
+                return type;
+            }
         }
-        throw new IllegalArgumentException("Unknown transaction type: " + input);
+        throw new IllegalArgumentException("Unknown payment type: " + input);
     }
 }

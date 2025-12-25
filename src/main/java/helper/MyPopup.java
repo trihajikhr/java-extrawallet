@@ -9,7 +9,7 @@ import javafx.stage.StageStyle;
 
 import java.util.Objects;
 
-public class Popup {
+public class MyPopup {
 
     private static double xOffset = 0;
     private static double yOffset = 0;
@@ -17,7 +17,7 @@ public class Popup {
     public static void showSucces(String title, String message) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    Popup.class.getResource("/fxml/popup-succes.fxml")
+                    MyPopup.class.getResource("/fxml/popup-succes.fxml")
             );
             AnchorPane root = loader.load();
 
@@ -30,7 +30,7 @@ public class Popup {
             Scene scene = new Scene(root);
             scene.setFill(null);
             scene.getStylesheets().add(
-                    Objects.requireNonNull(Popup.class.getResource("/stylesheet/popup-succes.css")).toExternalForm()
+                    Objects.requireNonNull(MyPopup.class.getResource("/stylesheet/popup-succes.css")).toExternalForm()
             );
 
             stage.setScene(scene);
@@ -58,7 +58,7 @@ public class Popup {
     public static void showDanger(String title, String message) {
         try {
             FXMLLoader loader = new FXMLLoader(
-                    Popup.class.getResource("/fxml/popup-danger.fxml")
+                    MyPopup.class.getResource("/fxml/popup-danger.fxml")
             );
             AnchorPane root = loader.load();
 
@@ -71,7 +71,7 @@ public class Popup {
             Scene scene = new Scene(root);
             scene.setFill(null);
             scene.getStylesheets().add(
-                    Objects.requireNonNull(Popup.class.getResource("/stylesheet/popup-danger.css")).toExternalForm()
+                    Objects.requireNonNull(MyPopup.class.getResource("/stylesheet/popup-danger.css")).toExternalForm()
             );
 
             stage.setScene(scene);

@@ -20,8 +20,11 @@ public enum PaymentType {
 
     public static PaymentType fromString(String input) {
         if (input == null) return null;
+        String val = input.trim();
         for (PaymentType type : values()) {
-            if (type.label.equalsIgnoreCase(input.trim())) return type;
+            if (type.name().equalsIgnoreCase(val) || type.label.equalsIgnoreCase(val)) {
+                return type;
+            }
         }
         throw new IllegalArgumentException("Unknown payment type: " + input);
     }

@@ -1,11 +1,10 @@
 package dataflow;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.*;
 
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
-import helper.Popup;
+import helper.MyPopup;
 import javafx.scene.image.Image;
 import model.MataUang;
 import javafx.collections.FXCollections;
@@ -22,8 +21,8 @@ public class DataManager {
     private ArrayList<Akun> dataAkun = new ArrayList<>();
     private ArrayList<Transaksi> dataTransaksi = new ArrayList<>();
     private ArrayList<TipeLabel> dataTipeLabel = new ArrayList<>();
-    private ObservableList<String> dataPeymentType = FXCollections.observableArrayList();
-    private ObservableList<String> dataStatusType = FXCollections.observableArrayList();
+    private ObservableList<PaymentType> dataPaymentType = FXCollections.observableArrayList();
+    private ObservableList<PaymentStatus> dataPaymentStatus = FXCollections.observableArrayList();
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
     private ObservableList<MataUang> dataMataUang = FXCollections.observableArrayList();
@@ -33,8 +32,8 @@ public class DataManager {
     private DataManager() {}
 
     public void initBaseData() {
-        dataPeymentType = DataSeeder.getInstance().seedPaymentType();
-        dataStatusType = DataSeeder.getInstance().seedPaymentStatus();
+        dataPaymentType = DataSeeder.getInstance().seedPaymentType();
+        dataPaymentStatus = DataSeeder.getInstance().seedPaymentStatus();
         DataSeeder.getInstance().seedColor();
         DataSeeder.getInstance().seedAccountItem();
         DataSeeder.getInstance().seedCurrency();
@@ -52,12 +51,12 @@ public class DataManager {
         return dataTemplate;
     }
 
-    public ObservableList<String> getDataPeymentType() {
-        return dataPeymentType;
+    public ObservableList<PaymentType> getDataPaymentType() {
+        return dataPaymentType;
     }
 
-    public ObservableList<String> getDataStatusType() {
-        return dataStatusType;
+    public ObservableList<PaymentStatus> getDataPaymentStatus() {
+        return dataPaymentStatus;
     }
 
     public static DataManager getInstance() {
@@ -87,6 +86,15 @@ public class DataManager {
         return dataMataUang;
     }
 
+    public ArrayList<MataUang> getFilteredMataUang() {
+        Set<MataUang> filteredCurrency = new LinkedHashSet<>();
+        for(Transaksi trans : dataTransaksi) {
+            filteredCurrency.add(trans.getAkun().getMataUang());
+        }
+
+        return new ArrayList<>(filteredCurrency);
+    }
+
     // [1] >> =============== DATA AKUN =============== //
     public void addAkun (Akun data) {
         int newId = Database.getInstance().insertAkun(data);
@@ -94,9 +102,9 @@ public class DataManager {
             data.setId(newId);
             dataAkun.add(data);
             log.info("akun baru [{}] berhasil dibuat!", data.getNama());
-            Popup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat!");
+            MyPopup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat!");
         } else {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
 
@@ -157,9 +165,9 @@ public class DataManager {
             trans.setId(newId);
             dataTransaksi.add(trans);
             log.info("transaksi berhasil ditambahkan!");
-            Popup.showSucces("Operasi berhasil!", "Transaksi berhasil ditambahkan!");
+            MyPopup.showSucces("Operasi berhasil!", "Transaksi berhasil ditambahkan!");
         } else {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
 
@@ -210,6 +218,17 @@ public class DataManager {
         dataKategori = new ArrayList<>(DataSeeder.getInstance().seedKategori());
     }
 
+    public ArrayList<Kategori> getFilteredCategory() {
+        Set<Kategori> filteredCategory = new LinkedHashSet<>();
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getKategori() != null) {
+                filteredCategory.add(trans.getKategori());
+            }
+        }
+
+        return new ArrayList<>(filteredCategory);
+    }
+
     // [6] >> =============== TIPE LABEL FUNCTION =============== //
     public boolean addLabel(TipeLabel tipelabel){
         int newId = Database.getInstance().insertTipeLabel(tipelabel);
@@ -217,10 +236,10 @@ public class DataManager {
             tipelabel.setId(newId);
             dataTipeLabel.add(tipelabel);
             log.info("Label baru [{}] berhasil dibuat!", tipelabel.getNama());
-            Popup.showSucces("Label baru berhasil dibuat!", "Label " + tipelabel.getNama() + " berhasil dibuat!");
+            MyPopup.showSucces("Label baru berhasil dibuat!", "Label " + tipelabel.getNama() + " berhasil dibuat!");
             return true;
         } else {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return false;
         }
     }
@@ -231,11 +250,22 @@ public class DataManager {
             temp.setId(newId);
             dataTemplate.add(temp);
             log.info("template {} berhasil ditambahkan!", temp.getNama());
-            Popup.showSucces("Template baru!", "Template " + temp.getNama() + " berhasil ditambahkan!");
+            MyPopup.showSucces("Template baru!", "Template " + temp.getNama() + " berhasil ditambahkan!");
             return true;
         } else {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return false;
         }
+    }
+
+    public ArrayList<TipeLabel> getFilteredLabel() {
+        Set<TipeLabel> filteredLabel = new LinkedHashSet<>();
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getTipelabel() != null) {
+                filteredLabel.add(trans.getTipelabel());
+            }
+        }
+
+        return new ArrayList<>(filteredLabel);
     }
 }

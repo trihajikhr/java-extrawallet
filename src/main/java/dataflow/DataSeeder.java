@@ -8,6 +8,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import model.PaymentStatus;
+import model.PaymentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -305,30 +307,15 @@ public class DataSeeder {
             return null;
         }
     }
-    public ObservableList<String> seedPaymentType() {
-        ObservableList<String> data = FXCollections.observableArrayList();
-        data.addAll(
-                "Cash",
-                "Debit card",
-                "Credit card",
-                "Transfer",
-                "Voucher",
-                "Mobile payment"
-        );
-        log.info("mengisi data typedata!");
-        return data;
+    public ObservableList<PaymentType> seedPaymentType() {
+        log.info("data payment type berhasil diseed!");
+        return FXCollections.observableArrayList(PaymentType.values());
     }
-    public ObservableList<String> seedPaymentStatus() {
-        ObservableList<String> data = FXCollections.observableArrayList();
-        data.addAll(
-                "Reconciled",
-                "Cleared",
-                "Uncleared"
+    public ObservableList<PaymentStatus> seedPaymentStatus() {
+        log.info("data payment status berhasil diseed!");
+        return FXCollections.observableArrayList(PaymentStatus.values());
+    }
 
-        );
-        log.info("mengisi data statusdata!");
-        return data;
-    }
     public void seedColor() {
         DataManager.getInstance().getDataColor().setAll(
                 new ColorItem("Berry Red", Color.web("#D0006F")),

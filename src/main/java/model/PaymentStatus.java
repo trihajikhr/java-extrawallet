@@ -17,9 +17,12 @@ public enum PaymentStatus {
 
     public static PaymentStatus fromString(String input) {
         if (input == null) return null;
-        for (PaymentStatus status : values()) {
-            if (status.label.equalsIgnoreCase(input.trim())) return status;
+        String val = input.trim();
+        for (PaymentStatus type : values()) {
+            if (type.name().equalsIgnoreCase(val) || type.label.equalsIgnoreCase(val)) {
+                return type;
+            }
         }
-        throw new IllegalArgumentException("Unknown payment status: " + input);
+        throw new IllegalArgumentException("Unknown payment type: " + input);
     }
 }
