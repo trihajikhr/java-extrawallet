@@ -357,11 +357,6 @@ public class Database {
                     }
                 }
 
-                if (tipelabel == null ) {
-                    log.warn("fetch transaksi:  idTipeLabel={} tidak ditemukan!", idTipeLabel);
-                    continue; // skip
-                }
-
                 if(tipe == TipeTransaksi.IN){
                     data.add(new Pemasukan(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, paymentType, status));
                 } else if(tipe == TipeTransaksi.OUT) {

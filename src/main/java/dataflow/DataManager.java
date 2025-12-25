@@ -4,7 +4,7 @@ import java.util.*;
 
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
-import helper.Popup;
+import helper.MyPopup;
 import javafx.scene.image.Image;
 import model.MataUang;
 import javafx.collections.FXCollections;
@@ -102,9 +102,9 @@ public class DataManager {
             data.setId(newId);
             dataAkun.add(data);
             log.info("akun baru [{}] berhasil dibuat!", data.getNama());
-            Popup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat!");
+            MyPopup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat!");
         } else {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
 
@@ -165,9 +165,9 @@ public class DataManager {
             trans.setId(newId);
             dataTransaksi.add(trans);
             log.info("transaksi berhasil ditambahkan!");
-            Popup.showSucces("Operasi berhasil!", "Transaksi berhasil ditambahkan!");
+            MyPopup.showSucces("Operasi berhasil!", "Transaksi berhasil ditambahkan!");
         } else {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
 
@@ -236,10 +236,10 @@ public class DataManager {
             tipelabel.setId(newId);
             dataTipeLabel.add(tipelabel);
             log.info("Label baru [{}] berhasil dibuat!", tipelabel.getNama());
-            Popup.showSucces("Label baru berhasil dibuat!", "Label " + tipelabel.getNama() + " berhasil dibuat!");
+            MyPopup.showSucces("Label baru berhasil dibuat!", "Label " + tipelabel.getNama() + " berhasil dibuat!");
             return true;
         } else {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return false;
         }
     }
@@ -250,10 +250,10 @@ public class DataManager {
             temp.setId(newId);
             dataTemplate.add(temp);
             log.info("template {} berhasil ditambahkan!", temp.getNama());
-            Popup.showSucces("Template baru!", "Template " + temp.getNama() + " berhasil ditambahkan!");
+            MyPopup.showSucces("Template baru!", "Template " + temp.getNama() + " berhasil ditambahkan!");
             return true;
         } else {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return false;
         }
     }

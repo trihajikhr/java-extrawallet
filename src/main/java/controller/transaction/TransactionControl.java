@@ -4,7 +4,7 @@ import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.Converter;
 import helper.IOLogic;
-import helper.Popup;
+import helper.MyPopup;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -114,8 +114,8 @@ public class TransactionControl implements Initializable {
     // submit button + add temlate
     @FXML Button submit_inout;
     @FXML Button submit_trans;
-    @FXML Button addTemplate_inout;
-    @FXML Button addTemplate_trans;
+    @FXML Button addMultipleRecord_inout;
+    @FXML Button addMultipleRecord_trans;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -351,7 +351,7 @@ public class TransactionControl implements Initializable {
                         .and(mataUangValid);
 
         submit_inout.disableProperty().bind(formValid.not());
-        addTemplate_inout.disableProperty().bind(formValid.not());
+        addMultipleRecord_inout.disableProperty().bind(formValid.not());
 
         // listener
         formValid.addListener((obs, oldV, newV) ->
@@ -390,7 +390,7 @@ public class TransactionControl implements Initializable {
                         .and(dateValid);
 
         submit_trans.disableProperty().bind(formValid.not());
-        addTemplate_trans.disableProperty().bind(formValid.not());
+        addMultipleRecord_trans.disableProperty().bind(formValid.not());
 
         // listener
         formValid.addListener((obs, oldV, newV) ->
@@ -405,7 +405,7 @@ public class TransactionControl implements Initializable {
         Kategori kategori = categoryComboBox.getValue();
         TipeLabel tipeLabel = tipeLabel_inout.getValue();
         LocalDate tanggal = date_inout.getValue();
-        String keterangan = note_inout.getText();
+        String keterangan = IOLogic.normalizeSpaces(note_inout.getText());
         PaymentType payment = paymentType_inout.getValue();
         PaymentStatus status = paymentStatus_inout.getValue();
 
@@ -478,18 +478,18 @@ public class TransactionControl implements Initializable {
 
         } catch (IOException e) {
             log.error("gagal membuka panel template!", e);
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
     @FXML
-    private void transSubmitHandler() {
+    private void transSubmitHandler(boolean closeAfterSubmit) {
         Akun fromAkun = akunComboBox_from.getValue();
         Akun toAkun = akunComboBox_to.getValue();
         int fromJumlah = spinner_from.getValue();
         int toJumlah = spinner_to.getValue();
         TipeLabel tipeLabel = tipeLabel_trans.getValue();
         LocalDate tanggal = date_trans.getValue();
-        String keterangan = note_trans.getText();
+        String keterangan = IOLogic.normalizeSpaces(note_trans.getText());
         PaymentType payment = paymentType_trans.getValue();
         PaymentStatus status = paymentStatus_trans.getValue();
 
@@ -502,7 +502,7 @@ public class TransactionControl implements Initializable {
         }
 
         if(fromKategori == null) {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return;
         }
 
@@ -528,7 +528,7 @@ public class TransactionControl implements Initializable {
         }
 
         if(toKategori == null) {
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return;
         }
 
@@ -545,8 +545,23 @@ public class TransactionControl implements Initializable {
                 status
         ));
 
-        closePopup();
+        if(closeAfterSubmit) {
+            closePopup();
+        } else {
+            clearTransForm();
+        }
     }
+
+    @FXML
+    private void transSubmitButton() {
+        transSubmitHandler(true);
+    }
+
+    @FXML
+    private void transSubmitAndAnotherRecord() {
+        transSubmitHandler(false);
+    }
+
     @FXML
     private void inouSubmitButton() {
         inoutSubmitHandler(true);
@@ -566,6 +581,18 @@ public class TransactionControl implements Initializable {
         note_inout.setText(null);
         paymentType_inout.setValue(null);
         paymentStatus_inout.setValue(null);
+    }
+    private void clearTransForm() {
+        akunComboBox_from.setValue(null);
+        akunComboBox_to.setValue(null);
+        spinner_from.getEditor().clear();
+        spinner_to.getEditor().clear();
+        tipeLabel_trans.setValue(null);
+        date_trans.setValue(LocalDate.now());
+        note_trans.clear();
+        paymentType_trans.setValue(null);
+        paymentStatus_trans.setValue(null);
+        templateComboBox_trans.setValue(null);
     }
 
     // [3] >=== BUTTON HANDLER
@@ -613,7 +640,7 @@ public class TransactionControl implements Initializable {
 
         } catch (IOException e) {
             log.error("gagal membuka panel tambah label!", e);
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
     @FXML
@@ -659,7 +686,7 @@ public class TransactionControl implements Initializable {
 
         } catch (IOException e) {
             log.error("gagal membuka panel template!", e);
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
 
@@ -682,9 +709,9 @@ public class TransactionControl implements Initializable {
 
     // [5] >=== HELPER FUNCTION
     private void spinnerLogicHandler() {
-        IOLogic.makeIntegerOnlyBlankInitial(spinner_inout, 1, 2_147_483_647);
-        IOLogic.makeIntegerOnlyBlankInitial(spinner_from, 1, 2_147_483_647);
-        IOLogic.makeIntegerOnlyBlankInitial(spinner_to, 1, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(spinner_inout, 0, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(spinner_from, 0, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(spinner_to, 0, 2_147_483_647);
     }
     private void showInOut() {
         inoutForm.setVisible(true);
@@ -782,7 +809,7 @@ public class TransactionControl implements Initializable {
         Kategori kategori = categoryComboBox.getValue();
         TipeLabel tipeLabel = tipeLabel_inout.getValue();
         LocalDate tanggal = date_inout.getValue();
-        String keterangan = note_inout.getText();
+        String keterangan = IOLogic.normalizeSpaces(note_inout.getText());
         PaymentType payment = paymentType_inout.getValue();
         PaymentStatus status = paymentStatus_inout.getValue();
 

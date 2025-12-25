@@ -4,7 +4,7 @@ import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.Converter;
 import helper.IOLogic;
-import helper.Popup;
+import helper.MyPopup;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -120,7 +120,7 @@ public class TemplateControl implements Initializable {
         loadTipeLabelComboBox();
 
         // uncategorized
-        IOLogic.makeIntegerOnlyBlankInitial(spinnerAmount, 1, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(spinnerAmount, 0, 2_147_483_647);
         mataUangComboBox.setMouseTransparent(true);
         mataUangComboBox.setFocusTraversable(false);
         mataUangComboBox.getStyleClass().add("locked");
@@ -388,18 +388,25 @@ public class TemplateControl implements Initializable {
 
         } catch (IOException e) {
             log.error("gagal membuka panel tambah label!", e);
-            Popup.showDanger("Gagal!", "Terjadi kesalahan!");
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
     @FXML
     private void submitHandler() {
         TipeTransaksi tipe = valueChoosen.getValue() == 1 ? TipeTransaksi.IN : TipeTransaksi.OUT;
-        String nama = nameText.getText();
+        String nama = IOLogic.normalizeSpaces(nameText.getText());
+
+        if(!uniqueNameValidation(nama)){
+            MyPopup.showDanger("Duplikasi Nama!", "Nama sudah digunakan!");
+            nameText.clear();
+            return;
+        }
+
         int jumlah = spinnerAmount.getValue();
         Akun dataAkun = akunComboBox.getValue();
         Kategori dataKategori = categoryComboBox.getValue();
         TipeLabel dataLabel = tipeLabelComboBox.getValue();
-        String keterangan = noteText.getText();
+        String keterangan = IOLogic.normalizeSpaces(noteText.getText());
         PaymentType payment = paymentTypeComboBox.getValue();
         PaymentStatus status = paymentStatusComboBox.getValue();
 
@@ -423,6 +430,14 @@ public class TemplateControl implements Initializable {
         }
 
         closePopup();
+    }
+    private boolean uniqueNameValidation(String nama) {
+        for(Template temp : DataManager.getInstance().getDataTemplate()) {
+            if(nama.equalsIgnoreCase(temp.getNama())){
+                return false;
+            }
+        }
+        return true;
     }
     public void prefillFromTransaksi(Transaksi trans) {
         TipeTransaksi tipe = trans.getTipeTransaksi();

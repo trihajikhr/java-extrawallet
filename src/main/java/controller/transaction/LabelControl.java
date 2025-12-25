@@ -3,6 +3,8 @@ package controller.transaction;
 import dataflow.DataLoader;
 import dataflow.DataManager;
 import dataflow.basedata.ColorItem;
+import helper.IOLogic;
+import helper.MyPopup;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
@@ -11,12 +13,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.TipeLabel;
@@ -125,7 +124,14 @@ public class LabelControl implements Initializable {
     }
     @FXML
     private void handleSubmitAction() {
-        String nama = labelName.getText();
+        String nama = IOLogic.normalizeSpaces(labelName.getText());
+
+        if(!uniqueNameValidation(nama)) {
+            MyPopup.showDanger("Duplikasi Nama!", "Nama sudah digunakan!");
+            labelName.clear();
+            return;
+        }
+
         Color warna = colorComboBox.getValue().getWarna();
 
         TipeLabel tipeLabel = new TipeLabel(0, nama, warna);
@@ -141,6 +147,15 @@ public class LabelControl implements Initializable {
             parentTransaction.getTipeLabelTrans().getSelectionModel().select(tipeLabel);
         }
         closePopup();
+    }
+
+    private boolean uniqueNameValidation(String name) {
+        for(TipeLabel tipeLabel : DataManager.getInstance().getDataTipeLabel()) {
+            if(name.equalsIgnoreCase(tipeLabel.getNama())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     // [2] >=== SCENE CONNECTION FUNCTION

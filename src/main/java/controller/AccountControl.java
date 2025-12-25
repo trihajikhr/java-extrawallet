@@ -3,6 +3,7 @@ package controller;
 import dataflow.DataManager;
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
+import helper.MyPopup;
 import model.MataUang;
 import helper.IOLogic;
 import javafx.animation.FadeTransition;
@@ -29,6 +30,8 @@ import java.util.ResourceBundle;
 import model.Akun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static helper.IOLogic.isTextFieldValid;
 
 public class AccountControl implements Initializable {
     // logger
@@ -58,11 +61,30 @@ public class AccountControl implements Initializable {
     @FXML
     private Button submitButton;
 
+    // [0] >=== INIT FUNCTION
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        log.info("Popup account terbuka!");
+        showPopup();
+
+        // combobox init
+        initComboBoxColor();
+        initComboBoxAccountItem();
+        currencyComboBox.setItems(DataManager.getInstance().getDataMataUang());
+
+        // validation init
+        IOLogic.isTextFieldValid(accountName, 20);
+        isFormComplete();
+        IOLogic.makeIntegerOnlyBlankInitial(amountSpinner, 0, 2_147_483_647);
+    }
+
+    // [1] >=== CONNECTOR FUNCTION
     // DIPANGGIL dari controller lain
     public void setStage(Stage stage) {
         this.stage = stage;
     }
 
+    // [2] >=== SCENE CONTROLLER FUUNCTION
     @FXML
     public void showPopup() {
         if (stage == null) return;
@@ -85,7 +107,6 @@ public class AccountControl implements Initializable {
         pt.setInterpolator(Interpolator.EASE_OUT);
         pt.play();
     }
-
     @FXML
     private void closePopup() {
         if (closing) return;
@@ -109,78 +130,9 @@ public class AccountControl implements Initializable {
         hideAnim.play();
     }
 
-    private void isFormComplete() {
-        BooleanBinding nameValid =
-                Bindings.createBooleanBinding(
-                        () -> !accountName.getText().trim().isEmpty(),
-                        accountName.textProperty()
-                );
-
-        BooleanBinding accountValid = accountComboBox.valueProperty().isNotNull();
-        BooleanBinding colorValid = colorComboBox.valueProperty().isNotNull();
-        BooleanBinding currencyValid = currencyComboBox.valueProperty().isNotNull();
-        BooleanBinding amountValid =
-                Bindings.createBooleanBinding(
-                        () -> amountSpinner.getValue() != null && amountSpinner.getValue() >= 0,
-                        amountSpinner.valueProperty()
-                );
-
-        BooleanBinding formValid =
-                nameValid
-                        .and(accountValid)
-                        .and(colorValid)
-                        .and(currencyValid)
-                        .and(amountValid);
-
-        submitButton.disableProperty().bind(formValid.not());
-    }
-
-    @FXML
-    private void handleSubmitAction() {
-        String name = accountName.getText();
-        ColorItem warna = colorComboBox.getValue();
-        AccountItem accountItem = accountComboBox.getValue();
-        int jumlah = amountSpinner.getValue();
-        MataUang currencyItem = currencyComboBox.getValue();
-
-        Akun akunBaru = new Akun(
-                0,
-                name,
-                warna.getWarna(),
-                accountItem.getIcon(),
-                accountItem.getIconPath(),
-                jumlah,
-                currencyItem
-        );
-
-        DataManager.getInstance().addAkun(akunBaru);
-        closePopup();
-    }
-
-    private void isTextFieldValid(TextField theTextField) {
-        TextFormatter<String> formatter = new TextFormatter<>(change -> {
-            if (change.getControlNewText().length() <= 15) {
-                return change; // allow input
-            } else {
-                return null; // reject input
-            }
-        });
-
-        theTextField.setTextFormatter(formatter);
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        log.info("Popup account terbuka!");
-        showPopup();
+    // [3] >=== INIT DATA
+    private void initComboBoxColor() {
         colorComboBox.setItems(DataManager.getInstance().getDataColor());
-        accountComboBox.setItems(DataManager.getInstance().getDataAccountItem());
-        currencyComboBox.setItems(DataManager.getInstance().getDataMataUang());
-
-        isTextFieldValid(accountName);
-
-        isFormComplete();
-
         colorComboBox.setCellFactory(list -> new ListCell<>() {
             @Override
             protected void updateItem(ColorItem item, boolean empty) {
@@ -213,7 +165,9 @@ public class AccountControl implements Initializable {
                 item.setWarna(newColor.getWarna());
             }
         });
-
+    }
+    private void initComboBoxAccountItem() {
+        accountComboBox.setItems(DataManager.getInstance().getDataAccountItem());
         accountComboBox.setCellFactory(list -> new ListCell<>() {
             @Override
             protected void updateItem(AccountItem item, boolean empty) {
@@ -266,10 +220,72 @@ public class AccountControl implements Initializable {
                 setText(empty || c == null
                         ? null
 //                        : c.getCode() + " — " + c.getName());
-                          : c.getKode());
+                        : c.getKode());
             }
         });
         currencyComboBox.setButtonCell(currencyComboBox.getCellFactory().call(null));
-        IOLogic.makeIntegerOnly(amountSpinner, 0, 2_147_483_647, 0);
+    }
+
+    // [4] >=== SUBMIT HANDLER & VALIDATION
+    private void isFormComplete() {
+        BooleanBinding nameValid =
+                Bindings.createBooleanBinding(
+                        () -> !accountName.getText().trim().isEmpty(),
+                        accountName.textProperty()
+                );
+
+        BooleanBinding accountValid = accountComboBox.valueProperty().isNotNull();
+        BooleanBinding colorValid = colorComboBox.valueProperty().isNotNull();
+        BooleanBinding currencyValid = currencyComboBox.valueProperty().isNotNull();
+        BooleanBinding amountValid =
+                Bindings.createBooleanBinding(
+                        () -> amountSpinner.getValue() != null && amountSpinner.getValue() >= 0,
+                        amountSpinner.valueProperty()
+                );
+
+        BooleanBinding formValid =
+                nameValid
+                        .and(accountValid)
+                        .and(colorValid)
+                        .and(currencyValid)
+                        .and(amountValid);
+
+        submitButton.disableProperty().bind(formValid.not());
+    }
+    @FXML
+    private void handleSubmitAction() {
+        String name = IOLogic.normalizeSpaces(accountName.getText());
+
+        if(!uniqueNameValidation(name)){
+            MyPopup.showDanger("Duplikasi Nama!", "Nama sudah digunakan!");
+            accountName.clear();
+            return;
+        }
+
+        ColorItem warna = colorComboBox.getValue();
+        AccountItem accountItem = accountComboBox.getValue();
+        int jumlah = amountSpinner.getValue();
+        MataUang currencyItem = currencyComboBox.getValue();
+
+        Akun akunBaru = new Akun(
+                0,
+                name,
+                warna.getWarna(),
+                accountItem.getIcon(),
+                accountItem.getIconPath(),
+                jumlah,
+                currencyItem
+        );
+
+        DataManager.getInstance().addAkun(akunBaru);
+        closePopup();
+    }
+    private boolean uniqueNameValidation(String name) {
+        for(Akun akun : DataManager.getInstance().getDataAkun()) {
+            if(name.equalsIgnoreCase(akun.getNama())){
+                return false;
+            }
+        }
+        return true;
     }
 }

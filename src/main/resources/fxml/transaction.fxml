@@ -260,7 +260,7 @@
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" GridPane.rowIndex="8">
                            <children>
                               <Button fx:id="submit_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#inouSubmitButton" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add record" VBox.vgrow="ALWAYS" />
-                              <Button fx:id="addTemplate_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#inoutSubmitAndAnotherRecord" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="addMultipleRecord_inout" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#inoutSubmitAndAnotherRecord" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
@@ -512,8 +512,8 @@
                         </VBox>
                         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" GridPane.rowIndex="8">
                            <children>
-                              <Button fx:id="submit_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#transSubmitHandler" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add record" VBox.vgrow="ALWAYS" />
-                              <Button fx:id="addTemplate_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="submit_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#transSubmitButton" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add record" VBox.vgrow="ALWAYS" />
+                              <Button fx:id="addMultipleRecord_trans" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#transSubmitAndAnotherRecord" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Add and create another" VBox.vgrow="ALWAYS" />
                            </children>
                            <GridPane.margin>
                               <Insets />
