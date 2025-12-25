@@ -440,7 +440,7 @@ public class Database {
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
-            log.error("insert akun gagal", e);
+            log.error("insert transaksi gagal", e);
             return -1;
 
         } finally {
@@ -614,11 +614,6 @@ public class Database {
                     }
                 }
 
-                if(tipeLabel == null) {
-                    log.error("id_tipelabel {} tidak ditemukan!", idTipeLabel);
-                    continue;
-                }
-
                 dataTemplate.add(new Template(
                         id,
                         tipe,
@@ -649,11 +644,12 @@ public class Database {
             koneksi.setAutoCommit(false);
 
             try (PreparedStatement ps = koneksi.prepareStatement(quertSql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, temp.getTipe().name());
+                ps.setString(1, temp.getTipeTransaksi().name());
                 ps.setString(2, temp.getNama());
                 ps.setInt(3, temp.getJumlah());
                 ps.setInt(4, temp.getAkun().getId());
                 ps.setInt(5, temp.getKategori().getId());
+
                 if (temp.getTipeLabel() != null) {
                     ps.setInt(6, temp.getTipeLabel().getId());
                 } else {
@@ -661,21 +657,21 @@ public class Database {
                 }
 
                 if (temp.getKeterangan() != null) {
-                    ps.setString(6, temp.getKeterangan());
-                } else {
-                    ps.setNull(6, Types.VARCHAR);
-                }
-
-                if (temp.getPaymentType() != null) {
-                    ps.setString(7, temp.getPaymentType().name());
+                    ps.setString(7, temp.getKeterangan());
                 } else {
                     ps.setNull(7, Types.VARCHAR);
                 }
 
-                if (temp.getPaymentStatus() != null) {
-                    ps.setString(8, temp.getPaymentStatus().name());
+                if (temp.getPaymentType() != null) {
+                    ps.setString(8, temp.getPaymentType().name());
                 } else {
                     ps.setNull(8, Types.VARCHAR);
+                }
+
+                if (temp.getPaymentStatus() != null) {
+                    ps.setString(9, temp.getPaymentStatus().name());
+                } else {
+                    ps.setNull(9, Types.VARCHAR);
                 }
 
                 if(ps.executeUpdate() == 0) {
@@ -698,7 +694,7 @@ public class Database {
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
-            log.error("insert akun gagal", e);
+            log.error("insert template gagal", e);
             return -1;
         } finally {
             try {

@@ -2,6 +2,7 @@ package controller.transaction;
 
 import dataflow.DataLoader;
 import dataflow.DataManager;
+import helper.Converter;
 import helper.IOLogic;
 import helper.Popup;
 import javafx.animation.FadeTransition;
@@ -85,7 +86,7 @@ public class TransactionControl implements Initializable {
 
     // template
     private ObservableList<Template> dataTemplateList = FXCollections.observableArrayList();
-    @FXML private ComboBox<Template> dataTemplateComboBox;
+    @FXML private ComboBox<Template> templateComboBox_inout, templateComboBox_trans;
 
     private final ObjectProperty<PaymentType> selectedPaymentType =
             new SimpleObjectProperty<>();
@@ -108,7 +109,7 @@ public class TransactionControl implements Initializable {
     @FXML DatePicker date_inout, date_trans;
 
     // checkbox
-    @FXML CheckBox checkTemplate_inout;
+    @FXML CheckBox checkTemplate_inout, checkTemplate_trans;
 
     // submit button + add temlate
     @FXML Button submit_inout;
@@ -153,9 +154,12 @@ public class TransactionControl implements Initializable {
 
         // helper
         spinnerLogicHandler();
+        checkTemplate_trans.setDisable(true);
 
         // listener
         akunToMataUangListener();
+        templateInOutListener();
+        templateTransListener();
 
         // scene controller
         showPopup();
@@ -217,11 +221,17 @@ public class TransactionControl implements Initializable {
         theImage = DataManager.getInstance().getImageTransactionForm();
     }
     private void initPaymentData() {
-        paymentType_inout.setItems(DataManager.getInstance().getDataPeymentType());
-        paymentType_trans.setItems(DataManager.getInstance().getDataPeymentType());
+        paymentType_inout.setItems(DataManager.getInstance().getDataPaymentType());
+        paymentStatus_inout.setItems(DataManager.getInstance().getDataPaymentStatus());
 
-        paymentStatus_inout.setItems(DataManager.getInstance().getDataStatusType());
-        paymentStatus_trans.setItems(DataManager.getInstance().getDataStatusType());
+        Converter.bindEnumComboBox(paymentType_inout, PaymentType::getLabel);
+        Converter.bindEnumComboBox(paymentStatus_inout, PaymentStatus::getLabel);
+
+        paymentType_trans.setItems(DataManager.getInstance().getDataPaymentType());
+        paymentStatus_trans.setItems(DataManager.getInstance().getDataPaymentStatus());
+
+        Converter.bindEnumComboBox(paymentType_trans, PaymentType::getLabel);
+        Converter.bindEnumComboBox(paymentStatus_trans, PaymentStatus::getLabel);
 
         paymentType_inout.valueProperty().bindBidirectional(selectedPaymentType);
         paymentType_trans.valueProperty().bindBidirectional(selectedPaymentType);
@@ -233,18 +243,29 @@ public class TransactionControl implements Initializable {
         dataTemplateList = FXCollections.observableArrayList(
                 DataManager.getInstance().getDataTemplate()
         );
-        dataTemplateComboBox.setItems(dataTemplateList);
 
-        dataTemplateComboBox.setCellFactory(cb -> new ListCell<>() {
+        templateComboBox_inout.setItems(dataTemplateList);
+        templateComboBox_inout.setCellFactory(cb -> new ListCell<>() {
             @Override
             protected void updateItem(Template temp, boolean empty) {
                 super.updateItem(temp, empty);
                 setText(empty || temp == null ? null : temp.getNama());
             }
         });
+        templateComboBox_inout.setButtonCell(
+                templateComboBox_inout.getCellFactory().call(null)
+        );
 
-        dataTemplateComboBox.setButtonCell(
-                dataTemplateComboBox.getCellFactory().call(null)
+        templateComboBox_trans.setItems(dataTemplateList);
+        templateComboBox_trans.setCellFactory(cb -> new ListCell<>() {
+            @Override
+            protected void updateItem(Template temp, boolean empty) {
+                super.updateItem(temp, empty);
+                setText(empty || temp == null ? null : temp.getNama());
+            }
+        });
+        templateComboBox_trans.setButtonCell(
+                templateComboBox_trans.getCellFactory().call(null)
         );
     }
     private void initTipeLabelList() {
@@ -268,10 +289,10 @@ public class TransactionControl implements Initializable {
 //            select(1,0, incomeBtn_1, incomeImg, incomeLbl, "#01AA71");
 //            updateCategoryCombo("IN");
 //        });
-        expenseBtn_inout.setOnAction(e -> {
-            select(1,1, expenseBtn_inout, expenseImg, expenseLbl, "#F92222");
-            updateCategoryCombo("OUT");
-        });
+        expenseBtn_inout.setOnAction(e -> activateExpense());
+//            select(1,1, expenseBtn_inout, expenseImg, expenseLbl, "#F92222");
+//            updateCategoryCombo("OUT");
+//        });
         transferBtn_inout.setOnAction(e -> select(1,2, transferBtn_trans, transferImg_trans, transferLbl_trans, "#0176FE"));
 
         incomeBtn_trans.setOnAction(e -> select(2,0, incomeBtn_inout, incomeImg, incomeLbl, "#01AA71"));
@@ -302,6 +323,10 @@ public class TransactionControl implements Initializable {
     private void activateIncome() {
         select(1, 0, incomeBtn_inout, incomeImg, incomeLbl, "#01AA71");
         updateCategoryCombo("IN");
+    }
+    private void activateExpense() {
+        select(1, 1, expenseBtn_inout, expenseImg, expenseLbl, "#F92222");
+        updateCategoryCombo("OUT");
     }
 
     // [2] >=== FORM VALIDATION & SUBMIT HANDLER
@@ -456,7 +481,6 @@ public class TransactionControl implements Initializable {
             Popup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
-
     @FXML
     private void transSubmitHandler() {
         Akun fromAkun = akunComboBox_from.getValue();
@@ -532,7 +556,7 @@ public class TransactionControl implements Initializable {
         inoutSubmitHandler(false);
     }
     private void clearInoutForm() {
-        dataTemplateComboBox.setValue(null);
+        templateComboBox_inout.setValue(null);
         spinner_inout.getEditor().clear();
         akunComboBox_inout.setValue(null);
         categoryComboBox.setValue(null);
@@ -653,7 +677,7 @@ public class TransactionControl implements Initializable {
         return dataTemplateList;
     }
     public ComboBox<Template> getTempleteComboBox() {
-        return dataTemplateComboBox;
+        return templateComboBox_inout;
     }
 
     // [5] >=== HELPER FUNCTION
@@ -777,6 +801,17 @@ public class TransactionControl implements Initializable {
 
         return draft;
     }
+    private void clearInoutFormForTemplater() {
+        spinner_inout.getEditor().clear();
+        akunComboBox_inout.setValue(null);
+        categoryComboBox.setValue(null);
+        tipeLabel_inout.setValue(null);
+        date_inout.setValue(LocalDate.now());
+        checkTemplate_inout.setSelected(false);
+        note_inout.setText(null);
+        paymentType_inout.setValue(null);
+        paymentStatus_inout.setValue(null);
+    }
 
     // [6] >=== LISTENER
     private void akunToMataUangListener() {
@@ -795,5 +830,38 @@ public class TransactionControl implements Initializable {
                 mataUangCombo_to.setValue(newVal.getMataUang());
             }
         });
+    }
+    private void templateInOutListener() {
+        templateComboBox_inout.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal != null) {
+                clearInoutFormForTemplater();
+                templateInOutDrafter(newVal);
+            }
+        });
+    }
+    private void templateTransListener() {
+        templateComboBox_trans.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal != null) {
+                showInOut();
+                templateComboBox_inout.setValue(newVal);
+            }
+        });
+    }
+    private void templateInOutDrafter(Template temp) {
+        if(temp.getTipeTransaksi() == TipeTransaksi.IN) {
+            activateIncome();
+        } else if (temp.getTipeTransaksi() == TipeTransaksi.OUT) {
+            activateExpense();
+        }
+
+        spinner_inout.getValueFactory().setValue(temp.getJumlah());
+        akunComboBox_inout.setValue(temp.getAkun());
+
+        categoryComboBox.setValue(temp.getKategori());
+
+        tipeLabel_inout.setValue(temp.getTipeLabel());
+        note_inout.setText(temp.getKeterangan());
+        paymentType_inout.setValue(temp.getPaymentType());
+        paymentStatus_inout.setValue(temp.getPaymentStatus());
     }
 }

@@ -2,7 +2,7 @@ package model;
 
 public class Template {
     private int id;
-    private TipeTransaksi tipe;
+    private TipeTransaksi tipeTransaksi;
     private String nama;
     private int jumlah;
     private Akun akun;
@@ -13,9 +13,9 @@ public class Template {
     private PaymentStatus paymentStatus;
 
     // constructor full atribut
-    public Template(int id, TipeTransaksi tipe, String nama, int jumlah, Akun akun, Kategori kategori, TipeLabel tipeLabel, String keterangan, PaymentType paymentType, PaymentStatus paymentStatus) {
+    public Template(int id, TipeTransaksi tipeTransaksi, String nama, int jumlah, Akun akun, Kategori kategori, TipeLabel tipeLabel, String keterangan, PaymentType paymentType, PaymentStatus paymentStatus) {
         this.id = id;
-        this.tipe = tipe;
+        this.tipeTransaksi = tipeTransaksi;
         this.nama = nama;
         this.jumlah = jumlah;
         this.akun = akun;
@@ -27,11 +27,11 @@ public class Template {
     }
 
     // constructor atribut wajib
-    public Template(int id, String nama, Akun akun, TipeTransaksi tipe, int jumlah) {
+    public Template(int id, String nama, Akun akun, TipeTransaksi tipeTransaksi, int jumlah) {
         this.id = id;
         this.nama = nama;
         this.akun = akun;
-        this.tipe = tipe;
+        this.tipeTransaksi = tipeTransaksi;
         this.jumlah = jumlah;
     }
 
@@ -46,12 +46,12 @@ public class Template {
         this.id = id;
     }
 
-    public TipeTransaksi getTipe() {
-        return tipe;
+    public TipeTransaksi getTipeTransaksi() {
+        return tipeTransaksi;
     }
 
-    public void setTipe(TipeTransaksi tipe) {
-        this.tipe = tipe;
+    public void setTipeTransaksi(TipeTransaksi tipeTransaksi) {
+        this.tipeTransaksi = tipeTransaksi;
     }
 
     public String getNama() {

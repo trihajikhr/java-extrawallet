@@ -21,8 +21,8 @@ public class DataManager {
     private ArrayList<Akun> dataAkun = new ArrayList<>();
     private ArrayList<Transaksi> dataTransaksi = new ArrayList<>();
     private ArrayList<TipeLabel> dataTipeLabel = new ArrayList<>();
-    private ObservableList<PaymentType> dataPeymentType = FXCollections.observableArrayList();
-    private ObservableList<PaymentStatus> dataStatusType = FXCollections.observableArrayList();
+    private ObservableList<PaymentType> dataPaymentType = FXCollections.observableArrayList();
+    private ObservableList<PaymentStatus> dataPaymentStatus = FXCollections.observableArrayList();
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
     private ObservableList<MataUang> dataMataUang = FXCollections.observableArrayList();
@@ -32,8 +32,8 @@ public class DataManager {
     private DataManager() {}
 
     public void initBaseData() {
-        dataPeymentType = DataSeeder.getInstance().seedPaymentType();
-        dataStatusType = DataSeeder.getInstance().seedPaymentStatus();
+        dataPaymentType = DataSeeder.getInstance().seedPaymentType();
+        dataPaymentStatus = DataSeeder.getInstance().seedPaymentStatus();
         DataSeeder.getInstance().seedColor();
         DataSeeder.getInstance().seedAccountItem();
         DataSeeder.getInstance().seedCurrency();
@@ -51,12 +51,12 @@ public class DataManager {
         return dataTemplate;
     }
 
-    public ObservableList<PaymentType> getDataPeymentType() {
-        return dataPeymentType;
+    public ObservableList<PaymentType> getDataPaymentType() {
+        return dataPaymentType;
     }
 
-    public ObservableList<PaymentStatus> getDataStatusType() {
-        return dataStatusType;
+    public ObservableList<PaymentStatus> getDataPaymentStatus() {
+        return dataPaymentStatus;
     }
 
     public static DataManager getInstance() {

@@ -2,6 +2,7 @@ package controller.transaction;
 
 import dataflow.DataLoader;
 import dataflow.DataManager;
+import helper.Converter;
 import helper.IOLogic;
 import helper.Popup;
 import javafx.animation.FadeTransition;
@@ -197,8 +198,11 @@ public class TemplateControl implements Initializable {
         });
     }
     private void initPayment() {
-        paymentTypeComboBox.setItems(DataManager.getInstance().getDataPeymentType());
-        paymentStatusComboBox.setItems(DataManager.getInstance().getDataStatusType());
+        paymentTypeComboBox.setItems(DataManager.getInstance().getDataPaymentType());
+        paymentStatusComboBox.setItems(DataManager.getInstance().getDataPaymentStatus());
+
+        Converter.bindEnumComboBox(paymentTypeComboBox, PaymentType::getLabel);
+        Converter.bindEnumComboBox(paymentStatusComboBox, PaymentStatus::getLabel);
     }
     private void activateIncome() {
         select(0, incomeBtn, incomeImg, incomeLabel, "#01AA71");
@@ -206,7 +210,7 @@ public class TemplateControl implements Initializable {
     }
     private void activateExpense() {
         select(0, expenseBtn, expenseImg, expenseLabel, "#F92222");
-        updateCategoryCombo("IN");
+        updateCategoryCombo("OUT");
     }
     private void initDataComboBox() {
         DataLoader.getInstance().kategoriComboBoxLoader(categoryComboBox);
