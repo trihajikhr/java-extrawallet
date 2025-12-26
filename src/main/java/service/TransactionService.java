@@ -11,6 +11,7 @@ import java.util.List;
 public interface TransactionService {
 
     List<Transaksi> filterByDate(
+            List<Transaksi> dataTransaksi,
             LocalDate startDate,
             LocalDate endDate
     );

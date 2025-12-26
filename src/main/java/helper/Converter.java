@@ -45,4 +45,30 @@ public class Converter {
 
         comboBox.setButtonCell(comboBox.getCellFactory().call(null));
     }
+
+    public static String numberFormatter(String number) {
+        StringBuilder result = new StringBuilder(number);
+        int lokasiTitik = number.indexOf('.');
+
+        int counter = 0;
+        if(lokasiTitik != -1) {
+            for(int i=lokasiTitik-1; i>=0; i--) {
+                counter++;
+                if(counter == 3 && i != 0) {
+                    counter = 0;
+                    result.insert(i, ',');
+                }
+            }
+        } else {
+            for(int i=number.length()-1; i >= 0; i--) {
+                counter++;
+                if(counter == 3 && i != 0) {
+                    counter = 0;
+                    result.insert(i, ',');
+                }
+            }
+        }
+
+        return result.toString();
+    }
 }

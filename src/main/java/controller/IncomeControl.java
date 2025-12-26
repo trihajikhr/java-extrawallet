@@ -3,6 +3,7 @@ package controller;
 import controller.option.SortOption;
 import dataflow.DataManager;
 import helper.Converter;
+import helper.IOLogic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -21,7 +22,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.CurrencyApiClient;
+import service.IncomeService;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -43,6 +47,7 @@ public class IncomeControl implements Initializable {
     // label tampilan
     @FXML private Label labelTotalRecords;
     @FXML private Label labelTanggalSekarang;
+    @FXML private Label labelTotalAmount;
 
     // combobox filter
     @FXML private ComboBox<SortOption> comboBoxSort;
@@ -84,6 +89,7 @@ public class IncomeControl implements Initializable {
     private void initBaseData() {
         setDateNow();
         recordCounterLabelInit();
+        totalIncomeAmountSetter(incomeTransaction);
     }
 
     // [1] >=== BASE INIT
@@ -99,6 +105,12 @@ public class IncomeControl implements Initializable {
     }
     private void recordCounterLabelInit() {
         labelTotalRecords.setText("Found " + incomeTransaction.size() + " record");
+    }
+    private void totalIncomeAmountSetter(List<Transaksi> dataIncome) {
+        BigDecimal value = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
+        String stringForm = value.toPlainString();
+        String result = Converter.numberFormatter(stringForm);
+        labelTotalAmount.setText("TOTAL: IDR " + result);
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
@@ -757,6 +769,7 @@ public class IncomeControl implements Initializable {
 
         String recordCounter = "Found " + result.size() + " record";
         labelTotalRecords.setText(recordCounter);
+        totalIncomeAmountSetter(result);
         refreshView(result);
     }
     private Comparator<Transaksi> activeComparator() {

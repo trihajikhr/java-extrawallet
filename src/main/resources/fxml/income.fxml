@@ -178,7 +178,7 @@
                      <children>
                         <Label fx:id="labelTanggalSekarang" text="tanggal sekarang" textFill="#01AA71" />
                         <Region HBox.hgrow="ALWAYS" />
-                        <Label fx:id="labelTotalAmount" styleClass="text-field-helper" text="TOTAL: -IDR 24,000.00" textFill="#BDC3C7" />
+                        <Label fx:id="labelTotalAmount" styleClass="text-field-helper" text="total income" textFill="#BDC3C7" />
                      </children>
                      <VBox.margin>
                         <Insets />

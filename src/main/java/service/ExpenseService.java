@@ -2,13 +2,23 @@ package service;
 
 import model.TipeTransaksi;
 import model.Transaksi;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ExpenseService extends AbstractTransactionService {
+    private static final Logger log = LoggerFactory.getLogger(ExpenseService.class);
+    private static ExpenseService instance;
 
-    public ExpenseService(List<Transaksi> data) {
-        super(data);
+    private static class Holder {
+        private static final ExpenseService INSTANCE = new ExpenseService();
     }
+
+    public static ExpenseService getInstance() {
+        log.info("object expenseservice berhasil dibuat!");
+        return ExpenseService.Holder.INSTANCE;
+    }
+
+    public ExpenseService() {}
 
     @Override
     protected boolean isTargetType(Transaksi t) {
