@@ -131,8 +131,8 @@ public class IncomeControl implements Initializable {
         VBox infoDasar = new VBox(5);
         infoDasar.setAlignment(Pos.CENTER_LEFT);
         infoDasar.setPrefWidth(400);
-        infoDasar.setPrefWidth(400);
-        infoDasar.setMaxWidth(400);
+        infoDasar.setMinWidth(300);
+        infoDasar.setMaxWidth(500);
         Label namaKategori = new Label(income.getKategori().getNama());
         namaKategori.setStyle("""
             -fx-text-fill: #000000;
@@ -164,8 +164,9 @@ public class IncomeControl implements Initializable {
         // [4] menampilkan bank dan tipelabel pilihan user
         HBox infoDukung = new HBox(15);
         infoDukung.setPrefWidth(300);
-        infoDukung.setMinWidth(300);
-        infoDukung.setMaxWidth(300);
+        infoDukung.setMinWidth(200);
+        infoDukung.setMaxWidth(800);
+        //infoDukung.setStyle("-fx-background-color: blue;");
         HBox.setHgrow(infoDukung, Priority.ALWAYS);
         infoDukung.setAlignment(Pos.CENTER_LEFT);
         Label namaAkun = new Label(income.getAkun().getNama());
@@ -183,6 +184,8 @@ public class IncomeControl implements Initializable {
         infoLabel.setPrefWidth(100);
         infoLabel.setMinWidth(100);
         infoLabel.setMaxWidth(300);
+        //infoLabel.setStyle("-fx-background-color: red;");
+
         HBox.setHgrow(infoLabel, Priority.ALWAYS);
         infoLabel.setAlignment(Pos.CENTER_LEFT);
         if(income.getTipelabel() != null) {
@@ -198,13 +201,15 @@ public class IncomeControl implements Initializable {
             infoLabel.getChildren().add(namaTipeLabel);
             transList.getChildren().addAll(infoDukung, infoLabel);
         } else {
-            transList.getChildren().add(infoDukung);
+            transList.getChildren().addAll(infoDukung, infoLabel);
         }
 
         // Spacer sebelum bagian kanan
         Region spacerRight = new Region();
         HBox.setHgrow(spacerRight, Priority.ALWAYS);
         transList.getChildren().add(spacerRight);
+        spacerRight.setMaxWidth(50);
+        // spacerRight.setStyle("-fx-background-color: blue;");
 
         // [5] menampilkan harga dan tanggal
         VBox infoTransaksi = new VBox(5);
