@@ -39,4 +39,4 @@ build/
 .DS_Store
 
 ### Editan ku!
-/database/
+# /database/
