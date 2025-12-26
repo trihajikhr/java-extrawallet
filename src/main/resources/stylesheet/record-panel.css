@@ -26,12 +26,31 @@
 }
 
 .menu-item {
-    -fx-padding: 3 0 3 0;
+    -fx-padding: 2 0 2 0;
     /* -fx-pref-height: 40px; */
 }
 
+/*
+ 1. Atur semua cell (dropdown & terpilih) ke padding default dulu
 .combo-box .list-cell {
-    -fx-pref-height: 20px;
+    -fx-font-size: 12px;
+    -fx-padding: 5 0 5 5;
+}
+
+2. KHUSUS untuk item yang ada di dalam list dropdown (saat dibuka)
+.combo-box-popup .list-view .list-cell {
+    -fx-padding: 5 0 5 20;
+}
+
+3. KHUSUS untuk tampilan item yang sudah terpilih (di kotaknya)
+.combo-box > .list-cell {
+    -fx-padding: 5 0 5 5;
+}
+*/
+
+.combo-box-popup .list-view .list-cell {
+    /* -fx-pref-height: 20px; */
+    -fx-padding: 5 0 5 20; /* top right bottom left */
     -fx-font-size: 12px;
 }
 
@@ -56,4 +75,17 @@
     -fx-border-color: #E5E7EB;
     -fx-border-radius: 4;
     -fx-background-radius: 4;
+}
+
+.menu-button .context-menu {
+    -fx-max-height: 400px;
+}
+
+.menu-button .context-menu .scroll-pane {
+    -fx-vbar-policy: as-needed;
+    -fx-hbar-policy: never;
+}
+
+.menu-button .context-menu .scroll-pane .content {
+    -fx-background-color: white;
 }
