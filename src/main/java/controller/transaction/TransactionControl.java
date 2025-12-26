@@ -155,6 +155,8 @@ public class TransactionControl implements Initializable {
         // helper
         spinnerLogicHandler();
         checkTemplate_trans.setDisable(true);
+        IOLogic.isTextFieldValid(note_inout, 50);
+        IOLogic.isTextFieldValid(note_trans, 50);
 
         // listener
         akunToMataUangListener();

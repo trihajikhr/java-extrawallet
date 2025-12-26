@@ -143,13 +143,44 @@ public class IncomeControl implements Initializable {
         infoDasar.getChildren().add(namaKategori);
 
         HBox infoDasarHelper = new HBox(5);
-        String paymentTypeLabel = income.getPaymentType() == null ? "-" : income.getPaymentType().getLabel();
-        Label metodeBayar = new Label(paymentTypeLabel);
-        metodeBayar.setStyle("-fx-text-fill: #000000");
-        infoDasarHelper.getChildren().add(metodeBayar);
-        Label keterangan = new Label(income.getKeterangan());
-        keterangan.setStyle("-fx-text-fill: #6B7280");
-        infoDasarHelper.getChildren().add(keterangan);
+
+        String paymentTypeLabel = "";
+        Label metodeBayar = null;
+        if(income.getPaymentType() != null)  {
+            metodeBayar = new Label();
+            paymentTypeLabel = income.getPaymentType().getLabel();
+            metodeBayar.setText(paymentTypeLabel);
+            metodeBayar.setStyle("-fx-text-fill: #000000");
+        }
+
+        String tempKeterangan = "";
+        Label keterangan = null;
+        if(income.getKeterangan() != null) {
+            keterangan = new Label();
+            tempKeterangan = income.getKeterangan();
+            keterangan.setText(tempKeterangan);
+            keterangan.setStyle("-fx-text-fill: #6B7280");
+        }
+
+        Line separatorDasar = null;
+        if(metodeBayar != null && keterangan != null) {
+            separatorDasar = new Line();
+            separatorDasar.setStartX(0);
+            separatorDasar.setStartY(0);
+            separatorDasar.setEndX(0); // tetap di X yang sama
+            separatorDasar.setEndY(20);
+            separatorDasar.setStroke(Color.web("#E5E7EB"));
+            separatorDasar.setStrokeWidth(1);
+
+            infoDasarHelper.getChildren().addAll(metodeBayar, separatorDasar, keterangan);
+        }  else {
+            if(metodeBayar != null) {
+                infoDasarHelper.getChildren().add(metodeBayar);
+            } else if(keterangan != null) {
+                infoDasarHelper.getChildren().add(keterangan);
+            }
+        }
+
         infoDasar.getChildren().add(infoDasarHelper);
         transList.getChildren().add(infoDasar);
 

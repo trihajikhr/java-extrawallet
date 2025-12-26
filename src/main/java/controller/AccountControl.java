@@ -31,8 +31,6 @@ import model.Akun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static helper.IOLogic.isTextFieldValid;
-
 public class AccountControl implements Initializable {
     // logger
     private static final Logger log = LoggerFactory.getLogger(AccountControl.class);

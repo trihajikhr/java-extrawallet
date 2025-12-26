@@ -25,6 +25,8 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static helper.IOLogic.isTextFieldValid;
+
 public class LabelControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(LabelControl.class);
 
@@ -46,7 +48,7 @@ public class LabelControl implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         showPopup();
         DataLoader.getInstance().warnaComboBoxLoader(colorComboBox);
-        isTextFieldValid(labelName);
+        IOLogic.isTextFieldValid(labelName,20);
         isFormComplete();
     }
 
@@ -110,17 +112,6 @@ public class LabelControl implements Initializable {
                 nameValid.and(colorValid);
 
         submitButton.disableProperty().bind(formValid.not());
-    }
-    private void isTextFieldValid(TextField theTextField) {
-        TextFormatter<String> formatter = new TextFormatter<>(change -> {
-            if (change.getControlNewText().length() <= 20) {
-                return change; // allow input
-            } else {
-                return null; // reject input
-            }
-        });
-
-        theTextField.setTextFormatter(formatter);
     }
     @FXML
     private void handleSubmitAction() {
