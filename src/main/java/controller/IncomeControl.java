@@ -76,13 +76,14 @@ public class IncomeControl implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("panel record income berhasil terbuka");
-        initBaseData();
         fetchTransactionData();
         initAllComboBox();
+        initBaseData();
     }
 
     private void initBaseData() {
         setDateNow();
+        recordCounterLabelInit();
     }
 
     // [1] >=== BASE INIT
@@ -95,6 +96,9 @@ public class IncomeControl implements Initializable {
             -fx-font-size: 12px;
             -fx-font-weight: bold;        
         """);
+    }
+    private void recordCounterLabelInit() {
+        labelTotalRecords.setText("Found " + incomeTransaction.size() + " record");
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
@@ -751,6 +755,8 @@ public class IncomeControl implements Initializable {
                 .sorted(activeComparator())  // sort sesuai pilihan user
                 .toList();
 
+        String recordCounter = "Found " + result.size() + " record";
+        labelTotalRecords.setText(recordCounter);
         refreshView(result);
     }
     private Comparator<Transaksi> activeComparator() {

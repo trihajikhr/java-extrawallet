@@ -150,9 +150,9 @@
                <children>
                   <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="15.0">
                      <children>
-                        <VBox alignment="CENTER_LEFT">
+                        <VBox alignment="CENTER_LEFT" spacing="5.0">
                            <children>
-                              <Label fx:id="labelTotalRecords" style="-fx-font-weight: bold; -fx-font-size: 14;" text="Found 1 records" textFill="#2c3e50" />
+                              <Label fx:id="labelTotalRecords" style="-fx-font-weight: bold; -fx-font-size: 14;" text="Jumlah record" textFill="#2c3e50" />
                               <HBox alignment="CENTER_LEFT" spacing="5.0">
                                  <children>
                                     <CheckBox mnemonicParsing="false" />
