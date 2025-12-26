@@ -155,7 +155,7 @@
                               <Label fx:id="labelTotalRecords" style="-fx-font-weight: bold; -fx-font-size: 14;" text="Jumlah record" textFill="#2c3e50" />
                               <HBox alignment="CENTER_LEFT" spacing="5.0">
                                  <children>
-                                    <CheckBox mnemonicParsing="false" />
+                                    <CheckBox fx:id="checkBoxSelectAll" mnemonicParsing="false" />
                                     <Label fx:id="labelSelectAll" styleClass="text-field-helper" text="Select all" textFill="#95a5a6" />
                                  </children>
                               </HBox>

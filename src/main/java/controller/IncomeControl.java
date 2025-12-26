@@ -3,7 +3,6 @@ package controller;
 import controller.option.SortOption;
 import dataflow.DataManager;
 import helper.Converter;
-import helper.IOLogic;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -22,7 +21,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import service.CurrencyApiClient;
 import service.IncomeService;
 
 import java.math.BigDecimal;
@@ -41,6 +39,8 @@ public class IncomeControl implements Initializable {
     // data sumber kebenaran
     List<Transaksi> incomeTransaction  = new ArrayList<>();
     private final Map<Transaksi, HBox> recordCardBoard = new HashMap<>();
+    private final Map<Transaksi, CheckBox> allCheckBox = new HashMap<>();
+    private final List<CheckBox> visibleCheckBox = new ArrayList<>();
 
     @FXML private VBox recordPanel;
 
@@ -48,6 +48,7 @@ public class IncomeControl implements Initializable {
     @FXML private Label labelTotalRecords;
     @FXML private Label labelTanggalSekarang;
     @FXML private Label labelTotalAmount;
+    @FXML private Label labelSelectAll;
 
     // combobox filter
     @FXML private ComboBox<SortOption> comboBoxSort;
@@ -76,6 +77,8 @@ public class IncomeControl implements Initializable {
     private final ObservableSet<PaymentStatus> selectedPaymentStates =
             FXCollections.observableSet(new LinkedHashSet<>());
 
+    // checkbox untuk select all
+    @FXML private CheckBox checkBoxSelectAll;
 
     // [0] >=== INIT FUNCTION
     @Override
@@ -84,6 +87,9 @@ public class IncomeControl implements Initializable {
         fetchTransactionData();
         initAllComboBox();
         initBaseData();
+
+        // listener
+        checkBoxSelectAllListener();
     }
 
     private void initBaseData() {
@@ -110,7 +116,7 @@ public class IncomeControl implements Initializable {
         BigDecimal value = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
         String stringForm = value.toPlainString();
         String result = Converter.numberFormatter(stringForm);
-        labelTotalAmount.setText("TOTAL: IDR " + result);
+        labelTotalAmount.setText("Total: IDR " + result);
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
@@ -130,6 +136,9 @@ public class IncomeControl implements Initializable {
         // [1] checklist:
         CheckBox checklist = new CheckBox();
         transList.getChildren().add(checklist);
+        // sambungkan langsung ke checkbox cuy!!!!!
+        allCheckBox.put(income, checklist);
+        visibleCheckBox.add(checklist);
 
         // [2] icon dengan stackpane:
         Circle bgCircle = new Circle(20, income.getKategori().getWarna());
@@ -756,6 +765,17 @@ public class IncomeControl implements Initializable {
                 selectedPaymentStates.isEmpty()
                         || selectedPaymentStates.contains(t.getPaymentStatus());
     }
+    private void checkBoxSelectAllListener() {
+        checkBoxSelectAll.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+            if(isNowSelected) {
+                applySelectAllCheckBox();
+                labelSelectAll.setText("Deselect all");
+            } else {
+                applyDeselectAllCheckBox();
+                labelSelectAll.setText("Select all");
+            }
+        });
+    }
 
     // [5] >=== FILTER HANDLER
     private void applyFilterAndSort() {
@@ -773,7 +793,9 @@ public class IncomeControl implements Initializable {
         String recordCounter = "Found " + result.size() + " record";
         labelTotalRecords.setText(recordCounter);
         totalIncomeAmountSetter(result);
+
         refreshView(result);
+        refreshVisibleCheckbox(result);
     }
     private Comparator<Transaksi> activeComparator() {
         SortOption sort = comboBoxSort.getValue();
@@ -805,6 +827,24 @@ public class IncomeControl implements Initializable {
 
         for (Transaksi trans : data) {
             recordPanel.getChildren().add(recordCardBoard.get(trans));
+        }
+    }
+    private void refreshVisibleCheckbox(List<Transaksi> dataTransaksi){
+        checkBoxSelectAll.setSelected(false);
+        applyDeselectAllCheckBox();
+        visibleCheckBox.clear();
+        for(Transaksi trans : dataTransaksi) {
+            visibleCheckBox.add(allCheckBox.get(trans));
+        }
+    }
+    private void applySelectAllCheckBox() {
+        for(CheckBox cek : visibleCheckBox) {
+            cek.setSelected(true);
+        }
+    }
+    private void applyDeselectAllCheckBox() {
+        for(CheckBox cek : visibleCheckBox) {
+            cek.setSelected(false);
         }
     }
 
