@@ -211,10 +211,10 @@ public class IncomeControl implements Initializable {
         infoTransaksi.setPrefWidth(250);
         infoTransaksi.setMaxWidth(250);
         infoTransaksi.setAlignment(Pos.CENTER_RIGHT);
-        Label harga = new Label("-" + income.getAkun().getMataUang().getSimbol() + " " + Integer.toString(income.getJumlah()));
+        Label harga = new Label(income.getAkun().getMataUang().getSimbol() + " " + Integer.toString(income.getJumlah()));
         harga.setStyle(
                 """
-                -fx-text-fill: #F92222;
+                -fx-text-fill: #01AA71;
                 -fx-font-size: 18px;
                 -fx-font-weight: bold;
                 """

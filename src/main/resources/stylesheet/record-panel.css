@@ -1,8 +1,20 @@
+.top-bar-styling {
+    -fx-background-color:  linear-gradient(to bottom right, #01AA71, #018558);
+    -fx-effect:  dropshadow(three-pass-box, rgba(1, 170, 113, 0.3), 15, 0, 0, 5);
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.filter-text-field {
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1;
+}
+
 .menu-button {
     -fx-background-color: white;
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
     -fx-text-fill: #374151;
 }
 
@@ -29,8 +41,8 @@
 .context-menu {
     -fx-background-color: white;
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
 }
 
 .menu-item:hover {
@@ -40,8 +52,8 @@
 .combo-box {
     -fx-background-color: white;
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
     -fx-text-fill: #374151;
 }
 
@@ -66,8 +78,8 @@
 .combo-box-popup .list-view {
     -fx-background-color: white;
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
 }
 
 .combo-box-popup .list-cell:hover {
