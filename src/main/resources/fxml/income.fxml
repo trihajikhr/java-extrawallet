@@ -156,7 +156,7 @@
                               <HBox alignment="CENTER_LEFT" spacing="5.0">
                                  <children>
                                     <CheckBox mnemonicParsing="false" />
-                                    <Label style="-fx-font-size: 11;" text="Select all" textFill="#95a5a6" />
+                                    <Label fx:id="labelSelectAll" styleClass="text-field-helper" text="Select all" textFill="#95a5a6" />
                                  </children>
                               </HBox>
                            </children>
@@ -178,7 +178,7 @@
                      <children>
                         <Label fx:id="labelTanggalSekarang" text="tanggal sekarang" textFill="#01AA71" />
                         <Region HBox.hgrow="ALWAYS" />
-                        <Label style="-fx-font-size: 11;" text="TOTAL: -IDR 24,000.00" textFill="#BDC3C7" />
+                        <Label fx:id="labelTotalAmount" styleClass="text-field-helper" text="TOTAL: -IDR 24,000.00" textFill="#BDC3C7" />
                      </children>
                      <VBox.margin>
                         <Insets />

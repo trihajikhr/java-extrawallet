@@ -5,6 +5,11 @@
     -fx-background-radius: 4;
 }
 
+.text-field-helper {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 11;
+}
+
 .filter-text-field {
     -fx-font-weight: bold;
     -fx-letter-spacing: 1;
