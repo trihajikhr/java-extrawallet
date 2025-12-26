@@ -13,6 +13,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import helper.Converter;
 
+// TODO [IMPORTANT]:
+// Database Singleton masih basic.
+// Perlu:
+// - Thread-safe init (double-check / holder)
+// - Connection lifecycle management
+// - Reconnect handling kalau koneksi mati
+// Jangan refactor sekarang, fokus fitur dulu!
+
 public class Database {
     private static final Logger log = LoggerFactory.getLogger(Database.class);
     private static Database instance;

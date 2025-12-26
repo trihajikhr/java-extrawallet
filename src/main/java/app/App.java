@@ -23,8 +23,7 @@ public class App extends Application {
         );
 
         // currencyClient api loader
-        CurrencyApiClient.getInstance().loadRatesFromJson();
-        CurrencyApiClient.getInstance().fetchAndSaveAllRates();
+        CurrencyApiClient.getInstance();
 
         stage.setScene(scene);
         stage.setTitle("Extra Wallet");
