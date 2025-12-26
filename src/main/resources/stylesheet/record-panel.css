@@ -1,3 +1,5 @@
+/* [1] >=== CUSTOM STYLING */
+
 .top-bar-styling {
     -fx-background-color:  linear-gradient(to bottom right, #01AA71, #018558);
     -fx-effect:  dropshadow(three-pass-box, rgba(1, 170, 113, 0.3), 15, 0, 0, 5);
@@ -16,7 +18,7 @@
 }
 
 
-/* langsung target ke node! */
+/* [2] >=== TARGET LANGSUNG KE NODE! */
 .menu-button {
     -fx-background-color: white;
     -fx-border-color: #E5E7EB;
@@ -88,4 +90,69 @@
 
 .menu-button .context-menu .scroll-pane .content {
     -fx-background-color: white;
+}
+
+/* checkbox styling! */
+.check-box .box {
+	-fx-background-color: white;
+	-fx-border-color: #bdc3c7;
+	-fx-border-radius: 4;
+}
+
+.check-box .mark {
+ 	-fx-shape: "M1.73,12.91 8.1,19.28 22.79,4.59 22.79,1.59 8.1,16.28 1.73,9.91";
+}
+
+.check-box:selected .mark {
+	-fx-background-color: white;
+}
+
+.check-box:selected .box {
+	-fx-background-color: #0176FE;
+	-fx-border-color: #0176FE;
+}
+
+/* scrollbar for scrollpane */
+/* Vertical scrollbar */
+.scroll-bar:vertical {
+    -fx-background-color: transparent; /* track container */
+    -fx-padding: 2px;
+    -fx-pref-width: 17px; /* tipis */
+}
+
+/* Track (latar scrollbar) */
+.scroll-bar:vertical .track {
+    -fx-background-color: #e0e0e0; /* abu-abu terang */
+    -fx-background-radius: 4px;
+}
+
+/* Thumb (bagian yang digeser) */
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c0c0c0; /* abu-abu default */
+    -fx-background-radius: 4px;
+}
+
+/* Thumb hover effect */
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #888888; /* lebih gelap saat hover */
+}
+
+/* Horizontal scrollbar (opsional) */
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 20px;
+}
+
+.scroll-bar:horizontal .track {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #c0c0c0;
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #888888;
 }
