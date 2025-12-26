@@ -220,7 +220,7 @@ public class IncomeControl implements Initializable {
         String warnaHex = Converter.colorToHex(income.getAkun().getWarna());
         namaAkun.setStyle("""
                 -fx-background-color: %s;
-                -fx-font-size: 9;
+                -fx-font-size: 11;
                 -fx-text-fill: white;
                 -fx-padding: 2 5 2 5;
                 -fx-background-radius: 4;
@@ -241,7 +241,7 @@ public class IncomeControl implements Initializable {
             warnaHex = Converter.colorToHex(income.getTipelabel().getWarna());
             namaTipeLabel.setStyle("""
                 -fx-background-color: %s;
-                -fx-font-size: 9;
+                -fx-font-size: 11;
                 -fx-text-fill: white;
                 -fx-padding: 2 5 2 5;
                 -fx-background-radius: 4;
