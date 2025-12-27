@@ -82,7 +82,7 @@ public class IncomeControl implements Initializable {
     @FXML private CheckBox checkBoxSelectAll;
     private int checkBoxSelectedCount = 0;
     private boolean isBulkChanging = false;
-    private boolean isUpdatingFromSelectAll = false;
+    private boolean isUpdatingFromSingleSelect = false;
 
     // bagian button
     @FXML private Button editButton;
@@ -138,6 +138,9 @@ public class IncomeControl implements Initializable {
             String result = Converter.numberFormatter(stringForm);
             labelTotalAmount.setText("Total: IDR " + result);
         }
+    }
+    private void resetSelectedAmount() {
+        totalSelectedValue = BigDecimal.ZERO;
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
@@ -608,6 +611,7 @@ public class IncomeControl implements Initializable {
 
         refreshView(result);
         refreshVisibleCheckbox(result);
+        resetSelectedAmount();
     }
     private Comparator<Transaksi> activeComparator() {
         SortOption sort = comboBoxSort.getValue();
@@ -645,12 +649,14 @@ public class IncomeControl implements Initializable {
     // [6] >=== CHECKBOX LISTENER & HANDLER
     private void checkBoxSelectAllListener() {
         checkBoxSelectAll.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
-            if(isUpdatingFromSelectAll) return;
+            if(isUpdatingFromSingleSelect) return;
             if(isNowSelected) {
                 applySelectAllCheckBox();
             } else {
                 applyDeselectAllCheckBox();
             }
+            totalSelectedValue = totalDefaultValue;
+            selectedAmountSetter(false);
         });
     }
     private void refreshVisibleCheckbox(List<Transaksi> dataTransaksi){
@@ -716,7 +722,7 @@ public class IncomeControl implements Initializable {
             checkBoxIndicatorPanel.setStyle("-fx-background-color: #FFF9DB;");
 
             String showLabel;
-            isUpdatingFromSelectAll = true; // guard start
+            isUpdatingFromSingleSelect = true; // guard start
 
             if(checkBoxSelectedCount == visibleCheckBox.size()) {
                 checkBoxSelectAll.setSelected(true);
@@ -726,14 +732,15 @@ public class IncomeControl implements Initializable {
                 checkBoxSelectAll.setSelected(false);
             }
 
-            isUpdatingFromSelectAll = false; // guard end
+            isUpdatingFromSingleSelect = false; // guard end
             labelSelectAll.setText(showLabel);
 
         } else {
-            isUpdatingFromSelectAll = true; // guard start
+            isUpdatingFromSingleSelect = true; // guard start
             checkBoxIndicatorPanel.setStyle("-fx-background-color: #FFFFFF;");
             labelSelectAll.setText("Select all");
-            isUpdatingFromSelectAll = false; // guard start
+            checkBoxSelectAll.setSelected(false);
+            isUpdatingFromSingleSelect = false; // guard start
         }
 
         selectedAmountSetter(result);
