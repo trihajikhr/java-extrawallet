@@ -15,6 +15,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import model.Kategori;
@@ -392,6 +394,31 @@ public class DataSeeder {
         log.info("icon form transaksi berhasil di load");
         return theImage;
     }
+    public Map<PaymentStatus, Image> seedPaymentStatusImage() {
+        try {
+            Map<PaymentStatus, Image> data = new HashMap<>();
+            data.put(
+                    PaymentStatus.RECONCILED,
+                    new Image(Objects.requireNonNull(getClass().getResource("/icons/reconciled.png")).toString())
+            );
+
+            data.put(
+                    PaymentStatus.CLEARED,
+                    new Image(Objects.requireNonNull(getClass().getResource("/icons/cleared.png")).toString())
+            );
+
+            data.put(
+                    PaymentStatus.UNCLEARED,
+                    new Image(Objects.requireNonNull(getClass().getResource("/icons/uncleared.png")).toString())
+            );
+
+            log.info("payment status icon berhasil terload");
+            return data;
+        } catch (Exception e) {
+            log.error("terjadi kesalahan: ", e);
+            return null;
+        }
+     }
 
     // [2] >=== SEED DATA DATABASE
     public void seedDatabaseKategori() {

@@ -13,15 +13,16 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.CurrencyApiClient;
+import service.IncomeService;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,13 +37,19 @@ public class IncomeControl implements Initializable {
 
     // data sumber kebenaran
     List<Transaksi> incomeTransaction  = new ArrayList<>();
-    private final Map<Transaksi, HBox> recordCardBoard = new HashMap<>();
+    private final Map<Transaksi, RecordCard> recordCardBoard = new HashMap<>();
+    private final List<CheckBox> visibleCheckBox = new ArrayList<>();
 
     @FXML private VBox recordPanel;
+    @FXML private AnchorPane checkBoxIndicatorPanel;
 
     // label tampilan
     @FXML private Label labelTotalRecords;
     @FXML private Label labelTanggalSekarang;
+    @FXML private Label labelTotalAmount;
+    @FXML private Label labelSelectAll;
+    private BigDecimal totalDefaultValue = BigDecimal.ZERO;
+    private BigDecimal totalSelectedValue = BigDecimal.ZERO;
 
     // combobox filter
     @FXML private ComboBox<SortOption> comboBoxSort;
@@ -71,18 +78,38 @@ public class IncomeControl implements Initializable {
     private final ObservableSet<PaymentStatus> selectedPaymentStates =
             FXCollections.observableSet(new LinkedHashSet<>());
 
+    // checkbox untuk select all
+    @FXML private CheckBox checkBoxSelectAll;
+    private int checkBoxSelectedCount = 0;
+    private boolean isBulkChanging = false;
+    private boolean isUpdatingFromSingleSelect = false;
+    private boolean isAnyCheckBoxSelected = false;
+
+    // bagian button
+    @FXML private Button editButton;
+    @FXML private Button exportButton;
+    @FXML private Button deleteButton;
+    private Map<String, Button> mainButtonList = new HashMap<>();
 
     // [0] >=== INIT FUNCTION
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("panel record income berhasil terbuka");
-        initBaseData();
         fetchTransactionData();
         initAllComboBox();
+        initBaseData();
+
+        // listener
+        checkBoxSelectAllListener();
+        checkBoxSetupListeners();
+        updateButtons();
     }
 
     private void initBaseData() {
+        mainButtonInit();
         setDateNow();
+        recordCounterLabelInit();
+        defaultTotalAmountSetter(incomeTransaction);
     }
 
     // [1] >=== BASE INIT
@@ -96,179 +123,52 @@ public class IncomeControl implements Initializable {
             -fx-font-weight: bold;        
         """);
     }
+    private void recordCounterLabelInit() {
+        labelTotalRecords.setText("Found " + incomeTransaction.size() + " record");
+    }
+    private void mainButtonInit() {
+        mainButtonList.put("edit", editButton);
+        mainButtonList.put("export", exportButton);
+        mainButtonList.put("delete", deleteButton);
+        mainButtonStyler(isAnyCheckBoxSelected);
+    }
+    private void defaultTotalAmountSetter(List<Transaksi> dataIncome) {
+        totalDefaultValue = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
+        String stringForm = totalDefaultValue.toPlainString();
+        String result = Converter.numberFormatter(stringForm);
+        labelTotalAmount.setText("IDR " + result);
+    }
+    private void selectedAmountSetter(Boolean anySelected) {
+        if(anySelected) {
+            String stringForm = totalSelectedValue.toPlainString();
+            String result = Converter.numberFormatter(stringForm);
+            labelTotalAmount.setText("IDR " + result);
+        } else {
+            String stringForm = totalDefaultValue.toPlainString();
+            String result = Converter.numberFormatter(stringForm);
+            labelTotalAmount.setText("IDR " + result);
+        }
+    }
+    private void resetSelectedAmount() {
+        totalSelectedValue = BigDecimal.ZERO;
+    }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
-    private HBox createTransaction(Transaksi income) {
-        HBox transList = new HBox(20);
-        transList.setAlignment(Pos.CENTER_LEFT);
-        transList.setPrefHeight(65);
-        transList.setStyle("""
-            -fx-padding: 0 20;
-            -fx-background-color: white;
-            -fx-border-radius: 12;
-            -fx-background-radius: 4;
-            -fx-border-color: transparent transparent #E5E7EB transparent;
-            -fx-border-width: 0 0 1 0;
-        """);
-
-        // [1] checklist:
-        CheckBox checklist = new CheckBox();
-        transList.getChildren().add(checklist);
-
-        // [2] icon dengan stackpane:
-        Circle bgCircle = new Circle(20, income.getKategori().getWarna());
-        ImageView kategoriIcon = new ImageView(income.getKategori().getIcon());
-        kategoriIcon.setFitWidth(24);
-        kategoriIcon.setFitHeight(24);
-
-        Circle clip = new Circle(12, 12, 12);
-        kategoriIcon.setClip(clip);
-
-        StackPane iconStack = new StackPane(bgCircle, kategoriIcon);
-        transList.getChildren().add(iconStack);
-
-        // [3] vbox untuk label, kategori, dan keterangan
-        VBox infoDasar = new VBox(5);
-        infoDasar.setAlignment(Pos.CENTER_LEFT);
-        infoDasar.setPrefWidth(400);
-        infoDasar.setPrefWidth(400);
-        infoDasar.setMaxWidth(400);
-        Label namaKategori = new Label(income.getKategori().getNama());
-        namaKategori.setStyle("""
-            -fx-text-fill: #000000;
-            -fx-font-size: 18px;
-            -fx-font-weight: bold;
-            """
-        );
-        infoDasar.getChildren().add(namaKategori);
-
-        HBox infoDasarHelper = new HBox(5);
-        String paymentTypeLabel = income.getPaymentType() == null ? "-" : income.getPaymentType().getLabel();
-        Label metodeBayar = new Label(paymentTypeLabel);
-        metodeBayar.setStyle("-fx-text-fill: #000000");
-        infoDasarHelper.getChildren().add(metodeBayar);
-        Label keterangan = new Label(income.getKeterangan());
-        keterangan.setStyle("-fx-text-fill: #6B7280");
-        infoDasarHelper.getChildren().add(keterangan);
-        infoDasar.getChildren().add(infoDasarHelper);
-        transList.getChildren().add(infoDasar);
-
-//        // Spacer sebelum bagian tengah
-//        Region spacerLeft = new Region();
-//        spacerLeft.setPrefWidth(100);
-//        spacerLeft.setMinWidth(100);
-//        spacerLeft.setMaxWidth(100);
-//        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
-//        transList.getChildren().add(spacerLeft);
-
-        // [4] menampilkan bank dan tipelabel pilihan user
-        HBox infoDukung = new HBox(15);
-        infoDukung.setPrefWidth(300);
-        infoDukung.setMinWidth(300);
-        infoDukung.setMaxWidth(300);
-        HBox.setHgrow(infoDukung, Priority.ALWAYS);
-        infoDukung.setAlignment(Pos.CENTER_LEFT);
-        Label namaAkun = new Label(income.getAkun().getNama());
-        String warnaHex = Converter.colorToHex(income.getAkun().getWarna());
-        namaAkun.setStyle("""
-                -fx-background-color: %s;
-                -fx-text-fill: white;
-                -fx-padding: 4 10 4 10;
-                -fx-background-radius: 4;
-                -fx-font-weight: bold;
-            """.formatted(warnaHex));
-        infoDukung.getChildren().add(namaAkun);
-
-        HBox infoLabel = new HBox(15);
-        infoLabel.setPrefWidth(100);
-        infoLabel.setMinWidth(100);
-        infoLabel.setMaxWidth(300);
-        HBox.setHgrow(infoLabel, Priority.ALWAYS);
-        infoLabel.setAlignment(Pos.CENTER_LEFT);
-        if(income.getTipelabel() != null) {
-            Label namaTipeLabel = new Label(income.getTipelabel().getNama());
-            warnaHex = Converter.colorToHex(income.getTipelabel().getWarna());
-            namaTipeLabel.setStyle("""
-                -fx-background-color: %s;
-                -fx-text-fill: white;
-                -fx-padding: 4 10 4 10;
-                -fx-background-radius: 4;
-                -fx-font-weight: bold;
-            """.formatted(warnaHex));
-            infoLabel.getChildren().add(namaTipeLabel);
-            transList.getChildren().addAll(infoDukung, infoLabel);
-        } else {
-            transList.getChildren().add(infoDukung);
-        }
-
-        // Spacer sebelum bagian kanan
-        Region spacerRight = new Region();
-        HBox.setHgrow(spacerRight, Priority.ALWAYS);
-        transList.getChildren().add(spacerRight);
-
-        // [5] menampilkan harga dan tanggal
-        VBox infoTransaksi = new VBox(5);
-        infoTransaksi.setPrefWidth(250);
-        infoTransaksi.setMaxWidth(250);
-        infoTransaksi.setAlignment(Pos.CENTER_RIGHT);
-        Label harga = new Label("-" + income.getAkun().getMataUang().getSimbol() + " " + Integer.toString(income.getJumlah()));
-        harga.setStyle(
-                """
-                -fx-text-fill: #F92222;
-                -fx-font-size: 18px;
-                -fx-font-weight: bold;
-                """
-        );
-        infoTransaksi.getChildren().add(harga);
-
-        HBox tanggalDanStatus = new HBox(5);
-        tanggalDanStatus.setAlignment(Pos.CENTER_RIGHT);
-        Label tanggal = new Label(income.getTanggal().format(formatter));
-        tanggal.setStyle("-fx-text-fill: #6B7280");
-
-        // kondisional icon payment
-        ImageView iconStatus = null;
-        // menentukan status icon
-        Image newImage = null;
-        if(income.getPaymentStatus() != null) {
-            if (income.getPaymentStatus() == PaymentStatus.RECONCILED) {
-                newImage = new Image(Objects.requireNonNull(getClass().getResource("/icons/reconciled.png")).toString());
-            } else if (income.getPaymentStatus() == PaymentStatus.CLEARED) {
-                newImage = new Image(Objects.requireNonNull(getClass().getResource("/icons/cleared.png")).toString());
-            } else if (income.getPaymentStatus() == PaymentStatus.UNCLEARED) {
-                newImage = new Image(Objects.requireNonNull(getClass().getResource("/icons/uncleared.png")).toString());
-            }
-
-            iconStatus = new ImageView(newImage);
-            iconStatus.setFitWidth(20);
-            iconStatus.setFitHeight(20);
-
-            Line separator = new Line();
-            separator.setStartX(0);
-            separator.setStartY(0);
-            separator.setEndX(0); // tetap di X yang sama
-            separator.setEndY(20);
-            separator.setStroke(Color.web("#E5E7EB"));
-            separator.setStrokeWidth(1);
-            tanggalDanStatus.getChildren().addAll(tanggal, separator, iconStatus);
-        } else {
-            tanggalDanStatus.getChildren().add(tanggal);
-        }
-        infoTransaksi.getChildren().add(tanggalDanStatus);
-        transList.getChildren().add(infoTransaksi);
-
-        return transList;
+    private RecordCard createTransaction(Transaksi income) {
+         RecordCard recordCard = new RecordCard(income);
+         visibleCheckBox.add(recordCard.getCheckList());
+         return recordCard;
     }
     private void fetchTransactionData() {
-        log.info("report income berhasil terbuka");
+        log.info("data income berhasil diambil dari datamanager");
         incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
 
         for(Transaksi in : incomeTransaction) {
             recordCardBoard.put(in, createTransaction(in));
         }
 
-        for(HBox card : recordCardBoard.values()) {
-            recordPanel.getChildren().add(card);
+        for(RecordCard card : recordCardBoard.values()) {
+            recordPanel.getChildren().add(card.getCardWrapper());
         }
     }
 
@@ -715,7 +615,13 @@ public class IncomeControl implements Initializable {
                 .sorted(activeComparator())  // sort sesuai pilihan user
                 .toList();
 
+        String recordCounter = "Found " + result.size() + " record";
+        labelTotalRecords.setText(recordCounter);
+        defaultTotalAmountSetter(result);
+
         refreshView(result);
+        refreshVisibleCheckbox(result);
+        resetSelectedAmount();
     }
     private Comparator<Transaksi> activeComparator() {
         SortOption sort = comboBoxSort.getValue();
@@ -746,11 +652,140 @@ public class IncomeControl implements Initializable {
         recordPanel.getChildren().clear();
 
         for (Transaksi trans : data) {
-            recordPanel.getChildren().add(recordCardBoard.get(trans));
+            recordPanel.getChildren().add(recordCardBoard.get(trans).getCardWrapper());
         }
     }
 
-    // [6] >=== CONTROLLER LAINYA...
+    // [6] >=== CHECKBOX LISTENER & HANDLER
+    private void checkBoxSelectAllListener() {
+        checkBoxSelectAll.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+            if(isUpdatingFromSingleSelect) return;
+            if(isNowSelected) {
+                applySelectAllCheckBox();
+            } else {
+                applyDeselectAllCheckBox();
+            }
+            selectedAmountSetter(false);
+        });
+    }
+    private void refreshVisibleCheckbox(List<Transaksi> dataTransaksi){
+        applyDeselectAllCheckBox();
+        visibleCheckBox.clear();
+        for(Transaksi trans : dataTransaksi) {
+            visibleCheckBox.add(recordCardBoard.get(trans).getCheckList());
+        }
+    }
+    private void applySelectAllCheckBox() {
+        isBulkChanging = true;
+        for (CheckBox cek : visibleCheckBox) {
+            cek.setSelected(true);
+        }
+        checkBoxSelectedCount = visibleCheckBox.size();
+        totalSelectedValue = totalDefaultValue;
+        updateButtons();
+        isBulkChanging = false;
+    }
+    private void applyDeselectAllCheckBox() {
+        isBulkChanging = true;
+        for (CheckBox cek : visibleCheckBox) {
+            cek.setSelected(false);
+        }
+        checkBoxSelectedCount = 0;
+        resetSelectedAmount();
+        updateButtons();
+        isBulkChanging = false;
+    }
+    private void checkBoxSetupListeners() {
+        for (RecordCard rc : recordCardBoard.values()) {
+            rc.setCheckBoxListener(isSelected -> {
+                if (isBulkChanging) return; // skip update count saat bulk change
+
+                if (isSelected) checkBoxSelectedCount++;
+                else checkBoxSelectedCount--;
+
+                if(isSelected) {
+                    totalSelectedValue = totalSelectedValue.add(CurrencyApiClient.getInstance().convert(
+                            BigDecimal.valueOf(rc.getTransaksi().getJumlah()),
+                            rc.getTransaksi().getAkun().getMataUang().getKode(),
+                            "IDR"
+                    ));
+                } else{
+                    totalSelectedValue = totalSelectedValue.subtract(CurrencyApiClient.getInstance().convert(
+                            BigDecimal.valueOf(rc.getTransaksi().getJumlah()),
+                            rc.getTransaksi().getAkun().getMataUang().getKode(),
+                            "IDR"
+                    ));
+                }
+
+                updateButtons();
+            });
+        }
+    }
+    private void updateButtons() {
+        boolean anySelected = checkBoxSelectedCount > 0;
+
+        // System.out.println("checkbox sekarang: " + checkBoxSelectedCount);
+        // System.out.println("default total: " + totalDefaultValue);
+        // System.out.println("checked total: " + totalSelectedValue);
+
+        if(anySelected != isAnyCheckBoxSelected) {
+            System.out.println("mendeteksi perubahan TOOGLER");
+            mainButtonStyler(anySelected);
+            isAnyCheckBoxSelected = anySelected;
+        }
+
+        checkBoxIndicatorPanelSetter(anySelected);
+        editButton.setDisable(!anySelected);
+        exportButton.setDisable(!anySelected);
+        deleteButton.setDisable(!anySelected);
+    }
+    private void checkBoxIndicatorPanelSetter(boolean result) {
+        if(result) {
+            checkBoxIndicatorPanel.setStyle("-fx-background-color: #FFF9DB;");
+
+            String showLabel;
+            isUpdatingFromSingleSelect = true; // guard start
+
+            if(checkBoxSelectedCount == visibleCheckBox.size()) {
+                checkBoxSelectAll.setSelected(true);
+                showLabel = "Deselect all";
+            } else {
+                showLabel = "Select all, selected " + checkBoxSelectedCount;
+                checkBoxSelectAll.setSelected(false);
+            }
+
+            isUpdatingFromSingleSelect = false; // guard end
+            labelSelectAll.setText(showLabel);
+
+        } else {
+            isUpdatingFromSingleSelect = true; // guard start
+            checkBoxIndicatorPanel.setStyle("-fx-background-color: #FFFFFF;");
+            labelSelectAll.setText("Select all");
+            checkBoxSelectAll.setSelected(false);
+            isUpdatingFromSingleSelect = false; // guard start
+        }
+
+        selectedAmountSetter(result);
+    }
+
+    // [7] >=== CONTROLLER LAINYA...
+    private void mainButtonStyler(Boolean value) {
+        if(value) {
+            mainButtonList.forEach((name, btn) -> {
+                btn.getStyleClass().remove("unselect-button");
+            });
+            mainButtonList.forEach((name, btn) -> {
+                btn.getStyleClass().add("selected-button-" + name);
+            });
+        } else {
+            mainButtonList.forEach((name, btn) -> {
+                btn.getStyleClass().remove("selected-button-" + name);
+            });
+            mainButtonList.forEach((name, btn) -> {
+                btn.getStyleClass().add("unselect-button");
+            });
+        }
+    }
     @FXML
     private void handleEdit() {
         showNotification("Info", "Fitur Edit akan segera hadir.");

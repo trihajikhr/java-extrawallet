@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 
 // package database
 import dataflow.Database;
+import service.CurrencyApiClient;
 
 public class App extends Application {
 
@@ -20,6 +21,9 @@ public class App extends Application {
         scene.getStylesheets().add(
                 getClass().getResource("/stylesheet/auto-card.css").toExternalForm()
         );
+
+        // currencyClient api loader
+        CurrencyApiClient.getInstance();
 
         stage.setScene(scene);
         stage.setTitle("Extra Wallet");

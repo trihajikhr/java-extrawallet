@@ -1,22 +1,21 @@
 package service;
 
+import dataflow.DataManager;
 import model.Akun;
 import model.Kategori;
 import model.TipeLabel;
 import model.Transaksi;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public abstract class AbstractTransactionService implements TransactionService {
-    protected final List<Transaksi> dataTransaksi;
-
-    protected AbstractTransactionService(List<Transaksi> data){
-        this.dataTransaksi = data;
-    }
+    protected static final String BASE_CURRENCY = "IDR";
+    protected AbstractTransactionService(){}
 
     @Override
-    public List<Transaksi> filterByDate(LocalDate startDate, LocalDate endDate) {
+    public List<Transaksi> filterByDate(List<Transaksi> dataTransaksi, LocalDate startDate, LocalDate endDate) {
         return dataTransaksi.stream()
                 .filter(this::isTargetType)
                 .filter(t ->
@@ -26,44 +25,66 @@ public abstract class AbstractTransactionService implements TransactionService {
                 .toList();
     }
 
+    protected BigDecimal normalizeAmount(Transaksi trans) {
+        BigDecimal amount = BigDecimal.valueOf(trans.getJumlah());
+        String currency = trans.getAkun().getMataUang().getKode();
+
+        if (currency.equalsIgnoreCase(BASE_CURRENCY)) {
+            return amount;
+        }
+
+        BigDecimal converted = CurrencyApiClient.getInstance().convert(amount, currency, BASE_CURRENCY);
+
+        return converted;
+    }
+
     @Override
-    public int sumBetween(LocalDate startDate, LocalDate endDate) {
-        int sum = 0;
-        for(Transaksi t : filterByDate(startDate, endDate)) {
-            sum += t.getJumlah();
+    public BigDecimal sumBetween(List<Transaksi> dataTransaksi, LocalDate startDate, LocalDate endDate) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for(Transaksi trans : filterByDate(dataTransaksi, startDate, endDate)) {
+            sum = sum.add(normalizeAmount(trans));
         }
         return sum;
     }
 
     @Override
-    public int sumByCategory(Kategori kategori, LocalDate startDate, LocalDate endDate) {
-        int sum = 0;
-        for(Transaksi t : filterByDate(startDate, endDate)){
-            if(t.getKategori().equals(kategori)) {
-                sum += t.getJumlah();
+    public BigDecimal sumByCategory(List<Transaksi> dataTransaksi, Kategori kategori, LocalDate startDate, LocalDate endDate) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for(Transaksi trans : filterByDate(dataTransaksi, startDate, endDate)){
+            if(trans.getKategori().equals(kategori)) {
+                sum = sum.add(normalizeAmount(trans));
             }
         }
         return sum;
     }
 
     @Override
-    public int sumByAccount(Akun akun, LocalDate startDate, LocalDate endDate) {
-        int sum = 0;
-        for(Transaksi t : filterByDate(startDate,endDate)) {
-            if(t.getAkun().equals(akun)) {
-                sum += t.getJumlah();
+    public BigDecimal sumByAccount(List<Transaksi> dataTransaksi, Akun akun, LocalDate startDate, LocalDate endDate) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for(Transaksi trans : filterByDate(dataTransaksi, startDate,endDate)) {
+            if(trans.getAkun().equals(akun)) {
+                sum = sum.add(normalizeAmount(trans));
             }
         }
         return sum;
     }
 
     @Override
-    public int sumByLabel(TipeLabel label, LocalDate startDate, LocalDate endDate) {
-        int sum = 0;
-        for(Transaksi t : filterByDate(startDate,endDate)) {
-            if(t.getTipelabel().equals(label)) {
-                sum += t.getJumlah();
+    public BigDecimal sumByLabel(List<Transaksi> dataTransaksi, TipeLabel label, LocalDate startDate, LocalDate endDate) {
+        BigDecimal sum = BigDecimal.ZERO;
+        for(Transaksi trans : filterByDate(dataTransaksi, startDate,endDate)) {
+            if(trans.getTipelabel().equals(label)) {
+                sum = sum.add(normalizeAmount(trans));
             }
+        }
+        return sum;
+    }
+
+    @Override
+    public BigDecimal sumAfterFilter(List<Transaksi> dataTransaksi) {
+        BigDecimal sum = BigDecimal.ZERO; // mulai dari 0
+        for(Transaksi trans : dataTransaksi) {
+            sum = sum.add(normalizeAmount(trans));
         }
         return sum;
     }

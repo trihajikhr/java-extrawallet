@@ -1,75 +1,216 @@
+/* [1] >=== CUSTOM STYLING */
+
+.top-bar-styling {
+    -fx-background-color:  linear-gradient(to bottom right, #01AA71, #018558);
+    -fx-effect:  dropshadow(three-pass-box, rgba(1, 170, 113, 0.3), 15, 0, 0, 5);
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
+.text-field-helper {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 13;
+}
+
+.text-field-amount {
+    -fx-text-fill: #6B7280;
+    -fx-font-size: 14;
+    -fx-font-weight: bold;
+}
+
+.filter-text-field {
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 1;
+}
+
+/* [2] >=== 3 Button styling */
+/* EDIT BUTTON */
+.unselect-button {
+    -fx-background-color: #d9d7d7;
+    -fx-text-fill: #404040;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
+
+.selected-button-edit {
+    -fx-background-color: #009360;
+    -fx-text-fill:  #FFFFFF;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
+
+.selected-button-edit:hover {
+    -fx-background-color: #007a4f;
+}
+.selected-button-edit:pressed {
+    -fx-background-color: #005e3c;
+}
+
+/* EXPORT BUTTON */
+.selected-button-export {
+    -fx-background-color: #FD7E14;
+    -fx-text-fill:  #FFFFFF;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
+
+.selected-button-export:hover {
+    -fx-background-color: #e06912;
+}
+.selected-button-export:pressed {
+    -fx-background-color: #b8510f;
+}
+
+/* DELETE BUTTON */
+.selected-button-delete {
+    -fx-background-color: #F92222;
+    -fx-text-fill:  #FFFFFF;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
+
+.selected-button-delete:hover {
+    -fx-background-color: #d11c1c;
+}
+.selected-button-delete:pressed {
+    -fx-background-color: #a41515;
+}
+
+/* [2] >=== TARGET LANGSUNG KE NODE! */
 .menu-button {
     -fx-background-color: white;
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
     -fx-text-fill: #374151;
 }
 
-.menu-button:hover {
-    -fx-background-color: #F9FAFB;
+.menu-item {
+    -fx-padding: 2 0 2 0;
+    /* -fx-pref-height: 40px; */
 }
 
-.menu-button:pressed,
-.menu-button:showing {
-    -fx-background-color: #F3F4F6;
-    -fx-border-color: #D1D5DB;
+/*
+ 1. Atur semua cell (dropdown & terpilih) ke padding default dulu
+.combo-box .list-cell {
+    -fx-font-size: 12px;
+    -fx-padding: 5 0 5 5;
 }
 
-/* arrow — warna doang, no padding, no scale */
-.menu-button .arrow {
-    -fx-background-color: #6B7280;
+2. KHUSUS untuk item yang ada di dalam list dropdown (saat dibuka)
+.combo-box-popup .list-view .list-cell {
+    -fx-padding: 5 0 5 20;
 }
 
-.menu-button:hover .arrow {
-    -fx-background-color: #374151;
+3. KHUSUS untuk tampilan item yang sudah terpilih (di kotaknya)
+.combo-box > .list-cell {
+    -fx-padding: 5 0 5 5;
 }
+*/
 
-/* popup menu — tampilan aja */
-.context-menu {
-    -fx-background-color: white;
-    -fx-border-color: #E5E7EB;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
-}
-
-.menu-item:hover {
-    -fx-background-color: #F3F4F6;
+.combo-box-popup .list-view .list-cell {
+    /* -fx-pref-height: 20px; */
+    -fx-padding: 5 0 5 20; /* top right bottom left */
+    -fx-font-size: 12px;
 }
 
 .combo-box {
     -fx-background-color: white;
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
     -fx-text-fill: #374151;
 }
 
-.combo-box:hover {
-    -fx-background-color: #F9FAFB;
+.context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #E5E7EB;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
 }
 
-.combo-box:focused,
-.combo-box:showing {
-    -fx-background-color: #F3F4F6;
-    -fx-border-color: #D1D5DB;
-}
-
-.combo-box .arrow {
-    -fx-background-color: #6B7280;
-}
-
-.combo-box:hover .arrow {
-    -fx-background-color: #374151;
-}
-
+/* ComboBox popup */
 .combo-box-popup .list-view {
     -fx-background-color: white;
     -fx-border-color: #E5E7EB;
-    -fx-border-radius: 8;
-    -fx-background-radius: 8;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
 }
 
-.combo-box-popup .list-cell:hover {
-    -fx-background-color: #F3F4F6;
+.menu-button .context-menu {
+    -fx-max-height: 400px;
+}
+
+.menu-button .context-menu .scroll-pane {
+    -fx-vbar-policy: as-needed;
+    -fx-hbar-policy: never;
+}
+
+.menu-button .context-menu .scroll-pane .content {
+    -fx-background-color: white;
+}
+
+/* checkbox styling! */
+.check-box .box {
+	-fx-background-color: white;
+	-fx-border-color: #bdc3c7;
+	-fx-border-radius: 4;
+}
+
+.check-box .mark {
+ 	-fx-shape: "M1.73,12.91 8.1,19.28 22.79,4.59 22.79,1.59 8.1,16.28 1.73,9.91";
+}
+
+.check-box:selected .mark {
+	-fx-background-color: white;
+}
+
+.check-box:selected .box {
+	-fx-background-color: #0176FE;
+	-fx-border-color: #0176FE;
+}
+
+/* scrollbar for scrollpane */
+/* Vertical scrollbar */
+.scroll-bar:vertical {
+    -fx-background-color: transparent; /* track container */
+    -fx-padding: 2px;
+    -fx-pref-width: 17px; /* tipis */
+}
+
+/* Track (latar scrollbar) */
+.scroll-bar:vertical .track {
+    -fx-background-color: #e0e0e0; /* abu-abu terang */
+    -fx-background-radius: 4px;
+}
+
+/* Thumb (bagian yang digeser) */
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c0c0c0; /* abu-abu default */
+    -fx-background-radius: 4px;
+}
+
+/* Thumb hover effect */
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #888888; /* lebih gelap saat hover */
+}
+
+/* Horizontal scrollbar (opsional) */
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 20px;
+}
+
+.scroll-bar:horizontal .track {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #c0c0c0;
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #888888;
 }
