@@ -3,6 +3,7 @@ package controller;
 import controller.option.SortOption;
 import dataflow.DataManager;
 import helper.Converter;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -13,8 +14,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Line;
 import model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,11 +37,12 @@ public class IncomeControl implements Initializable {
 
     // data sumber kebenaran
     List<Transaksi> incomeTransaction  = new ArrayList<>();
-    private final Map<Transaksi, HBox> recordCardBoard = new HashMap<>();
+    private final Map<Transaksi, RecordCard> recordCardBoard = new HashMap<>();
     private final Map<Transaksi, CheckBox> allCheckBox = new HashMap<>();
     private final List<CheckBox> visibleCheckBox = new ArrayList<>();
 
     @FXML private VBox recordPanel;
+    @FXML private AnchorPane checkBoxIndicatorPanel;
 
     // label tampilan
     @FXML private Label labelTotalRecords;
@@ -80,6 +80,11 @@ public class IncomeControl implements Initializable {
     // checkbox untuk select all
     @FXML private CheckBox checkBoxSelectAll;
 
+    // bagian button
+    @FXML private Button editButton;
+    @FXML private Button exportButton;
+    @FXML private Button deleteButton;
+
     // [0] >=== INIT FUNCTION
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -90,6 +95,7 @@ public class IncomeControl implements Initializable {
 
         // listener
         checkBoxSelectAllListener();
+        updateCheckBoxBooleanBinding();
     }
 
     private void initBaseData() {
@@ -120,208 +126,9 @@ public class IncomeControl implements Initializable {
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
-    private HBox createTransaction(Transaksi income) {
-        HBox transList = new HBox(20);
-        transList.setAlignment(Pos.CENTER_LEFT);
-        transList.setPrefHeight(65);
-        transList.setStyle("""
-            -fx-padding: 0 20;
-            -fx-background-color: white;
-            -fx-border-radius: 12;
-            -fx-background-radius: 4;
-            -fx-border-color: transparent transparent #E5E7EB transparent;
-            -fx-border-width: 0 0 1 0;
-        """);
-
-        // [1] checklist:
-        CheckBox checklist = new CheckBox();
-        transList.getChildren().add(checklist);
-        // sambungkan langsung ke checkbox cuy!!!!!
-        allCheckBox.put(income, checklist);
-        visibleCheckBox.add(checklist);
-
-        // [2] icon dengan stackpane:
-        Circle bgCircle = new Circle(20, income.getKategori().getWarna());
-        ImageView kategoriIcon = new ImageView(income.getKategori().getIcon());
-        kategoriIcon.setFitWidth(24);
-        kategoriIcon.setFitHeight(24);
-
-        Circle clip = new Circle(12, 12, 12);
-        kategoriIcon.setClip(clip);
-
-        StackPane iconStack = new StackPane(bgCircle, kategoriIcon);
-        transList.getChildren().add(iconStack);
-
-        // [3] vbox untuk label, kategori, dan keterangan
-        VBox infoDasar = new VBox(5);
-        infoDasar.setAlignment(Pos.CENTER_LEFT);
-        infoDasar.setPrefWidth(400);
-        infoDasar.setMinWidth(300);
-        infoDasar.setMaxWidth(500);
-        Label namaKategori = new Label(income.getKategori().getNama());
-        namaKategori.setStyle("""
-            -fx-text-fill: #000000;
-            -fx-font-size: 18px;
-            -fx-font-weight: bold;
-            """
-        );
-        infoDasar.getChildren().add(namaKategori);
-
-        HBox infoDasarHelper = new HBox(5);
-
-        String paymentTypeLabel = "";
-        Label metodeBayar = null;
-        if(income.getPaymentType() != null)  {
-            metodeBayar = new Label();
-            paymentTypeLabel = income.getPaymentType().getLabel();
-            metodeBayar.setText(paymentTypeLabel);
-            metodeBayar.setStyle("-fx-text-fill: #000000");
-        }
-
-        String tempKeterangan = "";
-        Label keterangan = null;
-        if(income.getKeterangan() != null) {
-            keterangan = new Label();
-            tempKeterangan = income.getKeterangan();
-            keterangan.setText(tempKeterangan);
-            keterangan.setStyle("-fx-text-fill: #6B7280");
-        }
-
-        Line separatorDasar = null;
-        if(metodeBayar != null && keterangan != null) {
-            separatorDasar = new Line();
-            separatorDasar.setStartX(0);
-            separatorDasar.setStartY(0);
-            separatorDasar.setEndX(0); // tetap di X yang sama
-            separatorDasar.setEndY(20);
-            separatorDasar.setStroke(Color.web("#E5E7EB"));
-            separatorDasar.setStrokeWidth(1);
-
-            infoDasarHelper.getChildren().addAll(metodeBayar, separatorDasar, keterangan);
-        }  else {
-            if(metodeBayar != null) {
-                infoDasarHelper.getChildren().add(metodeBayar);
-            } else if(keterangan != null) {
-                infoDasarHelper.getChildren().add(keterangan);
-            }
-        }
-
-        infoDasar.getChildren().add(infoDasarHelper);
-        transList.getChildren().add(infoDasar);
-
-//        // Spacer sebelum bagian tengah
-//        Region spacerLeft = new Region();
-//        spacerLeft.setPrefWidth(100);
-//        spacerLeft.setMinWidth(100);
-//        spacerLeft.setMaxWidth(100);
-//        HBox.setHgrow(spacerLeft, Priority.ALWAYS);
-//        transList.getChildren().add(spacerLeft);
-
-        // [4] menampilkan bank dan tipelabel pilihan user
-        HBox infoDukung = new HBox(15);
-        infoDukung.setPrefWidth(300);
-        infoDukung.setMinWidth(200);
-        infoDukung.setMaxWidth(800);
-        //infoDukung.setStyle("-fx-background-color: blue;");
-        HBox.setHgrow(infoDukung, Priority.ALWAYS);
-        infoDukung.setAlignment(Pos.CENTER_LEFT);
-        Label namaAkun = new Label(income.getAkun().getNama());
-        String warnaHex = Converter.colorToHex(income.getAkun().getWarna());
-        namaAkun.setStyle("""
-                -fx-background-color: %s;
-                -fx-font-size: 11;
-                -fx-text-fill: white;
-                -fx-padding: 2 5 2 5;
-                -fx-background-radius: 4;
-                -fx-font-weight: bold;
-            """.formatted(warnaHex));
-        infoDukung.getChildren().add(namaAkun);
-
-        HBox infoLabel = new HBox(15);
-        infoLabel.setPrefWidth(100);
-        infoLabel.setMinWidth(100);
-        infoLabel.setMaxWidth(300);
-        //infoLabel.setStyle("-fx-background-color: red;");
-
-        HBox.setHgrow(infoLabel, Priority.ALWAYS);
-        infoLabel.setAlignment(Pos.CENTER_LEFT);
-        if(income.getTipelabel() != null) {
-            Label namaTipeLabel = new Label(income.getTipelabel().getNama());
-            warnaHex = Converter.colorToHex(income.getTipelabel().getWarna());
-            namaTipeLabel.setStyle("""
-                -fx-background-color: %s;
-                -fx-font-size: 11;
-                -fx-text-fill: white;
-                -fx-padding: 2 5 2 5;
-                -fx-background-radius: 4;
-                -fx-font-weight: bold;
-            """.formatted(warnaHex));
-            infoLabel.getChildren().add(namaTipeLabel);
-            transList.getChildren().addAll(infoDukung, infoLabel);
-        } else {
-            transList.getChildren().addAll(infoDukung, infoLabel);
-        }
-
-        // Spacer sebelum bagian kanan
-        Region spacerRight = new Region();
-        HBox.setHgrow(spacerRight, Priority.ALWAYS);
-        transList.getChildren().add(spacerRight);
-        spacerRight.setMaxWidth(50);
-        // spacerRight.setStyle("-fx-background-color: blue;");
-
-        // [5] menampilkan harga dan tanggal
-        VBox infoTransaksi = new VBox(5);
-        infoTransaksi.setPrefWidth(250);
-        infoTransaksi.setMaxWidth(250);
-        infoTransaksi.setAlignment(Pos.CENTER_RIGHT);
-        String formatJumlah = Converter.numberFormatter(Integer.toString(income.getJumlah()));
-        Label harga = new Label(income.getAkun().getMataUang().getSimbol() + " " + formatJumlah);
-        harga.setStyle(
-                """
-                -fx-text-fill: #01AA71;
-                -fx-font-size: 18px;
-                -fx-font-weight: bold;
-                """
-        );
-        infoTransaksi.getChildren().add(harga);
-
-        HBox tanggalDanStatus = new HBox(5);
-        tanggalDanStatus.setAlignment(Pos.CENTER_RIGHT);
-        Label tanggal = new Label(income.getTanggal().format(formatter));
-        tanggal.setStyle("-fx-text-fill: #6B7280");
-
-        // kondisional icon payment
-        ImageView iconStatus = null;
-        // menentukan status icon
-        Image newImage = null;
-        if(income.getPaymentStatus() != null) {
-            if (income.getPaymentStatus() == PaymentStatus.RECONCILED) {
-                newImage = new Image(Objects.requireNonNull(getClass().getResource("/icons/reconciled.png")).toString());
-            } else if (income.getPaymentStatus() == PaymentStatus.CLEARED) {
-                newImage = new Image(Objects.requireNonNull(getClass().getResource("/icons/cleared.png")).toString());
-            } else if (income.getPaymentStatus() == PaymentStatus.UNCLEARED) {
-                newImage = new Image(Objects.requireNonNull(getClass().getResource("/icons/uncleared.png")).toString());
-            }
-
-            iconStatus = new ImageView(newImage);
-            iconStatus.setFitWidth(20);
-            iconStatus.setFitHeight(20);
-
-            Line separator = new Line();
-            separator.setStartX(0);
-            separator.setStartY(0);
-            separator.setEndX(0); // tetap di X yang sama
-            separator.setEndY(20);
-            separator.setStroke(Color.web("#E5E7EB"));
-            separator.setStrokeWidth(1);
-            tanggalDanStatus.getChildren().addAll(tanggal, separator, iconStatus);
-        } else {
-            tanggalDanStatus.getChildren().add(tanggal);
-        }
-        infoTransaksi.getChildren().add(tanggalDanStatus);
-        transList.getChildren().add(infoTransaksi);
-
-        return transList;
+    private RecordCard createTransaction(Transaksi income) {
+         RecordCard transList = new RecordCard(income);
+         return transList;
     }
     private void fetchTransactionData() {
         log.info("report income berhasil terbuka");
@@ -331,8 +138,8 @@ public class IncomeControl implements Initializable {
             recordCardBoard.put(in, createTransaction(in));
         }
 
-        for(HBox card : recordCardBoard.values()) {
-            recordPanel.getChildren().add(card);
+        for(RecordCard card : recordCardBoard.values()) {
+            recordPanel.getChildren().add(card.getCardWrapper());
         }
     }
 
@@ -765,17 +572,6 @@ public class IncomeControl implements Initializable {
                 selectedPaymentStates.isEmpty()
                         || selectedPaymentStates.contains(t.getPaymentStatus());
     }
-    private void checkBoxSelectAllListener() {
-        checkBoxSelectAll.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
-            if(isNowSelected) {
-                applySelectAllCheckBox();
-                labelSelectAll.setText("Deselect all");
-            } else {
-                applyDeselectAllCheckBox();
-                labelSelectAll.setText("Select all");
-            }
-        });
-    }
 
     // [5] >=== FILTER HANDLER
     private void applyFilterAndSort() {
@@ -826,17 +622,36 @@ public class IncomeControl implements Initializable {
         recordPanel.getChildren().clear();
 
         for (Transaksi trans : data) {
-            recordPanel.getChildren().add(recordCardBoard.get(trans));
+            recordPanel.getChildren().add(recordCardBoard.get(trans).getCardWrapper());
         }
     }
+
+    // [6] >=== CHECKBOX LISTENER & HANDLER
+    // FIXME: listener tidak bekerja
+    // BUG: listener tidak menghitung jumlah checkbox yang ditambahkan!
+    private void checkBoxSelectAllListener() {
+        checkBoxSelectAll.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+            if(isNowSelected) {
+                applySelectAllCheckBox();
+            } else {
+                applyDeselectAllCheckBox();
+            }
+        });
+    }
     private void refreshVisibleCheckbox(List<Transaksi> dataTransaksi){
-        checkBoxSelectAll.setSelected(false);
-        applyDeselectAllCheckBox();
         visibleCheckBox.clear();
         for(Transaksi trans : dataTransaksi) {
             visibleCheckBox.add(allCheckBox.get(trans));
         }
+
+        // reset semua checkbox visible ke false sebelum binding
+        applyDeselectAllCheckBox();
+        checkBoxSelectAll.setSelected(false);
+
+        // baru update binding
+        updateCheckBoxBooleanBinding();
     }
+
     private void applySelectAllCheckBox() {
         for(CheckBox cek : visibleCheckBox) {
             cek.setSelected(true);
@@ -847,8 +662,46 @@ public class IncomeControl implements Initializable {
             cek.setSelected(false);
         }
     }
+    private void updateCheckBoxBooleanBinding() {
+        BooleanBinding anySelected = new BooleanBinding() {
+            {
+                for (CheckBox cb : visibleCheckBox) {
+                    super.bind(cb.selectedProperty());
+                }
+            }
 
-    // [6] >=== CONTROLLER LAINYA...
+            @Override
+            protected boolean computeValue() {
+                return visibleCheckBox.stream().anyMatch(CheckBox::isSelected);
+            }
+        };
+
+        anySelected.addListener((obs, oldVal, newVal) -> System.out.println("INI TERPILIH!"));
+
+        editButton.disableProperty().bind(anySelected.not());
+        exportButton.disableProperty().bind(anySelected.not());
+        deleteButton.disableProperty().bind(anySelected.not());
+    }
+    private void checkBoxIndicatorPanelSetter(boolean result) {
+        if(result) {
+            checkBoxIndicatorPanel.setStyle("-fx-background-color: #FFF9DB;");
+            long selectedCount = visibleCheckBox.stream().filter(CheckBox::isSelected).count();
+
+            String showLabel;
+            if(selectedCount == visibleCheckBox.size()) {
+                showLabel = "Deselect all";
+            } else {
+                showLabel = "Select all, selected " + selectedCount;
+            }
+            labelSelectAll.setText(showLabel);
+
+        } else {
+            checkBoxIndicatorPanel.setStyle("-fx-background-color: #FFFFFF;");
+            labelSelectAll.setText("Select all");
+        }
+    }
+
+    // [7] >=== CONTROLLER LAINYA...
     @FXML
     private void handleEdit() {
         showNotification("Info", "Fitur Edit akan segera hadir.");

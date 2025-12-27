@@ -13,6 +13,9 @@ import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// TODO: rapikan struktur fungsi di file ini  (supaya lebih rapi)
+// dan hapus beberapa fungsi tidak terpakai
+
 public class DataManager {
     private static final Logger log = LoggerFactory.getLogger(DataManager.class);
     private static DataManager instance;
@@ -27,6 +30,7 @@ public class DataManager {
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
     private ObservableList<MataUang> dataMataUang = FXCollections.observableArrayList();
     private ArrayList<Template> dataTemplate;
+    private Map<PaymentStatus, Image> paymentStatusImage = new HashMap<>();
     private Image[][] theImage;
 
     private DataManager() {}
@@ -38,6 +42,7 @@ public class DataManager {
         DataSeeder.getInstance().seedAccountItem();
         DataSeeder.getInstance().seedCurrency();
         theImage = DataSeeder.getInstance().seedImageTransactionForm();
+        paymentStatusImage = DataSeeder.getInstance().seedPaymentStatusImage();
     }
 
     public void fetchDataDatabase() {
@@ -93,6 +98,10 @@ public class DataManager {
         }
 
         return new ArrayList<>(filteredCurrency);
+    }
+
+    public Map<PaymentStatus, Image> getPaymentStatusImage() {
+        return paymentStatusImage;
     }
 
     // [1] >> =============== DATA AKUN =============== //
