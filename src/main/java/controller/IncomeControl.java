@@ -3,7 +3,6 @@ package controller;
 import controller.option.SortOption;
 import dataflow.DataManager;
 import helper.Converter;
-import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
@@ -20,6 +19,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.CurrencyApiClient;
 import service.IncomeService;
 
 import java.math.BigDecimal;
@@ -48,6 +48,8 @@ public class IncomeControl implements Initializable {
     @FXML private Label labelTanggalSekarang;
     @FXML private Label labelTotalAmount;
     @FXML private Label labelSelectAll;
+    private BigDecimal totalDefaultValue = BigDecimal.ZERO;
+    private BigDecimal totalSelectedValue = BigDecimal.ZERO;
 
     // combobox filter
     @FXML private ComboBox<SortOption> comboBoxSort;
@@ -103,7 +105,7 @@ public class IncomeControl implements Initializable {
     private void initBaseData() {
         setDateNow();
         recordCounterLabelInit();
-        totalIncomeAmountSetter(incomeTransaction);
+        defaultTotalAmountSetter(incomeTransaction);
     }
 
     // [1] >=== BASE INIT
@@ -120,11 +122,22 @@ public class IncomeControl implements Initializable {
     private void recordCounterLabelInit() {
         labelTotalRecords.setText("Found " + incomeTransaction.size() + " record");
     }
-    private void totalIncomeAmountSetter(List<Transaksi> dataIncome) {
-        BigDecimal value = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
-        String stringForm = value.toPlainString();
+    private void defaultTotalAmountSetter(List<Transaksi> dataIncome) {
+        totalDefaultValue = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
+        String stringForm = totalDefaultValue.toPlainString();
         String result = Converter.numberFormatter(stringForm);
         labelTotalAmount.setText("Total: IDR " + result);
+    }
+    private void selectedAmountSetter(Boolean anySelected) {
+        if(anySelected) {
+            String stringForm = totalSelectedValue.toPlainString();
+            String result = Converter.numberFormatter(stringForm);
+            labelTotalAmount.setText("Total: IDR " + result);
+        } else {
+            String stringForm = totalDefaultValue.toPlainString();
+            String result = Converter.numberFormatter(stringForm);
+            labelTotalAmount.setText("Total: IDR " + result);
+        }
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
@@ -591,7 +604,7 @@ public class IncomeControl implements Initializable {
 
         String recordCounter = "Found " + result.size() + " record";
         labelTotalRecords.setText(recordCounter);
-        totalIncomeAmountSetter(result);
+        defaultTotalAmountSetter(result);
 
         refreshView(result);
         refreshVisibleCheckbox(result);
@@ -656,7 +669,6 @@ public class IncomeControl implements Initializable {
         updateButtons();
         isBulkChanging = false;
     }
-
     private void applyDeselectAllCheckBox() {
         isBulkChanging = true;
         for (CheckBox cek : visibleCheckBox) {
@@ -666,19 +678,32 @@ public class IncomeControl implements Initializable {
         updateButtons();
         isBulkChanging = false;
     }
-
-
     private void checkBoxSetupListeners() {
         for (RecordCard rc : recordCardBoard.values()) {
             rc.setCheckBoxListener(isSelected -> {
                 if (isBulkChanging) return; // skip update count saat bulk change
+
                 if (isSelected) checkBoxSelectedCount++;
                 else checkBoxSelectedCount--;
+
+                if(isSelected) {
+                    totalSelectedValue = totalSelectedValue.add(CurrencyApiClient.getInstance().convert(
+                            BigDecimal.valueOf(rc.getTransaksi().getJumlah()),
+                            rc.getTransaksi().getAkun().getMataUang().getKode(),
+                            "IDR"
+                    ));
+                } else{
+                    totalSelectedValue = totalSelectedValue.subtract(CurrencyApiClient.getInstance().convert(
+                            BigDecimal.valueOf(rc.getTransaksi().getJumlah()),
+                            rc.getTransaksi().getAkun().getMataUang().getKode(),
+                            "IDR"
+                    ));
+                }
+
                 updateButtons();
             });
         }
     }
-
     private void updateButtons() {
         boolean anySelected = checkBoxSelectedCount > 0;
         checkBoxIndicatorPanelSetter(anySelected);
@@ -686,7 +711,6 @@ public class IncomeControl implements Initializable {
         exportButton.setDisable(!anySelected);
         deleteButton.setDisable(!anySelected);
     }
-
     private void checkBoxIndicatorPanelSetter(boolean result) {
         if(result) {
             checkBoxIndicatorPanel.setStyle("-fx-background-color: #FFF9DB;");
@@ -711,6 +735,8 @@ public class IncomeControl implements Initializable {
             labelSelectAll.setText("Select all");
             isUpdatingFromSelectAll = false; // guard start
         }
+
+        selectedAmountSetter(result);
     }
 
     // [7] >=== CONTROLLER LAINYA...

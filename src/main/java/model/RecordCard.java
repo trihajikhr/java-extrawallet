@@ -14,6 +14,7 @@ import javafx.scene.shape.Line;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,8 +47,13 @@ public class RecordCard {
     private ImageView kategoriIcon;
     private ImageView paymentStatusIcon;
 
+    // atribute helper
+    private Transaksi transaksi;
+
     // [0] >=== CONSTRUCTOR
     public RecordCard(Transaksi trans) {
+        this.transaksi = trans;
+
         // [0] parent node
         this.cardWrapper = createParentNode(trans);
 
@@ -283,6 +289,7 @@ public class RecordCard {
         });
     }
 
+
     // [] >=== SETTER & GETTER
 
     public HBox getCardWrapper() {
@@ -387,5 +394,13 @@ public class RecordCard {
 
     public void setPaymentStatusIcon(ImageView paymentStatusIcon) {
         this.paymentStatusIcon = paymentStatusIcon;
+    }
+
+    public Transaksi getTransaksi() {
+        return transaksi;
+    }
+
+    public void setTransaksi(Transaksi transaksi) {
+        this.transaksi = transaksi;
     }
 }

@@ -153,6 +153,10 @@ public class CurrencyApiClient {
             return amount.divide(eurToIdr, 2, RoundingMode.HALF_UP);
         }
 
+        if(from.equals("IDR") && to.equals("IDR")) {
+            return amount;
+        }
+
         throw new IllegalArgumentException("Mata uang tidak didukung");
     }
 }
