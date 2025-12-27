@@ -157,14 +157,13 @@ public class DataManager {
 
     // [2] >> =============== DATA PEMASUKAN =============== //
     public ArrayList<Transaksi> getDataTransaksiPemasukan() {
-        System.out.println(dataTransaksi.size());
-
         ArrayList<Transaksi> inList = new ArrayList<>();
         for(Transaksi trans : dataTransaksi) {
             if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
                 inList.add(trans);
             }
         }
+        log.info("Total income transaction: " + inList.size());
         return inList;
     }
 

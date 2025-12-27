@@ -61,18 +61,24 @@ public class CurrencyApiClient {
 
     public String getExchangeRate(String from, String to) throws Exception {
         String url = "https://api.frankfurter.app/latest?from=" + from + "&to=" + to;
-
         HttpClient client = HttpClient.newHttpClient();
-
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .GET()
                 .build();
-
-        HttpResponse<String> response =
-                client.send(request, HttpResponse.BodyHandlers.ofString());
-
-        return response.body(); // JSON mentah
+        try {
+            HttpResponse<String> response =
+                    client.send(request, HttpResponse.BodyHandlers.ofString());
+            if(response.statusCode() == 200) {
+                return response.body();
+            } else {
+                log.error("Gagal fetch kurs, HTTP code: " + response.statusCode());
+                return null;
+            }
+        } catch (Exception e) {
+            log.warn("User sedang offline! tidak bisa fetch kurs " + from + " -> " + to);
+            return null;
+        }
     }
 
     public double extractRate(String json, String currency) {
@@ -85,6 +91,11 @@ public class CurrencyApiClient {
         try {
             String usdJson = getExchangeRate("USD", "IDR");
             String eurJson = getExchangeRate("EUR", "IDR");
+
+            if(usdJson == null || eurJson == null) {
+                log.warn("Menggunakan data kurs lokal karena fetch gagal!");
+                return;
+            }
 
             usdToIdr = BigDecimal.valueOf(extractRate(usdJson, "IDR"));
             eurToIdr = BigDecimal.valueOf(extractRate(eurJson, "IDR"));

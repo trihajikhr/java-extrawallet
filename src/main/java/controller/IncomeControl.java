@@ -147,7 +147,7 @@ public class IncomeControl implements Initializable {
          return recordCard;
     }
     private void fetchTransactionData() {
-        log.info("report income berhasil terbuka");
+        log.info("data income berhasil diambil dari datamanager");
         incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
 
         for(Transaksi in : incomeTransaction) {
