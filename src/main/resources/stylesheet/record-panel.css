@@ -23,6 +23,48 @@
     -fx-letter-spacing: 1;
 }
 
+/* [2] >=== 3 Button styling */
+.unselect-button-edit {
+    -fx-background-color: #E8F6F1;
+    -fx-text-fill: #01AA71;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
+
+.unselect-button-export {
+    -fx-background-color: #F8F9F9;
+    -fx-text-fill:  #7F8C8D;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
+
+.unselect-button-delete {
+    -fx-background-color: #FDEDEC;
+    -fx-text-fill:  #E74C3C;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
+
+.selected-button-edit {
+    -fx-background-color: #009360;
+    -fx-text-fill:  #FFFFFF;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
+
+.selected-button-export {
+    -fx-background-color: #FD7E14;
+    -fx-text-fill:  #FFFFFF;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
+
+.selected-button-delete {
+    -fx-background-color: #F92222;
+    -fx-text-fill:  #FFFFFF;
+    -fx-background-radius: 15;
+    -fx-font-weight: bold;
+}
 
 /* [2] >=== TARGET LANGSUNG KE NODE! */
 .menu-button {

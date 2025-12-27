@@ -656,7 +656,6 @@ public class IncomeControl implements Initializable {
             } else {
                 applyDeselectAllCheckBox();
             }
-            totalSelectedValue = totalDefaultValue;
             selectedAmountSetter(false);
         });
     }
@@ -673,6 +672,7 @@ public class IncomeControl implements Initializable {
             cek.setSelected(true);
         }
         checkBoxSelectedCount = visibleCheckBox.size();
+        totalSelectedValue = totalDefaultValue;
         updateButtons();
         isBulkChanging = false;
     }
@@ -682,6 +682,7 @@ public class IncomeControl implements Initializable {
             cek.setSelected(false);
         }
         checkBoxSelectedCount = 0;
+        resetSelectedAmount();
         updateButtons();
         isBulkChanging = false;
     }
@@ -713,6 +714,11 @@ public class IncomeControl implements Initializable {
     }
     private void updateButtons() {
         boolean anySelected = checkBoxSelectedCount > 0;
+
+//        System.out.println("checkbox sekarang: " + checkBoxSelectedCount);
+//        System.out.println("default total: " + totalDefaultValue);
+//        System.out.println("checked total: " + totalSelectedValue);
+
         checkBoxIndicatorPanelSetter(anySelected);
         editButton.setDisable(!anySelected);
         exportButton.setDisable(!anySelected);
