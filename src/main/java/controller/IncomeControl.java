@@ -111,6 +111,7 @@ public class IncomeControl implements Initializable {
         setDateNow();
         recordCounterLabelInit();
         defaultTotalAmountSetter(incomeTransaction);
+        setFirstFilter();
     }
 
     // [1] >=== BASE INIT
@@ -137,6 +138,9 @@ public class IncomeControl implements Initializable {
         recordPanel.getStylesheets().add(
                 getClass().getResource("/stylesheet/record-card.css").toExternalForm()
         );
+    }
+    private void setFirstFilter() {
+        applyFilterAndSort();
     }
     private void defaultTotalAmountSetter(List<Transaksi> dataIncome) {
         totalDefaultValue = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
@@ -192,8 +196,6 @@ public class IncomeControl implements Initializable {
         ObservableList<SortOption> sortItems =
                 FXCollections.observableArrayList(SortOption.values());
         comboBoxSort.setItems(sortItems);
-
-        comboBoxSort.getSelectionModel().select(SortOption.TIME_NEWEST);
 
         comboBoxSort.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             applyFilterAndSort();
@@ -633,25 +635,28 @@ public class IncomeControl implements Initializable {
         SortOption sort = comboBoxSort.getValue();
         if (sort == null) {
             return Comparator.comparing(Transaksi::getTanggal).reversed()
-                    .thenComparing(Transaksi::getId); // default
+                    .thenComparing(Comparator.comparing(Transaksi::getId).reversed());
         }
+
+        Comparator<Transaksi> byIdDesc =
+                Comparator.comparing(Transaksi::getId).reversed();
 
         switch (sort) {
             case TIME_NEWEST:
                 return Comparator.comparing(Transaksi::getTanggal).reversed()
-                        .thenComparing(Transaksi::getId);
+                        .thenComparing(byIdDesc);
             case TIME_OLDEST:
                 return Comparator.comparing(Transaksi::getTanggal)
                         .thenComparing(Transaksi::getId);
             case AMOUNT_HIGHEST:
                 return Comparator.comparing(Transaksi::getJumlah).reversed()
-                        .thenComparing(Transaksi::getId);
+                        .thenComparing(byIdDesc);
             case AMOUNT_LOWEST:
                 return Comparator.comparing(Transaksi::getJumlah)
-                        .thenComparing(Transaksi::getId);
+                        .thenComparing(byIdDesc);
             default:
                 return Comparator.comparing(Transaksi::getTanggal).reversed()
-                        .thenComparing(Transaksi::getId);
+                        .thenComparing(byIdDesc);
         }
     }
     private void refreshView(List<Transaksi> data) {

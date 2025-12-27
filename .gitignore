@@ -39,5 +39,5 @@ build/
 .DS_Store
 
 ### Editan ku!
-# /database/
+/database/
 data/exchange_rates.json
