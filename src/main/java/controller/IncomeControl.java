@@ -100,6 +100,7 @@ public class IncomeControl implements Initializable {
         // listener
         checkBoxSelectAllListener();
         checkBoxSetupListeners();
+        updateButtons();
     }
 
     private void initBaseData() {
