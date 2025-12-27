@@ -127,17 +127,17 @@ public class IncomeControl implements Initializable {
         totalDefaultValue = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
         String stringForm = totalDefaultValue.toPlainString();
         String result = Converter.numberFormatter(stringForm);
-        labelTotalAmount.setText("Total: IDR " + result);
+        labelTotalAmount.setText("IDR " + result);
     }
     private void selectedAmountSetter(Boolean anySelected) {
         if(anySelected) {
             String stringForm = totalSelectedValue.toPlainString();
             String result = Converter.numberFormatter(stringForm);
-            labelTotalAmount.setText("Total: IDR " + result);
+            labelTotalAmount.setText("IDR " + result);
         } else {
             String stringForm = totalDefaultValue.toPlainString();
             String result = Converter.numberFormatter(stringForm);
-            labelTotalAmount.setText("Total: IDR " + result);
+            labelTotalAmount.setText("IDR " + result);
         }
     }
     private void resetSelectedAmount() {

@@ -152,7 +152,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <VBox alignment="CENTER_LEFT" spacing="5.0">
+                              <VBox alignment="CENTER_LEFT" maxWidth="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Label fx:id="labelTotalRecords" style="-fx-font-weight: bold; -fx-font-size: 14;" text="Jumlah record" textFill="#2c3e50" />
                                     <HBox alignment="CENTER_LEFT" spacing="5.0">
@@ -163,8 +163,8 @@
                                     </HBox>
                                  </children>
                               </VBox>
-                              <Region HBox.hgrow="ALWAYS" />
-                              <HBox alignment="CENTER" spacing="10.0">
+                              <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                              <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEdit" prefWidth="60.0" style="-fx-background-color: #E8F6F1; -fx-text-fill: #01AA71; -fx-background-radius: 15; -fx-font-weight: bold;" text="Edit" />
                                     <Button fx:id="exportButton" mnemonicParsing="false" prefWidth="60.0" style="-fx-background-color: #F8F9F9; -fx-text-fill: #7F8C8D; -fx-background-radius: 15;" text="Export">
@@ -179,6 +179,12 @@
                                     </Button>
                                  </children>
                               </HBox>
+                              <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
+                              <HBox alignment="CENTER_RIGHT" maxWidth="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label fx:id="labelTotalAmount" styleClass="text-field-amount" text="total income" textFill="#BDC3C7" />
+                                 </children>
+                              </HBox>
                            </children>
                            <padding>
                               <Insets left="20.0" right="20.0" />
@@ -190,7 +196,6 @@
                      <children>
                         <Label fx:id="labelTanggalSekarang" text="tanggal sekarang" textFill="#01AA71" />
                         <Region HBox.hgrow="ALWAYS" />
-                        <Label fx:id="labelTotalAmount" styleClass="text-field-helper" text="total income" textFill="#BDC3C7" />
                      </children>
                      <VBox.margin>
                         <Insets />
