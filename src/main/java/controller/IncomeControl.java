@@ -38,7 +38,6 @@ public class IncomeControl implements Initializable {
     // data sumber kebenaran
     List<Transaksi> incomeTransaction  = new ArrayList<>();
     private final Map<Transaksi, RecordCard> recordCardBoard = new HashMap<>();
-    private final Map<Transaksi, CheckBox> allCheckBox = new HashMap<>();
     private final List<CheckBox> visibleCheckBox = new ArrayList<>();
 
     @FXML private VBox recordPanel;
@@ -79,6 +78,9 @@ public class IncomeControl implements Initializable {
 
     // checkbox untuk select all
     @FXML private CheckBox checkBoxSelectAll;
+    private int checkBoxSelectedCount = 0;
+    private boolean isBulkChanging = false;
+    private boolean isUpdatingFromSelectAll = false;
 
     // bagian button
     @FXML private Button editButton;
@@ -95,7 +97,7 @@ public class IncomeControl implements Initializable {
 
         // listener
         checkBoxSelectAllListener();
-        updateCheckBoxBooleanBinding();
+        checkBoxSetupListeners();
     }
 
     private void initBaseData() {
@@ -127,8 +129,9 @@ public class IncomeControl implements Initializable {
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
     private RecordCard createTransaction(Transaksi income) {
-         RecordCard transList = new RecordCard(income);
-         return transList;
+         RecordCard recordCard = new RecordCard(income);
+         visibleCheckBox.add(recordCard.getCheckList());
+         return recordCard;
     }
     private void fetchTransactionData() {
         log.info("report income berhasil terbuka");
@@ -627,10 +630,9 @@ public class IncomeControl implements Initializable {
     }
 
     // [6] >=== CHECKBOX LISTENER & HANDLER
-    // FIXME: listener tidak bekerja
-    // BUG: listener tidak menghitung jumlah checkbox yang ditambahkan!
     private void checkBoxSelectAllListener() {
         checkBoxSelectAll.selectedProperty().addListener((obs, wasSelected, isNowSelected) -> {
+            if(isUpdatingFromSelectAll) return;
             if(isNowSelected) {
                 applySelectAllCheckBox();
             } else {
@@ -639,65 +641,75 @@ public class IncomeControl implements Initializable {
         });
     }
     private void refreshVisibleCheckbox(List<Transaksi> dataTransaksi){
+        applyDeselectAllCheckBox();
         visibleCheckBox.clear();
         for(Transaksi trans : dataTransaksi) {
-            visibleCheckBox.add(allCheckBox.get(trans));
+            visibleCheckBox.add(recordCardBoard.get(trans).getCheckList());
         }
-
-        // reset semua checkbox visible ke false sebelum binding
-        applyDeselectAllCheckBox();
-        checkBoxSelectAll.setSelected(false);
-
-        // baru update binding
-        updateCheckBoxBooleanBinding();
     }
-
     private void applySelectAllCheckBox() {
-        for(CheckBox cek : visibleCheckBox) {
+        isBulkChanging = true;
+        for (CheckBox cek : visibleCheckBox) {
             cek.setSelected(true);
         }
+        checkBoxSelectedCount = visibleCheckBox.size();
+        updateButtons();
+        isBulkChanging = false;
     }
+
     private void applyDeselectAllCheckBox() {
-        for(CheckBox cek : visibleCheckBox) {
+        isBulkChanging = true;
+        for (CheckBox cek : visibleCheckBox) {
             cek.setSelected(false);
         }
+        checkBoxSelectedCount = 0;
+        updateButtons();
+        isBulkChanging = false;
     }
-    private void updateCheckBoxBooleanBinding() {
-        BooleanBinding anySelected = new BooleanBinding() {
-            {
-                for (CheckBox cb : visibleCheckBox) {
-                    super.bind(cb.selectedProperty());
-                }
-            }
 
-            @Override
-            protected boolean computeValue() {
-                return visibleCheckBox.stream().anyMatch(CheckBox::isSelected);
-            }
-        };
 
-        anySelected.addListener((obs, oldVal, newVal) -> System.out.println("INI TERPILIH!"));
-
-        editButton.disableProperty().bind(anySelected.not());
-        exportButton.disableProperty().bind(anySelected.not());
-        deleteButton.disableProperty().bind(anySelected.not());
+    private void checkBoxSetupListeners() {
+        for (RecordCard rc : recordCardBoard.values()) {
+            rc.setCheckBoxListener(isSelected -> {
+                if (isBulkChanging) return; // skip update count saat bulk change
+                if (isSelected) checkBoxSelectedCount++;
+                else checkBoxSelectedCount--;
+                updateButtons();
+            });
+        }
     }
+
+    private void updateButtons() {
+        boolean anySelected = checkBoxSelectedCount > 0;
+        checkBoxIndicatorPanelSetter(anySelected);
+        editButton.setDisable(!anySelected);
+        exportButton.setDisable(!anySelected);
+        deleteButton.setDisable(!anySelected);
+    }
+
     private void checkBoxIndicatorPanelSetter(boolean result) {
         if(result) {
             checkBoxIndicatorPanel.setStyle("-fx-background-color: #FFF9DB;");
-            long selectedCount = visibleCheckBox.stream().filter(CheckBox::isSelected).count();
 
             String showLabel;
-            if(selectedCount == visibleCheckBox.size()) {
+            isUpdatingFromSelectAll = true; // guard start
+
+            if(checkBoxSelectedCount == visibleCheckBox.size()) {
+                checkBoxSelectAll.setSelected(true);
                 showLabel = "Deselect all";
             } else {
-                showLabel = "Select all, selected " + selectedCount;
+                showLabel = "Select all, selected " + checkBoxSelectedCount;
+                checkBoxSelectAll.setSelected(false);
             }
+
+            isUpdatingFromSelectAll = false; // guard end
             labelSelectAll.setText(showLabel);
 
         } else {
+            isUpdatingFromSelectAll = true; // guard start
             checkBoxIndicatorPanel.setStyle("-fx-background-color: #FFFFFF;");
             labelSelectAll.setText("Select all");
+            isUpdatingFromSelectAll = false; // guard start
         }
     }
 

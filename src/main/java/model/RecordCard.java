@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 // TODO: sempurnakan constructor, dan atur setter dan getter, dan pikirkan soal listener
 
@@ -273,6 +274,13 @@ public class RecordCard {
         lineSeparator.setStrokeWidth(1);
 
         return lineSeparator;
+    }
+
+    // [3] >=== CHECKBOX LISTENER
+    public void setCheckBoxListener(Consumer<Boolean> callback) {
+        checkList.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            callback.accept(newVal);
+        });
     }
 
     // [] >=== SETTER & GETTER
