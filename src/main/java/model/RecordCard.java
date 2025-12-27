@@ -56,6 +56,7 @@ public class RecordCard {
 
         // [0] parent node
         this.cardWrapper = createParentNode(trans);
+        cardWrapper.getStyleClass().add("record-card");
 
         // [1] checklist:
         this.checkList = createCheckBoxNode(trans);

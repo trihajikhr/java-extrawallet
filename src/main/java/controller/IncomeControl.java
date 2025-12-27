@@ -107,6 +107,7 @@ public class IncomeControl implements Initializable {
 
     private void initBaseData() {
         mainButtonInit();
+        loadStyleForRecordParent();
         setDateNow();
         recordCounterLabelInit();
         defaultTotalAmountSetter(incomeTransaction);
@@ -132,6 +133,11 @@ public class IncomeControl implements Initializable {
         mainButtonList.put("delete", deleteButton);
         mainButtonStyler(isAnyCheckBoxSelected);
     }
+    private void loadStyleForRecordParent() {
+        recordPanel.getStylesheets().add(
+                getClass().getResource("/stylesheet/record-card.css").toExternalForm()
+        );
+    }
     private void defaultTotalAmountSetter(List<Transaksi> dataIncome) {
         totalDefaultValue = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
         String stringForm = totalDefaultValue.toPlainString();
@@ -154,7 +160,7 @@ public class IncomeControl implements Initializable {
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
-    private RecordCard createTransaction(Transaksi income) {
+    private RecordCard createRecordCard(Transaksi income) {
          RecordCard recordCard = new RecordCard(income);
          visibleCheckBox.add(recordCard.getCheckList());
          return recordCard;
@@ -164,7 +170,7 @@ public class IncomeControl implements Initializable {
         incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
 
         for(Transaksi in : incomeTransaction) {
-            recordCardBoard.put(in, createTransaction(in));
+            recordCardBoard.put(in, createRecordCard(in));
         }
 
         for(RecordCard card : recordCardBoard.values()) {
