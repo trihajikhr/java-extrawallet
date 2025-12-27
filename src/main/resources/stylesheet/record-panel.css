@@ -24,23 +24,10 @@
 }
 
 /* [2] >=== 3 Button styling */
-.unselect-button-edit {
-    -fx-background-color: #E8F6F1;
-    -fx-text-fill: #01AA71;
-    -fx-background-radius: 15;
-    -fx-font-weight: bold;
-}
-
-.unselect-button-export {
-    -fx-background-color: #F8F9F9;
-    -fx-text-fill:  #7F8C8D;
-    -fx-background-radius: 15;
-    -fx-font-weight: bold;
-}
-
-.unselect-button-delete {
-    -fx-background-color: #FDEDEC;
-    -fx-text-fill:  #E74C3C;
+/* EDIT BUTTON */
+.unselect-button {
+    -fx-background-color: #d9d7d7;
+    -fx-text-fill: #404040;
     -fx-background-radius: 15;
     -fx-font-weight: bold;
 }
@@ -52,6 +39,14 @@
     -fx-font-weight: bold;
 }
 
+.selected-button-edit:hover {
+    -fx-background-color: #007a4f;
+}
+.selected-button-edit:pressed {
+    -fx-background-color: #005e3c;
+}
+
+/* EXPORT BUTTON */
 .selected-button-export {
     -fx-background-color: #FD7E14;
     -fx-text-fill:  #FFFFFF;
@@ -59,11 +54,26 @@
     -fx-font-weight: bold;
 }
 
+.selected-button-export:hover {
+    -fx-background-color: #e06912;
+}
+.selected-button-export:pressed {
+    -fx-background-color: #b8510f;
+}
+
+/* DELETE BUTTON */
 .selected-button-delete {
     -fx-background-color: #F92222;
     -fx-text-fill:  #FFFFFF;
     -fx-background-radius: 15;
     -fx-font-weight: bold;
+}
+
+.selected-button-delete:hover {
+    -fx-background-color: #d11c1c;
+}
+.selected-button-delete:pressed {
+    -fx-background-color: #a41515;
 }
 
 /* [2] >=== TARGET LANGSUNG KE NODE! */

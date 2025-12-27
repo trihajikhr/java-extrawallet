@@ -83,11 +83,13 @@ public class IncomeControl implements Initializable {
     private int checkBoxSelectedCount = 0;
     private boolean isBulkChanging = false;
     private boolean isUpdatingFromSingleSelect = false;
+    private boolean isAnyCheckBoxSelected = false;
 
     // bagian button
     @FXML private Button editButton;
     @FXML private Button exportButton;
     @FXML private Button deleteButton;
+    private Map<String, Button> mainButtonList = new HashMap<>();
 
     // [0] >=== INIT FUNCTION
     @Override
@@ -104,6 +106,7 @@ public class IncomeControl implements Initializable {
     }
 
     private void initBaseData() {
+        mainButtonInit();
         setDateNow();
         recordCounterLabelInit();
         defaultTotalAmountSetter(incomeTransaction);
@@ -122,6 +125,12 @@ public class IncomeControl implements Initializable {
     }
     private void recordCounterLabelInit() {
         labelTotalRecords.setText("Found " + incomeTransaction.size() + " record");
+    }
+    private void mainButtonInit() {
+        mainButtonList.put("edit", editButton);
+        mainButtonList.put("export", exportButton);
+        mainButtonList.put("delete", deleteButton);
+        mainButtonStyler(isAnyCheckBoxSelected);
     }
     private void defaultTotalAmountSetter(List<Transaksi> dataIncome) {
         totalDefaultValue = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
@@ -715,9 +724,15 @@ public class IncomeControl implements Initializable {
     private void updateButtons() {
         boolean anySelected = checkBoxSelectedCount > 0;
 
-//        System.out.println("checkbox sekarang: " + checkBoxSelectedCount);
-//        System.out.println("default total: " + totalDefaultValue);
-//        System.out.println("checked total: " + totalSelectedValue);
+        // System.out.println("checkbox sekarang: " + checkBoxSelectedCount);
+        // System.out.println("default total: " + totalDefaultValue);
+        // System.out.println("checked total: " + totalSelectedValue);
+
+        if(anySelected != isAnyCheckBoxSelected) {
+            System.out.println("mendeteksi perubahan TOOGLER");
+            mainButtonStyler(anySelected);
+            isAnyCheckBoxSelected = anySelected;
+        }
 
         checkBoxIndicatorPanelSetter(anySelected);
         editButton.setDisable(!anySelected);
@@ -754,6 +769,23 @@ public class IncomeControl implements Initializable {
     }
 
     // [7] >=== CONTROLLER LAINYA...
+    private void mainButtonStyler(Boolean value) {
+        if(value) {
+            mainButtonList.forEach((name, btn) -> {
+                btn.getStyleClass().remove("unselect-button");
+            });
+            mainButtonList.forEach((name, btn) -> {
+                btn.getStyleClass().add("selected-button-" + name);
+            });
+        } else {
+            mainButtonList.forEach((name, btn) -> {
+                btn.getStyleClass().remove("selected-button-" + name);
+            });
+            mainButtonList.forEach((name, btn) -> {
+                btn.getStyleClass().add("unselect-button");
+            });
+        }
+    }
     @FXML
     private void handleEdit() {
         showNotification("Info", "Fitur Edit akan segera hadir.");
