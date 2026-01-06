@@ -30,3 +30,13 @@
 .nav-button:pressed {
     -fx-background-color: #e6e8eb;
 }
+
+
+/* home tampilan */
+/* box style */
+.box-styling {
+    -fx-background-color: #FEFEFE;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+    /* -fx-border-radius: 8; */
+    -fx-background-radius: 8;
+}

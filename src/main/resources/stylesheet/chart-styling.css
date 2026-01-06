@@ -1,0 +1,17 @@
+/* Garis Pertama (Income) */
+.default-color0.chart-series-line {
+    -fx-stroke: #2ecc71; /* Hijau */
+    -fx-stroke-width: 3px;
+}
+.default-color0.chart-line-symbol {
+    -fx-background-color: #2ecc71, white;
+}
+
+/* Garis Kedua */
+.default-color1.chart-series-line {
+    -fx-stroke: #e74c3c; /* Merah */
+    -fx-stroke-width: 3px;
+}
+.default-color1.chart-line-symbol {
+    -fx-background-color: #e74c3c, white;
+}

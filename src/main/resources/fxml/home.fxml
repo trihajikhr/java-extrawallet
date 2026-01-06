@@ -1,60 +1,213 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="-Infinity" prefHeight="900.0" prefWidth="1200.0" stylesheets="@../stylesheet/pane-style.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/25" fx:controller="controller.HomeControl">
-  <content>
-    <AnchorPane maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="1200.0" prefWidth="1200.0">
-         <children>
-            <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1200.0" prefWidth="900.0" stylesheets="@../stylesheet/dashboard.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.HomeControl">
+   <children>
+      <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="200.0" layoutY="84.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <content>
+            <VBox spacing="10.0">
                <children>
-                  <AnchorPane maxWidth="1.7976931348623157E308" prefHeight="80.0" prefWidth="1200.0">
+                  <VBox alignment="CENTER_LEFT" prefHeight="60.0" spacing="10.0">
                      <children>
-                        <FlowPane fx:id="accountPane" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                        <Label text="Your Dashboard" />
+                        <Label text="This is your statistic of your activity" />
                      </children>
-                  </AnchorPane>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="500.0" minWidth="900.0" prefHeight="800.0" prefWidth="1200.0">
+                  </VBox>
+                  <VBox spacing="25.0">
                      <children>
-                        <VBox layoutX="199.0" layoutY="80.0" prefHeight="587.0" prefWidth="1017.0" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox minHeight="150.0" prefHeight="150.0" prefWidth="200.0" spacing="25.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                              <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="box-styling" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+                                    <VBox layoutY="-36.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <children>
-                                          <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                                          <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="279.0" spacing="120.0">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
                                              <children>
-                                                <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
-                                                <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
+                                                <Label text="Total Income">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Persenan" />
                                              </children>
                                           </HBox>
-                                          <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                                          <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="279.0">
                                              <children>
-                                                <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
-                                                <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
+                                                <Label text="total pengeluaran" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="20.0" />
+                                             </padding>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="279.0">
+                                             <children>
+                                                <Label text="Last 30 days">
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
+                                             </children></HBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" styleClass="box-styling" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <VBox layoutY="-36.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="279.0" spacing="120.0">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <children>
+                                                <Label text="Total Expense">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Persenan" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="279.0">
+                                             <children>
+                                                <Label text="total pengeluaran" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="20.0" />
+                                             </padding>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="279.0">
+                                             <children>
+                                                <Label text="Last 30 days">
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
                                              </children>
                                           </HBox>
                                        </children>
                                     </VBox>
-                                    <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
                                  </children>
-                              </HBox>
-                              <HBox spacing="10.0" VBox.vgrow="ALWAYS">
+                              </AnchorPane>
+                              <AnchorPane layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="200.0" styleClass="box-styling" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
-                                    <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
-                                    <AnchorPane styleClass="white-box-shadow" HBox.hgrow="ALWAYS" />
+                                    <VBox layoutY="-36.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="279.0" spacing="120.0">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                             <children>
+                                                <Label text="Total Income">
+                                                   <HBox.margin>
+                                                      <Insets />
+                                                   </HBox.margin>
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
+                                                <Label text="Persenan" />
+                                             </children>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="279.0">
+                                             <children>
+                                                <Label text="total pengeluaran" />
+                                             </children>
+                                             <padding>
+                                                <Insets left="20.0" />
+                                             </padding>
+                                          </HBox>
+                                          <HBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="279.0">
+                                             <children>
+                                                <Label text="Last 30 days">
+                                                   <padding>
+                                                      <Insets left="20.0" />
+                                                   </padding>
+                                                </Label>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </VBox>
                                  </children>
-                              </HBox>
+                              </AnchorPane>
                            </children>
-                        </VBox>
+                        </HBox>
+                        <HBox prefHeight="500.0" prefWidth="200.0" spacing="25.0" VBox.vgrow="ALWAYS">
+                           <children>
+                              <VBox prefHeight="200.0" prefWidth="100.0" styleClass="box-styling" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <HBox prefHeight="36.0" prefWidth="318.0">
+                                       <children>
+                                          <Label text="Your last month activity" />
+                                       </children>
+                                    </HBox>
+                                    <AnchorPane prefHeight="400.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                       <children>
+                                          <LineChart fx:id="grafikLine" layoutX="-93.0" layoutY="-127.0" stylesheets="@../stylesheet/chart-styling.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <xAxis>
+                                                <CategoryAxis side="BOTTOM" />
+                                             </xAxis>
+                                             <yAxis>
+                                                <NumberAxis side="LEFT" />
+                                             </yAxis>
+                                          </LineChart>
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </VBox>
+                              <AnchorPane maxWidth="600.0" prefHeight="200.0" prefWidth="200.0" styleClass="box-styling" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <VBox alignment="CENTER_LEFT" layoutX="147.0" layoutY="50.0" prefHeight="75.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <Label text="Most traansaction in Categori" />
+                                       </children>
+                                       <padding>
+                                          <Insets left="20.0" />
+                                       </padding>
+                                    </VBox>
+                                    <ScrollPane layoutX="32.0" layoutY="150.0" prefHeight="407.0" prefWidth="430.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0" />
+                                      </content>
+                                    </ScrollPane>
+                                 </children></AnchorPane>
+                           </children>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="30.0" prefWidth="200.0">
+                           <children>
+                              <Label contentDisplay="CENTER" text="Your latest transaction">
+                                 <HBox.margin>
+                                    <Insets />
+                                 </HBox.margin></Label>
+                           </children>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </HBox>
+                        <VBox minHeight="40.0" prefWidth="100.0" styleClass="box-styling" />
                      </children>
-                  </AnchorPane>
+                  </VBox>
                </children>
             </VBox>
-         </children></AnchorPane>
-  </content>
-</ScrollPane>
+         </content>
+      </ScrollPane>
+   </children>
+</AnchorPane>
