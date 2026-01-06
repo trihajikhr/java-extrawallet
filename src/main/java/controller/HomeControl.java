@@ -5,27 +5,46 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.VBox;
 import model.Akun;
+import model.RecordCard;
 import model.TipeTransaksi;
 import model.Transaksi;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class HomeControl implements Initializable {
+    private static final Logger log = LoggerFactory.getLogger(HomeControl.class);
+
     private ArrayList<Transaksi> dataTransaksi;
     private ArrayList<Transaksi> dataBulanExpense = new ArrayList<>();
     private ArrayList<Transaksi> dataBulanIncome = new ArrayList<>();
+    private ArrayList<Transaksi> latestTransaction =  new ArrayList<>();
     private ArrayList<Akun> dataAkun;
 
-    @FXML
-    LineChart<String, Number> grafikLine;
+    @FXML private VBox latestTransactionPanel;
+
+    @FXML LineChart<String, Number> grafikLine;
+
+    @FXML private Label headDashboard1;
+    @FXML private Label headDashboard2;
 
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
+        // style dasar
+        latestTransactionPanel.setSpacing(5);
+
         fetchData();
         generateChart();
+        generateLatestTransactionPanel();
     }
 
     // [0] >=== INITIALISASI & DATA FETCHING
@@ -82,4 +101,35 @@ public class HomeControl implements Initializable {
         // tampilkan
         grafikLine.getData().addAll(dataIncome, dataExpense);
     }
+
+    // [] >=== LABEL SET
+    private void allLabelSet() {
+
+    }
+
+    // [] >=== PANEL 15 TRANSAKSI TERAKHIR
+    private RecordCard createRecoedCard(Transaksi trans) {
+        RecordCard recordCard = new RecordCard(trans);
+        recordCard.getCheckList().setVisible(false);
+        return recordCard;
+    }
+    private void generateLatestTransactionPanel(){
+        log.info("data transaksi terbaru berhasil digenerate!");
+        int batasData = 10;
+        List<Transaksi> latest15 =
+                dataTransaksi.stream()
+                        .sorted(
+                                Comparator
+                                        .comparing(Transaksi::getTanggal).reversed()
+                                        .thenComparing(Transaksi::getId, Comparator.reverseOrder())
+                        )
+                        .limit(batasData)
+                        .toList();
+
+        for (Transaksi trans: latest15) {
+            latestTransactionPanel.getChildren().add(createRecoedCard(trans).getCardWrapper());
+        }
+    }
+
+
 }

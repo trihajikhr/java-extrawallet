@@ -32,11 +32,85 @@
 }
 
 
-/* home tampilan */
+
+
+/* DASHBOARD ALL VIEW */
+/* SCROLL PANE NOT FOCUS */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane:focused {
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+
+
+/* scrollbar for scrollpane */
+/* Vertical scrollbar */
+.scroll-bar:vertical {
+    -fx-background-color: transparent; /* track container */
+    -fx-padding: 2px;
+    -fx-pref-width: 17px; /* tipis */
+}
+
+/* Track (latar scrollbar) */
+.scroll-bar:vertical .track {
+    -fx-background-color: #e0e0e0; /* abu-abu terang */
+    -fx-background-radius: 4px;
+}
+
+/* Thumb (bagian yang digeser) */
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c0c0c0; /* abu-abu default */
+    -fx-background-radius: 4px;
+}
+
+/* Thumb hover effect */
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #888888; /* lebih gelap saat hover */
+}
+
+/* Horizontal scrollbar (opsional) */
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 20px;
+}
+
+.scroll-bar:horizontal .track {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #c0c0c0;
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #888888;
+}
+
+
+
+
+
 /* box style */
 .box-styling {
     -fx-background-color: #FEFEFE;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
     /* -fx-border-radius: 8; */
     -fx-background-radius: 8;
+}
+
+/* bagian label income */
+.h1-label {
+    -fx-text-fill: #6A7282;
+    -fx-font-size: 15;
 }
