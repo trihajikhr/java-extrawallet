@@ -109,8 +109,44 @@
     -fx-background-radius: 8;
 }
 
-/* bagian label income */
-.h1-label {
+/* bagian label dashboard header */
+.h1-label-1 {
+    -fx-text-fill: #000000;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+.h1-label-2 {
     -fx-text-fill: #6A7282;
     -fx-font-size: 15;
+}
+
+/* triple badge */
+.triple-badge-label {
+    -fx-text-fill: #6A7282;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+.income-label {
+    -fx-text-fill: #01AA71;
+    -fx-font-size: 23;
+    -fx-font-weight: bold;
+}
+
+.expense-label {
+    -fx-text-fill: #F92222;
+    -fx-font-size: 23;
+    -fx-font-weight: bold;
+}
+
+.balance-label {
+    -fx-text-fill: #0176FE;
+    -fx-font-size: 23;
+    -fx-font-weight: bold;
+}
+
+.last-mounth30 {
+    -fx-text-fill: #9CA3AF;
+    -fx-font-size: 12;
 }

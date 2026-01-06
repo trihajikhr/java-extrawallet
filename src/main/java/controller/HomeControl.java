@@ -1,6 +1,7 @@
 package controller;
 
 import dataflow.DataManager;
+import helper.Converter;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
@@ -15,6 +16,7 @@ import model.Transaksi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -30,12 +32,17 @@ public class HomeControl implements Initializable {
     private ArrayList<Transaksi> latestTransaction =  new ArrayList<>();
     private ArrayList<Akun> dataAkun;
 
+    private BigDecimal totalIncome;
+    private BigDecimal totalExpense;
+    private BigDecimal totalBalance;
+
     @FXML private VBox latestTransactionPanel;
 
     @FXML LineChart<String, Number> grafikLine;
 
-    @FXML private Label headDashboard1;
-    @FXML private Label headDashboard2;
+    @FXML private Label incomeLabel;
+    @FXML private Label expenseLabel;
+    @FXML private Label balanceLabel;
 
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
@@ -45,6 +52,7 @@ public class HomeControl implements Initializable {
         fetchData();
         generateChart();
         generateLatestTransactionPanel();
+        allLabelSet();
     }
 
     // [0] >=== INITIALISASI & DATA FETCHING
@@ -104,11 +112,24 @@ public class HomeControl implements Initializable {
 
     // [] >=== LABEL SET
     private void allLabelSet() {
+        totalIncome = DataManager.getInstance().getTotalIncome();
+        String stringForm = totalIncome.toPlainString();
+        String result = Converter.numberFormatter(stringForm);
+        incomeLabel.setText("IDR " + result);
 
+        totalExpense = DataManager.getInstance().getTotalExpense();
+        stringForm = totalExpense.toPlainString();
+        result = Converter.numberFormatter(stringForm);
+        expenseLabel.setText("IDR " + result);
+
+        totalBalance = totalIncome.subtract(totalExpense);
+        stringForm = totalBalance.toPlainString();
+        result = Converter.numberFormatter(stringForm);
+        balanceLabel.setText("IDR " + result);
     }
 
     // [] >=== PANEL 15 TRANSAKSI TERAKHIR
-    private RecordCard createRecoedCard(Transaksi trans) {
+    private RecordCard createRecordCard(Transaksi trans) {
         RecordCard recordCard = new RecordCard(trans);
         recordCard.getCheckList().setVisible(false);
         return recordCard;
@@ -127,7 +148,7 @@ public class HomeControl implements Initializable {
                         .toList();
 
         for (Transaksi trans: latest15) {
-            latestTransactionPanel.getChildren().add(createRecoedCard(trans).getCardWrapper());
+            latestTransactionPanel.getChildren().add(createRecordCard(trans).getCardWrapper());
         }
     }
 

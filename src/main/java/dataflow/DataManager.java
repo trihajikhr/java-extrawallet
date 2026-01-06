@@ -1,5 +1,6 @@
 package dataflow;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import dataflow.basedata.AccountItem;
@@ -12,6 +13,7 @@ import javafx.collections.ObservableList;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.CurrencyApiClient;
 
 // TODO: rapikan struktur fungsi di file ini  (supaya lebih rapi)
 // dan hapus beberapa fungsi tidak terpakai
@@ -19,6 +21,7 @@ import org.slf4j.LoggerFactory;
 public class DataManager {
     private static final Logger log = LoggerFactory.getLogger(DataManager.class);
     private static DataManager instance;
+    private static final String BASE_CURRENCY = "IDR";
 
     private ArrayList<Kategori> dataKategori;
     private ArrayList<Akun> dataAkun = new ArrayList<>();
@@ -125,33 +128,54 @@ public class DataManager {
     public ArrayList<Transaksi> getDataTransaksi() {
         return dataTransaksi;
     }
-
     public void sortingAscTanggal() {
         this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal));
     }
-
     public void sortingDscTanggal() {
         this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal).reversed());
     }
-
     public void sortingJumlahAscending(){
         this.dataTransaksi.sort(Comparator.comparing(Transaksi::getJumlah));
     }
-
     public void sortingJumlahDescending() {
         this.dataTransaksi.sort(Comparator.comparing(Transaksi::getJumlah).reversed());
     }
-
     public ArrayList<Transaksi> copyDataTransaksi() {
         return new ArrayList<>(dataTransaksi);
     }
-
     public ArrayList<Transaksi> coreDataTransaksi(){
         return dataTransaksi;
     }
-
     public void removeTransaksi(int id) {
         Database.getInstance().deleteTransaksi(id);
+    }
+
+    private BigDecimal normalizeAmount(Transaksi trans) {
+        BigDecimal amount = BigDecimal.valueOf(trans.getJumlah());
+        String currency = trans.getAkun().getMataUang().getKode();
+        if (currency.equalsIgnoreCase(BASE_CURRENCY)) {
+            return amount;
+        }
+        BigDecimal converted = CurrencyApiClient.getInstance().convert(amount, currency, BASE_CURRENCY);
+        return converted;
+    }
+    public BigDecimal getTotalIncome() {
+        BigDecimal result = BigDecimal.ZERO;
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
+                result = result.add(normalizeAmount(trans));
+            }
+        }
+        return result;
+    }
+    public BigDecimal getTotalExpense() {
+        BigDecimal result = BigDecimal.ZERO;
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
+                result = result.add(normalizeAmount(trans));
+            }
+        }
+        return result;
     }
 
 

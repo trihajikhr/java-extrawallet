@@ -28,8 +28,8 @@
                            <children>
                               <VBox alignment="CENTER_LEFT" prefHeight="200.0" spacing="10.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Label fx:id="headDashboard1" styleClass="h1-label" text="Your Dashboard" />
-                                    <Label fx:id="headDashboard2" styleClass="h1-label" text="This is your statistic of your activity" />
+                                    <Label fx:id="headDashboard1" styleClass="h1-label-1" text="Your Dashboard" />
+                                    <Label fx:id="headDashboard2" styleClass="h1-label-2" text="Here’s a snapshot of your recent activity ✨" />
                                  </children>
                               </VBox>
                               <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="20.0" HBox.hgrow="ALWAYS">
@@ -66,7 +66,7 @@
                                           <Insets />
                                        </VBox.margin>
                                        <children>
-                                          <Label text="Total Income">
+                                          <Label styleClass="triple-badge-label" text="Total Income">
                                              <HBox.margin>
                                                 <Insets />
                                              </HBox.margin>
@@ -79,7 +79,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="279.0">
                                        <children>
-                                          <Label text="total pengeluaran" />
+                                          <Label fx:id="incomeLabel" styleClass="income-label" text="total pemasukan" />
                                        </children>
                                        <padding>
                                           <Insets left="20.0" />
@@ -87,7 +87,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="279.0">
                                        <children>
-                                          <Label text="Last 30 days">
+                                          <Label styleClass="last-mounth30" text="Last 30 days">
                                              <padding>
                                                 <Insets left="20.0" />
                                              </padding>
@@ -107,7 +107,7 @@
                                           <Insets />
                                        </VBox.margin>
                                        <children>
-                                          <Label text="Total Expense">
+                                          <Label styleClass="triple-badge-label" text="Total Expense">
                                              <HBox.margin>
                                                 <Insets />
                                              </HBox.margin>
@@ -120,7 +120,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="279.0">
                                        <children>
-                                          <Label text="total pengeluaran" />
+                                          <Label fx:id="expenseLabel" styleClass="expense-label" text="total pengeluaran" />
                                        </children>
                                        <padding>
                                           <Insets left="20.0" />
@@ -128,7 +128,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="279.0">
                                        <children>
-                                          <Label text="Last 30 days">
+                                          <Label styleClass="last-mounth30" text="Last 30 days">
                                              <padding>
                                                 <Insets left="20.0" />
                                              </padding>
@@ -148,7 +148,7 @@
                                           <Insets />
                                        </VBox.margin>
                                        <children>
-                                          <Label text="Total Income">
+                                          <Label styleClass="triple-badge-label" text="Total Balance">
                                              <HBox.margin>
                                                 <Insets />
                                              </HBox.margin>
@@ -161,7 +161,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="49.0" prefWidth="279.0">
                                        <children>
-                                          <Label text="total pengeluaran" />
+                                          <Label fx:id="balanceLabel" styleClass="balance-label" text="total pengeluaran" />
                                        </children>
                                        <padding>
                                           <Insets left="20.0" />
@@ -169,7 +169,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="279.0">
                                        <children>
-                                          <Label text="Last 30 days">
+                                          <Label styleClass="last-mounth30" text="Last 30 days">
                                              <padding>
                                                 <Insets left="20.0" />
                                              </padding>
