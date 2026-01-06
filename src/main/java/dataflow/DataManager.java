@@ -21,7 +21,6 @@ import service.CurrencyApiClient;
 public class DataManager {
     private static final Logger log = LoggerFactory.getLogger(DataManager.class);
     private static DataManager instance;
-    private static final String BASE_CURRENCY = "IDR";
 
     private ArrayList<Kategori> dataKategori;
     private ArrayList<Akun> dataAkun = new ArrayList<>();
@@ -149,35 +148,6 @@ public class DataManager {
     public void removeTransaksi(int id) {
         Database.getInstance().deleteTransaksi(id);
     }
-
-    private BigDecimal normalizeAmount(Transaksi trans) {
-        BigDecimal amount = BigDecimal.valueOf(trans.getJumlah());
-        String currency = trans.getAkun().getMataUang().getKode();
-        if (currency.equalsIgnoreCase(BASE_CURRENCY)) {
-            return amount;
-        }
-        BigDecimal converted = CurrencyApiClient.getInstance().convert(amount, currency, BASE_CURRENCY);
-        return converted;
-    }
-    public BigDecimal getTotalIncome() {
-        BigDecimal result = BigDecimal.ZERO;
-        for(Transaksi trans : dataTransaksi) {
-            if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
-                result = result.add(normalizeAmount(trans));
-            }
-        }
-        return result;
-    }
-    public BigDecimal getTotalExpense() {
-        BigDecimal result = BigDecimal.ZERO;
-        for(Transaksi trans : dataTransaksi) {
-            if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
-                result = result.add(normalizeAmount(trans));
-            }
-        }
-        return result;
-    }
-
 
     // [2] >> =============== DATA PEMASUKAN =============== //
     public ArrayList<Transaksi> getDataTransaksiPemasukan() {

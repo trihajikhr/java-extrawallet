@@ -129,19 +129,19 @@
 }
 
 .income-label {
-    -fx-text-fill: #01AA71;
+    -fx-text-fill: #000000;
     -fx-font-size: 23;
     -fx-font-weight: bold;
 }
 
 .expense-label {
-    -fx-text-fill: #F92222;
+    -fx-text-fill: #000000;
     -fx-font-size: 23;
     -fx-font-weight: bold;
 }
 
 .balance-label {
-    -fx-text-fill: #0176FE;
+    -fx-text-fill: #000000;
     -fx-font-size: 23;
     -fx-font-weight: bold;
 }
