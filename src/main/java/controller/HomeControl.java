@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class HomeControl implements Initializable {
@@ -29,7 +30,6 @@ public class HomeControl implements Initializable {
     private ArrayList<Transaksi> dataTransaksi;
     private ArrayList<Transaksi> dataBulanExpense = new ArrayList<>();
     private ArrayList<Transaksi> dataBulanIncome = new ArrayList<>();
-    private ArrayList<Akun> dataAkun;
 
     @FXML private VBox latestTransactionPanel;
     @FXML private VBox latestCategoriesPanel;
@@ -54,205 +54,20 @@ public class HomeControl implements Initializable {
 
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-
         fetchData();
         generateChart();
         generateLatestTransactionPanel();
         setLabelAndCountLastMonth();
         setLabelAndAccumulateAmount();
-
         setMostUsedCategories();
     }
 
     // [0] >=== INITIALISASI & DATA FETCHING
     private void fetchData() {
         dataTransaksi = DataManager.getInstance().getDataTransaksi();
-        dataAkun = DataManager.getInstance().getDataAkun();
     }
 
-    private void generateChart() {
-        // BUG: TESTING SAJA!
-        Akun akun = dataAkun.get(0);
-
-        // matikan line bagian bawah
-        grafikLine.getXAxis().setVisible(false);
-        grafikLine.setHorizontalGridLinesVisible(false);
-//        grafikLine.setCreateSymbols(false);
-
-        // clear data
-        dataBulanIncome.clear();
-        dataBulanExpense.clear();
-        grafikLine.getData().clear();
-
-        // getdata income & expense
-        for(int i = 0; i < dataTransaksi.size() && dataBulanIncome.size() < 30; i++) {
-            if(dataTransaksi.get(i).getAkun().equals(akun) && dataTransaksi.get(i).getTipeTransaksi() == TipeTransaksi.IN) {
-                dataBulanIncome.add(dataTransaksi.get(i));
-            }
-        }
-
-        for(int i = 0; i < dataTransaksi.size() && dataBulanExpense.size() < 30; i++) {
-            if(dataTransaksi.get(i).getAkun().equals(akun) && dataTransaksi.get(i).getTipeTransaksi() == TipeTransaksi.OUT) {
-                dataBulanExpense.add(dataTransaksi.get(i));
-            }
-        }
-
-        // income
-        XYChart.Series<String, Number> dataIncome = new XYChart.Series<>();
-        dataIncome.setName("Income");
-
-        for(int i = 0; i < dataBulanIncome.size(); i++) {
-            dataIncome.getData().add(
-                    new XYChart.Data<>(String.valueOf(i), dataBulanIncome.get(i).getJumlah()));
-        }
-
-        // expense
-        XYChart.Series<String, Number> dataExpense = new XYChart.Series<>();
-        dataExpense.setName("Expense");
-
-        for(int i = 0; i < dataBulanExpense.size(); i++) {
-            dataExpense.getData().add(
-                    new XYChart.Data<>(String.valueOf(i), dataBulanExpense.get(i).getJumlah()));
-        }
-
-        // tampilkan
-        grafikLine.getData().addAll(dataIncome, dataExpense);
-    }
-    private void setMostUsedCategories() {
-        mostTransactionCategories();
-        createCardCategories();
-    }
-
-    // [] >=== CARD KATEGORI
-    private void mostTransactionCategories() {
-        LocalDate today = LocalDate.now();
-        LocalDate startDate = today.minusDays(30);
-
-        HashMap<Kategori, Integer> kategoriUsed = new HashMap<>();
-        HashMap<Kategori, BigDecimal> kategoriAmount = new HashMap<>();
-
-        for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
-            kategoriUsed.put(ktgr,0);
-        }
-
-        for(Transaksi trans : dataTransaksi) {
-            if(!trans.getTanggal().isBefore(startDate) && !trans.getTanggal().isAfter(today)) {
-                int temp = kategoriUsed.get(trans.getKategori()) + 1;
-                kategoriUsed.put(trans.getKategori(), temp);
-            }
-        }
-
-        // sorting dan ambil beberapa terbesar
-        int dataLimit = 10;
-
-        List<Map.Entry<Kategori, Integer>> sortedKategori =
-                kategoriUsed.entrySet()
-                        .stream()
-                        .sorted(Map.Entry.<Kategori, Integer>comparingByValue().reversed())
-                        .toList();
-
-        List<Map.Entry<Kategori, Integer>> topKategori =
-                sortedKategori.stream()
-                        .limit(dataLimit)
-                        .toList();
-
-        for(int i=0; i<dataLimit; i++) {
-            BigDecimal sum = BigDecimal.ZERO;
-
-            for(Transaksi trans : dataTransaksi) {
-                if(trans.getKategori().equals(topKategori.get(i).getKey())) {
-                    sum = sum.add(normalizeAmount(trans));
-                }
-            }
-
-            kategoriAmount.put(topKategori.get(i).getKey(), sum);
-        }
-
-        for (Map.Entry<Kategori, Integer> entry : topKategori) {
-            Kategori kategori = entry.getKey();
-            if(entry.getValue() == 0) continue; // skip jika 0 penggunaan!
-            filteredKategori.add(
-                    new BlokKategori(
-                            kategori,
-                            entry.getValue(),
-                            kategoriAmount.get(kategori)
-                    )
-            );
-        }
-    }
-    private void createCardCategories() {
-        latestCategoriesPanel.getChildren().clear();
-
-        for(BlokKategori ktgr : filteredKategori) {
-            HBox cardWrapper = new HBox();
-            cardWrapper.setPrefHeight(60);
-            HBox.setHgrow(cardWrapper, Priority.ALWAYS);
-            cardWrapper.setSpacing(10);
-            cardWrapper.setAlignment(Pos.CENTER);
-            cardWrapper.getStyleClass().add("record-card-categories");
-
-            StackPane iconStack = createIconStackNode(ktgr.getKategori());
-            VBox labelWrap = createLabelNode(ktgr);
-            HBox amountLabel = createLabelAmount(ktgr);
-
-            cardWrapper.getChildren().addAll(iconStack, labelWrap, amountLabel);
-            latestCategoriesPanel.getChildren().add(cardWrapper);
-        }
-    }
-    private StackPane createIconStackNode(Kategori ktgr) {
-        Circle bgCircle = new Circle(20, ktgr.getWarna());
-        ImageView kategoriIcon = new ImageView(ktgr.getIcon());
-        kategoriIcon.setFitWidth(24);
-        kategoriIcon.setFitHeight(24);
-
-        Circle clip = new Circle(12, 12, 12);
-        kategoriIcon.setClip(clip);
-
-        StackPane result = new StackPane(bgCircle, kategoriIcon);
-        return result;
-    }
-    private VBox createLabelNode(BlokKategori ktgr) {
-        Label namaKategori = new Label(ktgr.getKategori().getNama());
-        Label counter = new Label(ktgr.getTotalUsed() + " transactions recorded");
-
-        namaKategori.setStyle("""
-            -fx-text-fill: #000000;
-            -fx-font-size: 14px;
-            -fx-font-weight: bold;
-            """
-        );
-
-        counter.setStyle("""
-            -fx-text-fill: #9CA3AF;
-            -fx-font-size: 12px;
-        """);
-
-        VBox labelWrap = new VBox(namaKategori, counter);
-        labelWrap.setPrefWidth(Region.USE_COMPUTED_SIZE);
-        labelWrap.setPrefHeight(Region.USE_COMPUTED_SIZE);
-        labelWrap.setAlignment(Pos.CENTER_LEFT);
-        return labelWrap;
-    }
-    private HBox createLabelAmount(BlokKategori ktgr) {
-        String stringForm = ktgr.getTotalAmount().toPlainString();
-        String result = Converter.numberFormatter(stringForm);
-
-        Label amountLabel = new Label("IDR " + result);
-        amountLabel.setStyle("""
-            -fx-text-fill: #000000;
-            -fx-font-size: 14px;
-            -fx-font-weight: bold;
-        """);
-
-        HBox labelWrap = new HBox(amountLabel);
-        HBox.setHgrow(labelWrap, Priority.ALWAYS);
-        labelWrap.setAlignment(Pos.CENTER_RIGHT);
-        labelWrap.setPrefHeight(50);
-
-        return labelWrap;
-    }
-
-    // [] >=== LABEL SET
+    // [1] >=== LABEL SET
     private BigDecimal normalizeAmount(Transaksi trans) {
         BigDecimal amount = BigDecimal.valueOf(trans.getJumlah());
         String currency = trans.getAkun().getMataUang().getKode();
@@ -383,7 +198,205 @@ public class HomeControl implements Initializable {
         label.setText("IDR " + Converter.numberFormatter(value.toPlainString()));
     }
 
-    // [] >=== PANEL 15 TRANSAKSI TERAKHIR
+    // [2] >=== CHART VIEW SETUP
+    private void generateChart() {
+        // TODO: dapatkan perubahan data pada 30 hari terakhir
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusDays(30);
+
+        Map<LocalDate, BigDecimal> incomePerDay = new LinkedHashMap<>();
+        Map<LocalDate, BigDecimal> expensePerDay = new LinkedHashMap<>();
+
+        for (int i = 0; i < 30; i++) {
+            LocalDate date = startDate.plusDays(i);
+            incomePerDay.put(date, BigDecimal.ZERO);
+            expensePerDay.put(date, BigDecimal.ZERO);
+        }
+
+        for (Transaksi t : dataTransaksi) {
+            LocalDate date = t.getTanggal();
+
+            if (!date.isBefore(startDate) && !date.isAfter(today)) {
+                BigDecimal amount = normalizeAmount(t);
+
+                if (t.getTipeTransaksi() == TipeTransaksi.IN) {
+                    incomePerDay.put(
+                            date,
+                            incomePerDay.get(date).add(amount)
+                    );
+                } else {
+                    expensePerDay.put(
+                            date,
+                            expensePerDay.get(date).add(amount)
+                    );
+                }
+            }
+        }
+
+        XYChart.Series<String, Number> incomeSeries = new XYChart.Series<>();
+        incomeSeries.setName("Income");
+
+        XYChart.Series<String, Number> expenseSeries = new XYChart.Series<>();
+        expenseSeries.setName("Expense");
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMM");
+
+        for (LocalDate date : incomePerDay.keySet()) {
+            incomeSeries.getData().add(
+                    new XYChart.Data<>(
+                            date.format(formatter),
+                            incomePerDay.get(date)
+                    )
+            );
+
+            expenseSeries.getData().add(
+                    new XYChart.Data<>(
+                            date.format(formatter),
+                            expensePerDay.get(date)
+                    )
+            );
+        }
+
+        // grafikLine.getXAxis().setLabel("Date");
+        grafikLine.getYAxis().setLabel("Amount");
+        grafikLine.getData().clear();
+        grafikLine.getData().addAll(incomeSeries, expenseSeries);
+    }
+
+    // [3] >=== PANEL 10 CARD KATEGORI
+    private void setMostUsedCategories() {
+        mostTransactionCategories();
+        createCardCategories();
+    }
+    private void mostTransactionCategories() {
+        LocalDate today = LocalDate.now();
+        LocalDate startDate = today.minusDays(30);
+
+        HashMap<Kategori, Integer> kategoriUsed = new HashMap<>();
+        HashMap<Kategori, BigDecimal> kategoriAmount = new HashMap<>();
+
+        for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
+            kategoriUsed.put(ktgr,0);
+        }
+
+        for(Transaksi trans : dataTransaksi) {
+            if(!trans.getTanggal().isBefore(startDate) && !trans.getTanggal().isAfter(today)) {
+                int temp = kategoriUsed.get(trans.getKategori()) + 1;
+                kategoriUsed.put(trans.getKategori(), temp);
+            }
+        }
+
+        // sorting dan ambil beberapa terbesar
+        int dataLimit = 10;
+
+        List<Map.Entry<Kategori, Integer>> sortedKategori =
+                kategoriUsed.entrySet()
+                        .stream()
+                        .sorted(Map.Entry.<Kategori, Integer>comparingByValue().reversed())
+                        .toList();
+
+        List<Map.Entry<Kategori, Integer>> topKategori =
+                sortedKategori.stream()
+                        .limit(dataLimit)
+                        .toList();
+
+        for(int i=0; i<dataLimit; i++) {
+            BigDecimal sum = BigDecimal.ZERO;
+
+            for(Transaksi trans : dataTransaksi) {
+                if(trans.getKategori().equals(topKategori.get(i).getKey())) {
+                    sum = sum.add(normalizeAmount(trans));
+                }
+            }
+
+            kategoriAmount.put(topKategori.get(i).getKey(), sum);
+        }
+
+        for (Map.Entry<Kategori, Integer> entry : topKategori) {
+            Kategori kategori = entry.getKey();
+            if(entry.getValue() == 0) continue; // skip jika 0 penggunaan!
+            filteredKategori.add(
+                    new BlokKategori(
+                            kategori,
+                            entry.getValue(),
+                            kategoriAmount.get(kategori)
+                    )
+            );
+        }
+    }
+    private void createCardCategories() {
+        latestCategoriesPanel.getChildren().clear();
+
+        for(BlokKategori ktgr : filteredKategori) {
+            HBox cardWrapper = new HBox();
+            cardWrapper.setPrefHeight(60);
+            HBox.setHgrow(cardWrapper, Priority.ALWAYS);
+            cardWrapper.setSpacing(10);
+            cardWrapper.setAlignment(Pos.CENTER);
+            cardWrapper.getStyleClass().add("record-card-categories");
+
+            StackPane iconStack = createIconStackNode(ktgr.getKategori());
+            VBox labelWrap = createLabelNode(ktgr);
+            HBox amountLabel = createLabelAmount(ktgr);
+
+            cardWrapper.getChildren().addAll(iconStack, labelWrap, amountLabel);
+            latestCategoriesPanel.getChildren().add(cardWrapper);
+        }
+    }
+    private StackPane createIconStackNode(Kategori ktgr) {
+        Circle bgCircle = new Circle(20, ktgr.getWarna());
+        ImageView kategoriIcon = new ImageView(ktgr.getIcon());
+        kategoriIcon.setFitWidth(24);
+        kategoriIcon.setFitHeight(24);
+
+        Circle clip = new Circle(12, 12, 12);
+        kategoriIcon.setClip(clip);
+
+        StackPane result = new StackPane(bgCircle, kategoriIcon);
+        return result;
+    }
+    private VBox createLabelNode(BlokKategori ktgr) {
+        Label namaKategori = new Label(ktgr.getKategori().getNama());
+        Label counter = new Label(ktgr.getTotalUsed() + " transactions recorded");
+
+        namaKategori.setStyle("""
+            -fx-text-fill: #000000;
+            -fx-font-size: 14px;
+            -fx-font-weight: bold;
+            """
+        );
+
+        counter.setStyle("""
+            -fx-text-fill: #9CA3AF;
+            -fx-font-size: 12px;
+        """);
+
+        VBox labelWrap = new VBox(namaKategori, counter);
+        labelWrap.setPrefWidth(Region.USE_COMPUTED_SIZE);
+        labelWrap.setPrefHeight(Region.USE_COMPUTED_SIZE);
+        labelWrap.setAlignment(Pos.CENTER_LEFT);
+        return labelWrap;
+    }
+    private HBox createLabelAmount(BlokKategori ktgr) {
+        String stringForm = ktgr.getTotalAmount().toPlainString();
+        String result = Converter.numberFormatter(stringForm);
+
+        Label amountLabel = new Label("IDR " + result);
+        amountLabel.setStyle("""
+            -fx-text-fill: #000000;
+            -fx-font-size: 14px;
+            -fx-font-weight: bold;
+        """);
+
+        HBox labelWrap = new HBox(amountLabel);
+        HBox.setHgrow(labelWrap, Priority.ALWAYS);
+        labelWrap.setAlignment(Pos.CENTER_RIGHT);
+        labelWrap.setPrefHeight(50);
+
+        return labelWrap;
+    }
+
+    // [4] >=== PANEL 15 TRANSAKSI TERAKHIR
     private RecordCard createRecordCard(Transaksi trans) {
         RecordCard recordCard = new RecordCard(trans);
 
