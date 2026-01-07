@@ -13,7 +13,7 @@
 }
 
 .record-card:hover {
-    -fx-background-color: #F9FAFB;
+    -fx-background-color: white;
     -fx-border-color: #D1D5DB;
 
     /* naik dikit */
@@ -32,3 +32,31 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.02), 4, 0, 0, 1);
 }
 */
+
+
+/* untuk bagian dashboard, ada yand harus diedit sedikit */
+.record-card-custom {
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+
+    /* BORDER: hanya bawah */
+    -fx-border-color: #E5E7EB transparent #E5E7EB transparent;
+    -fx-border-width: 1 0 1 0;
+
+    -fx-padding: 12;
+
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 6, 0, 0, 2);
+}
+
+.record-card-custom:hover {
+    -fx-background-color: white;
+    -fx-border-color: #D1D5DB transparent #D1D5DB transparent;
+
+    -fx-scale-x: 1.005;
+    -fx-scale-y: 1.005;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 14, 0, 0, 6);
+}

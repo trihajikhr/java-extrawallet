@@ -31,7 +31,6 @@ public class HomeControl implements Initializable {
     private ArrayList<Transaksi> dataTransaksi;
     private ArrayList<Transaksi> dataBulanExpense = new ArrayList<>();
     private ArrayList<Transaksi> dataBulanIncome = new ArrayList<>();
-    private ArrayList<Transaksi> latestTransaction =  new ArrayList<>();
     private ArrayList<Akun> dataAkun;
 
     @FXML private VBox latestTransactionPanel;
@@ -51,8 +50,6 @@ public class HomeControl implements Initializable {
 
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
-        // style dasar
-        latestTransactionPanel.setSpacing(5);
 
         fetchData();
         generateChart();
@@ -375,11 +372,16 @@ public class HomeControl implements Initializable {
         label.setText("IDR " + Converter.numberFormatter(value.toPlainString()));
     }
 
-
     // [] >=== PANEL 15 TRANSAKSI TERAKHIR
     private RecordCard createRecordCard(Transaksi trans) {
         RecordCard recordCard = new RecordCard(trans);
+
+        // edit record card
         recordCard.getCheckList().setVisible(false);
+        recordCard.getCardWrapper().setStyle(null);
+        recordCard.getCardWrapper().getStyleClass().clear();
+        recordCard.getCardWrapper().getStyleClass().add("record-card-custom");
+
         return recordCard;
     }
     private void generateLatestTransactionPanel(){

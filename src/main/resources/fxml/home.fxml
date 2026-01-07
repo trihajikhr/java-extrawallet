@@ -252,47 +252,45 @@
                         </AnchorPane>
                      </children>
                   </GridPane>
-                  <VBox minHeight="40.0" prefWidth="100.0" spacing="10.0">
+                  <VBox minHeight="40.0" prefWidth="100.0" styleClass="box-styling">
                      <children>
-                        <HBox prefHeight="75.0" styleClass="box-styling" VBox.vgrow="ALWAYS">
+                        <HBox prefHeight="90.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                              <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Label contentDisplay="CENTER" text="Your latest transaction">
-                                       <font>
-                                          <Font size="17.0" />
-                                       </font>
-                                    </Label>
+                                    <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label contentDisplay="CENTER" styleClass="h1-label-1" text="Your Latest Transactions">
+                                             <font>
+                                                <Font size="17.0" />
+                                             </font>
+                                          </Label>
+                                          <Label styleClass="h1-label-2" text="A snapshot of your latest financial activity" />
+                                       </children>
+                                    </VBox>
                                  </children>
-                                 <padding>
-                                    <Insets left="20.0" top="10.0" />
-                                 </padding>
                               </HBox>
                               <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Label text="See all Transaction">
+                                    <Label styleClass="h1-label-2" text="See all Transaction">
                                        <font>
                                           <Font size="18.0" />
                                        </font>
                                     </Label>
                                  </children>
-                                 <padding>
-                                    <Insets right="20.0" top="10.0" />
-                                 </padding>
                               </HBox>
                            </children>
                            <VBox.margin>
                               <Insets />
                            </VBox.margin>
-                        </HBox>
-                        <VBox fx:id="latestTransactionPanel" prefWidth="898.0" VBox.vgrow="ALWAYS">
                            <padding>
-                              <Insets left="5.0" right="5.0" />
+                              <Insets left="20.0" right="20.0" top="20.0" />
                            </padding>
-                        </VBox>
+                        </HBox>
+                        <VBox fx:id="latestTransactionPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
-                        <Insets top="25.0" />
+                        <Insets top="15.0" />
                      </VBox.margin>
                   </VBox>
                </children>
