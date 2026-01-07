@@ -4,7 +4,6 @@ import dataflow.DataManager;
 import helper.Converter;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
@@ -17,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.CurrencyApiClient;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
@@ -48,13 +46,20 @@ public class HomeControl implements Initializable {
     // data class record card kategori
     private ArrayList<BlokKategori> filteredKategori = new ArrayList<>();
 
+    // data bigdecimal
+    private BigDecimal lastIncome60 = BigDecimal.ZERO;
+    private BigDecimal lastExpense60 = BigDecimal.ZERO;
+    private BigDecimal lastTotalIncome = BigDecimal.ZERO;
+    private BigDecimal lastTotalExpense = BigDecimal.ZERO;
+
     @FXML
     public void initialize(URL url, ResourceBundle rb) {
 
         fetchData();
         generateChart();
         generateLatestTransactionPanel();
-        allLabelSet();
+        setLabelAndCountLastMonth();
+        setLabelAndAccumulateAmount();
 
         setMostUsedCategories();
     }
@@ -257,14 +262,10 @@ public class HomeControl implements Initializable {
         BigDecimal converted = CurrencyApiClient.getInstance().convert(amount, currency, BASE_CURRENCY);
         return converted;
     }
-    private void allLabelSet() {
+    private void setLabelAndCountLastMonth() {
         LocalDate today = LocalDate.now();
         LocalDate startDate = today.minusDays(30);
         LocalDate previousDate = today.minusDays(60);
-
-        BigDecimal previousTotalIncome = BigDecimal.ZERO;
-        BigDecimal previousTotalExpense = BigDecimal.ZERO;
-        BigDecimal previousTotalBalance = BigDecimal.ZERO;
 
         List<Transaksi> previousDays = dataTransaksi.stream()
                 .filter(t ->
@@ -272,10 +273,6 @@ public class HomeControl implements Initializable {
                                 !t.getTanggal().isAfter(startDate)
                 )
                 .toList();
-
-        BigDecimal lastTotalIncome = BigDecimal.ZERO;
-        BigDecimal lastTotalExpense = BigDecimal.ZERO;
-        BigDecimal lastTotalBalance = BigDecimal.ZERO;
 
         List<Transaksi> last30Days = dataTransaksi.stream()
                 .filter(t ->
@@ -286,9 +283,9 @@ public class HomeControl implements Initializable {
 
         for(Transaksi trans : previousDays) {
             if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
-                previousTotalIncome = previousTotalIncome.add(normalizeAmount(trans));
+                lastIncome60 = lastIncome60.add(normalizeAmount(trans));
             } else if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
-                previousTotalExpense = previousTotalExpense.add(normalizeAmount(trans));
+                lastExpense60 = lastExpense60.add(normalizeAmount(trans));
             }
         }
 
@@ -304,15 +301,29 @@ public class HomeControl implements Initializable {
         setLabel(incomeLabel, lastTotalIncome);
         setLabel(expenseLabel, lastTotalExpense);
 
-        lastTotalBalance = lastTotalIncome.subtract(lastTotalExpense);
-        setLabel(balanceLabel, lastTotalBalance);
-
-        previousTotalBalance = previousTotalIncome.subtract(previousTotalExpense);
-
         // persentasi set
-        setPercentageBadge(persenIncome, lastTotalIncome, previousTotalIncome);
-        setPercentageBadge(persenExpense, lastTotalExpense, previousTotalExpense);
-        setPercentageBadge(persenBalance, lastTotalBalance, previousTotalBalance);
+        setPercentageBadge(persenIncome, lastTotalIncome, lastIncome60);
+        setPercentageBadge(persenExpense, lastTotalExpense, lastExpense60);
+    }
+    private void setLabelAndAccumulateAmount() {
+        BigDecimal allIncome = BigDecimal.ZERO;
+        BigDecimal allExpense = BigDecimal.ZERO;
+        BigDecimal totalBalance = BigDecimal.ZERO;
+        BigDecimal totalBalanceBefore = BigDecimal.ZERO;
+
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
+                allIncome = allIncome.add(normalizeAmount(trans));
+            } else if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
+                allExpense = allExpense.add(normalizeAmount(trans));
+            }
+        }
+
+        totalBalance = allIncome.subtract(allExpense);
+        totalBalanceBefore = totalBalance.subtract(lastTotalIncome.subtract(lastTotalExpense));
+
+        setLabel(balanceLabel, totalBalance);
+        setPercentageBadge(persenBalance, totalBalance, totalBalanceBefore);
     }
     private void setPercentageBadge(Label badge, BigDecimal current, BigDecimal previous) {
 

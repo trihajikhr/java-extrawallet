@@ -188,7 +188,7 @@
                                     </HBox>
                                     <HBox alignment="CENTER_LEFT" prefHeight="56.0" prefWidth="279.0">
                                        <children>
-                                          <Label styleClass="last-mounth30" text="Last 30 days">
+                                          <Label styleClass="last-mounth30" text="Alltime. Compared to previous 30 days">
                                              <padding>
                                                 <Insets left="20.0" />
                                              </padding>
