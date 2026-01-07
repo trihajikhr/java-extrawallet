@@ -238,7 +238,7 @@
                                           <Label styleClass="h1-label-2" text="Your top transaction categories from the last 30 days" />
                                        </children>
                                     </VBox>
-                                    <VBox fx:id="latestCategoriesPanel" spacing="5.0">
+                                    <VBox fx:id="latestCategoriesPanel">
                                        <padding>
                                           <Insets left="10.0" right="10.0" />
                                        </padding>
@@ -287,7 +287,11 @@
                               <Insets left="20.0" right="20.0" top="20.0" />
                            </padding>
                         </HBox>
-                        <VBox fx:id="latestTransactionPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS" />
+                        <VBox fx:id="latestTransactionPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+                           <padding>
+                              <Insets left="10.0" right="10.0" />
+                           </padding>
+                        </VBox>
                      </children>
                      <VBox.margin>
                         <Insets top="15.0" />

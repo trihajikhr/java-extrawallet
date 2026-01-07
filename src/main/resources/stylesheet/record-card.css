@@ -40,8 +40,8 @@
     -fx-background-insets: 0;
 
     /* BORDER: hanya bawah */
-    -fx-border-color: #E5E7EB transparent #E5E7EB transparent;
-    -fx-border-width: 1 0 1 0;
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-width: 0 0 1 0;
 
     -fx-padding: 12;
 
@@ -53,10 +53,36 @@
 
 .record-card-custom:hover {
     -fx-background-color: white;
-    -fx-border-color: #D1D5DB transparent #D1D5DB transparent;
+    -fx-border-color: transparent transparent #D1D5DB transparent;
 
     -fx-scale-x: 1.005;
     -fx-scale-y: 1.005;
 
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 14, 0, 0, 6);
+    /* -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.10), 14, 0, 0, 6); */
+}
+
+.record-card-categories {
+    -fx-background-color: white;
+    -fx-background-insets: 0;
+
+    /* BORDER: hanya bawah */
+    -fx-border-color: transparent transparent #E5E7EB transparent;
+    -fx-border-width: 0 0 1 0;
+
+    -fx-padding: 12;
+
+    /*
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 6, 0, 0, 2);
+    */
+}
+
+.record-card-categories:hover {
+    -fx-background-color: white;
+    -fx-border-color: transparent transparent #D1D5DB transparent;
+
+    -fx-scale-x: 1.005;
+    -fx-scale-y: 1.005;
 }

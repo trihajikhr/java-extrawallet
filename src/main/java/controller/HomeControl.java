@@ -180,11 +180,11 @@ public class HomeControl implements Initializable {
 
         for(BlokKategori ktgr : filteredKategori) {
             HBox cardWrapper = new HBox();
-            cardWrapper.setPrefHeight(50);
+            cardWrapper.setPrefHeight(60);
             HBox.setHgrow(cardWrapper, Priority.ALWAYS);
             cardWrapper.setSpacing(10);
             cardWrapper.setAlignment(Pos.CENTER);
-
+            cardWrapper.getStyleClass().add("record-card-categories");
 
             StackPane iconStack = createIconStackNode(ktgr.getKategori());
             VBox labelWrap = createLabelNode(ktgr);
