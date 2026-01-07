@@ -5,7 +5,7 @@ import helper.Converter;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.chart.LineChart;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -28,13 +28,11 @@ public class HomeControl implements Initializable {
     private static final String BASE_CURRENCY = "IDR";
 
     private ArrayList<Transaksi> dataTransaksi;
-    private ArrayList<Transaksi> dataBulanExpense = new ArrayList<>();
-    private ArrayList<Transaksi> dataBulanIncome = new ArrayList<>();
 
     @FXML private VBox latestTransactionPanel;
     @FXML private VBox latestCategoriesPanel;
 
-    @FXML LineChart<String, Number> grafikLine;
+    @FXML AreaChart<String, Number> grafikArea;
 
     @FXML private Label incomeLabel;
     @FXML private Label expenseLabel;
@@ -258,9 +256,10 @@ public class HomeControl implements Initializable {
         }
 
         // grafikLine.getXAxis().setLabel("Date");
-        grafikLine.getYAxis().setLabel("Amount");
-        grafikLine.getData().clear();
-        grafikLine.getData().addAll(incomeSeries, expenseSeries);
+        grafikArea.setCreateSymbols(false);
+        grafikArea.getYAxis().setLabel("Amount");
+        grafikArea.getData().clear();
+        grafikArea.getData().addAll(incomeSeries, expenseSeries);
     }
 
     // [3] >=== PANEL 10 CARD KATEGORI
