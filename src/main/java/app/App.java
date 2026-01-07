@@ -1,5 +1,6 @@
 package app;
 
+import controller.DashboardControl;
 import dataflow.DataManager;
 import dataflow.DataSeeder;
 import javafx.application.Application;
@@ -36,8 +37,11 @@ public class App extends Application {
         DataSeeder.getInstance().seedDatabaseKategori();
         DataSeeder.getInstance().seedDatabaseCurrency();
 
-        // load tampilan
+        // load tampilan & setting default menu
         stage.show();
+
+        DashboardControl ctrl = loader.getController();
+        ctrl.loadPage("home");
     }
 
     public static void main(String[] args) {

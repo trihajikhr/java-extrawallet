@@ -63,3 +63,26 @@
 .default-color1.chart-legend-item-symbol {
     -fx-background-color: #e74c3c;
 }
+
+
+/* ============== MODERNIZE ============== */
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-horizontal-grid-lines,
+.chart-vertical-grid-lines {
+    -fx-stroke: rgba(0, 0, 0, 0.1);
+    -fx-stroke-width: 0.6;
+}
+
+.axis-line {
+    -fx-stroke: rgba(0, 0, 0, 0.15);
+    -fx-stroke-width: 0.8;
+}
+
+/* Label axis Y */
+.axis-label {
+    -fx-text-fill: #6A7282; /* abu lembut */
+    -fx-font-weight: normal;
+}

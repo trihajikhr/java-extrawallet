@@ -400,7 +400,7 @@ public class HomeControl implements Initializable {
         RecordCard recordCard = new RecordCard(trans);
 
         // edit record card
-        recordCard.getCheckList().setVisible(false);
+        recordCard.getCardWrapper().getChildren().remove(0); // hapus node checklist!
         recordCard.getCardWrapper().setStyle(null);
         recordCard.getCardWrapper().getStyleClass().clear();
         recordCard.getCardWrapper().getStyleClass().add("record-card-custom");

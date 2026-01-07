@@ -52,7 +52,7 @@
                       <RowConstraints minHeight="400.0" prefHeight="600.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="box-styling">
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="anchor-income">
                            <children>
                               <VBox layoutY="-36.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
@@ -101,7 +101,7 @@
                               </VBox>
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="box-styling" GridPane.columnIndex="1">
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="anchor-expense" GridPane.columnIndex="1">
                            <children>
                               <VBox layoutY="-36.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
@@ -150,7 +150,7 @@
                               </VBox>
                            </children>
                         </AnchorPane>
-                        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="box-styling" GridPane.columnIndex="2">
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0" styleClass="anchor-balance" GridPane.columnIndex="2">
                            <children>
                               <VBox layoutY="-36.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <children>
@@ -205,7 +205,7 @@
                                  <children>
                                     <VBox spacing="5.0">
                                        <children>
-                                          <Label styleClass="h1-label-1" text="Your last month activity" />
+                                          <Label styleClass="h1-label-1" text="Your Last Month Activity" />
                                           <Label styleClass="h1-label-2" text="Here’s a snapshot of your income, expenses, and balance from the past 30 days" />
                                        </children>
                                     </VBox>
@@ -294,7 +294,7 @@
                         </VBox>
                      </children>
                      <VBox.margin>
-                        <Insets top="15.0" />
+                        <Insets top="13.0" />
                      </VBox.margin>
                   </VBox>
                </children>

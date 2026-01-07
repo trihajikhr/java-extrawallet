@@ -109,6 +109,36 @@
     -fx-background-radius: 8;
 }
 
+.anchor-income {
+    /* Lapis 1: Putih Solid (biar bayangan nempel ke sini) */
+    /* Lapis 2: Gradien hijau transparanmu */
+    -fx-background-color: #FEFEFE, linear-gradient(to bottom, #2ecc711a, #ffffff00);
+
+    -fx-background-insets: 0, 0;
+    -fx-background-radius: 8, 8;
+
+    /* Sekarang dropshadow akan mendeteksi Lapis 1 yang solid */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
+/* WARNA MERAH */
+.anchor-expense {
+    /* Lapis 1: Putih Solid | Lapis 2: Gradien Merah Transparan */
+    -fx-background-color: #FEFEFE, linear-gradient(to bottom, rgba(231, 76, 60, 0.1), rgba(255, 255, 255, 0));
+    -fx-background-insets: 0, 0;
+    -fx-background-radius: 8, 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
+/* WARNA BIRU */
+.anchor-balance {
+    /* Lapis 1: Putih Solid | Lapis 2: Gradien Biru Transparan */
+    -fx-background-color: #FEFEFE, linear-gradient(to bottom, rgba(52, 152, 219, 0.1), rgba(255, 255, 255, 0));
+    -fx-background-insets: 0, 0;
+    -fx-background-radius: 8, 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
 /* bagian label dashboard header */
 .h1-label-1 {
     -fx-text-fill: #000000;
