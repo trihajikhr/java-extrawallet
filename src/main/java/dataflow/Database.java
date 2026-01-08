@@ -469,6 +469,9 @@ public class Database {
             log.error("Data transaksi gagal dihapus!", e);
         }
     }
+    public void updateTransaksi(Transaksi trans){
+
+    }
 
     // [6] >=== manipulasi data akun
     public int insertAkun(Akun dataAkun) {

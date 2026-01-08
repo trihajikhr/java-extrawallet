@@ -46,7 +46,7 @@ public class EditControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(EditControl.class);
     private Stage stage;
     @FXML private AnchorPane rootPane;
-    private Transaksi TransaksiCompare;
+    private Transaksi transOriginal;
 
     // atribut pendukung
     private double xOffset = 0;
@@ -55,7 +55,7 @@ public class EditControl implements Initializable {
     private ObservableList<TipeLabel> tipeLabelList = FXCollections.observableArrayList();
 
     // atribut fxml
-    @FXML private Spinner<Integer> editAmount;
+    @FXML private Spinner<Integer> amountEdit;
     @FXML private ComboBox<MataUang> mataUangCombo;
     @FXML private ComboBox<Akun> akunComboBox;
     @FXML private ComboBox<Kategori> categoryComboBox;
@@ -70,9 +70,9 @@ public class EditControl implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         loadAllData();
         logicHandler();
-        isFormComplete();
         akunToMataUangListener();
         loadTipeLabelComboBox();
+        isFormComplete();
 
         showPopup();
     }
@@ -133,7 +133,7 @@ public class EditControl implements Initializable {
         return tipeLabelList;
     }
 
-    // [1] >=== DATA LOADER
+    // [2] >=== DATA LOADER
     private void loadAllData() {
         DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo);
         DataLoader.getInstance().akunComboBoxLoader(akunComboBox);
@@ -148,7 +148,6 @@ public class EditControl implements Initializable {
         mataUangCombo.setFocusTraversable(false);
         mataUangCombo.getStyleClass().add("locked");
     }
-
     private void loadTipeLabelComboBox(){
         ArrayList<TipeLabel> dataTipelabel = DataManager.getInstance().getDataTipeLabel();
         tipeLabelList = FXCollections.observableArrayList(dataTipelabel);
@@ -196,9 +195,8 @@ public class EditControl implements Initializable {
         });
         tipeLabelCombo.setButtonCell(tipeLabelCombo.getCellFactory().call(null));
     }
-
     public void prefilFromRecord(Transaksi trans) {
-        editAmount.getEditor().setText(Integer.toString(trans.getJumlah()));
+        amountEdit.getEditor().setText(Integer.toString(trans.getJumlah()));
         akunComboBox.setValue(trans.getAkun());
         categoryComboBox.setValue(trans.getKategori());
         tipeLabelCombo.setValue(trans.getTipelabel());
@@ -208,36 +206,70 @@ public class EditControl implements Initializable {
         );
         paymentType.setValue(trans.getPaymentType());
         paymentStatus.setValue(trans.getPaymentStatus());
-        this.TransaksiCompare = trans;
+        this.transOriginal = trans;
     }
 
-    // [2] >=== LOGIC HANDLER & FORM VALIDATION
+    // [3] >=== LOGIC HANDLER & FORM VALIDATION
     private void logicHandler() {
         IOLogic.isTextFieldValid(noteEdit, 50);
-        IOLogic.makeIntegerOnlyBlankInitial(editAmount, 0, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(amountEdit, 0, 2_147_483_647);
     }
-
     private void isFormComplete() {
         BooleanBinding amountValid =
                 Bindings.createBooleanBinding(
-                        () -> editAmount.getValue() != null && editAmount.getValue() > 0,
-                        editAmount.valueProperty()
+                        () -> amountEdit.getValue() != null && amountEdit.getValue() > 0,
+                        amountEdit.valueProperty()
                 );
 
         BooleanBinding akunValid = akunComboBox.valueProperty().isNotNull();
         BooleanBinding kategoriValid = categoryComboBox.valueProperty().isNotNull();
         BooleanBinding dateValid = dateEdit.valueProperty().isNotNull();
 
-        BooleanBinding foromValid =
+        BooleanBinding formValid =
                 amountValid
                         .and(akunValid)
                         .and(kategoriValid)
                         .and(dateValid);
 
-        submitButton.disableProperty().bind(foromValid.not());
+        BooleanBinding isChanged = isChangedBinding();
+
+        submitButton.disableProperty().bind(
+                formValid.and(isChanged).not()
+        );
+    }
+    private BooleanBinding isChangedBinding() {
+        return Bindings.createBooleanBinding(() -> {
+                    if (transOriginal == null) return false;
+
+                    Transaksi current = new Transaksi(
+                            transOriginal.getId(),
+                            transOriginal.getTipeTransaksi(),
+                            amountEdit.getValue(),
+                            akunComboBox.getValue(),
+                            categoryComboBox.getValue(),
+                            tipeLabelCombo.getValue(),
+                            dateEdit.getValue(),
+                            noteEdit.getText() == null || noteEdit.getText().isBlank()
+                                    ? null : noteEdit.getText(),
+                            paymentType.getValue(),
+                            paymentStatus.getValue()
+                    );
+
+                    return !current.isSameState(transOriginal);
+                },
+                amountEdit.valueProperty(),
+                akunComboBox.valueProperty(),
+                categoryComboBox.valueProperty(),
+                tipeLabelCombo.valueProperty(),
+                dateEdit.valueProperty(),
+                noteEdit.textProperty(),
+                paymentType.valueProperty(),
+                paymentStatus.valueProperty()
+        );
     }
 
-    // [3] >=== LISTENER
+
+    // [4] >=== LISTENER
     private void akunToMataUangListener() {
         akunComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
@@ -246,7 +278,7 @@ public class EditControl implements Initializable {
         });
     }
 
-    // [4] >=== BUTTON
+    // [5] >=== BUTTON
     @FXML
     private void addLabelOnEdit(ActionEvent evt) {
         try {
@@ -293,5 +325,30 @@ public class EditControl implements Initializable {
             log.error("gagal membuka panel tambah label!", e);
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
+    }
+    @FXML
+    private void submitHandler(ActionEvent evt) {
+        String note = noteEdit.getText();
+        note = (note == null || note.isBlank()) ? null : note;
+
+        Transaksi transModified = new Transaksi(
+                transOriginal.getId(),
+                transOriginal.getTipeTransaksi(),
+                amountEdit.getValue(),
+                akunComboBox.getValue(),
+                categoryComboBox.getValue(),
+                tipeLabelCombo.getValue(),
+                dateEdit.getValue(),
+                note,
+                paymentType.getValue(),
+                paymentStatus.getValue()
+        );
+
+
+        Boolean isChanged = !transModified.isSameState(transOriginal);
+        if(isChanged) {
+            DataManager.getInstance().modifyTransaksi(transModified);
+        }
+        closePopup();
     }
 }

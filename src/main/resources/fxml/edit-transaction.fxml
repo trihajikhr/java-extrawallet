@@ -75,7 +75,7 @@
                         </HBox>
                         <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                            <children>
-                              <Spinner fx:id="editAmount" editable="true" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
+                              <Spinner fx:id="amountEdit" editable="true" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" HBox.hgrow="ALWAYS" />
                               <ComboBox fx:id="mataUangCombo" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" prefWidth="70.0" styleClass="modern-btn" />
                            </children>
                         </HBox>
@@ -178,7 +178,7 @@
                   </VBox>
                   <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" GridPane.rowIndex="5">
                      <children>
-                        <Button fx:id="submitButton" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Edit" VBox.vgrow="ALWAYS" />
+                        <Button fx:id="submitButton" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#submitHandler" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Edit" VBox.vgrow="ALWAYS" />
                      </children>
                      <GridPane.margin>
                         <Insets />

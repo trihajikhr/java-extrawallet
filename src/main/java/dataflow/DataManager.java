@@ -148,6 +148,11 @@ public class DataManager {
     public void removeTransaksi(int id) {
         Database.getInstance().deleteTransaksi(id);
     }
+    public Boolean modifyTransaksi(Transaksi trans) {
+        Database.getInstance().updateTransaksi(trans);
+        // FIXME:
+        return true;
+    }
 
     // [2] >> =============== DATA PEMASUKAN =============== //
     public ArrayList<Transaksi> getDataTransaksiPemasukan() {
