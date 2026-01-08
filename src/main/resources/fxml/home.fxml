@@ -254,7 +254,7 @@
                   </GridPane>
                   <VBox minHeight="40.0" prefWidth="100.0" styleClass="box-styling">
                      <children>
-                        <HBox prefHeight="90.0" VBox.vgrow="ALWAYS">
+                        <HBox prefHeight="90.0" styleClass="hbox-last-record" VBox.vgrow="ALWAYS">
                            <children>
                               <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                                  <children>
