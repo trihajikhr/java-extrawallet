@@ -83,6 +83,9 @@ public class DataLoader {
         dataKategoriComboBox.setButtonCell(dataKategoriComboBox.getCellFactory().call(null));
     }
     public void tipeLabelComboBoxLoader(ComboBox<TipeLabel> dataTipeLabelComboBox) {
+        ArrayList<TipeLabel> tipeLabel = DataManager.getInstance().getDataTipeLabel();
+        dataTipeLabelComboBox.setItems(FXCollections.observableArrayList(tipeLabel));
+
         dataTipeLabelComboBox.setCellFactory(list -> new ListCell<TipeLabel>() {
             @Override
             protected void updateItem(TipeLabel item, boolean empty) {

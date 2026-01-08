@@ -1,0 +1,125 @@
+package controller.transaction;
+
+import dataflow.DataLoader;
+import dataflow.DataManager;
+import helper.Converter;
+import javafx.animation.FadeTransition;
+import javafx.animation.Interpolator;
+import javafx.animation.ParallelTransition;
+import javafx.animation.ScaleTransition;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
+public class EditControl implements Initializable {
+    // atribut vital
+    private static final Logger log = LoggerFactory.getLogger(EditControl.class);
+    private Stage stage;
+    @FXML private AnchorPane rootPane;
+    private boolean closing = false;
+
+    // atribut fxml
+    @FXML private Spinner<Integer> editAmount;
+    @FXML private ComboBox<MataUang> mataUangCombo;
+    @FXML private ComboBox<Akun> akunComboBox;
+    @FXML private ComboBox<Kategori> categoryComboBox;
+    @FXML private ComboBox<TipeLabel> tipeLabelCombo;
+    @FXML private DatePicker dateEdit;
+    @FXML private TextField noteEdit;
+    @FXML private ComboBox<PaymentType> paymentType;
+    @FXML private ComboBox<PaymentStatus> paymentStatus;
+
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        loadAllData();
+        showPopup();
+    }
+
+    // [0] >=== SCENE CONTROLLER
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+    @FXML
+    public void showPopup() {
+        rootPane.setOpacity(0);
+        rootPane.setScaleX(0.8);
+        rootPane.setScaleY(0.8);
+        rootPane.setOpacity(0);
+
+        FadeTransition fade = new FadeTransition(Duration.millis(200), rootPane);
+        fade.setFromValue(0);
+        fade.setToValue(1);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(200), rootPane);
+        scale.setFromX(0.8);
+        scale.setFromY(0.8);
+        scale.setToX(1);
+        scale.setToY(1);
+
+        ParallelTransition showAnim = new ParallelTransition(fade, scale);
+        showAnim.setInterpolator(Interpolator.EASE_BOTH);
+        showAnim.play();
+    }
+    @FXML
+    private void closePopup() {
+        if (closing) return;
+        closing = true;
+        if (stage == null) return;
+
+        FadeTransition fade = new FadeTransition(Duration.millis(150), rootPane);
+        fade.setFromValue(1);
+        fade.setToValue(0);
+
+        ScaleTransition scale = new ScaleTransition(Duration.millis(150), rootPane);
+        scale.setFromX(1);
+        scale.setFromY(1);
+        scale.setToX(0.8);
+        scale.setToY(0.8);
+
+        ParallelTransition hideAnim = new ParallelTransition(fade, scale);
+        hideAnim.setInterpolator(Interpolator.EASE_BOTH);
+
+        hideAnim.setOnFinished(e -> stage.close());
+        hideAnim.play();
+    }
+
+    // [1] >=== DATA LOADER
+    private void loadAllData() {
+        DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo);
+        DataLoader.getInstance().akunComboBoxLoader(akunComboBox);
+        DataLoader.getInstance().kategoriComboBoxLoader(categoryComboBox);
+        DataLoader.getInstance().tipeLabelComboBoxLoader(tipeLabelCombo);
+        paymentType.setItems(DataManager.getInstance().getDataPaymentType());
+        paymentStatus.setItems(DataManager.getInstance().getDataPaymentStatus());
+        Converter.bindEnumComboBox(paymentType, PaymentType::getLabel);
+        Converter.bindEnumComboBox(paymentStatus, PaymentStatus::getLabel);
+
+        // lock combobox mata uang
+        mataUangCombo.setMouseTransparent(true);
+        mataUangCombo.setFocusTraversable(false);
+        mataUangCombo.getStyleClass().add("locked");
+    }
+
+    public void prefilFromRecord(Transaksi trans) {
+        editAmount.getEditor().setText(Integer.toString(trans.getJumlah()));
+        akunComboBox.setValue(trans.getAkun());
+        categoryComboBox.setValue(trans.getKategori());
+        tipeLabelCombo.setValue(trans.getTipelabel());
+        dateEdit.setValue(trans.getTanggal());
+        noteEdit.setText(trans.getKeterangan());
+        paymentType.setValue(trans.getPaymentType());
+        paymentStatus.setValue(trans.getPaymentStatus());
+    }
+}

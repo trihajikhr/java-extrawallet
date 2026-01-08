@@ -303,8 +303,22 @@ public class RecordCard {
         });
     }
 
+    // [4] >=== CARD LISTENER JIKA DIKLIK
+    public void setOnCardClick(Consumer<Transaksi> onClick) {
+        if (onClick == null) return;
 
-    // [] >=== SETTER & GETTER
+        cardWrapper.setOnMouseClicked(e -> {
+            if (e.getClickCount() != 1) return;
+
+            // Kalau yang diklik checkbox (atau child-nya), stop! Abaikan!
+            if (e.getTarget() instanceof CheckBox) return;
+
+            onClick.accept(transaksi);
+        });
+    }
+
+
+    // [4] >=== SETTER & GETTER
 
     public HBox getCardWrapper() {
         return cardWrapper;
