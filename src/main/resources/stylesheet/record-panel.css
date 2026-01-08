@@ -7,6 +7,13 @@
     -fx-background-radius: 4;
 }
 
+.vbox-under-topbar {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-effect:  dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 4);
+}
+
 .text-field-helper {
     -fx-text-fill: #6B7280;
     -fx-font-size: 13;

@@ -30,3 +30,177 @@
 .nav-button:pressed {
     -fx-background-color: #e6e8eb;
 }
+
+
+
+
+/* DASHBOARD ALL VIEW */
+/* SCROLL PANE NOT FOCUS */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane:focused {
+    -fx-border-color: transparent;
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: transparent;
+}
+
+
+
+/* scrollbar for scrollpane */
+/* Vertical scrollbar */
+.scroll-bar:vertical {
+    -fx-background-color: transparent; /* track container */
+    -fx-padding: 2px;
+    -fx-pref-width: 17px; /* tipis */
+}
+
+/* Track (latar scrollbar) */
+.scroll-bar:vertical .track {
+    -fx-background-color: #e0e0e0; /* abu-abu terang */
+    -fx-background-radius: 4px;
+}
+
+/* Thumb (bagian yang digeser) */
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #c0c0c0; /* abu-abu default */
+    -fx-background-radius: 4px;
+}
+
+/* Thumb hover effect */
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color: #888888; /* lebih gelap saat hover */
+}
+
+/* Horizontal scrollbar (opsional) */
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-height: 20px;
+}
+
+.scroll-bar:horizontal .track {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar:horizontal .thumb {
+    -fx-background-color: #c0c0c0;
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar:horizontal .thumb:hover {
+    -fx-background-color: #888888;
+}
+
+
+
+
+
+/* box style */
+.box-styling {
+    -fx-background-color: #FEFEFE;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+    /* -fx-border-radius: 8; */
+    -fx-background-radius: 8;
+}
+
+.anchor-income {
+    /* Lapis 1: Putih Solid (biar bayangan nempel ke sini) */
+    /* Lapis 2: Gradien hijau transparanmu */
+    -fx-background-color: #FEFEFE, linear-gradient(to bottom, #2ecc711a, #ffffff00);
+
+    -fx-background-insets: 0, 0;
+    -fx-background-radius: 8, 8;
+
+    /* Sekarang dropshadow akan mendeteksi Lapis 1 yang solid */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
+/* WARNA MERAH */
+.anchor-expense {
+    /* Lapis 1: Putih Solid | Lapis 2: Gradien Merah Transparan */
+    -fx-background-color: #FEFEFE, linear-gradient(to bottom, rgba(231, 76, 60, 0.1), rgba(255, 255, 255, 0));
+    -fx-background-insets: 0, 0;
+    -fx-background-radius: 8, 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
+/* WARNA BIRU */
+.anchor-balance {
+    /* Lapis 1: Putih Solid | Lapis 2: Gradien Biru Transparan */
+    -fx-background-color: #FEFEFE, linear-gradient(to bottom, rgba(52, 152, 219, 0.1), rgba(255, 255, 255, 0));
+    -fx-background-insets: 0, 0;
+    -fx-background-radius: 8, 8;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+}
+
+/* bagian label dashboard header */
+.h1-label-1 {
+    -fx-text-fill: #000000;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+.h1-label-2 {
+    -fx-text-fill: #6A7282;
+    -fx-font-size: 15;
+}
+
+/* triple badge */
+.triple-badge-label {
+    -fx-text-fill: #6A7282;
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+.income-label {
+    -fx-text-fill: #000000;
+    -fx-font-size: 23;
+    -fx-font-weight: bold;
+}
+
+.expense-label {
+    -fx-text-fill: #000000;
+    -fx-font-size: 23;
+    -fx-font-weight: bold;
+}
+
+.balance-label {
+    -fx-text-fill: #000000;
+    -fx-font-size: 23;
+    -fx-font-weight: bold;
+}
+
+.last-mounth30 {
+    -fx-text-fill: #9CA3AF;
+    -fx-font-size: 12;
+}
+
+/* ====== PROGRESS BAR ======== */
+/* progress bar container */
+.progress-bar {
+    -fx-pref-height: 20px;
+    -fx-pref-width: 280px;
+    -fx-background-radius: 4;
+}
+
+/* background */
+.progress-bar .track {
+    -fx-background-color: #E5E7EB;
+    -fx-background-radius: 4;
+}
+
+/* fill */
+.progress-bar .bar {
+    -fx-background-color: linear-gradient(
+        to right,
+        #22C55E,
+        #16A34A
+    );
+    -fx-background-radius: 4;
+}

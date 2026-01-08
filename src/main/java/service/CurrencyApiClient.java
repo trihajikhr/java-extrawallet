@@ -39,13 +39,15 @@ public class CurrencyApiClient {
         }
 
         // Fetch terbaru di background thread
-        new Thread(() -> {
+        Thread t = new Thread(() -> {
             try {
                 fetchAndSaveAllRates();
             } catch (Exception ex) {
                 log.error("gagal fetch kurs terbaru", ex);
             }
-        }).start();
+        });
+        t.setName("CurrencyAPI-Thread");
+        t.start();
 
         log.info("CurrencyApiClient siap digunakan!");
     }

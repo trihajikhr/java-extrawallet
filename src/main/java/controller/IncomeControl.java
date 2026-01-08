@@ -107,9 +107,11 @@ public class IncomeControl implements Initializable {
 
     private void initBaseData() {
         mainButtonInit();
+        loadStyleForRecordParent();
         setDateNow();
         recordCounterLabelInit();
         defaultTotalAmountSetter(incomeTransaction);
+        setFirstFilter();
     }
 
     // [1] >=== BASE INIT
@@ -131,6 +133,14 @@ public class IncomeControl implements Initializable {
         mainButtonList.put("export", exportButton);
         mainButtonList.put("delete", deleteButton);
         mainButtonStyler(isAnyCheckBoxSelected);
+    }
+    private void loadStyleForRecordParent() {
+        recordPanel.getStylesheets().add(
+                getClass().getResource("/stylesheet/record-card.css").toExternalForm()
+        );
+    }
+    private void setFirstFilter() {
+        applyFilterAndSort();
     }
     private void defaultTotalAmountSetter(List<Transaksi> dataIncome) {
         totalDefaultValue = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
@@ -154,7 +164,7 @@ public class IncomeControl implements Initializable {
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
-    private RecordCard createTransaction(Transaksi income) {
+    private RecordCard createRecordCard(Transaksi income) {
          RecordCard recordCard = new RecordCard(income);
          visibleCheckBox.add(recordCard.getCheckList());
          return recordCard;
@@ -164,7 +174,7 @@ public class IncomeControl implements Initializable {
         incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
 
         for(Transaksi in : incomeTransaction) {
-            recordCardBoard.put(in, createTransaction(in));
+            recordCardBoard.put(in, createRecordCard(in));
         }
 
         for(RecordCard card : recordCardBoard.values()) {
@@ -186,8 +196,6 @@ public class IncomeControl implements Initializable {
         ObservableList<SortOption> sortItems =
                 FXCollections.observableArrayList(SortOption.values());
         comboBoxSort.setItems(sortItems);
-
-        comboBoxSort.getSelectionModel().select(SortOption.TIME_NEWEST);
 
         comboBoxSort.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             applyFilterAndSort();
@@ -627,25 +635,28 @@ public class IncomeControl implements Initializable {
         SortOption sort = comboBoxSort.getValue();
         if (sort == null) {
             return Comparator.comparing(Transaksi::getTanggal).reversed()
-                    .thenComparing(Transaksi::getId); // default
+                    .thenComparing(Comparator.comparing(Transaksi::getId).reversed());
         }
+
+        Comparator<Transaksi> byIdDesc =
+                Comparator.comparing(Transaksi::getId).reversed();
 
         switch (sort) {
             case TIME_NEWEST:
                 return Comparator.comparing(Transaksi::getTanggal).reversed()
-                        .thenComparing(Transaksi::getId);
+                        .thenComparing(byIdDesc);
             case TIME_OLDEST:
                 return Comparator.comparing(Transaksi::getTanggal)
                         .thenComparing(Transaksi::getId);
             case AMOUNT_HIGHEST:
                 return Comparator.comparing(Transaksi::getJumlah).reversed()
-                        .thenComparing(Transaksi::getId);
+                        .thenComparing(byIdDesc);
             case AMOUNT_LOWEST:
                 return Comparator.comparing(Transaksi::getJumlah)
-                        .thenComparing(Transaksi::getId);
+                        .thenComparing(byIdDesc);
             default:
                 return Comparator.comparing(Transaksi::getTanggal).reversed()
-                        .thenComparing(Transaksi::getId);
+                        .thenComparing(byIdDesc);
         }
     }
     private void refreshView(List<Transaksi> data) {

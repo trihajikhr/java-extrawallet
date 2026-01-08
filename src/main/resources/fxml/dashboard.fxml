@@ -17,7 +17,7 @@
    <left>
       <VBox fx:id="navbarContainer" prefHeight="480.0" prefWidth="194.0" spacing="10.0" styleClass="box-shadow" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="toggleButton" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="95.0" maxHeight="40.0" maxWidth="45.0" mnemonicParsing="false" onAction="#toggleNavbar" prefHeight="40.0" prefWidth="40.0" styleClass="nav-button" textAlignment="CENTER">
+            <Button fx:id="toggleButton" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="95.0" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#toggleNavbar" prefHeight="40.0" prefWidth="40.0" styleClass="nav-button" textAlignment="CENTER" VBox.vgrow="ALWAYS">
                <graphic>
                   <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" prefHeight="30.0" spacing="10.0">
                      <children>

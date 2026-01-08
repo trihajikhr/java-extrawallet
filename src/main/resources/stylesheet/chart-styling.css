@@ -1,0 +1,88 @@
+/* GRAFIK LINE AJA! */
+/* Garis Pertama (Income) */
+.default-color0.chart-series-line {
+    -fx-stroke: #2ecc71; /* Hijau */
+    -fx-stroke-width: 3px;
+}
+.default-color0.chart-line-symbol {
+    -fx-background-color: #2ecc71, white;
+}
+
+/* Garis Kedua */
+.default-color1.chart-series-line {
+    -fx-stroke: #e74c3c; /* Merah */
+    -fx-stroke-width: 3px;
+}
+.default-color1.chart-line-symbol {
+    -fx-background-color: #e74c3c, white;
+}
+
+
+
+
+
+
+/* GRAFIK AREA */
+/* ================== AREA LINE ================== */
+.default-color0.chart-series-area-line {
+    -fx-stroke: #2ecc71;
+    -fx-stroke-width: 3px;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+
+.default-color1.chart-series-area-line {
+    -fx-stroke: #e74c3c;
+    -fx-stroke-width: 3px;
+    -fx-stroke-line-cap: round;
+    -fx-stroke-line-join: round;
+}
+
+/* ================== AREA FILL (GRADIENT) ================== */
+.default-color0.chart-series-area-fill {
+    -fx-fill: linear-gradient(
+        to bottom,
+        rgba(46, 204, 113, 0.45),
+        rgba(46, 204, 113, 0.05)
+    );
+}
+
+.default-color1.chart-series-area-fill {
+    -fx-fill: linear-gradient(
+        to bottom,
+        rgba(231, 76, 60, 0.45),
+        rgba(231, 76, 60, 0.05)
+    );
+}
+
+/* ================== LEGEND ================== */
+.default-color0.chart-legend-item-symbol {
+    -fx-background-color: #2ecc71;
+}
+
+.default-color1.chart-legend-item-symbol {
+    -fx-background-color: #e74c3c;
+}
+
+
+/* ============== MODERNIZE ============== */
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-horizontal-grid-lines,
+.chart-vertical-grid-lines {
+    -fx-stroke: rgba(0, 0, 0, 0.1);
+    -fx-stroke-width: 0.6;
+}
+
+.axis-line {
+    -fx-stroke: rgba(0, 0, 0, 0.15);
+    -fx-stroke-width: 0.8;
+}
+
+/* Label axis Y */
+.axis-label {
+    -fx-text-fill: #6A7282; /* abu lembut */
+    -fx-font-weight: normal;
+}

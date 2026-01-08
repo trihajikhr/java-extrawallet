@@ -56,6 +56,7 @@ public class RecordCard {
 
         // [0] parent node
         this.cardWrapper = createParentNode(trans);
+        cardWrapper.getStyleClass().add("record-card");
 
         // [1] checklist:
         this.checkList = createCheckBoxNode(trans);
@@ -229,14 +230,27 @@ public class RecordCard {
         result.setMaxWidth(250);
         result.setAlignment(Pos.CENTER_RIGHT);
         String formatJumlah = Converter.numberFormatter(Integer.toString(trans.getJumlah()));
-        this.labelJumlahTransaksi = new Label(trans.getAkun().getMataUang().getSimbol() + " " + formatJumlah);
-        this.labelJumlahTransaksi.setStyle(
-                """
-                -fx-text-fill: #01AA71;
-                -fx-font-size: 18px;
-                -fx-font-weight: bold;
-                """
-        );
+
+        if(trans.getTipeTransaksi() == TipeTransaksi.IN){
+            this.labelJumlahTransaksi = new Label(trans.getAkun().getMataUang().getSimbol() + " " + formatJumlah);
+            this.labelJumlahTransaksi.setStyle(
+                    """
+                    -fx-text-fill: #01AA71;
+                    -fx-font-size: 18px;
+                    -fx-font-weight: bold;
+                    """
+            );
+        } else if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
+            this.labelJumlahTransaksi = new Label("-" + trans.getAkun().getMataUang().getSimbol() + " " + formatJumlah);
+            this.labelJumlahTransaksi.setStyle(
+                    """
+                    -fx-text-fill: #F92222;
+                    -fx-font-size: 18px;
+                    -fx-font-weight: bold;
+                    """
+            );
+        }
+
         result.getChildren().add(this.labelJumlahTransaksi);
 
         this.tanggalStatusWrapper = new HBox(5);

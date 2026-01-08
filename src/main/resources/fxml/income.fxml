@@ -146,7 +146,7 @@
                         </GridPane>
                     </children>
                 </AnchorPane>
-            <VBox minHeight="90.0" prefHeight="90.0" prefWidth="843.0" style="-fx-background-color: white; -fx-background-radius: 4; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 4);">
+            <VBox minHeight="90.0" prefHeight="90.0" prefWidth="843.0" styleClass="vbox-under-topbar">
                <children>
                   <AnchorPane fx:id="checkBoxIndicatorPanel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                      <children>
