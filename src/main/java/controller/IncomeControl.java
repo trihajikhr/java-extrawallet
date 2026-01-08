@@ -839,9 +839,7 @@ public class IncomeControl implements Initializable {
             // kasih akses stage ke controller
             EditControl ctrl = loader.getController();
             ctrl.setStage(stage);
-
-            // FIXME:
-//            EditControl ctrl =
+            ctrl.prefilFromRecord(trans);
 
             stage.showAndWait();
         } catch (IOException e) {

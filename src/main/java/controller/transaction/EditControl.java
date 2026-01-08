@@ -3,24 +3,42 @@ package controller.transaction;
 import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.Converter;
+import helper.IOLogic;
+import helper.MyPopup;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ParallelTransition;
 import javafx.animation.ScaleTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.BooleanBinding;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.AnchorPane;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class EditControl implements Initializable {
@@ -28,7 +46,13 @@ public class EditControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(EditControl.class);
     private Stage stage;
     @FXML private AnchorPane rootPane;
+    private Transaksi TransaksiCompare;
+
+    // atribut pendukung
+    private double xOffset = 0;
+    private double yOffset = 0;
     private boolean closing = false;
+    private ObservableList<TipeLabel> tipeLabelList = FXCollections.observableArrayList();
 
     // atribut fxml
     @FXML private Spinner<Integer> editAmount;
@@ -40,10 +64,16 @@ public class EditControl implements Initializable {
     @FXML private TextField noteEdit;
     @FXML private ComboBox<PaymentType> paymentType;
     @FXML private ComboBox<PaymentStatus> paymentStatus;
+    @FXML private Button submitButton;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         loadAllData();
+        logicHandler();
+        isFormComplete();
+        akunToMataUangListener();
+        loadTipeLabelComboBox();
+
         showPopup();
     }
 
@@ -95,12 +125,19 @@ public class EditControl implements Initializable {
         hideAnim.play();
     }
 
+    // [1] >=== SCENE CONNECTION
+    public ComboBox<TipeLabel> getTipeLabelCombo() {
+        return tipeLabelCombo;
+    }
+    public ObservableList<TipeLabel> getTipeLabelList() {
+        return tipeLabelList;
+    }
+
     // [1] >=== DATA LOADER
     private void loadAllData() {
         DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo);
         DataLoader.getInstance().akunComboBoxLoader(akunComboBox);
         DataLoader.getInstance().kategoriComboBoxLoader(categoryComboBox);
-        DataLoader.getInstance().tipeLabelComboBoxLoader(tipeLabelCombo);
         paymentType.setItems(DataManager.getInstance().getDataPaymentType());
         paymentStatus.setItems(DataManager.getInstance().getDataPaymentStatus());
         Converter.bindEnumComboBox(paymentType, PaymentType::getLabel);
@@ -112,14 +149,149 @@ public class EditControl implements Initializable {
         mataUangCombo.getStyleClass().add("locked");
     }
 
+    private void loadTipeLabelComboBox(){
+        ArrayList<TipeLabel> dataTipelabel = DataManager.getInstance().getDataTipeLabel();
+        tipeLabelList = FXCollections.observableArrayList(dataTipelabel);
+
+        tipeLabelCombo.setItems(tipeLabelList);
+        tipeLabelCombo.setCellFactory(list -> new ListCell<TipeLabel>() {
+            @Override
+            protected void updateItem(TipeLabel item, boolean empty) {
+                super.updateItem(item, empty);
+
+                if(empty || item == null) {
+                    setText(null);
+                    setGraphic(null);
+                    return;
+                }
+
+                // icon
+                ImageView iconView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/icons/tagW.png")).toString()));
+                iconView.setFitWidth(14);
+                iconView.setFitHeight(14);
+                iconView.setPreserveRatio(true);
+
+                // background
+                StackPane iconBox = new StackPane(iconView);
+                iconBox.setPrefSize(28,28);;
+                iconBox.setMaxSize(28,28);
+
+                iconBox.setBackground(new Background(
+                        new BackgroundFill(
+                                item.getWarna(),
+                                new CornerRadii(8),
+                                Insets.EMPTY
+                        )
+                ));
+
+                // teks
+                Label label = new Label(item.getNama());
+                label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
+
+                // gabung
+                HBox box = new HBox(10, iconBox, label);
+                box.setAlignment(Pos.CENTER_LEFT);
+                setGraphic(box);
+            }
+        });
+        tipeLabelCombo.setButtonCell(tipeLabelCombo.getCellFactory().call(null));
+    }
+
     public void prefilFromRecord(Transaksi trans) {
         editAmount.getEditor().setText(Integer.toString(trans.getJumlah()));
         akunComboBox.setValue(trans.getAkun());
         categoryComboBox.setValue(trans.getKategori());
         tipeLabelCombo.setValue(trans.getTipelabel());
         dateEdit.setValue(trans.getTanggal());
-        noteEdit.setText(trans.getKeterangan());
+        noteEdit.setText(
+                Objects.requireNonNullElse(trans.getKeterangan(), "")
+        );
         paymentType.setValue(trans.getPaymentType());
         paymentStatus.setValue(trans.getPaymentStatus());
+        this.TransaksiCompare = trans;
+    }
+
+    // [2] >=== LOGIC HANDLER & FORM VALIDATION
+    private void logicHandler() {
+        IOLogic.isTextFieldValid(noteEdit, 50);
+        IOLogic.makeIntegerOnlyBlankInitial(editAmount, 0, 2_147_483_647);
+    }
+
+    private void isFormComplete() {
+        BooleanBinding amountValid =
+                Bindings.createBooleanBinding(
+                        () -> editAmount.getValue() != null && editAmount.getValue() > 0,
+                        editAmount.valueProperty()
+                );
+
+        BooleanBinding akunValid = akunComboBox.valueProperty().isNotNull();
+        BooleanBinding kategoriValid = categoryComboBox.valueProperty().isNotNull();
+        BooleanBinding dateValid = dateEdit.valueProperty().isNotNull();
+
+        BooleanBinding foromValid =
+                amountValid
+                        .and(akunValid)
+                        .and(kategoriValid)
+                        .and(dateValid);
+
+        submitButton.disableProperty().bind(foromValid.not());
+    }
+
+    // [3] >=== LISTENER
+    private void akunToMataUangListener() {
+        akunComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                mataUangCombo.setValue(newVal.getMataUang());
+            }
+        });
+    }
+
+    // [4] >=== BUTTON
+    @FXML
+    private void addLabelOnEdit(ActionEvent evt) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/label.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setRadius(10.0);
+            dropShadow.setOffsetX(5.0);
+            dropShadow.setOffsetY(5.0);
+            dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+            root.setEffect(dropShadow);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+
+//        stage.setMinWidth(450);
+//        stage.setMinHeight(560);
+//        stage.setMaxWidth(800);
+//        stage.setMaxHeight(700);
+
+            root.setOnMousePressed(event -> {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            });
+
+            root.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            });
+
+            LabelControl ctrl = loader.getController();
+            ctrl.setStage(stage);
+            ctrl.setParentEditRecord(this);
+
+            stage.showAndWait();
+
+        } catch (IOException e) {
+            log.error("gagal membuka panel tambah label!", e);
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
+        }
     }
 }

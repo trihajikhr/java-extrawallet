@@ -20,7 +20,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="575.0" minWidth="800.0" prefHeight="575.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.transaction.EditControl">
+<AnchorPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="575.0" minWidth="800.0" prefHeight="590.0" prefWidth="880.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.transaction.EditControl">
    <children>
       <AnchorPane layoutY="-3.0" prefHeight="75.0" prefWidth="800.0" styleClass="white-box" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -60,7 +60,7 @@
                   <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="70.0" minHeight="0.0" prefHeight="70.0" vgrow="SOMETIMES" />
                   <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="60.0" minHeight="75.0" prefHeight="70.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
                   <VBox alignment="TOP_CENTER" prefHeight="80.0" prefWidth="400.0" spacing="10.0">
@@ -88,7 +88,7 @@
                      <children>
                         <HBox alignment="CENTER_LEFT" prefHeight="10.0" prefWidth="400.0">
                            <children>
-                              <Label text="Account" />
+                              <Label text="Account *" />
                            </children>
                            <opaqueInsets>
                               <Insets />
@@ -137,7 +137,7 @@
                         <HBox prefHeight="54.0" prefWidth="400.0" spacing="5.0">
                            <children>
                               <ComboBox fx:id="tipeLabelCombo" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" styleClass="modern-btn" HBox.hgrow="ALWAYS" />
-                              <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
+                              <Button maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" onAction="#addLabelOnEdit" prefHeight="40.0" prefWidth="40.0" styleClass="modern-btn-add">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -160,7 +160,7 @@
                      <children>
                         <HBox prefHeight="9.0" prefWidth="400.0">
                            <children>
-                              <Label text="Date &amp; Times" />
+                              <Label text="Date &amp; Times *" />
                            </children>
                            <opaqueInsets>
                               <Insets />
@@ -178,7 +178,7 @@
                   </VBox>
                   <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0" GridPane.rowIndex="5">
                      <children>
-                        <Button fx:id="submit" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Edit" VBox.vgrow="ALWAYS" />
+                        <Button fx:id="submitButton" maxHeight="40.0" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="submit-button" stylesheets="@../stylesheet/submit-button.css" text="Edit" VBox.vgrow="ALWAYS" />
                      </children>
                      <GridPane.margin>
                         <Insets />
@@ -195,7 +195,7 @@
                         <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Note" />
-                              <TextField fx:id="note" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." />
+                              <TextField fx:id="noteEdit" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" promptText="your notes..." />
                            </children>
                         </VBox>
                      </children>
