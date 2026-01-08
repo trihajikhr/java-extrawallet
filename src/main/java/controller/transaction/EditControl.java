@@ -255,7 +255,14 @@ public class EditControl implements Initializable {
                             paymentStatus.getValue()
                     );
 
-                    return !current.isSameState(transOriginal);
+                    boolean changed = !current.isSameState(transOriginal);
+                    if(changed){
+                        log.info("EDIT: data tidak sama!");
+                    } else {
+                        log.info("EDIT: data sama!");
+                    }
+
+                    return changed;
                 },
                 amountEdit.valueProperty(),
                 akunComboBox.valueProperty(),
@@ -267,7 +274,6 @@ public class EditControl implements Initializable {
                 paymentStatus.valueProperty()
         );
     }
-
 
     // [4] >=== LISTENER
     private void akunToMataUangListener() {
