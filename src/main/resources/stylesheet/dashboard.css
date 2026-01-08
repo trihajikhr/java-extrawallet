@@ -180,3 +180,27 @@
     -fx-text-fill: #9CA3AF;
     -fx-font-size: 12;
 }
+
+/* ====== PROGRESS BAR ======== */
+/* progress bar container */
+.progress-bar {
+    -fx-pref-height: 20px;
+    -fx-pref-width: 280px;
+    -fx-background-radius: 4;
+}
+
+/* background */
+.progress-bar .track {
+    -fx-background-color: #E5E7EB;
+    -fx-background-radius: 4;
+}
+
+/* fill */
+.progress-bar .bar {
+    -fx-background-color: linear-gradient(
+        to right,
+        #22C55E,
+        #16A34A
+    );
+    -fx-background-radius: 4;
+}
