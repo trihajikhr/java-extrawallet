@@ -535,7 +535,7 @@ public class Database {
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
-            log.error("insert transaksi gagal", e);
+            log.error("update transaksi gagal", e);
             return false;
 
         } finally {
@@ -638,6 +638,46 @@ public class Database {
         } catch (SQLException e) {
             log.error("gagal fetch data akun: ", e);
             return null;
+        }
+    }
+    public Boolean updateSaldoAkun(Akun akun, int jumlah) {
+        String querySql = """
+            UPDATE akun SET
+            jumlah = ?
+            WHERE id = ?;
+            """;
+
+        try {
+            koneksi.setAutoCommit(false);
+            try (PreparedStatement ps = koneksi.prepareStatement(querySql)) {
+                ps.setInt(1, jumlah);
+                ps.setInt(2, akun.getId());
+
+                int affected = ps.executeUpdate();
+                if(affected == 0) {
+                    koneksi.rollback();
+                    return false;
+                }
+
+                koneksi.commit();
+                return true;
+
+            }
+        } catch (SQLException e) {
+            try {
+                koneksi.rollback();
+            } catch (SQLException ex) {
+                log.error("rollback database gagal", ex);
+            }
+            log.error("update saldo akun gagal", e);
+            return false;
+
+        } finally {
+            try {
+                koneksi.setAutoCommit(true); // balikin normal
+            } catch (SQLException e) {
+                log.error("gagal reset autoCommit", e);
+            }
         }
     }
 

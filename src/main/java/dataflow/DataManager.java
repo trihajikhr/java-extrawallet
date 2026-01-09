@@ -118,6 +118,15 @@ public class DataManager {
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
+    public Boolean updateSaldoAkun(Akun akun, int jumlah){
+        Boolean result = Database.getInstance().updateSaldoAkun(akun, jumlah);
+        if(result) {
+            log.info("saldo akun diperbarui!");
+        } else {
+            log.error("saldo akun GAGAL diperbarui!");
+        }
+        return result;
+    }
 
     public ArrayList<Akun> getDataAkun() {
         return dataAkun;
