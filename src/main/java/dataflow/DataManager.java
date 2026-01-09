@@ -149,9 +149,29 @@ public class DataManager {
         Database.getInstance().deleteTransaksi(id);
     }
     public Boolean modifyTransaksi(Transaksi trans) {
-        Database.getInstance().updateTransaksi(trans);
-        // FIXME:
-        return true;
+        Boolean result = Database.getInstance().updateTransaksi(trans);
+        if(result) {
+            for (Transaksi t : DataManager.getInstance().getDataTransaksi()) {
+                if (t.getId() == trans.getId()) {
+                    t.setJumlah(trans.getJumlah());
+                    t.setAkun(trans.getAkun());
+                    t.setKategori(trans.getKategori());
+                    t.setTipelabel(trans.getTipelabel());
+                    t.setTanggal(trans.getTanggal());
+                    t.setKeterangan(trans.getKeterangan());
+                    t.setPaymentType(trans.getPaymentType());
+                    t.setPaymentStatus(trans.getPaymentStatus());
+                    break;
+                }
+            }
+
+            log.info("transaksi berhasil diedit!");
+            MyPopup.showSucces("Operasi berhasil!", "Transaksi berhasil diedit!");
+            return true;
+        } else {
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
+            return false;
+        }
     }
 
     // [2] >> =============== DATA PEMASUKAN =============== //

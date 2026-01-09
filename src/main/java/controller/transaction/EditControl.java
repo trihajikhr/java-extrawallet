@@ -350,7 +350,6 @@ public class EditControl implements Initializable {
                 paymentStatus.getValue()
         );
 
-
         Boolean isChanged = !transModified.isSameState(transOriginal);
         if(isChanged) {
             DataManager.getInstance().modifyTransaksi(transModified);
