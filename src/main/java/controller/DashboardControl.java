@@ -56,8 +56,13 @@ public class DashboardControl {
     @FXML private Label item4Label;
     @FXML private Label item5Label;
 
+    private static DashboardControl instance;
+    private String currentPage = "home";
+
     @FXML
     public void initialize() {
+        instance = this; // simpan reference
+
         navLabel = new Label[]{item1Label, item2Label, item3Label, item4Label, item5Label};
 
         imgOpen  = new Image(getClass().getResource("/icons/left-arrow.png").toString());
@@ -67,6 +72,13 @@ public class DashboardControl {
         navbarContainer.setPrefWidth(collapsedWidth);
         setTextsVisible(false);
         toggleIcon.setImage(imgClose);
+    }
+
+    public static DashboardControl getInstance() {
+        return instance;
+    }
+    public String getCurrentPage(){
+        return currentPage;
     }
 
     @FXML private void home(ActionEvent e){loadPage("home");}
@@ -230,6 +242,7 @@ public class DashboardControl {
 
     @FXML
     public void loadPage(String page) {
+        this.currentPage = page;
         try {
             FXMLLoader loadder = new FXMLLoader(getClass().getResource("/fxml/" + page + ".fxml"));
             Parent root = loadder.load();

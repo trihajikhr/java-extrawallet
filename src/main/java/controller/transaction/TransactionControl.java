@@ -1,5 +1,6 @@
 package controller.transaction;
 
+import controller.DashboardControl;
 import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.Converter;
@@ -430,6 +431,8 @@ public class TransactionControl implements Initializable {
 
         if(closeAfterSubmit) {
             closePopup();
+            String page = DashboardControl.getInstance().getCurrentPage();
+            DashboardControl.getInstance().loadPage(page);
         } else {
             clearInoutForm();
         }

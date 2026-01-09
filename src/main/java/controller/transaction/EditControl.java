@@ -1,5 +1,6 @@
 package controller.transaction;
 
+import controller.DashboardControl;
 import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.Converter;
@@ -353,6 +354,8 @@ public class EditControl implements Initializable {
         Boolean isChanged = !transModified.isSameState(transOriginal);
         if(isChanged) {
             DataManager.getInstance().modifyTransaksi(transModified);
+            String page = DashboardControl.getInstance().getCurrentPage();
+            DashboardControl.getInstance().loadPage(page);
         }
         closePopup();
     }
