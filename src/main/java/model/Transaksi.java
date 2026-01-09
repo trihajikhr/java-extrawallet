@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 public class Transaksi {
     protected int id;
@@ -38,6 +39,34 @@ public class Transaksi {
     }
 
     public Transaksi() {}
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Transaksi)) return false;
+        Transaksi that = (Transaksi) o;
+        return id == that.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Integer.hashCode(id);
+    }
+
+    public boolean isSameState(Transaksi t) {
+        if (t == null) return false;
+
+        return jumlah == t.jumlah &&
+                tipeTransaksi == t.tipeTransaksi &&
+                Objects.equals(akun, t.akun) &&
+                Objects.equals(kategori, t.kategori) &&
+                Objects.equals(tipelabel, t.tipelabel) &&
+                Objects.equals(tanggal, t.tanggal) &&
+                Objects.equals(keterangan, t.keterangan) &&
+                paymentType == t.paymentType &&
+                paymentStatus == t.paymentStatus;
+    }
+
 
     public int getId() {
         return id;

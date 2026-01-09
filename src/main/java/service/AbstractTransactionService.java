@@ -1,10 +1,8 @@
 package service;
 
 import dataflow.DataManager;
-import model.Akun;
-import model.Kategori;
-import model.TipeLabel;
-import model.Transaksi;
+import helper.MyPopup;
+import model.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -87,6 +85,57 @@ public abstract class AbstractTransactionService implements TransactionService {
             sum = sum.add(normalizeAmount(trans));
         }
         return sum;
+    }
+
+    @Override
+    public Boolean updateSingleAkun(Akun akun, Transaksi oldTrans, int newJumlah) {
+        TipeTransaksi tipe = oldTrans.getTipeTransaksi();
+        int oldJumlah = oldTrans.getJumlah();
+        int selisih = 0;
+
+        switch (tipe) {
+            case IN -> selisih = newJumlah - oldJumlah;
+            case OUT -> selisih = oldJumlah - newJumlah;
+        }
+
+        if (tipe == TipeTransaksi.OUT && selisih > akun.getJumlah()) {
+            MyPopup.showDanger("Saldo kurang!", "Saldo anda: " + akun.getJumlah());
+            return false;
+        }
+
+        int newSaldo = akun.getJumlah() + selisih;
+        akun.setJumlah(newSaldo);
+
+        return DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
+    }
+
+    @Override
+    public Boolean updateMultipleAkun(List<Transaksi> selected) {
+        for (Transaksi trans : selected) {
+            Akun akun = trans.getAkun();
+            int jumlah = trans.getJumlah();
+            int newSaldo;
+
+            if (trans.getTipeTransaksi() == TipeTransaksi.IN) {
+                newSaldo = akun.getJumlah() + jumlah;
+            } else {
+                if (jumlah > akun.getJumlah()) {
+                    MyPopup.showDanger("Saldo kurang!", "Akun " + akun.getNama() + " saldo: " + akun.getJumlah());
+                    return false;
+                }
+                newSaldo = akun.getJumlah() - jumlah;
+            }
+
+            boolean result = DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
+            if (!result) {
+                MyPopup.showDanger("Gagal update saldo untuk akun: " + akun.getNama(), "Coba lagi nanti.");
+                return false;
+            }
+
+            akun.setJumlah(newSaldo);
+        }
+
+        return true;
     }
 
     protected abstract boolean isTargetType(Transaksi t);

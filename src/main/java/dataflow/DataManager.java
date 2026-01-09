@@ -118,6 +118,15 @@ public class DataManager {
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
+    public Boolean updateSaldoAkun(Akun akun, int jumlah){
+        Boolean result = Database.getInstance().updateSaldoAkun(akun, jumlah);
+        if(result) {
+            log.info("saldo akun diperbarui!");
+        } else {
+            log.error("saldo akun GAGAL diperbarui!");
+        }
+        return result;
+    }
 
     public ArrayList<Akun> getDataAkun() {
         return dataAkun;
@@ -147,6 +156,64 @@ public class DataManager {
     }
     public void removeTransaksi(int id) {
         Database.getInstance().deleteTransaksi(id);
+    }
+    public Boolean modifyTransaksi(Transaksi trans) {
+        Boolean result = Database.getInstance().updateTransaksi(trans);
+        if(result) {
+            for (Transaksi t : DataManager.getInstance().getDataTransaksi()) {
+                if (t.getId() == trans.getId()) {
+                    t.setJumlah(trans.getJumlah());
+                    t.setAkun(trans.getAkun());
+                    t.setKategori(trans.getKategori());
+                    t.setTipelabel(trans.getTipelabel());
+                    t.setTanggal(trans.getTanggal());
+                    t.setKeterangan(trans.getKeterangan());
+                    t.setPaymentType(trans.getPaymentType());
+                    t.setPaymentStatus(trans.getPaymentStatus());
+                    break;
+                }
+            }
+
+            log.info("transaksi berhasil diedit!");
+            MyPopup.showSucces("Operasi berhasil!", "Transaksi berhasil diedit!");
+            return true;
+        } else {
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
+            return false;
+        }
+    }
+    public Boolean modifyMultipleTransaksi(List<Transaksi> selected){
+        int counter = 0;
+        for(Transaksi trans : selected) {
+            Boolean result = Database.getInstance().updateTransaksi(trans);
+            if(result){
+                counter++;
+                for (Transaksi t : DataManager.getInstance().getDataTransaksi()) {
+                    if (t.getId() == trans.getId()) {
+                        t.setJumlah(trans.getJumlah());
+                        t.setAkun(trans.getAkun());
+                        t.setKategori(trans.getKategori());
+                        t.setTipelabel(trans.getTipelabel());
+                        t.setTanggal(trans.getTanggal());
+                        t.setKeterangan(trans.getKeterangan());
+                        t.setPaymentType(trans.getPaymentType());
+                        t.setPaymentStatus(trans.getPaymentStatus());
+                        break;
+                    }
+                }
+                log.info("transaksi " + counter + " berhasil diedit!");
+            } else {
+                log.error("GAGAL! transaksi " + counter + " gagal diedit!");
+            }
+        }
+
+        if(counter == selected.size()) {
+            MyPopup.showSucces("Operasi berhasil!", "Transaksi berhasil diedit!");
+            return true;
+        } else {
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
+            return false;
+        }
     }
 
     // [2] >> =============== DATA PEMASUKAN =============== //

@@ -8,6 +8,18 @@
    NAVBAR BUTTON — modern, tidak atur ukuran
    ========================================== */
 
+.icon-pojok-dashboard {
+    -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.slogan-app {
+    -fx-font-size: 11px;
+    -fx-text-fill: #696969;
+    /* -fx-font-weight: bold; */
+}
+
 .nav-button {
     -fx-background-color: transparent;
     -fx-text-fill: #2c2c2c;
@@ -138,6 +150,12 @@
     -fx-background-radius: 8, 8;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
 }
+
+.hbox-last-record {
+    /* Lapis 1: Putih | Lapis 2: Gradasi Kuning → Putih */
+    -fx-background-color: #FFFFFF, linear-gradient(to bottom, rgba(255, 214, 102, 0.1), rgba(255, 255, 255, 0));
+}
+
 
 /* bagian label dashboard header */
 .h1-label-1 {

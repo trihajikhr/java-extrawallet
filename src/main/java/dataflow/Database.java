@@ -469,6 +469,83 @@ public class Database {
             log.error("Data transaksi gagal dihapus!", e);
         }
     }
+    public Boolean updateTransaksi(Transaksi trans){
+        String querySql = """
+            UPDATE transaksi SET
+                jumlah = ?,
+                id_akun = ?,
+                id_kategori = ?,
+                id_tipelabel = ?,
+                tanggal = ?,
+                keterangan = ?,
+                metode_transaksi = ?,
+                status = ?
+            WHERE id = ?;
+            """;
+
+        try {
+            koneksi.setAutoCommit(false);
+            try (PreparedStatement ps = koneksi.prepareStatement(querySql)) {
+                ps.setInt(1, trans.getJumlah());
+                ps.setInt(2, trans.getAkun().getId());
+                ps.setInt(3, trans.getKategori().getId());
+
+                if(trans.getTipelabel() != null) {
+                    ps.setInt(4, trans.getTipelabel().getId());
+                } else {
+                    ps.setNull(4, Types.INTEGER);
+                }
+
+                ps.setString(5, trans.getTanggal().format(formatter));
+
+                if (trans.getKeterangan() != null) {
+                    ps.setString(6, trans.getKeterangan());
+                } else {
+                    ps.setNull(6, Types.VARCHAR);
+                }
+
+                if(trans.getPaymentType() != null) {
+                    ps.setString(7, trans.getPaymentType().name());
+                } else {
+                    ps.setNull(7, Types.VARCHAR);
+                }
+
+                if(trans.getPaymentStatus() != null) {
+                    ps.setString(8, trans.getPaymentStatus().name());
+                } else {
+                    ps.setNull(8, Types.VARCHAR);
+                }
+
+                ps.setInt(9, trans.getId());
+
+
+                int affected = ps.executeUpdate();
+                if(affected == 0) {
+                    koneksi.rollback();
+                    return false;
+                }
+
+                koneksi.commit();
+                return true;
+
+            }
+        } catch (SQLException e) {
+            try {
+                koneksi.rollback();
+            } catch (SQLException ex) {
+                log.error("rollback database gagal", ex);
+            }
+            log.error("update transaksi gagal", e);
+            return false;
+
+        } finally {
+            try {
+                koneksi.setAutoCommit(true); // balikin normal
+            } catch (SQLException e) {
+                log.error("gagal reset autoCommit", e);
+            }
+        }
+    }
 
     // [6] >=== manipulasi data akun
     public int insertAkun(Akun dataAkun) {
@@ -561,6 +638,46 @@ public class Database {
         } catch (SQLException e) {
             log.error("gagal fetch data akun: ", e);
             return null;
+        }
+    }
+    public Boolean updateSaldoAkun(Akun akun, int jumlah) {
+        String querySql = """
+            UPDATE akun SET
+            jumlah = ?
+            WHERE id = ?;
+            """;
+
+        try {
+            koneksi.setAutoCommit(false);
+            try (PreparedStatement ps = koneksi.prepareStatement(querySql)) {
+                ps.setInt(1, jumlah);
+                ps.setInt(2, akun.getId());
+
+                int affected = ps.executeUpdate();
+                if(affected == 0) {
+                    koneksi.rollback();
+                    return false;
+                }
+
+                koneksi.commit();
+                return true;
+
+            }
+        } catch (SQLException e) {
+            try {
+                koneksi.rollback();
+            } catch (SQLException ex) {
+                log.error("rollback database gagal", ex);
+            }
+            log.error("update saldo akun gagal", e);
+            return false;
+
+        } finally {
+            try {
+                koneksi.setAutoCommit(true); // balikin normal
+            } catch (SQLException e) {
+                log.error("gagal reset autoCommit", e);
+            }
         }
     }
 

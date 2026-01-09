@@ -197,10 +197,10 @@ public class HomeControl implements Initializable {
     }
 
     // [2] >=== CHART VIEW SETUP
+    // BUG: error ketika data baru ditambahan dihari [today]
     private void generateChart() {
-        // TODO: dapatkan perubahan data pada 30 hari terakhir
         LocalDate today = LocalDate.now();
-        LocalDate startDate = today.minusDays(30);
+        LocalDate startDate = today.minusDays(29);
 
         Map<LocalDate, BigDecimal> incomePerDay = new LinkedHashMap<>();
         Map<LocalDate, BigDecimal> expensePerDay = new LinkedHashMap<>();

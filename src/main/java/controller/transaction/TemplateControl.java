@@ -452,7 +452,9 @@ public class TemplateControl implements Initializable {
         categoryComboBox.setValue(trans.getKategori());
 
         tipeLabelComboBox.setValue(trans.getTipelabel());
-        noteText.setText(trans.getKeterangan());
+        noteText.setText(
+                Objects.requireNonNullElse(trans.getKeterangan(), "")
+        );
         paymentTypeComboBox.setValue(trans.getPaymentType());
         paymentStatusComboBox.setValue(trans.getPaymentStatus());
     }

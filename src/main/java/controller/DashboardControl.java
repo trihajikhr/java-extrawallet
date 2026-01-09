@@ -56,6 +56,31 @@ public class DashboardControl {
     @FXML private Label item4Label;
     @FXML private Label item5Label;
 
+    private static DashboardControl instance;
+    private String currentPage = "home";
+
+    @FXML
+    public void initialize() {
+        instance = this; // simpan reference
+
+        navLabel = new Label[]{item1Label, item2Label, item3Label, item4Label, item5Label};
+
+        imgOpen  = new Image(getClass().getResource("/icons/left-arrow.png").toString());
+        imgClose   = new Image(getClass().getResource("/icons/menu.png").toString());
+
+        isExpanded = false;
+        navbarContainer.setPrefWidth(collapsedWidth);
+        setTextsVisible(false);
+        toggleIcon.setImage(imgClose);
+    }
+
+    public static DashboardControl getInstance() {
+        return instance;
+    }
+    public String getCurrentPage(){
+        return currentPage;
+    }
+
     @FXML private void home(ActionEvent e){loadPage("home");}
     @FXML private void income(ActionEvent e){loadPage("income");}
     @FXML private void expense(ActionEvent e){loadPage("expense");}
@@ -109,7 +134,6 @@ public class DashboardControl {
 
         stage.showAndWait();
     }
-
     @FXML
     private void addAccount(ActionEvent e) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/account.fxml"));
@@ -182,8 +206,6 @@ public class DashboardControl {
             timeline.play();
         }
     }
-
-
     private void fadeInTexts() {
         for (Label text : navLabel) {
             text.setManaged(true);
@@ -196,7 +218,6 @@ public class DashboardControl {
             ft.play();
         }
     }
-
     private void fadeOutTexts() {
         for (Label text : navLabel) {
             FadeTransition ft = new FadeTransition(Duration.millis(150), text);
@@ -211,8 +232,6 @@ public class DashboardControl {
             ft.play();
         }
     }
-
-
     private void setTextsVisible(boolean visible) {
         for (Label text : navLabel) {
             text.setVisible(visible);
@@ -220,21 +239,10 @@ public class DashboardControl {
         }
     }
 
-    @FXML
-    public void initialize() {
-        navLabel = new Label[]{item1Label, item2Label, item3Label, item4Label, item5Label};
-
-        imgOpen  = new Image(getClass().getResource("/icons/left-arrow.png").toString());
-        imgClose   = new Image(getClass().getResource("/icons/menu.png").toString());
-
-        isExpanded = false;
-        navbarContainer.setPrefWidth(collapsedWidth);
-        setTextsVisible(false);
-        toggleIcon.setImage(imgClose);
-    }
 
     @FXML
     public void loadPage(String page) {
+        this.currentPage = page;
         try {
             FXMLLoader loadder = new FXMLLoader(getClass().getResource("/fxml/" + page + ".fxml"));
             Parent root = loadder.load();

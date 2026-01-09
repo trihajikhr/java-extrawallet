@@ -1,18 +1,28 @@
 package controller;
 
 import controller.option.SortOption;
+import controller.option.TransactionParent;
+import controller.transaction.EditControl;
 import dataflow.DataManager;
 import helper.Converter;
+import helper.MyPopup;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableSet;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import service.CurrencyApiClient;
 import service.IncomeService;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
@@ -30,10 +41,13 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class IncomeControl implements Initializable {
+public class IncomeControl implements Initializable, TransactionParent {
     private static final Logger log = LoggerFactory.getLogger(IncomeControl.class);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
     DateTimeFormatter formatterNow = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
+
+    private double xOffset = 0;
+    private double yOffset = 0;
 
     // data sumber kebenaran
     List<Transaksi> incomeTransaction  = new ArrayList<>();
@@ -91,7 +105,7 @@ public class IncomeControl implements Initializable {
     @FXML private Button deleteButton;
     private Map<String, Button> mainButtonList = new HashMap<>();
 
-    // [0] >=== INIT FUNCTION
+    // [0] >=== INIT FUNCTION & SCENE CONNECTOR
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         log.info("panel record income berhasil terbuka");
@@ -104,7 +118,6 @@ public class IncomeControl implements Initializable {
         checkBoxSetupListeners();
         updateButtons();
     }
-
     private void initBaseData() {
         mainButtonInit();
         loadStyleForRecordParent();
@@ -112,6 +125,10 @@ public class IncomeControl implements Initializable {
         recordCounterLabelInit();
         defaultTotalAmountSetter(incomeTransaction);
         setFirstFilter();
+    }
+    @Override
+    public Map<Transaksi, RecordCard> getRecordCardBoard() {
+        return recordCardBoard;
     }
 
     // [1] >=== BASE INIT
@@ -166,6 +183,7 @@ public class IncomeControl implements Initializable {
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
     private RecordCard createRecordCard(Transaksi income) {
          RecordCard recordCard = new RecordCard(income);
+         recordCard.setOnCardClick(this::openSingleEdit);
          visibleCheckBox.add(recordCard.getCheckList());
          return recordCard;
     }
@@ -779,7 +797,71 @@ public class IncomeControl implements Initializable {
         selectedAmountSetter(result);
     }
 
-    // [7] >=== CONTROLLER LAINYA...
+    // [7] >=== TOMBOL EDIT UNTUK RECORDCARD
+    private void openSingleEdit(Transaksi trans) {
+        openSingleEdit(trans, false); // default true
+    }
+    @FXML
+    private void openSingleEdit(Transaksi trans, Boolean isMultiple) {
+        // setting stage ini mirip dengan fungsi addTransaction di class DashboardController!
+        // komentas yang lebih lengkap ada disana!
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/edit-transaction.fxml"));
+            Parent root = loader.load();
+            Stage stage = new Stage();
+
+
+            // undecorated windows
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.initModality(Modality.APPLICATION_MODAL);
+
+            // dropshadow ke root
+            DropShadow dropShadow = new DropShadow();
+            dropShadow.setRadius(10.0);
+            dropShadow.setOffsetX(5.0);
+            dropShadow.setOffsetY(5.0);
+            dropShadow.setColor(Color.rgb(0, 0, 0, 0.4));
+            root.setEffect(dropShadow);
+
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+
+            // stage.setMinWidth(750);
+            // stage.setMinHeight(650);
+            // stage.setMaxWidth(800);
+            // stage.setMaxHeight(700);
+
+            // draggable pop up
+            root.setOnMousePressed(event -> {
+                xOffset = event.getSceneX();
+                yOffset = event.getSceneY();
+            });
+
+            root.setOnMouseDragged(event -> {
+                stage.setX(event.getScreenX() - xOffset);
+                stage.setY(event.getScreenY() - yOffset);
+            });
+
+            // kasih akses stage ke controller
+            EditControl ctrl = loader.getController();
+            ctrl.setStage(stage);
+            ctrl.setParent(this);
+            if(isMultiple){
+                ctrl.setIsMultiple(isMultiple);
+            } else {
+                ctrl.setIsMultiple(isMultiple);
+                ctrl.prefilFromRecord(trans);
+            }
+
+            stage.showAndWait();
+        } catch (IOException e) {
+            log.error("gagal membuka jendela edit!", e);
+        }
+    }
+
+    // [7] >=== 3 BUTTON PENGEDITAN & HELPER
     private void mainButtonStyler(Boolean value) {
         if(value) {
             mainButtonList.forEach((name, btn) -> {
@@ -798,13 +880,18 @@ public class IncomeControl implements Initializable {
         }
     }
     @FXML
-    private void handleEdit() {
-        showNotification("Info", "Fitur Edit akan segera hadir.");
+    private void handleMultipleEdit() {
+        openSingleEdit(null, true);
     }
 
     @FXML
     private void handleDelete() {
-        showNotification("Info", "Fitur Delete akan segera hadir.");
+        MyPopup.showSucces("Coming Soon!", "dalam tahap pengembangan");
+    }
+
+    @FXML
+    private void handleExport() {
+        MyPopup.showSucces("Coming Soon!", "dalam tahap pengembangan");
     }
 
     private void showNotification(String title, String message) {

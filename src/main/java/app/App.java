@@ -117,7 +117,7 @@ public class App extends Application {
         // app icon
         HBox mainDesign = new HBox();
         mainDesign.setAlignment(Pos.CENTER);
-        mainDesign.setSpacing(10);
+        mainDesign.setSpacing(15);
 
         Image iconImg = new Image(Objects.requireNonNull(getClass().getResource("/app-icon/icon.png")).toString());
         ImageView icon = new ImageView(iconImg);

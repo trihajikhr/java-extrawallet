@@ -1,5 +1,6 @@
 package controller.transaction;
 
+import controller.DashboardControl;
 import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.Converter;
@@ -411,6 +412,31 @@ public class TransactionControl implements Initializable {
         PaymentType payment = paymentType_inout.getValue();
         PaymentStatus status = paymentStatus_inout.getValue();
 
+        if(tipe == TipeTransaksi.OUT && jumlah > akun.getJumlah()){
+            MyPopup.showDanger("Saldo kurang!", "Saldo anda: " + akun.getJumlah());
+            return;
+        }
+
+        int newSaldo = 0;
+        Boolean result = false;
+        if(tipe == TipeTransaksi.IN) {
+            newSaldo = akun.getJumlah() + jumlah;
+            result = DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
+            if(result) {
+                akun.setJumlah(newSaldo);
+            }
+        } else {
+            newSaldo = akun.getJumlah() - jumlah;
+            result = DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
+            if(result) {
+                akun.setJumlah(newSaldo);
+            }
+        }
+
+        if(!result) {
+            return;
+        }
+
         DataManager.getInstance().addTransaksi(new Transaksi(
                 0,
                 tipe,
@@ -430,6 +456,8 @@ public class TransactionControl implements Initializable {
 
         if(closeAfterSubmit) {
             closePopup();
+            String page = DashboardControl.getInstance().getCurrentPage();
+            DashboardControl.getInstance().loadPage(page);
         } else {
             clearInoutForm();
         }
@@ -494,6 +522,25 @@ public class TransactionControl implements Initializable {
         String keterangan = IOLogic.normalizeSpaces(note_trans.getText());
         PaymentType payment = paymentType_trans.getValue();
         PaymentStatus status = paymentStatus_trans.getValue();
+
+        if(fromJumlah > fromAkun.getJumlah()){
+            MyPopup.showDanger("Saldo akun kurang!", "Saldo anda: " + fromAkun.getJumlah());
+            return;
+        }
+
+        Boolean fromValid = false, toValid = false;
+        int newFromJumlah = fromAkun.getJumlah() - fromJumlah;
+        int newToJumlah = toAkun.getJumlah() + toJumlah;
+
+        fromValid = DataManager.getInstance().updateSaldoAkun(fromAkun, newFromJumlah);
+        toValid = DataManager.getInstance().updateSaldoAkun(fromAkun, newToJumlah);
+
+        if(fromValid && toValid) {
+            fromAkun.setJumlah(newFromJumlah);
+            toAkun.setJumlah(newToJumlah);
+        } else {
+            return;
+        }
 
         Kategori fromKategori = null;
         for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {

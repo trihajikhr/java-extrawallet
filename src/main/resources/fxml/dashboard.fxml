@@ -151,7 +151,7 @@
          <children>
             <AnchorPane prefHeight="75.0" styleClass="box-shadow" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Button ellipsisString="" layoutX="1316.0" layoutY="25.0" mnemonicParsing="false" onAction="#addTransaction" prefHeight="35.0" prefWidth="150.0" styleClass="modern-btn" AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="17.0">
+                  <Button ellipsisString="" layoutX="1316.0" layoutY="25.0" mnemonicParsing="false" onAction="#addTransaction" prefHeight="35.0" prefWidth="150.0" styleClass="modern-btn" AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="17.0">
                      <graphic>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -168,7 +168,7 @@
                         </HBox>
                      </graphic>
                   </Button>
-                  <Button ellipsisString="" layoutX="1210.0" layoutY="27.0" mnemonicParsing="false" onAction="#addAccount" prefHeight="35.0" prefWidth="150.0" styleClass="modern-btn" AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="220.0" AnchorPane.topAnchor="17.0">
+                  <Button ellipsisString="" layoutX="1210.0" layoutY="27.0" mnemonicParsing="false" onAction="#addAccount" prefHeight="35.0" prefWidth="150.0" styleClass="modern-btn" AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="17.0">
                      <graphic>
                         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                            <children>
@@ -186,6 +186,21 @@
                         </HBox>
                      </graphic>
                   </Button>
+                  <HBox alignment="CENTER_LEFT" layoutY="-12.0" spacing="15.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../app-icon/icon.png" />
+                           </image>
+                        </ImageView>
+                        <VBox alignment="CENTER_LEFT">
+                           <children>
+                              <Label styleClass="icon-pojok-dashboard" text="Extra Wallet" />
+                              <Label styleClass="slogan-app" text="Track smarter. Spend better." />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
                </children></AnchorPane>
          </children>
       </AnchorPane>

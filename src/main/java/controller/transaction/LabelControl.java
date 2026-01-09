@@ -25,8 +25,6 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import static helper.IOLogic.isTextFieldValid;
-
 public class LabelControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(LabelControl.class);
 
@@ -37,6 +35,7 @@ public class LabelControl implements Initializable {
     private TransactionControl parentTransaction;
     private TemplateControl parentTemplate;
     private TransactionControl grandParent;
+    private EditControl parentEdit;
 
     private Stage stage;
     private boolean closing = false;
@@ -136,6 +135,9 @@ public class LabelControl implements Initializable {
             parentTransaction.getTipeLabelList().add(tipeLabel);
             parentTransaction.getTipeLabelInOut().getSelectionModel().select(tipeLabel);
             parentTransaction.getTipeLabelTrans().getSelectionModel().select(tipeLabel);
+        } else if(result && parentEdit != null) {
+            parentEdit.getTipeLabelList().add(tipeLabel);
+            parentEdit.getTipeLabelCombo().getSelectionModel().select(tipeLabel);
         }
         closePopup();
     }
@@ -155,6 +157,9 @@ public class LabelControl implements Initializable {
     }
     public void setParentTransaction(TransactionControl parent) {
         this.parentTransaction = parent;
+    }
+    public void setParentEditRecord(EditControl parent) {
+        this.parentEdit = parent;
     }
     public void setParentTemplate(TemplateControl parent, TransactionControl grandParent) {
         this.grandParent = grandParent;
