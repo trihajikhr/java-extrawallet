@@ -1,6 +1,9 @@
 package controller.transaction;
 
 import controller.DashboardControl;
+import controller.ExpensControl;
+import controller.IncomeControl;
+import controller.option.TransactionParent;
 import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.Converter;
@@ -38,9 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class EditControl implements Initializable {
     // atribut vital
@@ -48,6 +49,8 @@ public class EditControl implements Initializable {
     private Stage stage;
     @FXML private AnchorPane rootPane;
     private Transaksi transOriginal;
+    private Boolean isMultiple = false;
+    private TransactionParent parent;
 
     // atribut pendukung
     private double xOffset = 0;
@@ -124,6 +127,17 @@ public class EditControl implements Initializable {
 
         hideAnim.setOnFinished(e -> stage.close());
         hideAnim.play();
+    }
+    public void setIsMultiple(Boolean val){
+        this.isMultiple = val;
+        isFormComplete();
+        log.info("isMultiple: " + (isMultiple ? "true" : "false"));
+    }
+    public void setParent(TransactionParent parent) {
+        this.parent = parent;
+    }
+    public Map<Transaksi, RecordCard> getParentRecordCards() {
+        return parent.getRecordCardBoard();
     }
 
     // [1] >=== SCENE CONNECTION
@@ -232,11 +246,14 @@ public class EditControl implements Initializable {
                         .and(kategoriValid)
                         .and(dateValid);
 
-        BooleanBinding isChanged = isChangedBinding();
-
-        submitButton.disableProperty().bind(
-                formValid.and(isChanged).not()
-        );
+        if (isMultiple){
+            submitButton.disableProperty().bind(formValid.not());
+        } else {
+            BooleanBinding isChanged = isChangedBinding();
+            submitButton.disableProperty().bind(
+                    formValid.and(isChanged).not()
+            );
+        }
     }
     private BooleanBinding isChangedBinding() {
         return Bindings.createBooleanBinding(() -> {
@@ -335,27 +352,55 @@ public class EditControl implements Initializable {
     }
     @FXML
     private void submitHandler(ActionEvent evt) {
-        String note = noteEdit.getText();
-        note = (note == null || note.isBlank()) ? null : note;
+        if(isMultiple){
+            List<Transaksi> selected = parent.getRecordCardBoard().entrySet().stream()
+                    .filter(e -> e.getValue().getCheckList().isSelected())
+                    .map(Map.Entry::getKey)
+                    .toList();
 
-        Transaksi transModified = new Transaksi(
-                transOriginal.getId(),
-                transOriginal.getTipeTransaksi(),
-                amountEdit.getValue(),
-                akunComboBox.getValue(),
-                categoryComboBox.getValue(),
-                tipeLabelCombo.getValue(),
-                dateEdit.getValue(),
-                note,
-                paymentType.getValue(),
-                paymentStatus.getValue()
-        );
+            List<Transaksi> editedTransaksi = new ArrayList<>();
 
-        Boolean isChanged = !transModified.isSameState(transOriginal);
-        if(isChanged) {
-            DataManager.getInstance().modifyTransaksi(transModified);
+            for (Transaksi trans : selected) {
+                // update tiap transaksi sesuai form
+                trans.setJumlah(amountEdit.getValue());
+                trans.setAkun(akunComboBox.getValue());
+                trans.setKategori(categoryComboBox.getValue());
+                trans.setTipelabel(tipeLabelCombo.getValue());
+                trans.setTanggal(dateEdit.getValue());
+                trans.setKeterangan(noteEdit.getText());
+                trans.setPaymentType(paymentType.getValue());
+                trans.setPaymentStatus(paymentStatus.getValue());
+
+                editedTransaksi.add(trans);
+            }
+
+            DataManager.getInstance().modifyMultipleTransaksi(editedTransaksi);
             String page = DashboardControl.getInstance().getCurrentPage();
             DashboardControl.getInstance().loadPage(page);
+
+        } else {
+            String note = noteEdit.getText();
+            note = (note == null || note.isBlank()) ? null : note;
+
+            Transaksi transModified = new Transaksi(
+                    transOriginal.getId(),
+                    transOriginal.getTipeTransaksi(),
+                    amountEdit.getValue(),
+                    akunComboBox.getValue(),
+                    categoryComboBox.getValue(),
+                    tipeLabelCombo.getValue(),
+                    dateEdit.getValue(),
+                    note,
+                    paymentType.getValue(),
+                    paymentStatus.getValue()
+            );
+
+            Boolean isChanged = !transModified.isSameState(transOriginal);
+            if(isChanged) {
+                DataManager.getInstance().modifyTransaksi(transModified);
+                String page = DashboardControl.getInstance().getCurrentPage();
+                DashboardControl.getInstance().loadPage(page);
+            }
         }
         closePopup();
     }

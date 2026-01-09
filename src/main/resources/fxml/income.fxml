@@ -166,9 +166,9 @@
                               <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
                               <HBox alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEdit" prefWidth="60.0" text="Edit" />
-                                    <Button fx:id="exportButton" mnemonicParsing="false" prefWidth="60.0" text="Export" />
-                                    <Button fx:id="deleteButton" mnemonicParsing="false" prefWidth="60.0" text="Delete" />
+                                    <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleMultipleEdit" prefWidth="60.0" text="Edit" />
+                                    <Button fx:id="exportButton" mnemonicParsing="false" onAction="#handleExport" prefWidth="60.0" text="Export" />
+                                    <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDelete" prefWidth="60.0" text="Delete" />
                                  </children>
                               </HBox>
                               <Region maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS" />
