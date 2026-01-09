@@ -1,0 +1,30 @@
+/* box style */
+.box-styling {
+    -fx-background-color: #FEFEFE;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);
+    /* -fx-border-radius: 8; */
+    -fx-background-radius: 8;
+}
+
+.h1-label {
+    -fx-text-fill: #000000;
+    -fx-font-size: 15;
+    /* -fx-font-weight: bold; */
+}
+
+/* Tombol modern putih tanpa aturan ukuran */
+.modern-btn {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #2c2c2c;
+
+    /* Hilangkan gaya jadul */
+    -fx-border-color: transparent;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+
+    /* bentuk modern menggunakan radius*/
+    -fx-background-radius: 4;
+
+    /* Shadow kecil yang tidak mengubah size */
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 0);
+}

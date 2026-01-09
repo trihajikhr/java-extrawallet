@@ -1,0 +1,17 @@
+ID,TipeTransaksi,Jumlah,Akun,Kategori,TipeLabel,Tanggal,Keterangan,PaymentType,PaymentStatus
+1,IN,90000,Wallet,Salary,warmindo,2026-01-15,halo kawan,DEBIT_CARD,CLEARED
+2,OUT,5000,Wallet,Daily Shopping,,2026-01-07,,,
+3,IN,5000,Wallet,Allowance,,2025-11-27,,,
+4,IN,20000,Wallet,Busines,,2025-11-27,,,
+5,OUT,10000,Wallet,Daily Shopping,,2025-11-28,,,
+6,OUT,25000,Wallet,Food & Beverages,tole,2026-01-08,,CASH,CLEARED
+7,IN,90000,Wallet,Salary,warmindo,2026-01-15,,,
+8,IN,34000,Wallet,Allowance,tole,2026-01-03,kelompokan di tole,CASH,CLEARED
+9,IN,90000,Wallet,Salary,warmindo,2026-01-15,,,
+10,IN,21000,Wallet,Bonuses,,2026-01-04,ini adalah penambahan data,,
+11,OUT,12000,Wallet,Daily Shopping,tole,2026-01-09,,,
+12,IN,10000,Wallet,Bonuses,,2026-01-09,,,
+13,OUT,15000,Wallet,Daily Shopping,,2026-01-09,,,
+14,IN,7000,Wallet,Allowance,,2026-01-09,,,
+15,IN,100000,Wallet,Salary,,2026-01-09,,,
+16,IN,90000,Wallet,Salary,kobe,2026-01-09,terbaru hehehe,,
