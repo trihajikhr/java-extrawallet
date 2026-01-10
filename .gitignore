@@ -39,5 +39,4 @@ build/
 .DS_Store
 
 ### Editan ku!
-# /database-back/
-data/exchange_rates.json
+/my-runtime/

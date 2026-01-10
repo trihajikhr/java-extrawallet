@@ -35,6 +35,9 @@ import org.slf4j.LoggerFactory;
 import service.AppPaths;
 import service.CurrencyApiClient;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Objects;
 
 public class App extends Application {
@@ -50,9 +53,15 @@ public class App extends Application {
             protected Void call() throws Exception {
 
                 updateProgress(0,100);
-                CurrencyApiClient.getInstance();
-                updateProgress(15,100);
+
+                Path logDir = Paths.get(System.getProperty("user.home"), ".extrawallet");
+                Files.createDirectories(logDir);
+
+                updateProgress(7, 100);
+
                 Database.getInstance();
+                updateProgress(15,100);
+                CurrencyApiClient.getInstance();
                 updateProgress(25, 100);
                 DataManager.getInstance().setDataKategori();
                 updateProgress(45, 100);
