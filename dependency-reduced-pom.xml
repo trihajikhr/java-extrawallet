@@ -13,6 +13,9 @@
         <version>0.0.8</version>
         <configuration>
           <mainClass>app.Main</mainClass>
+          <options>
+            <option>-Dapp.mode=${app.mode}</option>
+          </options>
         </configuration>
       </plugin>
       <plugin>
@@ -44,6 +47,14 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>dev</id>
+      <properties>
+        <app.mode>dev</app.mode>
+      </properties>
+    </profile>
+  </profiles>
   <dependencies>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -86,6 +97,7 @@
     <maven.compiler.release>20</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.target>20</maven.compiler.target>
+    <app.mode>prod</app.mode>
     <maven.compiler.source>20</maven.compiler.source>
   </properties>
 </project>

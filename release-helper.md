@@ -49,14 +49,51 @@ Karena itu, properti seperti nama aplikasi, vendor, icon, dan shortcut **tidak d
     --main-jar extrawallet-v1.0.0.jar 
     --main-class app.Main 
     --module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\Java\jdk-25.0.1\jmods" 
-    --add-modules javafx.controls,javafx.fxml 
+    --add-modules javafx.base,javafx.graphics,javafx.controls,javafx.fxml
     --icon "src/main/resources/app-icon/favicon.ico" 
     --win-shortcut 
     --win-menu
+    ```
+   
+    Versi yang dicoba untuk tidak error lagi:
+
+    ```bash
+        jpackage 
+        --name "Extra Wallet" 
+        --app-version 1.0.0
+        --vendor Extra-Inc 
+        --type exe 
+        --input target 
+        --dest target 
+        --main-jar extrawallet-v1.0.0.jar 
+        --main-class app.Main 
+        --module-path "C:\Program Files\Java\javafx-jmods-25.0.1" 
+        --add-modules javafx.base,javafx.graphics,javafx.controls,javafx.fxml
+        --icon "src/main/resources/app-icon/favicon.ico" 
+        --win-shortcut 
+        --win-menu
     ```
     
     Atau berikut yang siap tempel di terminal (lakukan perubahan pada `--app-version` sesuai versi aplikasi):
     
     ```bash
-    jpackage --name "Extra Wallet" --app-version 1.0.0 --vendor Extra-Inc --type exe --input target  --dest target --main-jar extrawallet-v1.0.0.jar --main-class app.Main --module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\Java\jdk-25.0.1\jmods" --add-modules javafx.controls,javafx.fxml --icon "src/main/resources/app-icon/favicon.ico" --win-shortcut --win-menu
+    jpackage --name "Extra Wallet" --app-version 1.0.0 --vendor Extra-Inc --type exe --input target  --dest target --main-jar extrawallet-v1.0.0.jar --main-class app.Main --module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\Java\jdk-25.0.1\jmods" --add-modules javafx.base,javafx.graphics,javafx.controls,javafx.fxml --icon "src/main/resources/app-icon/favicon.ico" --win-shortcut --win-menu --java-options "-verbose:class" "-Dapp.mode=prod"
     ```
+   
+    Versi kedua yang jika pertama error:
+    
+    ```bash
+    jpackage --name "Extra Wallet" --app-version 1.0.0 --vendor Extra-Inc --type exe --input target --dest target --main-jar extrawallet-v1.0.0.jar --main-class app.Main --module-path "C:\Program Files\Java\javafx-jmods-25.0.1" --add-modules javafx.base,javafx.graphics,javafx.controls,javafx.fxml --icon "src/main/resources/app-icon/favicon.ico" --win-shortcut --win-menu
+    ```
+   
+buat runtims:
+
+```bash
+jlink --module-path "C:\Program Files\Java\jdk-25.0.1\jmods;C:\Program Files\Java\javafx-jmods-25.0.1" --add-modules java.base,javafx.controls,javafx.fxml,javafx.graphics --output runtime
+```
+
+Lalu package
+
+```bash
+jpackage --name "Extra Wallet" --app-version 1.0.0 --vendor Extra-Inc  --type exe --input target --dest target --main-jar extrawallet-v1.0.0.jar --main-class app.Main --runtime-image runtime --icon "src/main/resources/app-icon/favicon.ico" --win-shortcut --win-menu
+```
