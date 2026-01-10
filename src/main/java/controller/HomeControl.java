@@ -197,7 +197,6 @@ public class HomeControl implements Initializable {
     }
 
     // [2] >=== CHART VIEW SETUP
-    // BUG: error ketika data baru ditambahan dihari [today]
     private void generateChart() {
         LocalDate today = LocalDate.now();
         LocalDate startDate = today.minusDays(29);
@@ -286,7 +285,7 @@ public class HomeControl implements Initializable {
         }
 
         // sorting dan ambil beberapa terbesar
-        int dataLimit = 10;
+        int dataLimit = 8;
 
         List<Map.Entry<Kategori, Integer>> sortedKategori =
                 kategoriUsed.entrySet()

@@ -38,6 +38,8 @@ import javafx.util.Duration;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.AbstractTransactionService;
+import service.ExpenseService;
 import service.IncomeService;
 
 import java.io.IOException;
@@ -353,8 +355,11 @@ public class EditControl implements Initializable {
     }
     @FXML
     private void submitHandler(ActionEvent evt) {
-        IncomeService incomeService = new IncomeService();
         if(isSingle){
+
+            AbstractTransactionService service =
+                    resolveService(transOriginal);
+
             String note = noteEdit.getText();
             note = (note == null || note.isBlank()) ? null : note;
 
@@ -374,7 +379,7 @@ public class EditControl implements Initializable {
             Boolean isChanged = !transModified.isSameState(transOriginal);
             if(isChanged) {
 
-                boolean saldoOk = incomeService.updateSingleAkun(
+                boolean saldoOk = service.updateSingleAkun(
                         transOriginal.getAkun(),   // akun LAMA
                         transOriginal,             // transaksi LAMA
                         transModified.getJumlah()  // jumlah BARU
@@ -395,15 +400,24 @@ public class EditControl implements Initializable {
                     .map(Map.Entry::getKey)
                     .toList();
 
-            // optional safety: paksa satu akun
+            // safety: minimal 1 data
+            if (selected.isEmpty()) return;
+
+            // safety: satu akun saja
             if (selected.stream().map(Transaksi::getAkun).distinct().count() > 1) {
                 MyPopup.showDanger("Gagal", "Edit massal hanya boleh untuk satu akun");
                 return;
             }
 
-            List<Transaksi> oldList = new ArrayList<>();
+            AbstractTransactionService service =
+                    resolveService(selected.get(0));
+
+            Akun akun = selected.get(0).getAkun();
+            int saldoAwal = akun.getJumlah();
+
             List<Transaksi> newList = new ArrayList<>();
 
+            // === VALIDASI & HITUNG SALDO (SIMULASI) ===
             for (Transaksi old : selected) {
                 Transaksi edited = new Transaksi(
                         old.getId(),
@@ -418,26 +432,33 @@ public class EditControl implements Initializable {
                         paymentStatus.getValue()
                 );
 
-                oldList.add(old);
+                boolean ok = service.updateSingleAkun(
+                        akun,
+                        old,
+                        edited.getJumlah()
+                );
+
+                if (!ok) {
+                    akun.setJumlah(saldoAwal);
+                    DataManager.getInstance().updateSaldoAkun(akun, saldoAwal);
+                    return;
+                }
+
                 newList.add(edited);
             }
 
-            // validasi saldo dulu
-            for (int i = 0; i < oldList.size(); i++) {
-                boolean ok = incomeService.updateSingleAkun(
-                        oldList.get(i).getAkun(),
-                        oldList.get(i),
-                        newList.get(i).getJumlah()
-                );
-                if (!ok) return;
-            }
-
-            // commit ke DB
             DataManager.getInstance().modifyMultipleTransaksi(newList);
 
             String page = DashboardControl.getInstance().getCurrentPage();
             DashboardControl.getInstance().loadPage(page);
         }
         closePopup();
+    }
+
+    private AbstractTransactionService resolveService(Transaksi t) {
+        return switch (t.getTipeTransaksi()) {
+            case IN  -> new IncomeService();
+            case OUT -> new ExpenseService();
+        };
     }
 }

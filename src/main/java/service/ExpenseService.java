@@ -35,6 +35,6 @@ public class ExpenseService extends AbstractTransactionService {
 
     @Override
     protected int calculateSaldoDelta(int oldJumlah, int newJumlah) {
-        return oldJumlah - newJumlah;
+        return oldJumlah - newJumlah; // expense ngurang saldo
     }
 }
