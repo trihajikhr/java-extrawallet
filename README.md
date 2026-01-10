@@ -1,9 +1,8 @@
 # Extra Wallet — Personal Finance App
 
 <p align="center">
-  <img src="assets/demo-app.gif" alt="Demo GIF" width="800"/>
+  <img src="assets/img.png" alt="Demo GIF" width="800"/>
 </p>
-
 
 **Extra Wallet** is a **personal finance desktop application** built with **Java**, managed via **Maven**, and powered by **JavaFX** for a clean and responsive GUI. All data is stored locally using **SQLite**, making the app lightweight, reliable, and fully offline.
 
@@ -18,6 +17,11 @@ Take control of your finances with Extra Wallet. Designed for personal use, it p
 * **Smart Defaults:** Pre-loaded exchange rates and default categories help you start tracking your finances immediately.
 
 ## Core Features
+
+<p align="center">
+  <img src="assets/demo-app.gif" alt="Demo GIF" width="800"/>
+</p>
+
 
 * **Income & Expense Tracking:** Record transactions with precise timestamps for complete cash flow visibility.
 * **Filtering & History:** Quickly filter your transactions by category, account, or date range.
