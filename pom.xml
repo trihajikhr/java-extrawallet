@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>extrawallet</groupId>
-    <artifactId>java-extrawallet</artifactId>
-    <version>v0.0.1</version>
+    <artifactId>extrawallet</artifactId>
+    <version>v1.0.0</version>
 
     <!-- opsional, bisa diatasi JPackage mungkin -->
     <packaging>jar</packaging>
