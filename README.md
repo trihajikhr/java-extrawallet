@@ -1,24 +1,33 @@
 # Extra Wallet — Personal Finance App
 
-Aplikasi personal finance Extra Wallet, yang dibuat dengan menggunakan Java Maven dengan GUI yang dibuat dengan bantuan library Flatlaf. Project Java ini mengambil beberapa referensi, seperti dari [Wallet by Budgetbakers](https://web.budgetbakers.com/), dan aplikasi sejenis lainya. 
+<p align="center">
+  <img src="assets/demo-app.gif" alt="Demo GIF" width="800"/>
+</p>
 
-## Spesifikasi aplikasi:
 
-- Aplikasi multi user, bisa digunakan oleh beberapa user sekaligus dengan akun terdaftar yang berbeda beda.
-- Menggunakan library Java hashing, memberikan keamanan pada data sensitif pengguna yang disimpan di database.
-- Mengimplementasikan SQLite sebagai database lokal yang ringan, andal, dan mampu berjalan secara lokal pada device user.
-- Menggunakan GUI dari library flatlaf, yang menawarkan tampilan yang clean dan smooth, seperti software produkan Jetbrains.
-- Menggunakan library tertentu, yang memberikan fitur ekstra untuk mencatat data report yang ada pada file CSV.
+**Extra Wallet** is a **personal finance desktop application** built with **Java**, managed via **Maven**, and powered by **JavaFX** for a clean and responsive GUI. All data is stored locally using **SQLite**, making the app lightweight, reliable, and fully offline.
 
-## Fitur yang tersedia::
-- Menghitung total uang masuk dan keluar yang diinputkan oleh user, dan mentracking tanggal dan waktu perubahan dilakukan.
-- Opsi melihat daftar transaksikai masuk dan keluar selama 1 hari, 3 hari, 1 minggu, 1 bulan, dan 1 tahun.
-- Mengenerate chart dari data yang difilter untuk dilihat oleh user.
-- Mengmabil data yang ada dan menuliskanya kedalam file CSV.
-- Pembuatan anggaran, memungkinkan pengguna membuat anggaran berdasarkan katerogri tertentu dan memantau batas pengeluaran
+## Overview
 
-## Desain Sistem
+Take control of your finances with Extra Wallet. Designed for personal use, it provides secure local storage, insightful reporting, and a smooth desktop experience.
 
-Untuk informasi lengkap tentang desain sistem dan rancangan awal, bisa dicek di [SDLC design system](sdlc/system-design.md). Tapi masih dalam pengembangan, perubahan mungkin dilakukan selama proses pengembangan.
-Untuk informasi lengkap tentang desain sistem dan rancangan awal, bisa dicek di [SDLC design system](sdlc/system-design.md)
-Beberapa perubahan mungkin akan dilakukan selama tahap pengembangan.
+* **Fully Offline & Lightweight:** No server required; all data is stored locally.
+* **Modern Interface:** JavaFX delivers a smooth, professional, and responsive GUI.
+* **Portable & Hassle-Free:** Run the app anywhere; first launch automatically sets up your database and necessary folders.
+* **Reliable Data Backup:** Export transactions to CSV for analysis, sharing, or safekeeping.
+* **Smart Defaults:** Pre-loaded exchange rates and default categories help you start tracking your finances immediately.
+
+## Core Features
+
+* **Income & Expense Tracking:** Record transactions with precise timestamps for complete cash flow visibility.
+* **Filtering & History:** Quickly filter your transactions by category, account, or date range.
+* **Charts & Insights:** Visualize spending trends and financial summaries for better decision-making.
+* **Budgets:** Set category-specific budgets and monitor your spending limits.
+* **Currency Conversion:** Offline USD/EUR ↔ IDR conversion ensures accurate financial calculations even without internet.
+* **Automatic Setup:** Creates required folders, database, and default data on first run so the app works out-of-the-box.
+
+## Coming Soon
+
+* Multi-account support
+* Enhanced dashboard analytics
+* Recurring transactions & alerts
