@@ -25,12 +25,20 @@ import java.nio.file.Path;
 public class CurrencyApiClient {
     private static final Logger log = LoggerFactory.getLogger(CurrencyApiClient.class);
 
+    // mode offline DARURAT
+    private static final BigDecimal DEFAULT_USD_IDR = new BigDecimal("15000");
+    private static final BigDecimal DEFAULT_EUR_IDR = new BigDecimal("16500");
+
     // value
     private BigDecimal usdToIdr;
     private BigDecimal eurToIdr;
 
     // constructror
     private CurrencyApiClient() {
+        // jika user menjalankan aplikasi secara offline, aplikasnya tidak crash!
+        usdToIdr = DEFAULT_USD_IDR;
+        eurToIdr = DEFAULT_EUR_IDR;
+
         // load offline
         try {
             loadRatesFromJson();
