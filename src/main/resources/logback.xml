@@ -1,5 +1,16 @@
 <configuration>
+
+    <!-- Console log -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss} %-5level [%thread] %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- File log -->
+    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+        <file>${user.home}/.extrawallet/extrawallet.log</file>
+        <append>true</append>
         <encoder>
             <pattern>%d{HH:mm:ss} %-5level [%thread] %logger - %msg%n</pattern>
         </encoder>
@@ -7,5 +18,6 @@
 
     <root level="debug">
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </root>
 </configuration>

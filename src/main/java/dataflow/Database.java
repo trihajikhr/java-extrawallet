@@ -1,6 +1,10 @@
 package dataflow;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,8 +30,6 @@ public class Database {
     private static Database instance;
 
     private final String JDBC_URL = "jdbc:sqlite:";
-    private final String DATABASE_FOLDER = "database";
-    private final String DATABASE_NAME = "finance.db";
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -48,12 +50,11 @@ public class Database {
     // [1] >=== objek database singleton
     private Database () {
         try {
-            File folder = new File(DATABASE_FOLDER);
-            if(!folder.exists()) {
-                folder.mkdir();
-            }
+            Path dbDir = Paths.get(System.getProperty("user.home"), ".extrawallet", "database");
+            Files.createDirectories(dbDir);
 
-            this.koneksi = DriverManager.getConnection(JDBC_URL + DATABASE_FOLDER + File.separator + DATABASE_NAME);
+            String dbPath = System.getProperty("user.home") + "/.extrawallet/database/finance.db";
+            this.koneksi = DriverManager.getConnection(JDBC_URL + dbPath);
 
             // aktifkan opsi foreign key (tidak aktif secara default!)
             try (Statement perintah = koneksi.createStatement()) {
@@ -69,6 +70,8 @@ public class Database {
 
         } catch (SQLException e) {
             log.error("Database gagal!",  e);
+        } catch (IOException e) {
+            log.info("gagal membuat folder untuk database!", e);
         }
     }
 

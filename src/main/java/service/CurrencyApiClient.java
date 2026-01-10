@@ -13,6 +13,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 // TODO [IMPORTANT]:
 // CurrencyApiClient masih versi sync + manual load.
@@ -113,7 +114,7 @@ public class CurrencyApiClient {
 
             root.add("rates", rates);
 
-            Path path = Path.of("data-exchange/exchange_rates.json");
+            Path path = Paths.get(System.getProperty("user.home"), ".extrawallet", "data-exchange", "exchanges-rates.json");
             Files.createDirectories(path.getParent());
             Files.writeString(path, new Gson().toJson(root));
 
@@ -127,7 +128,7 @@ public class CurrencyApiClient {
 
 
     public void loadRatesFromJson() throws Exception {
-        Path path = Path.of("data-exchange/exchange_rates.json");
+        Path path = Paths.get(System.getProperty("user.home"), ".extrawallet", "data-exchange", "exchanges-rates.json");
         if (!Files.exists(path)) {
             log.warn("File JSON kurs tidak ditemukan, lewati load offline!");
             return;
