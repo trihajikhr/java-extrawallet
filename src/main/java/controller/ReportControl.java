@@ -12,10 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javafx.event.ActionEvent;
+import service.AppPaths;
 
 import java.io.*;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -42,16 +44,30 @@ public class ReportControl implements Initializable {
     }
 
     private void exportToCSV(List<Transaksi> list) {
-        File folder = new File("export-data");
-        if (!folder.exists() && !folder.mkdirs()) {
-            log.error("Gagal membuat folder export-data");
-            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Simpan File CSV");
+
+        fileChooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("CSV Files (*.csv)", "*.csv")
+        );
+
+        fileChooser.setInitialFileName(
+                "akun-report_" + timestamp + ".csv"
+        );
+
+        fileChooser.setInitialDirectory(
+                AppPaths.ROOT.toFile()
+        );
+
+        File file = fileChooser.showSaveDialog(null);
+        if (file == null) {
+            log.info("User membatalkan export CSV");
             return;
         }
 
-        File file = new File(folder, "akun-report_" + timestamp + ".csv");
+        try (BufferedWriter writer = Files.newBufferedWriter(file.toPath())) {
 
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write("ID,TipeTransaksi,Jumlah,Akun,Kategori,TipeLabel,Tanggal,Keterangan,PaymentType,PaymentStatus");
             writer.newLine();
 
@@ -71,12 +87,12 @@ public class ReportControl implements Initializable {
                 writer.newLine();
             }
 
-            log.info("CSV berhasil dibuat: " + file.getAbsolutePath());
+            log.info("CSV berhasil dibuat: {}", file.getAbsolutePath());
             MyPopup.showSucces("Export berhasil!", "Export data berhasil!");
 
         } catch (IOException e) {
-            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             log.error("CSV gagal diexport!", e);
+            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
 
@@ -114,7 +130,6 @@ public class ReportControl implements Initializable {
 
         importFromCSV(selectedFile);
     }
-
 
     public void importFromCSV(File file) {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {

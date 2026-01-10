@@ -113,7 +113,8 @@ public class CurrencyApiClient {
 
             root.add("rates", rates);
 
-            Path path = Path.of("data-exchange/exchange_rates.json");
+            // Path path = Path.of("data-exchange/exchange_rates.json");
+            Path path = AppPaths.EXCHANGE_JSON;
             Files.createDirectories(path.getParent());
             Files.writeString(path, new Gson().toJson(root));
 
@@ -127,7 +128,7 @@ public class CurrencyApiClient {
 
 
     public void loadRatesFromJson() throws Exception {
-        Path path = Path.of("data-exchange/exchange_rates.json");
+        Path path = AppPaths.EXCHANGE_JSON;
         if (!Files.exists(path)) {
             log.warn("File JSON kurs tidak ditemukan, lewati load offline!");
             return;

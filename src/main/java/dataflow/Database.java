@@ -1,6 +1,8 @@
 package dataflow;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import helper.Converter;
+import service.AppPaths;
 
 // TODO [IMPORTANT]:
 // Database Singleton masih basic.
@@ -26,8 +29,6 @@ public class Database {
     private static Database instance;
 
     private final String JDBC_URL = "jdbc:sqlite:";
-    private final String DATABASE_FOLDER = "database";
-    private final String DATABASE_NAME = "finance.db";
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -48,12 +49,9 @@ public class Database {
     // [1] >=== objek database singleton
     private Database () {
         try {
-            File folder = new File(DATABASE_FOLDER);
-            if(!folder.exists()) {
-                folder.mkdir();
-            }
+            Files.createDirectories(AppPaths.DATABASE_DIR);
 
-            this.koneksi = DriverManager.getConnection(JDBC_URL + DATABASE_FOLDER + File.separator + DATABASE_NAME);
+            this.koneksi = DriverManager.getConnection(JDBC_URL + AppPaths.DB_FILE.toAbsolutePath());
 
             // aktifkan opsi foreign key (tidak aktif secara default!)
             try (Statement perintah = koneksi.createStatement()) {
@@ -67,8 +65,12 @@ public class Database {
             createTableTransaksi();
             createTableTemplate();
 
+            log.info("Database siap digunakan di: {}", AppPaths.DB_FILE.toAbsolutePath());
+
         } catch (SQLException e) {
             log.error("Database gagal!",  e);
+        } catch (IOException e) {
+            log.error("pembuatan folder database gagal!", e);
         }
     }
 
