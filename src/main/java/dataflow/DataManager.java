@@ -216,6 +216,11 @@ public class DataManager {
         }
     }
 
+    public void importTransaksiFromCSV(Transaksi trans) {
+        Database.getInstance().insertTransaksi(trans);
+        dataTransaksi.add(trans);
+    }
+
     // [2] >> =============== DATA PEMASUKAN =============== //
     public ArrayList<Transaksi> getDataTransaksiPemasukan() {
         ArrayList<Transaksi> inList = new ArrayList<>();
