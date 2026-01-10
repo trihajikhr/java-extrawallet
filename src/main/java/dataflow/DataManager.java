@@ -216,9 +216,14 @@ public class DataManager {
         }
     }
 
-    public void importTransaksiFromCSV(Transaksi trans) {
-        Database.getInstance().insertTransaksi(trans);
-        dataTransaksi.add(trans);
+    public Boolean importTransaksiFromCSV(Transaksi trans) {
+        int newId = Database.getInstance().insertTransaksi(trans);
+        if(newId > 0) {
+            trans.setId(newId);
+            dataTransaksi.add(trans);
+            return true;
+        }
+        return false;
     }
 
     // [2] >> =============== DATA PEMASUKAN =============== //

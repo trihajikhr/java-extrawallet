@@ -189,6 +189,11 @@ public class IncomeControl implements Initializable, TransactionParent {
     }
     private void fetchTransactionData() {
         log.info("data income berhasil diambil dari datamanager");
+
+//        recordCardBoard.clear();
+//        recordPanel.getChildren().clear();
+//        visibleCheckBox.clear();
+
         incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
 
         for(Transaksi in : incomeTransaction) {

@@ -120,6 +120,7 @@ public class ReportControl implements Initializable {
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
 
             String line;
+            Boolean allSucces = true;
             boolean isFirstLine = true;
 
             while ((line = reader.readLine()) != null) {
@@ -133,14 +134,19 @@ public class ReportControl implements Initializable {
                 String[] data = parseCSVLine(line);
                 Transaksi transaksi = mapToTransaksi(data);
                 transaksi.showData();
-                DataManager.getInstance().importTransaksiFromCSV(transaksi);
+                allSucces = allSucces && DataManager.getInstance().importTransaksiFromCSV(transaksi);
             }
 
-            log.info("data berhasil diimport");
-            MyPopup.showSucces("Import berhasil", "Data berhasil diimport");
+            if(allSucces) {
+                log.info("data berhasil diimport");
+                MyPopup.showSucces("Import berhasil", "Semua data berhasil diimport");
+            } else {
+                log.info("data terimport sebagian");
+                MyPopup.showDanger("Terjadi kesalahan!" , "Ada data gagal diimport!");
+            }
 
         } catch (Exception e) {
-            log.error("data berhasil diimport!", e);
+            log.error("data gagal diimport!", e);
             MyPopup.showDanger("Import gagal", "Terjadi kesalahan saat import");
             e.printStackTrace();
         }
