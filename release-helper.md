@@ -37,18 +37,24 @@ Karena itu, properti seperti nama aplikasi, vendor, icon, dan shortcut **tidak d
 
 5. Jika aplikasi berjalan, langkah selanjutnya adalah mengkonversi ke EXE dengan menggunakan JPackage berikut:
 
-```bash
-jpackage 
---name "Extra Wallet" 
---vendor Extra-Inc 
---type exe 
---input target 
---dest target 
---main-jar extrawallet-v1.0.0.jar 
---main-class app.Main 
---module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\Java\jdk-25.0.1\jmods" 
---add-modules javafx.controls,javafx.fxml 
---icon "src/main/resources/app-icon/favicon.ico" 
---win-shortcut 
---win-menu
-```
+    ```bash
+    jpackage 
+    --name "Extra Wallet" 
+    --vendor Extra-Inc 
+    --type exe 
+    --input target 
+    --dest target 
+    --main-jar extrawallet-v1.0.0.jar 
+    --main-class app.Main 
+    --module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\Java\jdk-25.0.1\jmods" 
+    --add-modules javafx.controls,javafx.fxml 
+    --icon "src/main/resources/app-icon/favicon.ico" 
+    --win-shortcut 
+    --win-menu
+    ```
+    
+    Atau berikut yang siap tempel di terminal:
+    
+    ```bash
+    jpackage --name "Extra Wallet" --vendor Extra-Inc --type exe --input target  --dest target --main-jar extrawallet-v1.0.0.jar --main-class app.Main --module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\Java\jdk-25.0.1\jmods" --add-modules javafx.controls,javafx.fxml --icon "src/main/resources/app-icon/favicon.ico" --win-shortcut --win-menu
+    ```
