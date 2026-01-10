@@ -53,8 +53,6 @@ Karena itu, properti seperti nama aplikasi, vendor, icon, dan shortcut **tidak d
     --icon "src/main/resources/app-icon/favicon.ico" 
     --win-shortcut 
     --win-menu
-   
-   --win-console
     ```
     
     Atau berikut yang siap tempel di terminal (lakukan perubahan pada `--app-version` sesuai versi aplikasi):
@@ -63,7 +61,7 @@ Karena itu, properti seperti nama aplikasi, vendor, icon, dan shortcut **tidak d
     jpackage --name "Extra Wallet" --app-version 1.0.0 --vendor Extra-Inc --type exe --input target  --dest target --main-jar extrawallet-v1.0.0.jar --main-class app.Main --module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\Java\jdk-25.0.1\jmods" --add-modules javafx.controls,javafx.fxml --icon "src/main/resources/app-icon/favicon.ico" --win-shortcut --win-menu --win-console
     ```
    
-Ada beberapa error, gunakan ini untuk solusi yang sedang ditest:
+## Ada beberapa error, gunakan ini untuk solusi yang sedang ditest
 Pertama gunakan jlink untuk bundle semua kepertluan packaging:
 
 ```bash
@@ -73,14 +71,21 @@ jlink --module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\
 dengan penggunaan jpackage sebagai berikut:
 
 ```bash
-jpackage \
-  --name ExtraWallet \
-  --input target \
-  --main-jar extrawallet-v1.0.0.jar \
-  --main-class app.Main \
-  --type exe \
-  --runtime-image my-runtime \
-  --java-options "--enable-native-access=javafx.graphics"
+jpackage 
+--name "Extra Wallet" 
+--app-version 1.0.0 
+--vendor Extra-Inc 
+--type exe 
+--input target 
+--dest target 
+--main-jar extrawallet-v1.0.0.jar 
+--main-class app.Main 
+--runtime-image my-runtime 
+--java-options "--enable-native-access=javafx.graphics" 
+--icon "src/main/resources/app-icon/favicon.ico" 
+--win-shortcut 
+--win-menu 
+--win-console
 ```
 
 atau berikut yang siap tempel:
@@ -88,6 +93,8 @@ atau berikut yang siap tempel:
 ```bash
 jpackage --name "Extra Wallet" --app-version 1.0.0 --vendor Extra-Inc --type exe --input target --dest target --main-jar extrawallet-v1.0.0.jar --main-class app.Main --runtime-image my-runtime --java-options "--enable-native-access=javafx.graphics" --icon "src/main/resources/app-icon/favicon.ico" --win-shortcut --win-menu --win-console
 ```
+
+> [!ALERT] Perhatikan bahwa disini aku menggunakan `--win-console`, ini akan dijelaskan dibagain bawah!
     
 ## Tips trick:
 Ketka aku melakukan konversi ke JAR dengan melakukan `mvn clean install`, klik dua kali tidak akan membuka file JAR tersebut. File JAR tersebut baru bisa dibuka ketika aku menggunakan:

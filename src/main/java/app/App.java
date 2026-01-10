@@ -35,6 +35,7 @@ import org.slf4j.LoggerFactory;
 import service.AppPaths;
 import service.CurrencyApiClient;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,8 +55,11 @@ public class App extends Application {
 
                 updateProgress(0,100);
 
-                Path logDir = Paths.get(System.getProperty("user.home"), ".extrawallet");
-                Files.createDirectories(logDir);
+                try {
+                    Files.createDirectories(AppPaths.ROOT);
+                } catch (IOException e) {
+                    log.error("gagal membuat folder app root!", e);
+                }
 
                 updateProgress(7, 100);
 

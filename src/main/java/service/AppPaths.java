@@ -24,7 +24,7 @@ public final class AppPaths {
         DB_FILE = DATABASE_DIR.resolve("finance.db");
 
         EXCHANGE_JSON = ROOT
-                .resolve("data-exchange")
+                .resolve("currency-exchange")
                 .resolve("exchange_rates.json");
     }
 
