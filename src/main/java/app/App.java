@@ -40,28 +40,17 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
 
         // Background task load data & dashboard
-        Task<FXMLLoader> loadTask = new Task<>() {
+        Task<Void> loadTask = new Task<>() {
             @Override
-            protected FXMLLoader call() throws Exception {
+            protected Void call() throws Exception {
 
                 updateProgress(0,100);
-
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
-                Parent root = loader.load(); // load dulu → root
-
-                updateProgress(15,100);
-
-                // Load stylesheet
-                root.getStylesheets().add(
-                        getClass().getResource("/stylesheet/auto-card.css").toExternalForm()
-                );
-                updateProgress(25, 100);
-
-                // Setup data / database
                 CurrencyApiClient.getInstance();
+                updateProgress(15,100);
                 Database.getInstance();
-                updateProgress(45, 100);
+                updateProgress(25, 100);
                 DataManager.getInstance().setDataKategori();
+                updateProgress(45, 100);
                 DataManager.getInstance().initBaseData();
                 updateProgress(65, 100);
                 DataManager.getInstance().fetchDataDatabase();
@@ -74,7 +63,7 @@ public class App extends Application {
                 DataManager.getInstance().setupDefaultAcount();
                 updateProgress(100, 100);
 
-                return loader;
+                return null;
             }
         };
 
@@ -89,9 +78,15 @@ public class App extends Application {
 
         loadTask.setOnSucceeded(e -> {
             try {
-                FXMLLoader loader = loadTask.getValue();
-                DashboardControl ctrl = loader.getController();
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
+                Parent root = loader.load(); // load dulu → root
 
+                // Load stylesheet
+                root.getStylesheets().add(
+                        getClass().getResource("/stylesheet/auto-card.css").toExternalForm()
+                );
+
+                DashboardControl ctrl = loader.getController();
                 ctrl.loadPage("home");
 
                 Scene dashboardScene = new Scene(loader.getRoot(), 1200, 800);
@@ -116,7 +111,7 @@ public class App extends Application {
         t.start();
     }
 
-    private Scene createLoadingScene(Task<FXMLLoader> task) {
+    private Scene createLoadingScene(Task<Void> task) {
         // app icon
         HBox mainDesign = new HBox();
         mainDesign.setAlignment(Pos.CENTER);
