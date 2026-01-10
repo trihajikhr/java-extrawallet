@@ -7,6 +7,13 @@
     -fx-background-radius: 4;
 }
 
+.top-bar-expense-styling {
+    -fx-background-color: linear-gradient(to bottom right, #F44336, #C62828);
+    -fx-effect: dropshadow(three-pass-box, rgba(244, 67, 54, 0.3), 14, 0, 0, 4);
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+}
+
 .vbox-under-topbar {
     -fx-background-color: #FFFFFF;
     -fx-background-radius: 4;

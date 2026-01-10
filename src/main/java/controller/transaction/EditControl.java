@@ -1,7 +1,7 @@
 package controller.transaction;
 
 import controller.DashboardControl;
-import controller.ExpensControl;
+import controller.ExpenseControl;
 import controller.IncomeControl;
 import controller.option.TransactionParent;
 import dataflow.DataLoader;

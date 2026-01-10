@@ -251,11 +251,14 @@ public class DataManager {
     }
 
     // [3] >> =============== DATA PENGELUARAN =============== //
-    public ArrayList<Pengeluaran> getDataTransaksiPengeluaran() {
-        ArrayList<Pengeluaran> outList = new ArrayList<>();
-        for (Transaksi t : dataTransaksi) {
-            if (t instanceof Pengeluaran) outList.add((Pengeluaran) t);
+    public ArrayList<Transaksi> getDataTransaksiPengeluaran() {
+        ArrayList<Transaksi> outList = new ArrayList<>();
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
+                outList.add(trans);
+            }
         }
+        log.info("Total expense transaction: " + outList.size());
         return outList;
     }
 
