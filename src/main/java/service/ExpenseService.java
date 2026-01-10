@@ -32,4 +32,9 @@ public class ExpenseService extends AbstractTransactionService {
     public BigDecimal expenseSumAfterFilter(List<Transaksi> data) {
         return sumAfterFilter(data);
     }
+
+    @Override
+    protected int calculateSaldoDelta(int oldJumlah, int newJumlah) {
+        return oldJumlah - newJumlah;
+    }
 }

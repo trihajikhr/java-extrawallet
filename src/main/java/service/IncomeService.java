@@ -1,6 +1,5 @@
 package service;
 
-import model.Akun;
 import model.TipeTransaksi;
 import model.Transaksi;
 import org.slf4j.Logger;
@@ -27,6 +26,11 @@ public class IncomeService extends AbstractTransactionService {
     @Override
     protected boolean isTargetType(Transaksi t) {
         return t.getTipeTransaksi() == TipeTransaksi.IN;
+    }
+
+    @Override
+    protected int calculateSaldoDelta(int oldJumlah, int newJumlah) {
+        return newJumlah - oldJumlah;
     }
 
     public BigDecimal incomeSumAfterFilter(List<Transaksi> data) {

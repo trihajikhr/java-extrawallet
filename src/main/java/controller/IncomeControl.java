@@ -804,10 +804,10 @@ public class IncomeControl implements Initializable, TransactionParent {
 
     // [7] >=== TOMBOL EDIT UNTUK RECORDCARD
     private void openSingleEdit(Transaksi trans) {
-        openSingleEdit(trans, false); // default true
+        openSingleEdit(trans, true); // default true
     }
     @FXML
-    private void openSingleEdit(Transaksi trans, Boolean isMultiple) {
+    private void openSingleEdit(Transaksi trans, Boolean isSingle) {
         // setting stage ini mirip dengan fungsi addTransaction di class DashboardController!
         // komentas yang lebih lengkap ada disana!
 
@@ -853,11 +853,12 @@ public class IncomeControl implements Initializable, TransactionParent {
             EditControl ctrl = loader.getController();
             ctrl.setStage(stage);
             ctrl.setParent(this);
-            if(isMultiple){
-                ctrl.setIsMultiple(isMultiple);
-            } else {
-                ctrl.setIsMultiple(isMultiple);
+            if(isSingle){
                 ctrl.prefilFromRecord(trans);
+                ctrl.setIsMultiple(isSingle);
+            } else {
+                ctrl.setIsMultiple(isSingle);
+
             }
 
             stage.showAndWait();
@@ -886,7 +887,7 @@ public class IncomeControl implements Initializable, TransactionParent {
     }
     @FXML
     private void handleMultipleEdit() {
-        openSingleEdit(null, true);
+        openSingleEdit(null, false);
     }
 
     @FXML
