@@ -54,6 +54,9 @@
     <filter-actions connection-id="0bd0eea5-8509-4f24-a4e4-1550eb990735" dataset="main.akun" active-filter-id="" />
     <filter-actions connection-id="0bd0eea5-8509-4f24-a4e4-1550eb990735" dataset="main.transaksi" active-filter-id="" />
   </component>
+  <component name="DBNavigator.Project.ExecutionManager">
+    <retain-sticky-names value="false" />
+  </component>
   <component name="DBNavigator.Project.ObjectQuickFilterManager">
     <last-used-operator value="EQUAL" />
     <filters />

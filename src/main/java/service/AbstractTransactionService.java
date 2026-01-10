@@ -89,21 +89,16 @@ public abstract class AbstractTransactionService implements TransactionService {
 
     @Override
     public Boolean updateSingleAkun(Akun akun, Transaksi oldTrans, int newJumlah) {
-        TipeTransaksi tipe = oldTrans.getTipeTransaksi();
         int oldJumlah = oldTrans.getJumlah();
-        int selisih = 0;
 
-        switch (tipe) {
-            case IN -> selisih = newJumlah - oldJumlah;
-            case OUT -> selisih = oldJumlah - newJumlah;
-        }
+        int delta = calculateSaldoDelta(oldJumlah, newJumlah);
 
-        if (tipe == TipeTransaksi.OUT && selisih > akun.getJumlah()) {
+        if (delta < 0 && Math.abs(delta) > akun.getJumlah()) {
             MyPopup.showDanger("Saldo kurang!", "Saldo anda: " + akun.getJumlah());
             return false;
         }
 
-        int newSaldo = akun.getJumlah() + selisih;
+        int newSaldo = akun.getJumlah() + delta;
         akun.setJumlah(newSaldo);
 
         return DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
@@ -111,24 +106,29 @@ public abstract class AbstractTransactionService implements TransactionService {
 
     @Override
     public Boolean updateMultipleAkun(List<Transaksi> selected) {
+
         for (Transaksi trans : selected) {
             Akun akun = trans.getAkun();
             int jumlah = trans.getJumlah();
-            int newSaldo;
 
-            if (trans.getTipeTransaksi() == TipeTransaksi.IN) {
-                newSaldo = akun.getJumlah() + jumlah;
-            } else {
-                if (jumlah > akun.getJumlah()) {
-                    MyPopup.showDanger("Saldo kurang!", "Akun " + akun.getNama() + " saldo: " + akun.getJumlah());
-                    return false;
-                }
-                newSaldo = akun.getJumlah() - jumlah;
+            int delta = calculateSaldoDelta(0, jumlah);
+
+            if (delta < 0 && Math.abs(delta) > akun.getJumlah()) {
+                MyPopup.showDanger(
+                        "Saldo kurang!",
+                        "Akun " + akun.getNama() + " saldo: " + akun.getJumlah()
+                );
+                return false;
             }
+
+            int newSaldo = akun.getJumlah() + delta;
 
             boolean result = DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
             if (!result) {
-                MyPopup.showDanger("Gagal update saldo untuk akun: " + akun.getNama(), "Coba lagi nanti.");
+                MyPopup.showDanger(
+                        "Gagal update saldo untuk akun: " + akun.getNama(),
+                        "Coba lagi nanti."
+                );
                 return false;
             }
 
@@ -137,6 +137,8 @@ public abstract class AbstractTransactionService implements TransactionService {
 
         return true;
     }
+
+    protected abstract int calculateSaldoDelta(int oldJumlah, int newJumlah);
 
     protected abstract boolean isTargetType(Transaksi t);
 }

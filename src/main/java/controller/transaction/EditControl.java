@@ -1,7 +1,7 @@
 package controller.transaction;
 
 import controller.DashboardControl;
-import controller.ExpensControl;
+import controller.ExpenseControl;
 import controller.IncomeControl;
 import controller.option.TransactionParent;
 import dataflow.DataLoader;
@@ -38,6 +38,9 @@ import javafx.util.Duration;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import service.AbstractTransactionService;
+import service.ExpenseService;
+import service.IncomeService;
 
 import java.io.IOException;
 import java.net.URL;
@@ -49,7 +52,7 @@ public class EditControl implements Initializable {
     private Stage stage;
     @FXML private AnchorPane rootPane;
     private Transaksi transOriginal;
-    private Boolean isMultiple = false;
+    private Boolean isSingle = false;
     private TransactionParent parent;
 
     // atribut pendukung
@@ -129,9 +132,9 @@ public class EditControl implements Initializable {
         hideAnim.play();
     }
     public void setIsMultiple(Boolean val){
-        this.isMultiple = val;
+        this.isSingle = val;
         isFormComplete();
-        log.info("isMultiple: " + (isMultiple ? "true" : "false"));
+        log.info("isSingle: " + (isSingle ? "true" : "false"));
     }
     public void setParent(TransactionParent parent) {
         this.parent = parent;
@@ -246,13 +249,13 @@ public class EditControl implements Initializable {
                         .and(kategoriValid)
                         .and(dateValid);
 
-        if (isMultiple){
-            submitButton.disableProperty().bind(formValid.not());
-        } else {
+        if (isSingle){
             BooleanBinding isChanged = isChangedBinding();
             submitButton.disableProperty().bind(
                     formValid.and(isChanged).not()
             );
+        } else {
+            submitButton.disableProperty().bind(formValid.not());
         }
     }
     private BooleanBinding isChangedBinding() {
@@ -352,33 +355,11 @@ public class EditControl implements Initializable {
     }
     @FXML
     private void submitHandler(ActionEvent evt) {
-        if(isMultiple){
-            List<Transaksi> selected = parent.getRecordCardBoard().entrySet().stream()
-                    .filter(e -> e.getValue().getCheckList().isSelected())
-                    .map(Map.Entry::getKey)
-                    .toList();
+        if(isSingle){
 
-            List<Transaksi> editedTransaksi = new ArrayList<>();
+            AbstractTransactionService service =
+                    resolveService(transOriginal);
 
-            for (Transaksi trans : selected) {
-                // update tiap transaksi sesuai form
-                trans.setJumlah(amountEdit.getValue());
-                trans.setAkun(akunComboBox.getValue());
-                trans.setKategori(categoryComboBox.getValue());
-                trans.setTipelabel(tipeLabelCombo.getValue());
-                trans.setTanggal(dateEdit.getValue());
-                trans.setKeterangan(noteEdit.getText());
-                trans.setPaymentType(paymentType.getValue());
-                trans.setPaymentStatus(paymentStatus.getValue());
-
-                editedTransaksi.add(trans);
-            }
-
-            DataManager.getInstance().modifyMultipleTransaksi(editedTransaksi);
-            String page = DashboardControl.getInstance().getCurrentPage();
-            DashboardControl.getInstance().loadPage(page);
-
-        } else {
             String note = noteEdit.getText();
             note = (note == null || note.isBlank()) ? null : note;
 
@@ -397,11 +378,87 @@ public class EditControl implements Initializable {
 
             Boolean isChanged = !transModified.isSameState(transOriginal);
             if(isChanged) {
+
+                boolean saldoOk = service.updateSingleAkun(
+                        transOriginal.getAkun(),   // akun LAMA
+                        transOriginal,             // transaksi LAMA
+                        transModified.getJumlah()  // jumlah BARU
+                );
+
+                if (!saldoOk) {
+                    return; // popup sudah muncul di service
+                }
+
                 DataManager.getInstance().modifyTransaksi(transModified);
                 String page = DashboardControl.getInstance().getCurrentPage();
                 DashboardControl.getInstance().loadPage(page);
             }
+
+        } else {
+            List<Transaksi> selected = parent.getRecordCardBoard().entrySet().stream()
+                    .filter(e -> e.getValue().getCheckList().isSelected())
+                    .map(Map.Entry::getKey)
+                    .toList();
+
+            // safety: minimal 1 data
+            if (selected.isEmpty()) return;
+
+            // safety: satu akun saja
+            if (selected.stream().map(Transaksi::getAkun).distinct().count() > 1) {
+                MyPopup.showDanger("Gagal", "Edit massal hanya boleh untuk satu akun");
+                return;
+            }
+
+            AbstractTransactionService service =
+                    resolveService(selected.get(0));
+
+            Akun akun = selected.get(0).getAkun();
+            int saldoAwal = akun.getJumlah();
+
+            List<Transaksi> newList = new ArrayList<>();
+
+            // === VALIDASI & HITUNG SALDO (SIMULASI) ===
+            for (Transaksi old : selected) {
+                Transaksi edited = new Transaksi(
+                        old.getId(),
+                        old.getTipeTransaksi(),
+                        amountEdit.getValue(),
+                        akunComboBox.getValue(),
+                        categoryComboBox.getValue(),
+                        tipeLabelCombo.getValue(),
+                        dateEdit.getValue(),
+                        noteEdit.getText(),
+                        paymentType.getValue(),
+                        paymentStatus.getValue()
+                );
+
+                boolean ok = service.updateSingleAkun(
+                        akun,
+                        old,
+                        edited.getJumlah()
+                );
+
+                if (!ok) {
+                    akun.setJumlah(saldoAwal);
+                    DataManager.getInstance().updateSaldoAkun(akun, saldoAwal);
+                    return;
+                }
+
+                newList.add(edited);
+            }
+
+            DataManager.getInstance().modifyMultipleTransaksi(newList);
+
+            String page = DashboardControl.getInstance().getCurrentPage();
+            DashboardControl.getInstance().loadPage(page);
         }
         closePopup();
+    }
+
+    private AbstractTransactionService resolveService(Transaksi t) {
+        return switch (t.getTipeTransaksi()) {
+            case IN  -> new IncomeService();
+            case OUT -> new ExpenseService();
+        };
     }
 }

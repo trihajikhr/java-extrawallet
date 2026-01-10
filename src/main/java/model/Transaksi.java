@@ -67,6 +67,17 @@ public class Transaksi {
                 paymentStatus == t.paymentStatus;
     }
 
+    public void showData() {
+        System.out.println("ID            : " + this.id);
+        System.out.println("TipeTransaksi : " + this.tipeTransaksi.getLabel());
+        System.out.println("Jumlah        : " + this.jumlah);
+        System.out.println("Akun          : " + this.akun.getNama());
+        System.out.println("Kategori      : " + this.kategori.getNama());
+        System.out.println("TipeLabel     : " + (this.tipelabel != null ? this.tipelabel.getNama() : ""));
+        System.out.println("Keterangan    : " + (this.keterangan != null ? this.keterangan : ""));
+        System.out.println("PaymentType   : " + (this.paymentType != null ? this.paymentType.getLabel() : ""));
+        System.out.println("PaymentStatus : " + (this.paymentStatus != null ? this.paymentStatus.getLabel() : ""));
+    }
 
     public int getId() {
         return id;

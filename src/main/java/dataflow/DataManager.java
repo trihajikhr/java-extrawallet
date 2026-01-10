@@ -216,6 +216,16 @@ public class DataManager {
         }
     }
 
+    public Boolean importTransaksiFromCSV(Transaksi trans) {
+        int newId = Database.getInstance().insertTransaksi(trans);
+        if(newId > 0) {
+            trans.setId(newId);
+            dataTransaksi.add(trans);
+            return true;
+        }
+        return false;
+    }
+
     // [2] >> =============== DATA PEMASUKAN =============== //
     public ArrayList<Transaksi> getDataTransaksiPemasukan() {
         ArrayList<Transaksi> inList = new ArrayList<>();
@@ -241,11 +251,14 @@ public class DataManager {
     }
 
     // [3] >> =============== DATA PENGELUARAN =============== //
-    public ArrayList<Pengeluaran> getDataTransaksiPengeluaran() {
-        ArrayList<Pengeluaran> outList = new ArrayList<>();
-        for (Transaksi t : dataTransaksi) {
-            if (t instanceof Pengeluaran) outList.add((Pengeluaran) t);
+    public ArrayList<Transaksi> getDataTransaksiPengeluaran() {
+        ArrayList<Transaksi> outList = new ArrayList<>();
+        for(Transaksi trans : dataTransaksi) {
+            if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
+                outList.add(trans);
+            }
         }
+        log.info("Total expense transaction: " + outList.size());
         return outList;
     }
 

@@ -30,7 +30,7 @@ import javafx.scene.control.Alert.AlertType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.CurrencyApiClient;
-import service.IncomeService;
+import service.ExpenseService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -41,8 +41,8 @@ import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class IncomeControl implements Initializable, TransactionParent {
-    private static final Logger log = LoggerFactory.getLogger(IncomeControl.class);
+public class ExpenseControl implements Initializable, TransactionParent {
+    private static final Logger log = LoggerFactory.getLogger(ExpenseControl.class);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
     DateTimeFormatter formatterNow = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
 
@@ -50,7 +50,7 @@ public class IncomeControl implements Initializable, TransactionParent {
     private double yOffset = 0;
 
     // data sumber kebenaran
-    List<Transaksi> incomeTransaction  = new ArrayList<>();
+    List<Transaksi> expenseTransaction = new ArrayList<>();
     private final Map<Transaksi, RecordCard> recordCardBoard = new HashMap<>();
     private final List<CheckBox> visibleCheckBox = new ArrayList<>();
 
@@ -108,7 +108,7 @@ public class IncomeControl implements Initializable, TransactionParent {
     // [0] >=== INIT FUNCTION & SCENE CONNECTOR
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        log.info("panel record income berhasil terbuka");
+        log.info("panel record expense berhasil terbuka");
         fetchTransactionData();
         initAllComboBox();
         initBaseData();
@@ -123,7 +123,7 @@ public class IncomeControl implements Initializable, TransactionParent {
         loadStyleForRecordParent();
         setDateNow();
         recordCounterLabelInit();
-        defaultTotalAmountSetter(incomeTransaction);
+        defaultTotalAmountSetter(expenseTransaction);
         setFirstFilter();
     }
     @Override
@@ -137,13 +137,13 @@ public class IncomeControl implements Initializable, TransactionParent {
         String dateStringNow = dateNow.format(formatterNow);
         labelTanggalSekarang.setText(dateStringNow);
         labelTanggalSekarang.setStyle("""
-            -fx-text-fill: #01aa71;
+            -fx-text-fill: #E53935;
             -fx-font-size: 12px;
             -fx-font-weight: bold;        
         """);
     }
     private void recordCounterLabelInit() {
-        labelTotalRecords.setText("Found " + incomeTransaction.size() + " record");
+        labelTotalRecords.setText("Found " + expenseTransaction.size() + " record");
     }
     private void mainButtonInit() {
         mainButtonList.put("edit", editButton);
@@ -159,8 +159,8 @@ public class IncomeControl implements Initializable, TransactionParent {
     private void setFirstFilter() {
         applyFilterAndSort();
     }
-    private void defaultTotalAmountSetter(List<Transaksi> dataIncome) {
-        totalDefaultValue = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
+    private void defaultTotalAmountSetter(List<Transaksi> dataExpense) {
+        totalDefaultValue = (ExpenseService.getInstance().expenseSumAfterFilter(dataExpense));
         String stringForm = totalDefaultValue.toPlainString();
         String result = Converter.numberFormatter(stringForm);
         labelTotalAmount.setText("IDR " + result);
@@ -181,23 +181,23 @@ public class IncomeControl implements Initializable, TransactionParent {
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
-    private RecordCard createRecordCard(Transaksi income) {
-         RecordCard recordCard = new RecordCard(income);
-         recordCard.setOnCardClick(this::openSingleEdit);
-         visibleCheckBox.add(recordCard.getCheckList());
-         return recordCard;
+    private RecordCard createRecordCard(Transaksi expense) {
+        RecordCard recordCard = new RecordCard(expense);
+        recordCard.setOnCardClick(this::openSingleEdit);
+        visibleCheckBox.add(recordCard.getCheckList());
+        return recordCard;
     }
     private void fetchTransactionData() {
-        log.info("data income berhasil diambil dari datamanager");
+        log.info("data expense berhasil diambil dari datamanager");
 
 //        recordCardBoard.clear();
 //        recordPanel.getChildren().clear();
 //        visibleCheckBox.clear();
 
-        incomeTransaction = DataManager.getInstance().getDataTransaksiPemasukan();
+        expenseTransaction = DataManager.getInstance().getDataTransaksiPengeluaran();
 
-        for(Transaksi in : incomeTransaction) {
-            recordCardBoard.put(in, createRecordCard(in));
+        for(Transaksi exp : expenseTransaction) {
+            recordCardBoard.put(exp, createRecordCard(exp));
         }
 
         for(RecordCard card : recordCardBoard.values()) {
@@ -635,7 +635,7 @@ public class IncomeControl implements Initializable, TransactionParent {
 
     // [5] >=== FILTER HANDLER
     private void applyFilterAndSort() {
-        List<Transaksi> result = incomeTransaction.stream()
+        List<Transaksi> result = expenseTransaction.stream()
                 .filter(accountFilter())
                 .filter(categoryFilter())
                 .filter(labelFilter())
