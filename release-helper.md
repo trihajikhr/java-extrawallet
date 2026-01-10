@@ -118,7 +118,7 @@ Jika aplikasi crash, sulit untuk mengetahu apa yang menyebabkanya. Mudah untuk m
 
 Nah, ketika program dikonversi ke EXE, untuk tapah testing, gunakan tambahan atribut berupa `--win-console` pada `jpackage`, ini akan membuat aplikasi yang berjalan akan menyediakan terminal untuk mmeberikan feedback langsung:
 
-![img.png](img.png)
+![img.png](dokumentasi/img.png)
 
 Gambar diatas menunjukan, ketika programku crash, alias stuck, dan aku tidak tahu apa yang salah. Tapi dengan mengaktifkan `--win-console` ketika mengkonveri JAR ke EXE dengan JPackage, aku menjadi tahu bahwa ternyatta ada masalah tertentu yang harus ditangani, dan feedback ini menjadikan masalah masalah menjadi lebih jelas, tidak ambigu.
 
