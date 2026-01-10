@@ -35,11 +35,13 @@ Karena itu, properti seperti nama aplikasi, vendor, icon, dan shortcut **tidak d
     java -jar target/extrawallet-v1.0.0.jar
     ```
 
-5. Jika aplikasi berjalan, langkah selanjutnya adalah mengkonversi ke EXE dengan menggunakan JPackage berikut:
+5. Jika aplikasi berjalan, langkah selanjutnya adalah mengkonversi ke EXE dengan menggunakan JPackage berikut.
+    Bagian `--name` berisi nama aplikasi, beri tanda petik ganda `""` jika ingin menyematkan spasi diantara nama aplikasi. Lalu pada bagian `--app-version` berikan semver versi aplikasi. Cukup gunakan angka, tidak perlu menambahkan `v` didepanya, karena JPackage hanya menerima angka, lagipula format resmi versioning (SemVer): MAJOR.MINOR.PATCH. Penggunaan versioning misal dengan `v1.0.0` dilakukan dengan `git tag` 
 
     ```bash
     jpackage 
     --name "Extra Wallet" 
+    --app-version 1.0.0
     --vendor Extra-Inc 
     --type exe 
     --input target 
@@ -53,8 +55,8 @@ Karena itu, properti seperti nama aplikasi, vendor, icon, dan shortcut **tidak d
     --win-menu
     ```
     
-    Atau berikut yang siap tempel di terminal:
+    Atau berikut yang siap tempel di terminal (lakukan perubahan pada `--app-version` sesuai versi aplikasi):
     
     ```bash
-    jpackage --name "Extra Wallet" --vendor Extra-Inc --type exe --input target  --dest target --main-jar extrawallet-v1.0.0.jar --main-class app.Main --module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\Java\jdk-25.0.1\jmods" --add-modules javafx.controls,javafx.fxml --icon "src/main/resources/app-icon/favicon.ico" --win-shortcut --win-menu
+    jpackage --name "Extra Wallet" --app-version 1.0.0 --vendor Extra-Inc --type exe --input target  --dest target --main-jar extrawallet-v1.0.0.jar --main-class app.Main --module-path "C:\Program Files\Java\javafx-jmods-25.0.1;C:\Program Files\Java\jdk-25.0.1\jmods" --add-modules javafx.controls,javafx.fxml --icon "src/main/resources/app-icon/favicon.ico" --win-shortcut --win-menu
     ```

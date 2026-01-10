@@ -69,6 +69,9 @@ public class App extends Application {
                 DataSeeder.getInstance().seedDatabaseKategori();
                 updateProgress(95, 100);
                 DataSeeder.getInstance().seedDatabaseCurrency();
+
+                // jika pertama kali download aplikasi, buat aku default supaya dahboard tidak crash!
+                DataManager.getInstance().setupDefaultAcount();
                 updateProgress(100, 100);
 
                 return loader;

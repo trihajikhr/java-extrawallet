@@ -45,6 +45,25 @@ public class DataManager {
         DataSeeder.getInstance().seedCurrency();
         theImage = DataSeeder.getInstance().seedImageTransactionForm();
         paymentStatusImage = DataSeeder.getInstance().seedPaymentStatusImage();
+
+    }
+
+    public void setupDefaultAcount() {
+        if(dataAkun.isEmpty()) {
+            Akun akun = new Akun(
+                 1,
+                 "General",
+                  dataColor.get(1).getWarna(),
+                  dataAccountItem.get(0).getIcon(),
+                  dataAccountItem.get(0).getIconPath(),
+                   0,
+                   dataMataUang.get(0)
+            );
+
+            dataAkun.add(akun);
+            addAkun(akun, false);
+            log.info("akun default dibuat untuk penggunaan pertama user! akun [general]");
+        }
     }
 
     public void fetchDataDatabase() {
@@ -107,15 +126,19 @@ public class DataManager {
     }
 
     // [1] >> =============== DATA AKUN =============== //
-    public void addAkun (Akun data) {
+    public void addAkun(Akun data) {
+        addAkun(data, true);
+    }
+
+    public void addAkun (Akun data, Boolean isGeneral) {
         int newId = Database.getInstance().insertAkun(data);
         if(newId > 0) {
             data.setId(newId);
             dataAkun.add(data);
             log.info("akun baru [{}] berhasil dibuat!", data.getNama());
-            MyPopup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat!");
+            if(isGeneral) MyPopup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat!");
         } else {
-            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
+            if(isGeneral) MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         }
     }
     public Boolean updateSaldoAkun(Akun akun, int jumlah){
