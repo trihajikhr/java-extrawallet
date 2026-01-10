@@ -26,12 +26,20 @@ import java.nio.file.Paths;
 public class CurrencyApiClient {
     private static final Logger log = LoggerFactory.getLogger(CurrencyApiClient.class);
 
+    // mode offline DARURAT
+    private static final BigDecimal DEFAULT_USD_IDR = new BigDecimal("15000");
+    private static final BigDecimal DEFAULT_EUR_IDR = new BigDecimal("16500");
+
     // value
     private BigDecimal usdToIdr;
     private BigDecimal eurToIdr;
 
     // constructror
     private CurrencyApiClient() {
+        // jika user menjalankan aplikasi secara offline, aplikasnya tidak crash!
+        usdToIdr = DEFAULT_USD_IDR;
+        eurToIdr = DEFAULT_EUR_IDR;
+
         // load offline
         try {
             loadRatesFromJson();
@@ -114,7 +122,8 @@ public class CurrencyApiClient {
 
             root.add("rates", rates);
 
-            Path path = Paths.get(System.getProperty("user.home"), ".extrawallet", "data-exchange", "exchanges-rates.json");
+            // Path path = Path.of("data-exchange/exchange_rates.json");
+            Path path = AppPaths.EXCHANGE_JSON;
             Files.createDirectories(path.getParent());
             Files.writeString(path, new Gson().toJson(root));
 
@@ -128,7 +137,7 @@ public class CurrencyApiClient {
 
 
     public void loadRatesFromJson() throws Exception {
-        Path path = Paths.get(System.getProperty("user.home"), ".extrawallet", "data-exchange", "exchanges-rates.json");
+        Path path = AppPaths.EXCHANGE_JSON;
         if (!Files.exists(path)) {
             log.warn("File JSON kurs tidak ditemukan, lewati load offline!");
             return;

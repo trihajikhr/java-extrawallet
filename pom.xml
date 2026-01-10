@@ -13,6 +13,7 @@
     <name>Extra-Wallet</name>
 
     <properties>
+        <app.mode>prod</app.mode> <!-- default -->
         <maven.compiler.source>20</maven.compiler.source>
         <maven.compiler.target>20</maven.compiler.target>
         <maven.compiler.release>20</maven.compiler.release>
@@ -104,16 +105,32 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <app.mode>dev</app.mode>
+            </properties>
+        </profile>
+    </profiles>
+
+
     <build>
         <plugins>
+            <!-- JavaFX -->
             <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
                     <mainClass>app.Main</mainClass>
+                    <options>
+                        <option>-Dapp.mode=${app.mode}</option>
+                    </options>
                 </configuration>
             </plugin>
+
+            <!-- Compiler -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -123,6 +140,8 @@
                     <target>20</target>
                 </configuration>
             </plugin>
+
+            <!-- Shade -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

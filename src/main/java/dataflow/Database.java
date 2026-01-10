@@ -16,6 +16,7 @@ import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import helper.Converter;
+import service.AppPaths;
 
 // TODO [IMPORTANT]:
 // Database Singleton masih basic.
@@ -50,11 +51,9 @@ public class Database {
     // [1] >=== objek database singleton
     private Database () {
         try {
-            Path dbDir = Paths.get(System.getProperty("user.home"), ".extrawallet", "database");
-            Files.createDirectories(dbDir);
+            Files.createDirectories(AppPaths.DATABASE_DIR);
 
-            String dbPath = System.getProperty("user.home") + "/.extrawallet/database/finance.db";
-            this.koneksi = DriverManager.getConnection(JDBC_URL + dbPath);
+            this.koneksi = DriverManager.getConnection(JDBC_URL + AppPaths.DB_FILE.toAbsolutePath());
 
             // aktifkan opsi foreign key (tidak aktif secara default!)
             try (Statement perintah = koneksi.createStatement()) {
@@ -68,10 +67,12 @@ public class Database {
             createTableTransaksi();
             createTableTemplate();
 
+            log.info("Database siap digunakan di: {}", AppPaths.DB_FILE.toAbsolutePath());
+
         } catch (SQLException e) {
             log.error("Database gagal!",  e);
         } catch (IOException e) {
-            log.info("gagal membuat folder untuk database!", e);
+            log.error("pembuatan folder database gagal!", e);
         }
     }
 

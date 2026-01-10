@@ -30,6 +30,9 @@ import javafx.scene.layout.StackPane;
 import dataflow.Database;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import service.AppPaths;
 import service.CurrencyApiClient;
 
 import java.nio.file.Files;
@@ -38,6 +41,8 @@ import java.nio.file.Paths;
 import java.util.Objects;
 
 public class App extends Application {
+
+    private static final Logger log = LoggerFactory.getLogger(App.class);
 
     @Override
     public void start(Stage stage) throws Exception {
@@ -70,6 +75,10 @@ public class App extends Application {
 
                 // jika pertama kali download aplikasi, buat aku default supaya dahboard tidak crash!
                 DataManager.getInstance().setupDefaultAcount();
+
+                log.info("App Mode: {}", AppPaths.IS_DEV ? "DEV" : "PROD");
+                log.info("App Root: {}", AppPaths.ROOT.toAbsolutePath());
+
                 updateProgress(100, 100);
 
                 return null;
