@@ -386,7 +386,7 @@ public class IncomeControl implements Initializable, TransactionParent {
             // Centang
             Label checkMark = new Label("✓");
             checkMark.setTextFill(Color.GREEN);
-            checkMark.setVisible(selectedCategories.contains(tipeLabel));
+            checkMark.setVisible(selectedLabels.contains(tipeLabel));
 
             // Spacer
             Region spacer = new Region();
@@ -397,7 +397,7 @@ public class IncomeControl implements Initializable, TransactionParent {
             wrapper.setAlignment(Pos.CENTER_LEFT);
             wrapper.setPadding(new Insets(2, 5, 2, 5));
             wrapper.setMaxWidth(Double.MAX_VALUE); // biar expand
-            wrapper.prefWidthProperty().bind(menuButtonCategory.widthProperty().subtract(2));
+            wrapper.prefWidthProperty().bind(menuButtonLabel.widthProperty().subtract(2));
 
             // CustomMenuItem
             CustomMenuItem menuItem = new CustomMenuItem(wrapper);

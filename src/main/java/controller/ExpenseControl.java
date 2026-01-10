@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.CurrencyApiClient;
 import service.ExpenseService;
-import service.IncomeService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -43,7 +42,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ExpenseControl implements Initializable, TransactionParent {
-    private static final Logger log = LoggerFactory.getLogger(IncomeControl.class);
+    private static final Logger log = LoggerFactory.getLogger(ExpenseControl.class);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
     DateTimeFormatter formatterNow = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
 
@@ -109,7 +108,7 @@ public class ExpenseControl implements Initializable, TransactionParent {
     // [0] >=== INIT FUNCTION & SCENE CONNECTOR
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        log.info("panel record income berhasil terbuka");
+        log.info("panel record expense berhasil terbuka");
         fetchTransactionData();
         initAllComboBox();
         initBaseData();
@@ -138,7 +137,7 @@ public class ExpenseControl implements Initializable, TransactionParent {
         String dateStringNow = dateNow.format(formatterNow);
         labelTanggalSekarang.setText(dateStringNow);
         labelTanggalSekarang.setStyle("""
-            -fx-text-fill: #01aa71;
+            -fx-text-fill: #E53935;
             -fx-font-size: 12px;
             -fx-font-weight: bold;        
         """);
@@ -182,8 +181,8 @@ public class ExpenseControl implements Initializable, TransactionParent {
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
-    private RecordCard createRecordCard(Transaksi income) {
-        RecordCard recordCard = new RecordCard(income);
+    private RecordCard createRecordCard(Transaksi expense) {
+        RecordCard recordCard = new RecordCard(expense);
         recordCard.setOnCardClick(this::openSingleEdit);
         visibleCheckBox.add(recordCard.getCheckList());
         return recordCard;
@@ -197,8 +196,8 @@ public class ExpenseControl implements Initializable, TransactionParent {
 
         expenseTransaction = DataManager.getInstance().getDataTransaksiPengeluaran();
 
-        for(Transaksi in : expenseTransaction) {
-            recordCardBoard.put(in, createRecordCard(in));
+        for(Transaksi exp : expenseTransaction) {
+            recordCardBoard.put(exp, createRecordCard(exp));
         }
 
         for(RecordCard card : recordCardBoard.values()) {
@@ -387,7 +386,7 @@ public class ExpenseControl implements Initializable, TransactionParent {
             // Centang
             Label checkMark = new Label("✓");
             checkMark.setTextFill(Color.GREEN);
-            checkMark.setVisible(selectedCategories.contains(tipeLabel));
+            checkMark.setVisible(selectedLabels.contains(tipeLabel));
 
             // Spacer
             Region spacer = new Region();
@@ -398,7 +397,7 @@ public class ExpenseControl implements Initializable, TransactionParent {
             wrapper.setAlignment(Pos.CENTER_LEFT);
             wrapper.setPadding(new Insets(2, 5, 2, 5));
             wrapper.setMaxWidth(Double.MAX_VALUE); // biar expand
-            wrapper.prefWidthProperty().bind(menuButtonCategory.widthProperty().subtract(2));
+            wrapper.prefWidthProperty().bind(menuButtonLabel.widthProperty().subtract(2));
 
             // CustomMenuItem
             CustomMenuItem menuItem = new CustomMenuItem(wrapper);
