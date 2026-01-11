@@ -27,8 +27,6 @@ public class RecordCard {
     private static final Logger log = LoggerFactory.getLogger(RecordCard.class);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d MMMM yyyy");
 
-    private final Map<PaymentStatus, Image> statusIconData = new HashMap<>();
-
     // all node atribute
     private HBox cardWrapper;
     private HBox infoDasarWrapper;

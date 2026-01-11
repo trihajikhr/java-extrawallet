@@ -1,6 +1,5 @@
 package service;
 
-import model.Akun;
 import model.TipeTransaksi;
 import model.Transaksi;
 import org.slf4j.Logger;
@@ -29,12 +28,13 @@ public class ExpenseService extends AbstractTransactionService {
         return t.getTipeTransaksi() == TipeTransaksi.OUT;
     }
 
-    public BigDecimal expenseSumAfterFilter(List<Transaksi> data) {
-        return sumAfterFilter(data);
-    }
-
     @Override
     protected int calculateSaldoDelta(int oldJumlah, int newJumlah) {
         return oldJumlah - newJumlah; // expense ngurang saldo
     }
+
+    public BigDecimal expenseSumAfterFilter(List<Transaksi> data) {
+        return sumAfterFilter(data);
+    }
+
 }

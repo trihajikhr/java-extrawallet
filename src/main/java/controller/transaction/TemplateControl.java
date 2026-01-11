@@ -1,14 +1,11 @@
 package controller.transaction;
 
+import controller.PopupUtils;
 import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.Converter;
 import helper.IOLogic;
 import helper.MyPopup;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.IntegerProperty;
@@ -32,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,7 +79,7 @@ public class TemplateControl implements Initializable {
 
     @FXML
     private ComboBox<TipeLabel> tipeLabelComboBox;
-    private ObservableList<TipeLabel> tipeLabelList = FXCollections.observableArrayList();
+    private ObservableList<TipeLabel> tipeLabelObservable = FXCollections.observableArrayList();
 
     @FXML
     private TextField noteText;
@@ -129,47 +125,13 @@ public class TemplateControl implements Initializable {
     // [0] >=== SCENE CONTROLLER
     @FXML
     public void showPopup() {
-        if (stage == null) return;
-
-        rootPane.setOpacity(0);
-        rootPane.setScaleX(0.6);
-        rootPane.setScaleY(0.6);
-
-        FadeTransition fade = new FadeTransition(Duration.millis(250), rootPane);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-
-        ScaleTransition scale = new ScaleTransition(Duration.millis(250), rootPane);
-        scale.setFromX(0.6);
-        scale.setFromY(0.6);
-        scale.setToX(1);
-        scale.setToY(1);
-
-        ParallelTransition pt = new ParallelTransition(fade, scale);
-        pt.setInterpolator(Interpolator.EASE_OUT);
-        pt.play();
+        PopupUtils.showPopup(rootPane, stage);
     }
     @FXML
     private void closePopup() {
         if (closing) return;
         closing = true;
-        if (stage == null) return;
-
-        FadeTransition fade = new FadeTransition(Duration.millis(150), rootPane);
-        fade.setFromValue(1);
-        fade.setToValue(0);
-
-        ScaleTransition scale = new ScaleTransition(Duration.millis(150), rootPane);
-        scale.setFromX(1);
-        scale.setFromY(1);
-        scale.setToX(0.8);
-        scale.setToY(0.8);
-
-        ParallelTransition hideAnim = new ParallelTransition(fade, scale);
-        hideAnim.setInterpolator(Interpolator.EASE_BOTH);
-
-        hideAnim.setOnFinished(e -> stage.close());
-        hideAnim.play();
+        PopupUtils.closePopup(rootPane, stage);
     }
 
     // [1] >=== SCENE CONNECTION FUNCTION
@@ -182,8 +144,8 @@ public class TemplateControl implements Initializable {
     public ComboBox<TipeLabel> getTipeLabel() {
         return tipeLabelComboBox;
     }
-    public ObservableList<TipeLabel> getTipeLabelList() {
-        return tipeLabelList;
+    public ObservableList<TipeLabel> getTipeLabelObservable() {
+        return tipeLabelObservable;
     }
 
     // [2] >=== INIT FUNCTION
@@ -223,9 +185,9 @@ public class TemplateControl implements Initializable {
     }
     private void loadTipeLabelComboBox(){
         ArrayList<TipeLabel> dataTipelabel = DataManager.getInstance().getDataTipeLabel();
-        tipeLabelList = FXCollections.observableArrayList(dataTipelabel);
+        tipeLabelObservable = FXCollections.observableArrayList(dataTipelabel);
 
-        tipeLabelComboBox.setItems(tipeLabelList);
+        tipeLabelComboBox.setItems(tipeLabelObservable);
         tipeLabelComboBox.setCellFactory(list -> new ListCell<TipeLabel>() {
             @Override
             protected void updateItem(TipeLabel item, boolean empty) {

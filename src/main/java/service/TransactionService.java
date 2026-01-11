@@ -48,7 +48,11 @@ public interface TransactionService {
             LocalDate endDate
     );
 
-    Boolean updateSingleAkun(Akun akun, Transaksi oldTrans, int newJumlah);
+    Boolean updateSingleAkun(
+            Akun akun,
+            Transaksi oldTrans,
+            int newJumlah
+    );
 
     Boolean updateMultipleAkun(
             List<Transaksi> selected

@@ -4,13 +4,8 @@ import controller.DashboardControl;
 import dataflow.DataManager;
 import dataflow.DataSeeder;
 import helper.MyPopup;
-import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -23,22 +18,15 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.concurrent.Task;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.StackPane;
-
-// package database
 import dataflow.Database;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.AppPaths;
 import service.CurrencyApiClient;
-
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 
 public class App extends Application {
@@ -58,11 +46,10 @@ public class App extends Application {
                 try {
                     Files.createDirectories(AppPaths.ROOT);
                 } catch (IOException e) {
-                    log.error("gagal membuat folder app root!", e);
+                    log.error("gagal membuat folder app root (.extrawallet)!", e);
                 }
 
                 updateProgress(7, 100);
-
                 Database.getInstance();
                 updateProgress(15,100);
                 CurrencyApiClient.getInstance();
@@ -77,7 +64,8 @@ public class App extends Application {
                 updateProgress(95, 100);
                 DataSeeder.getInstance().seedDatabaseCurrency();
 
-                // jika pertama kali download aplikasi, buat aku default supaya dahboard tidak crash!
+                // TODO: Jika user pertama kali pasang aplikasi, tetapkan satu akun secara langsung sebagai defaul akun
+                // kedepanya, perbaiki supaya ketika database tidak mengecek adanya akun, maka buat panel pembuatan akun baru terlebih dahulu!
                 DataManager.getInstance().setupDefaultAcount();
 
                 log.info("App Mode: {}", AppPaths.IS_DEV ? "DEV" : "PROD");
@@ -119,12 +107,12 @@ public class App extends Application {
                 loaderStage.close();
 
             } catch (Exception ex) {
-                ex.printStackTrace();
+                log.error("gagal load dashboard.fxml!", ex);
             }
         });
 
         loadTask.setOnFailed(e -> {
-            loadTask.getException().printStackTrace();
+            log.error("gagal menjalankan task loader pertama!", loadTask.getException());
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
         });
 
@@ -170,7 +158,6 @@ public class App extends Application {
             -fx-font-size: 12px;
             -fx-text-fill: #9CA3AF;
         """);
-        // loadingLabel.setText("Preparing dashboard...");
         loadingLabel.textProperty().bind(
                 task.progressProperty().multiply(100).asString("Preparing dashboard... %.0f%%")
         );

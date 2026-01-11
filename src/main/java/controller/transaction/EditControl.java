@@ -1,18 +1,13 @@
 package controller.transaction;
 
 import controller.DashboardControl;
-import controller.ExpenseControl;
-import controller.IncomeControl;
+import controller.PopupUtils;
 import controller.option.TransactionParent;
 import dataflow.DataLoader;
 import dataflow.DataManager;
 import helper.Converter;
 import helper.IOLogic;
 import helper.MyPopup;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
@@ -34,7 +29,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javafx.util.Duration;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,48 +82,13 @@ public class EditControl implements Initializable {
     public void setStage(Stage stage) {
         this.stage = stage;
     }
-    @FXML
-    public void showPopup() {
-        rootPane.setOpacity(0);
-        rootPane.setScaleX(0.8);
-        rootPane.setScaleY(0.8);
-        rootPane.setOpacity(0);
-
-        FadeTransition fade = new FadeTransition(Duration.millis(200), rootPane);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-
-        ScaleTransition scale = new ScaleTransition(Duration.millis(200), rootPane);
-        scale.setFromX(0.8);
-        scale.setFromY(0.8);
-        scale.setToX(1);
-        scale.setToY(1);
-
-        ParallelTransition showAnim = new ParallelTransition(fade, scale);
-        showAnim.setInterpolator(Interpolator.EASE_BOTH);
-        showAnim.play();
+    @FXML private void showPopup() {
+        PopupUtils.showPopup(rootPane, stage);
     }
-    @FXML
-    private void closePopup() {
+    @FXML private void closePopup() {
         if (closing) return;
         closing = true;
-        if (stage == null) return;
-
-        FadeTransition fade = new FadeTransition(Duration.millis(150), rootPane);
-        fade.setFromValue(1);
-        fade.setToValue(0);
-
-        ScaleTransition scale = new ScaleTransition(Duration.millis(150), rootPane);
-        scale.setFromX(1);
-        scale.setFromY(1);
-        scale.setToX(0.8);
-        scale.setToY(0.8);
-
-        ParallelTransition hideAnim = new ParallelTransition(fade, scale);
-        hideAnim.setInterpolator(Interpolator.EASE_BOTH);
-
-        hideAnim.setOnFinished(e -> stage.close());
-        hideAnim.play();
+        PopupUtils.closePopup(rootPane, stage);
     }
     public void setIsMultiple(Boolean val){
         this.isSingle = val;
