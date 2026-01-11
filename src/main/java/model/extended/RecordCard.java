@@ -1,4 +1,4 @@
-package model;
+package model.extended;
 
 import dataflow.DataManager;
 import helper.Converter;
@@ -11,6 +11,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
+import model.Transaction;
+import model.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,8 +106,8 @@ public class RecordCard {
         return result;
     }
     private StackPane createIconStackNode(Transaction trans) {
-        Circle bgCircle = new Circle(20, trans.getKategori().getColor());
-        this.kategoriIcon = new ImageView(trans.getKategori().getIcon());
+        Circle bgCircle = new Circle(20, trans.getCategory().getColor());
+        this.kategoriIcon = new ImageView(trans.getCategory().getIcon());
         this.kategoriIcon.setFitWidth(24);
         this.kategoriIcon.setFitHeight(24);
 
@@ -121,7 +123,7 @@ public class RecordCard {
         result.setPrefWidth(400);
         result.setMinWidth(300);
         result.setMaxWidth(500);
-        this.labelKategori = new Label(trans.getKategori().getName());
+        this.labelKategori = new Label(trans.getCategory().getName());
         this.labelKategori.setStyle("""
             -fx-text-fill: #000000;
             -fx-font-size: 18px;
@@ -173,8 +175,8 @@ public class RecordCard {
         //result.setStyle("-fx-background-color: blue;");
         HBox.setHgrow(result, Priority.ALWAYS);
         result.setAlignment(Pos.CENTER_LEFT);
-        this.labelAkun = new Label(trans.getAkun().getName());
-        String warnaHex = Converter.colorToHex(trans.getAkun().getColor());
+        this.labelAkun = new Label(trans.getAccount().getName());
+        String warnaHex = Converter.colorToHex(trans.getAccount().getColor());
         this.labelAkun.setStyle("""
                 -fx-background-color: %s;
                 -fx-font-size: 11;
@@ -224,10 +226,10 @@ public class RecordCard {
         result.setPrefWidth(250);
         result.setMaxWidth(250);
         result.setAlignment(Pos.CENTER_RIGHT);
-        String formatJumlah = Converter.numberFormatter(Integer.toString(trans.getAmount()));
+        String formatJumlah = Converter.numberFormatter(trans.getAmount().toPlainString());
 
-        if(trans.getTipeTransaksi() == TransactionType.INCOME){
-            this.labelJumlahTransaksi = new Label(trans.getAkun().getCurrencyType().getSimbol() + " " + formatJumlah);
+        if(trans.getTransactionType() == TransactionType.INCOME){
+            this.labelJumlahTransaksi = new Label(trans.getAccount().getCurrencyType().getSymbol() + " " + formatJumlah);
             this.labelJumlahTransaksi.setStyle(
                     """
                     -fx-text-fill: #01AA71;
@@ -235,8 +237,8 @@ public class RecordCard {
                     -fx-font-weight: bold;
                     """
             );
-        } else if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
-            this.labelJumlahTransaksi = new Label("-" + trans.getAkun().getCurrencyType().getSimbol() + " " + formatJumlah);
+        } else if(trans.getTransactionType() == TransactionType.EXPANSE) {
+            this.labelJumlahTransaksi = new Label("-" + trans.getAccount().getCurrencyType().getSymbol() + " " + formatJumlah);
             this.labelJumlahTransaksi.setStyle(
                     """
                     -fx-text-fill: #F92222;

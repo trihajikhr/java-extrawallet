@@ -1,6 +1,6 @@
 package service;
 
-import model.TransactionType;
+import model.enums.TransactionType;
 import model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +25,12 @@ public class ExpenseService extends AbstractTransactionService {
 
     @Override
     protected boolean isTargetType(Transaction t) {
-        return t.getTipeTransaksi() == TransactionType.EXPANSE;
+        return t.getTransactionType() == TransactionType.EXPANSE;
     }
 
     @Override
-    protected int calculateSaldoDelta(int oldJumlah, int newJumlah) {
-        return oldJumlah - newJumlah; // expense ngurang saldo
+    protected BigDecimal calculateSaldoDelta(BigDecimal oldAmount, BigDecimal newAmount) {
+        return oldAmount.subtract(newAmount);
     }
 
     public BigDecimal expenseSumAfterFilter(List<Transaction> data) {

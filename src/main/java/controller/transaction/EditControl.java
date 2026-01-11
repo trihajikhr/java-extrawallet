@@ -30,6 +30,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.*;
+import model.Currency;
+import model.enums.PaymentStatus;
+import model.enums.PaymentType;
+import model.extended.RecordCard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.AbstractTransactionService;
@@ -57,7 +61,7 @@ public class EditControl implements Initializable {
 
     // atribut fxml
     @FXML private Spinner<Integer> amountEdit;
-    @FXML private ComboBox<MataUang> mataUangCombo;
+    @FXML private ComboBox<Currency> mataUangCombo;
     @FXML private ComboBox<Account> akunComboBox;
     @FXML private ComboBox<Category> categoryComboBox;
     @FXML private ComboBox<LabelType> tipeLabelCombo;
@@ -174,8 +178,8 @@ public class EditControl implements Initializable {
     }
     public void prefilFromRecord(Transaction trans) {
         amountEdit.getEditor().setText(Integer.toString(trans.getAmount()));
-        akunComboBox.setValue(trans.getAkun());
-        categoryComboBox.setValue(trans.getKategori());
+        akunComboBox.setValue(trans.getAccount());
+        categoryComboBox.setValue(trans.getCategory());
         tipeLabelCombo.setValue(trans.getLabelType());
         dateEdit.setValue(trans.getDate());
         noteEdit.setText(
@@ -223,7 +227,7 @@ public class EditControl implements Initializable {
 
                     Transaction current = new Transaction(
                             transOriginal.getId(),
-                            transOriginal.getTipeTransaksi(),
+                            transOriginal.getTransactionType(),
                             amountEdit.getValue(),
                             akunComboBox.getValue(),
                             categoryComboBox.getValue(),
@@ -324,7 +328,7 @@ public class EditControl implements Initializable {
 
             Transaction transModified = new Transaction(
                     transOriginal.getId(),
-                    transOriginal.getTipeTransaksi(),
+                    transOriginal.getTransactionType(),
                     amountEdit.getValue(),
                     akunComboBox.getValue(),
                     categoryComboBox.getValue(),
@@ -339,7 +343,7 @@ public class EditControl implements Initializable {
             if(isChanged) {
 
                 boolean saldoOk = service.updateSingleAkun(
-                        transOriginal.getAkun(),   // account LAMA
+                        transOriginal.getAccount(),   // account LAMA
                         transOriginal,             // transaksi LAMA
                         transModified.getAmount()  // jumlah BARU
                 );
@@ -363,7 +367,7 @@ public class EditControl implements Initializable {
             if (selected.isEmpty()) return;
 
             // safety: satu account saja
-            if (selected.stream().map(Transaction::getAkun).distinct().count() > 1) {
+            if (selected.stream().map(Transaction::getAccount).distinct().count() > 1) {
                 MyPopup.showDanger("Gagal", "Edit massal hanya boleh untuk satu account");
                 return;
             }
@@ -371,7 +375,7 @@ public class EditControl implements Initializable {
             AbstractTransactionService service =
                     resolveService(selected.get(0));
 
-            Account account = selected.get(0).getAkun();
+            Account account = selected.get(0).getAccount();
             int saldoAwal = account.getBalance();
 
             List<Transaction> newList = new ArrayList<>();
@@ -380,7 +384,7 @@ public class EditControl implements Initializable {
             for (Transaction old : selected) {
                 Transaction edited = new Transaction(
                         old.getId(),
-                        old.getTipeTransaksi(),
+                        old.getTransactionType(),
                         amountEdit.getValue(),
                         akunComboBox.getValue(),
                         categoryComboBox.getValue(),
@@ -415,7 +419,7 @@ public class EditControl implements Initializable {
     }
 
     private AbstractTransactionService resolveService(Transaction t) {
-        return switch (t.getTipeTransaksi()) {
+        return switch (t.getTransactionType()) {
             case INCOME -> new IncomeService();
             case EXPANSE -> new ExpenseService();
         };

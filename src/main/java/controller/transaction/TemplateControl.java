@@ -30,6 +30,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.*;
+import model.enums.PaymentStatus;
+import model.enums.PaymentType;
+import model.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +72,7 @@ public class TemplateControl implements Initializable {
     private Spinner<Integer> spinnerAmount;
 
     @FXML
-    private ComboBox<MataUang> mataUangComboBox;
+    private ComboBox<Currency> mataUangComboBox;
 
     @FXML
     private ComboBox<Account> akunComboBox;
@@ -395,14 +398,14 @@ public class TemplateControl implements Initializable {
     }
     private boolean uniqueNameValidation(String nama) {
         for(Template temp : DataManager.getInstance().getDataTemplate()) {
-            if(nama.equalsIgnoreCase(temp.getNama())){
+            if(nama.equalsIgnoreCase(temp.getName())){
                 return false;
             }
         }
         return true;
     }
     public void prefillFromTransaksi(Transaction trans) {
-        TransactionType tipe = trans.getTipeTransaksi();
+        TransactionType tipe = trans.getTransactionType();
         if(tipe == TransactionType.INCOME) {
             activateIncome();
         } else if(tipe == TransactionType.EXPANSE){
@@ -410,8 +413,8 @@ public class TemplateControl implements Initializable {
         }
 
         spinnerAmount.getEditor().setText(Integer.toString(trans.getAmount()));
-        akunComboBox.setValue(trans.getAkun());
-        categoryComboBox.setValue(trans.getKategori());
+        akunComboBox.setValue(trans.getAccount());
+        categoryComboBox.setValue(trans.getCategory());
 
         tipeLabelComboBox.setValue(trans.getLabelType());
         noteText.setText(

@@ -1,14 +1,18 @@
 package dataflow;
 
+import java.math.BigDecimal;
 import java.util.*;
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
 import helper.MyPopup;
 import javafx.scene.image.Image;
-import model.MataUang;
+import model.Currency;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import model.*;
+import model.enums.PaymentStatus;
+import model.enums.PaymentType;
+import model.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,7 +28,7 @@ public class DataManager {
     private ObservableList<PaymentStatus> dataPaymentStatus = FXCollections.observableArrayList();
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
     private ObservableList<AccountItem> dataAccountItem = FXCollections.observableArrayList();
-    private ObservableList<MataUang> dataMataUang = FXCollections.observableArrayList();
+    private ObservableList<Currency> dataCurrency = FXCollections.observableArrayList();
     private ArrayList<Template> dataTemplate;
     private Map<PaymentStatus, Image> paymentStatusImage = new HashMap<>();
     private Image[][] theImage;
@@ -58,7 +62,7 @@ public class DataManager {
                   dataAccountItem.get(0).getIcon(),
                   dataAccountItem.get(0).getIconPath(),
                    0,
-                   dataMataUang.get(0)
+                   dataCurrency.get(0)
             );
 
             accountData.add(account);
@@ -98,14 +102,14 @@ public class DataManager {
         return dataAccountItem;
     }
 
-    public ObservableList<MataUang> getDataMataUang() {
-        return dataMataUang;
+    public ObservableList<Currency> getDataMataUang() {
+        return dataCurrency;
     }
 
-    public ArrayList<MataUang> getFilteredMataUang() {
-        Set<MataUang> filteredCurrency = new LinkedHashSet<>();
+    public ArrayList<Currency> getFilteredMataUang() {
+        Set<Currency> filteredCurrency = new LinkedHashSet<>();
         for(Transaction trans : dataTransaction) {
-            filteredCurrency.add(trans.getAkun().getCurrencyType());
+            filteredCurrency.add(trans.getAccount().getCurrencyType());
         }
 
         return new ArrayList<>(filteredCurrency);
@@ -127,8 +131,8 @@ public class DataManager {
             for (Transaction t : DataManager.getInstance().getDataTransaksi()) {
                 if (t.getId() == trans.getId()) {
                     t.setAmount(trans.getAmount());
-                    t.setAkun(trans.getAkun());
-                    t.setKategori(trans.getKategori());
+                    t.setAccount(trans.getAccount());
+                    t.setCategory(trans.getCategory());
                     t.setLabelType(trans.getLabelType());
                     t.setDate(trans.getDate());
                     t.setDescription(trans.getDescription());
@@ -155,8 +159,8 @@ public class DataManager {
                 for (Transaction t : DataManager.getInstance().getDataTransaksi()) {
                     if (t.getId() == trans.getId()) {
                         t.setAmount(trans.getAmount());
-                        t.setAkun(trans.getAkun());
-                        t.setKategori(trans.getKategori());
+                        t.setAccount(trans.getAccount());
+                        t.setCategory(trans.getCategory());
                         t.setLabelType(trans.getLabelType());
                         t.setDate(trans.getDate());
                         t.setDescription(trans.getDescription());
@@ -192,7 +196,7 @@ public class DataManager {
     public ArrayList<Transaction> getIncomeTransactionData() {
         ArrayList<Transaction> inList = new ArrayList<>();
         for(Transaction trans : dataTransaction) {
-            if(trans.getTipeTransaksi() == TransactionType.INCOME) {
+            if(trans.getTransactionType() == TransactionType.INCOME) {
                 inList.add(trans);
             }
         }
@@ -202,7 +206,7 @@ public class DataManager {
     public ArrayList<Transaction> getExpenseTransactionData() {
         ArrayList<Transaction> outList = new ArrayList<>();
         for(Transaction trans : dataTransaction) {
-            if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
+            if(trans.getTransactionType() == TransactionType.EXPANSE) {
                 outList.add(trans);
             }
         }
@@ -246,7 +250,7 @@ public class DataManager {
         }
     }
 
-    public Boolean updateSaldoAkun(Account account, int jumlah){
+    public Boolean updateSaldoAkun(Account account, BigDecimal jumlah){
         Boolean result = Database.getInstance().updateSaldoAkun(account, jumlah);
         if(result) {
             log.info("saldo account diperbarui!");
@@ -270,8 +274,8 @@ public class DataManager {
     public ArrayList<Category> getFilteredCategory() {
         Set<Category> filteredCategory = new LinkedHashSet<>();
         for(Transaction trans : dataTransaction) {
-            if(trans.getKategori() != null) {
-                filteredCategory.add(trans.getKategori());
+            if(trans.getCategory() != null) {
+                filteredCategory.add(trans.getCategory());
             }
         }
 
@@ -298,8 +302,8 @@ public class DataManager {
         if(newId > 0) {
             temp.setId(newId);
             dataTemplate.add(temp);
-            log.info("template {} berhasil ditambahkan!", temp.getNama());
-            MyPopup.showsucces("Template baru!", "Template " + temp.getNama() + " berhasil ditambahkan!");
+            log.info("template {} berhasil ditambahkan!", temp.getName());
+            MyPopup.showsucces("Template baru!", "Template " + temp.getName() + " berhasil ditambahkan!");
             return true;
         } else {
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");

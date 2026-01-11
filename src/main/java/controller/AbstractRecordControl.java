@@ -26,6 +26,10 @@ import javafx.stage.StageStyle;
 import model.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import model.Currency;
+import model.enums.PaymentStatus;
+import model.enums.PaymentType;
+import model.extended.RecordCard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.CurrencyApiClient;
@@ -82,7 +86,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
     private final ObservableSet<LabelType> selectedLabels =
             FXCollections.observableSet(new LinkedHashSet<>());
 
-    private final ObservableSet<MataUang> selectedCurrencies =
+    private final ObservableSet<Currency> selectedCurrencies =
             FXCollections.observableSet(new LinkedHashSet<>());
 
     private final ObservableSet<PaymentType> selectedPaymentTypes =
@@ -438,17 +442,17 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
         menuButtonCurrencie.getItems().clear();
         menuButtonCurrencie.setText("Currency");
         menuButtonCurrencie.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
-        List<MataUang> dataMataUang = DataManager.getInstance().getFilteredMataUang();
+        List<Currency> dataCurrency = DataManager.getInstance().getFilteredMataUang();
 
-        for (MataUang mataUang : dataMataUang) {
+        for (Currency currency : dataCurrency) {
             // Label teks mata uang
-            Label label = new Label(mataUang.getNama());
+            Label label = new Label(currency.getName());
             label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
             // Centang
             Label checkMark = new Label("✓");
             checkMark.setTextFill(Color.GREEN);
-            checkMark.setVisible(selectedCurrencies.contains(mataUang));
+            checkMark.setVisible(selectedCurrencies.contains(currency));
 
             // Spacer supaya full row clickable
             Region spacer = new Region();
@@ -467,9 +471,9 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
 
             // Klik seluruh area menuItem
             menuItem.setOnAction(e -> {
-                boolean selected = !selectedCurrencies.contains(mataUang);
-                if (selected) selectedCurrencies.add(mataUang);
-                else selectedCurrencies.remove(mataUang);
+                boolean selected = !selectedCurrencies.contains(currency);
+                if (selected) selectedCurrencies.add(currency);
+                else selectedCurrencies.remove(currency);
 
                 checkMark.setVisible(selected);
                 updateCurrencyMenuText();
@@ -486,7 +490,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
             return;
         }
         String text = selectedCurrencies.stream()
-                .map(MataUang::getNama)
+                .map(Currency::getName)
                 .collect(Collectors.joining(", "));
         menuButtonCurrencie.setText(text);
         menuButtonCurrencie.setStyle("-fx-text-fill: -fx-text-base-color;");
@@ -608,12 +612,12 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
     private Predicate<Transaction> accountFilter() {
         return t ->
                 selectedAccounts.isEmpty()
-                        || selectedAccounts.contains(t.getAkun());
+                        || selectedAccounts.contains(t.getAccount());
     }
     private Predicate<Transaction> categoryFilter() {
         return t ->
                 selectedCategories.isEmpty()
-                        || selectedCategories.contains(t.getKategori());
+                        || selectedCategories.contains(t.getCategory());
     }
     private Predicate<Transaction> labelFilter() {
         return t ->
@@ -623,7 +627,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
     private Predicate<Transaction> currencyFilter() {
         return t ->
                 selectedCurrencies.isEmpty()
-                        || selectedCurrencies.contains(t.getAkun().getCurrencyType());
+                        || selectedCurrencies.contains(t.getAccount().getCurrencyType());
     }
     private Predicate<Transaction> paymentTypeFilter() {
         return t ->
@@ -743,13 +747,13 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
                 if(isSelected) {
                     totalSelectedValue = totalSelectedValue.add(CurrencyApiClient.getInstance().convert(
                             BigDecimal.valueOf(rc.getTransaksi().getAmount()),
-                            rc.getTransaksi().getAkun().getCurrencyType().getKode(),
+                            rc.getTransaksi().getAccount().getCurrencyType().getCode(),
                             "IDR"
                     ));
                 } else{
                     totalSelectedValue = totalSelectedValue.subtract(CurrencyApiClient.getInstance().convert(
                             BigDecimal.valueOf(rc.getTransaksi().getAmount()),
-                            rc.getTransaksi().getAkun().getCurrencyType().getKode(),
+                            rc.getTransaksi().getAccount().getCurrencyType().getCode(),
                             "IDR"
                     ));
                 }

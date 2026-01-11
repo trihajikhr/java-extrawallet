@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URI;
@@ -13,7 +12,6 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 // TODO [IMPORTANT]:
 // CurrencyApiClient masih versi sync + manual load.
@@ -70,7 +68,7 @@ public class CurrencyApiClient {
     }
 
 
-    public String getExchangeRate(String from, String to) throws Exception {
+    public String getExchangeRate(String from, String to) {
         String url = "https://api.frankfurter.app/latest?from=" + from + "&to=" + to;
         HttpClient client = HttpClient.newHttpClient();
         HttpRequest request = HttpRequest.newBuilder()
@@ -83,11 +81,11 @@ public class CurrencyApiClient {
             if(response.statusCode() == 200) {
                 return response.body();
             } else {
-                log.error("Gagal fetch kurs, HTTP code: " + response.statusCode());
+                log.error("Gagal fetch kurs, HTTP code: {}", response.statusCode());
                 return null;
             }
         } catch (Exception e) {
-            log.warn("User sedang offline! tidak bisa fetch kurs " + from + " -> " + to);
+            log.warn("User sedang offline! tidak bisa fetch kurs {} -> {}", from, to);
             return null;
         }
     }
@@ -128,7 +126,7 @@ public class CurrencyApiClient {
             Files.writeString(path, new Gson().toJson(root));
 
             log.info("User sedang Online! Data dari CurrencyApiClient berhasil difetch");
-            log.info("File JSON berhasil disimpan di: " + path.toAbsolutePath());
+            log.info("File JSON berhasil disimpan di: {}", path.toAbsolutePath());
 
         } catch (Exception e) {
             log.error("Gagal fetch & save kurs", e);

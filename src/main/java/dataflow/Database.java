@@ -1,6 +1,7 @@
 package dataflow;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.sql.*;
 import java.time.LocalDate;
@@ -10,6 +11,9 @@ import java.util.Objects;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import model.*;
+import model.enums.PaymentStatus;
+import model.enums.PaymentType;
+import model.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import helper.Converter;
@@ -321,7 +325,7 @@ public class Database {
             while(rs.next()) {
                 int id = rs.getInt("id");
                 TransactionType tipe = TransactionType.valueOf(rs.getString("tipe"));
-                int jumlah = rs.getInt("jumlah");
+                BigDecimal jumlah = rs.getBigDecimal("jumlah");
                 int idAkun = rs.getInt("id_akun");
                 int idKategori = rs.getInt("id_kategori");
                 int idTipeLabel = rs.getInt("id_tipelabel");
@@ -366,11 +370,7 @@ public class Database {
                     }
                 }
 
-                if(tipe == TransactionType.INCOME){
-                    data.add(new Pemasukan(id, tipe, jumlah, account, category, tipelabel, tanggal, keterangan, paymentType, status));
-                } else if(tipe == TransactionType.EXPANSE) {
-                    data.add(new Pengeluaran(id, tipe, jumlah, account, category, tipelabel, tanggal, keterangan, paymentType, status));
-                }
+                data.add(new Transaction(id, tipe, jumlah, account, category, tipelabel, tanggal, keterangan, paymentType, status));
             }
 
             log.info("data transaction berhasil di fetch!");
@@ -389,10 +389,10 @@ public class Database {
         try {
             koneksi.setAutoCommit(false); // mulai
             try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, trans.getTipeTransaksi().name());
+                ps.setString(1, trans.getTransactionType().name());
                 ps.setInt(2, trans.getAmount());
-                ps.setInt(3, trans.getAkun().getId());
-                ps.setInt(4, trans.getKategori().getId());
+                ps.setInt(3, trans.getAccount().getId());
+                ps.setInt(4, trans.getCategory().getId());
 
                 if (trans.getLabelType() != null) {
                     ps.setInt(5, trans.getLabelType().getId());
@@ -488,8 +488,8 @@ public class Database {
             koneksi.setAutoCommit(false);
             try (PreparedStatement ps = koneksi.prepareStatement(querySql)) {
                 ps.setInt(1, trans.getAmount());
-                ps.setInt(2, trans.getAkun().getId());
-                ps.setInt(3, trans.getKategori().getId());
+                ps.setInt(2, trans.getAccount().getId());
+                ps.setInt(3, trans.getCategory().getId());
 
                 if(trans.getLabelType() != null) {
                     ps.setInt(4, trans.getLabelType().getId());
@@ -611,14 +611,14 @@ public class Database {
                 int jumlah = rs.getInt("jumlah");
                 int idMataUang = rs.getInt("id_mata_uang");
 
-                MataUang mataUang = null;
-                for(MataUang item : DataManager.getInstance().getDataMataUang()){
+                Currency currency = null;
+                for(Currency item : DataManager.getInstance().getDataMataUang()){
                     if(item.getId() == idMataUang) {
-                        mataUang = item;
+                        currency = item;
                         break;
                     }
                 }
-                if (mataUang == null ) {
+                if (currency == null ) {
                     log.warn("fetch account: id_mata_uang={} tidak ditemukan!", idMataUang);
                     continue; // skip
                 }
@@ -630,7 +630,7 @@ public class Database {
                         new Image(Objects.requireNonNull(getClass().getResource(iconPath)).toString()),
                         iconPath,
                         jumlah,
-                        mataUang)
+                        currency)
                 );
             }
             log.info("data account berhasil di fetch!");
@@ -641,7 +641,7 @@ public class Database {
             return null;
         }
     }
-    public Boolean updateSaldoAkun(Account account, int jumlah) {
+    public Boolean updateSaldoAkun(Account account, BigDecimal jumlah) {
         String querySql = """
             UPDATE account SET
             jumlah = ?
@@ -651,7 +651,7 @@ public class Database {
         try {
             koneksi.setAutoCommit(false);
             try (PreparedStatement ps = koneksi.prepareStatement(querySql)) {
-                ps.setInt(1, jumlah);
+                ps.setBigDecimal(1, jumlah);
                 ps.setInt(2, account.getId());
 
                 int affected = ps.executeUpdate();
@@ -765,20 +765,20 @@ public class Database {
             koneksi.setAutoCommit(false);
 
             try (PreparedStatement ps = koneksi.prepareStatement(quertSql, Statement.RETURN_GENERATED_KEYS)) {
-                ps.setString(1, temp.getTipeTransaksi().name());
-                ps.setString(2, temp.getNama());
-                ps.setInt(3, temp.getJumlah());
-                ps.setInt(4, temp.getAkun().getId());
-                ps.setInt(5, temp.getKategori().getId());
+                ps.setString(1, temp.getTransactionType().name());
+                ps.setString(2, temp.getName());
+                ps.setInt(3, temp.getAmount());
+                ps.setInt(4, temp.getAccount().getId());
+                ps.setInt(5, temp.getCategory().getId());
 
-                if (temp.getTipeLabel() != null) {
-                    ps.setInt(6, temp.getTipeLabel().getId());
+                if (temp.getLabelType() != null) {
+                    ps.setInt(6, temp.getLabelType().getId());
                 } else {
                     ps.setNull(6, Types.INTEGER);
                 }
 
-                if (temp.getKeterangan() != null) {
-                    ps.setString(7, temp.getKeterangan());
+                if (temp.getDescription() != null) {
+                    ps.setString(7, temp.getDescription());
                 } else {
                     ps.setNull(7, Types.VARCHAR);
                 }

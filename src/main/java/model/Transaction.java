@@ -1,5 +1,9 @@
 package model;
 
+import model.enums.PaymentStatus;
+import model.enums.PaymentType;
+import model.enums.TransactionType;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -7,7 +11,7 @@ import java.util.Objects;
 public class Transaction {
     private int id;
     private TransactionType transactionType;
-    private int amount;
+    private BigDecimal amount;
     private Account account;
     private Category category;
     private LabelType labelType;
@@ -16,8 +20,8 @@ public class Transaction {
     private PaymentType paymentType;
     private PaymentStatus paymentStatus;
 
-    // full spec contructor
-    public Transaction(int id, TransactionType transactionType, int amount, Account account, Category category, LabelType labelType, LocalDate date, String description, PaymentType paymentType, PaymentStatus paymentStatus) {
+    // full field constructor
+    public Transaction(int id, TransactionType transactionType, BigDecimal amount, Account account, Category category, LabelType labelType, LocalDate date, String description, PaymentType paymentType, PaymentStatus paymentStatus) {
         this.id = id;
         this.transactionType = transactionType;
         this.amount = amount;
@@ -30,8 +34,8 @@ public class Transaction {
         this.paymentStatus = paymentStatus;
     }
 
-    // mid spec constructor
-    public Transaction(int id, TransactionType transactionType, int amount, Category category, LocalDate date) {
+    // mid field constructor
+    public Transaction(int id, TransactionType transactionType, BigDecimal amount, Category category, LocalDate date) {
         this.id = id;
         this.transactionType = transactionType;
         this.amount = amount;
@@ -42,19 +46,10 @@ public class Transaction {
     // Default constructor for manual field assignment
     public Transaction() {}
 
-    public boolean isIncome() {
-        return transactionType == TransactionType.INCOME;
-    }
-
-//    public BigDecimal getSignedAmount() {
-//        return isIncome() ? amount : amount.negate();
-//    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Transaction)) return false;
-        Transaction that = (Transaction) o;
+        if (!(o instanceof Transaction that)) return false;
         return id == that.id;
     }
 
@@ -66,7 +61,7 @@ public class Transaction {
     public boolean isSameState(Transaction t) {
         if (t == null) return false;
 
-        return amount == t.amount &&
+        return Objects.equals(amount, t.amount) &&
                 transactionType == t.transactionType &&
                 Objects.equals(account, t.account) &&
                 Objects.equals(category, t.category) &&
@@ -78,15 +73,15 @@ public class Transaction {
     }
 
     public void showData() {
-        System.out.println("ID            : " + this.id);
+        System.out.println("ID              : " + this.id);
         System.out.println("TransactionType : " + this.transactionType.getLabel());
-        System.out.println("Jumlah        : " + this.amount);
-        System.out.println("Account          : " + this.account.getName());
-        System.out.println("Category      : " + this.category.getName());
-        System.out.println("LabelType     : " + (this.labelType != null ? this.labelType.getName() : ""));
-        System.out.println("Keterangan    : " + (this.description != null ? this.description : ""));
-        System.out.println("PaymentType   : " + (this.paymentType != null ? this.paymentType.getLabel() : ""));
-        System.out.println("PaymentStatus : " + (this.paymentStatus != null ? this.paymentStatus.getLabel() : ""));
+        System.out.println("Jumlah          : " + this.amount);
+        System.out.println("Account         : " + this.account.getName());
+        System.out.println("Category        : " + this.category.getName());
+        System.out.println("LabelType       : " + (this.labelType != null ? this.labelType.getName() : ""));
+        System.out.println("Keterangan      : " + (this.description != null ? this.description : ""));
+        System.out.println("PaymentType     : " + (this.paymentType != null ? this.paymentType.getLabel() : ""));
+        System.out.println("PaymentStatus   : " + (this.paymentStatus != null ? this.paymentStatus.getLabel() : ""));
     }
 
     public int getId() {
@@ -97,35 +92,35 @@ public class Transaction {
         this.id = id;
     }
 
-    public TransactionType getTipeTransaksi() {
+    public TransactionType getTransactionType() {
         return transactionType;
     }
 
-    public void setTipeTransaksi(TransactionType transactionType) {
+    public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
     }
 
-    public int getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(int amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public Account getAkun() {
+    public Account getAccount() {
         return account;
     }
 
-    public void setAkun(Account account) {
+    public void setAccount(Account account) {
         this.account = account;
     }
 
-    public Category getKategori() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setKategori(Category category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

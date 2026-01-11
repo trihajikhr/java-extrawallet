@@ -1,6 +1,6 @@
 package controller.option;
 
-import model.RecordCard;
+import model.extended.RecordCard;
 import model.Transaction;
 
 import java.util.Map;

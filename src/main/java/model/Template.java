@@ -1,41 +1,44 @@
 package model;
 
+import model.enums.*;
+import java.math.BigDecimal;
+
 public class Template {
     private int id;
     private TransactionType transactionType;
-    private String nama;
-    private int jumlah;
+    private String name;
+    private BigDecimal amount;
     private Account account;
     private Category category;
     private LabelType labelType;
-    private String keterangan;
+    private String description;
     private PaymentType paymentType;
     private PaymentStatus paymentStatus;
 
-    // constructor full atribut
-    public Template(int id, TransactionType transactionType, String nama, int jumlah, Account account, Category category, LabelType labelType, String keterangan, PaymentType paymentType, PaymentStatus paymentStatus) {
+    // full field constructor
+    public Template(int id, TransactionType transactionType, String name, BigDecimal amount, Account account, Category category, LabelType labelType, String description, PaymentType paymentType, PaymentStatus paymentStatus) {
         this.id = id;
         this.transactionType = transactionType;
-        this.nama = nama;
-        this.jumlah = jumlah;
+        this.name = name;
+        this.amount = amount;
         this.account = account;
         this.category = category;
         this.labelType = labelType;
-        this.keterangan = keterangan;
+        this.description = description;
         this.paymentType = paymentType;
         this.paymentStatus = paymentStatus;
     }
 
-    // constructor atribut wajib
-    public Template(int id, String nama, Account account, TransactionType transactionType, int jumlah) {
+    // mid field constructor
+    public Template(int id, String name, Account account, TransactionType transactionType, BigDecimal amount) {
         this.id = id;
-        this.nama = nama;
+        this.name = name;
         this.account = account;
         this.transactionType = transactionType;
-        this.jumlah = jumlah;
+        this.amount = amount;
     }
 
-    // constructor custom
+    // Default constructor for manual field assignment
     public Template() {}
 
     public int getId() {
@@ -46,60 +49,60 @@ public class Template {
         this.id = id;
     }
 
-    public TransactionType getTipeTransaksi() {
+    public TransactionType getTransactionType() {
         return transactionType;
     }
 
-    public void setTipeTransaksi(TransactionType transactionType) {
+    public void setTransactionType(TransactionType transactionType) {
         this.transactionType = transactionType;
     }
 
-    public String getNama() {
-        return nama;
+    public String getName() {
+        return name;
     }
 
-    public void setNama(String nama) {
-        this.nama = nama;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public int getJumlah() {
-        return jumlah;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setJumlah(int jumlah) {
-        this.jumlah = jumlah;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
-    public Account getAkun() {
+    public Account getAccount() {
         return account;
     }
 
-    public void setAkun(Account account) {
+    public void setAccount(Account account) {
         this.account = account;
     }
 
-    public Category getKategori() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setKategori(Category category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 
-    public LabelType getTipeLabel() {
+    public LabelType getLabelType() {
         return labelType;
     }
 
-    public void setTipeLabel(LabelType labelType) {
+    public void setLabelType(LabelType labelType) {
         this.labelType = labelType;
     }
 
-    public String getKeterangan() {
-        return keterangan;
+    public String getDescription() {
+        return description;
     }
 
-    public void setKeterangan(String keterangan) {
-        this.keterangan = keterangan;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public PaymentType getPaymentType() {

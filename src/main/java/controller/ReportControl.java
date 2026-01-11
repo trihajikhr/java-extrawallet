@@ -8,6 +8,9 @@ import javafx.scene.Node;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.*;
+import model.enums.PaymentStatus;
+import model.enums.PaymentType;
+import model.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,10 +76,10 @@ public class ReportControl implements Initializable {
             for (Transaction t : list) {
                 writer.write(String.join(",",
                         String.valueOf(t.getId()),
-                        t.getTipeTransaksi() != null ? t.getTipeTransaksi().name() : "",
+                        t.getTransactionType() != null ? t.getTransactionType().name() : "",
                         String.valueOf(t.getAmount()),
-                        t.getAkun() != null ? t.getAkun().getName() : "",
-                        t.getKategori() != null ? t.getKategori().getName() : "",
+                        t.getAccount() != null ? t.getAccount().getName() : "",
+                        t.getCategory() != null ? t.getCategory().getName() : "",
                         t.getLabelType() != null ? t.getLabelType().getName() : "",
                         t.getDate() != null ? t.getDate().format(DATE_FORMAT) : "",
                         escapeCSV(t.getDescription()),
@@ -176,11 +179,11 @@ public class ReportControl implements Initializable {
         // Kalau ID auto increment → jangan set
         // t.setId(Integer.parseInt(d[0]));
 
-        t.setTipeTransaksi(TransactionType.valueOf(d[1].trim().toUpperCase()));
+        t.setTransactionType(TransactionType.valueOf(d[1].trim().toUpperCase()));
         t.setAmount(Integer.parseInt(d[2]));
 
-        t.setAkun(findAkun(d[3]));
-        t.setKategori(findKategori(d[4]));
+        t.setAccount(findAkun(d[3]));
+        t.setCategory(findKategori(d[4]));
         t.setLabelType(findLabel(d[5]));
 
         t.setDate(LocalDate.parse(d[6], DATE_FORMAT));

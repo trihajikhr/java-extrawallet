@@ -2,6 +2,7 @@ package model;
 
 import javafx.scene.paint.Color;
 import javafx.scene.image.Image;
+import java.math.BigDecimal;
 
 public class Account {
     private int id;
@@ -9,10 +10,11 @@ public class Account {
     private Color color;
     private Image icon;
     private String iconPath;
-    private int balance;
-    private MataUang currencyType;
+    private BigDecimal balance;
+    private Currency currencyType;
 
-    public Account(int id, String name, Color color, Image image, String iconPath, int balance, MataUang currencyType) {
+    // full field constructor
+    public Account(int id, String name, Color color, Image image, String iconPath, BigDecimal balance, Currency currencyType) {
         this.id = id;
         this.name = name;
         this.color = color;
@@ -22,6 +24,7 @@ public class Account {
         this.currencyType = currencyType;
     }
 
+    // Default constructor for manual field assignment
     public Account() {}
 
     public int getId() {
@@ -64,19 +67,19 @@ public class Account {
         this.iconPath = iconPath;
     }
 
-    public int getBalance() {
+    public BigDecimal getBalance() {
         return balance;
     }
 
-    public void setBalance(int balance) {
+    public void setBalance(BigDecimal balance) {
         this.balance = balance;
     }
 
-    public MataUang getCurrencyType() {
+    public Currency getCurrencyType() {
         return currencyType;
     }
 
-    public void setCurrencyType(MataUang currencyType) {
+    public void setCurrencyType(Currency currencyType) {
         this.currencyType = currencyType;
     }
 }

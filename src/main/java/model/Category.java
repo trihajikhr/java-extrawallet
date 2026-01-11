@@ -11,6 +11,7 @@ public class Category {
     private String iconPath;
     private Color color;
 
+    // full field constructor
     public Category(int id, String type, String name, Image icon, String iconPath, Color color) {
         this.id = id;
         this.type = type;
@@ -19,6 +20,9 @@ public class Category {
         this.iconPath = iconPath;
         this.color = color;
     }
+
+    // Default constructor for manual field assignment
+    public Category(){}
 
     public int getId() {
         return id;

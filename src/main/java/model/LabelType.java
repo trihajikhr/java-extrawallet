@@ -7,12 +7,14 @@ public class LabelType {
     private String name;
     private Color color;
 
+    // full field constructor
     public LabelType(int id, String name, Color color) {
         this.id = id;
         this.name = name;
         this.color = color;
     }
 
+    // Default constructor for manual field assignment
     public LabelType() {}
 
     public int getId() {

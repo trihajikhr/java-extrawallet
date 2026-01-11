@@ -1,12 +1,16 @@
-package model;
+package model.enums;
 
-public enum TransactionType {
-    INCOME("In"),
-    EXPANSE("Out");
+public enum PaymentType {
+    CASH("Cash"),
+    DEBIT_CARD("Debit card"),
+    CREDIT_CARD("Credit card"),
+    TRANSFER("Transfer"),
+    VOUCHER("Voucher"),
+    MOBILE_PAYMENT("Mobile payment");
 
     private final String label;
 
-    TransactionType(String label) {
+    PaymentType(String label) {
         this.label = label;
     }
 
@@ -14,10 +18,10 @@ public enum TransactionType {
         return label;
     }
 
-    public static TransactionType fromString(String input) {
+    public static PaymentType fromString(String input) {
         if (input == null) return null;
         String val = input.trim();
-        for (TransactionType type : values()) {
+        for (PaymentType type : values()) {
             if (type.name().equalsIgnoreCase(val) || type.label.equalsIgnoreCase(val)) {
                 return type;
             }

@@ -3,14 +3,14 @@ package dataflow;
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
 import model.Category;
-import model.MataUang;
+import model.Currency;
 import helper.Converter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import model.PaymentStatus;
-import model.PaymentType;
+import model.enums.PaymentStatus;
+import model.enums.PaymentType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.sql.PreparedStatement;
@@ -357,9 +357,9 @@ public final class DataSeeder {
     }
     public static void seedCurrency() {
         DataManager.getInstance().getDataMataUang().setAll(
-                new MataUang(1, "IDR", "Rupiah", "Rp", 0),
-                new MataUang(2, "USD", "US Dollar", "$", 2),
-                new MataUang(3, "EUR", "Euro", "€", 2)
+                new Currency(1, "IDR", "Rupiah", "Rp", 0),
+                new Currency(2, "USD", "US Dollar", "$", 2),
+                new Currency(3, "EUR", "Euro", "€", 2)
         );
         log.info("data currency lokal berhasil dibuat!");
     }
@@ -433,12 +433,12 @@ public final class DataSeeder {
         String querySql = "INSERT OR IGNORE INTO mata_uang(id, kode, nama, simbol, desimal) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
-            for(MataUang mk : DataManager.getInstance().getDataMataUang()) {
+            for(Currency mk : DataManager.getInstance().getDataMataUang()) {
                 stat.setInt(1, mk.getId());
-                stat.setString(2, mk.getKode());
-                stat.setString(3, mk.getNama());
-                stat.setString(4, mk.getSimbol());
-                stat.setInt(5, mk.getDesimal());
+                stat.setString(2, mk.getCode());
+                stat.setString(3, mk.getName());
+                stat.setString(4, mk.getSymbol());
+                stat.setInt(5, mk.getDecimal());
 
                 stat.executeUpdate();
             }

@@ -14,7 +14,7 @@ import javafx.scene.shape.Circle;
 import model.Account;
 import model.Category;
 import model.LabelType;
-import model.MataUang;
+import model.Currency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,15 +167,15 @@ public final class DataLoader {
         });
         dataAkunComboBox.setButtonCell(dataAkunComboBox.getCellFactory().call(null));
     }
-    public static void mataUangComboBoxLoader(ComboBox<MataUang> dataMataUangComboBox) {
+    public static void mataUangComboBoxLoader(ComboBox<Currency> dataMataUangComboBox) {
         dataMataUangComboBox.setItems(DataManager.getInstance().getDataMataUang());
         dataMataUangComboBox.setCellFactory(cb -> new ListCell<>() {
             @Override
-            protected void updateItem(MataUang c, boolean empty) {
+            protected void updateItem(Currency c, boolean empty) {
                 super.updateItem(c, empty);
                 setText(empty || c == null
                         ? null
-                        : c.getKode());
+                        : c.getCode());
             }
         });
         dataMataUangComboBox.setButtonCell(dataMataUangComboBox.getCellFactory().call(null));

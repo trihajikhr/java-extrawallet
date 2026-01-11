@@ -12,6 +12,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import model.*;
+import model.enums.TransactionType;
+import model.extended.BlokKategori;
+import model.extended.RecordCard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import service.CurrencyApiClient;
@@ -68,7 +71,7 @@ public class HomeControl implements Initializable {
     // [1] >=== LABEL SET
     private BigDecimal normalizeAmount(Transaction trans) {
         BigDecimal amount = BigDecimal.valueOf(trans.getAmount());
-        String currency = trans.getAkun().getCurrencyType().getKode();
+        String currency = trans.getAccount().getCurrencyType().getCode();
         if (currency.equalsIgnoreCase(BASE_CURRENCY)) {
             return amount;
         }
@@ -95,17 +98,17 @@ public class HomeControl implements Initializable {
                 .toList();
 
         for(Transaction trans : previousDays) {
-            if(trans.getTipeTransaksi() == TransactionType.INCOME) {
+            if(trans.getTransactionType() == TransactionType.INCOME) {
                 lastIncome60 = lastIncome60.add(normalizeAmount(trans));
-            } else if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
+            } else if(trans.getTransactionType() == TransactionType.EXPANSE) {
                 lastExpense60 = lastExpense60.add(normalizeAmount(trans));
             }
         }
 
         for(Transaction trans : last30Days) {
-            if(trans.getTipeTransaksi() == TransactionType.INCOME) {
+            if(trans.getTransactionType() == TransactionType.INCOME) {
                 lastTotalIncome = lastTotalIncome.add(normalizeAmount(trans));
-            } else if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
+            } else if(trans.getTransactionType() == TransactionType.EXPANSE) {
                 lastTotalExpense = lastTotalExpense.add(normalizeAmount(trans));
             }
         }
@@ -125,9 +128,9 @@ public class HomeControl implements Initializable {
         BigDecimal totalBalanceBefore = BigDecimal.ZERO;
 
         for(Transaction trans : dataTransaction) {
-            if(trans.getTipeTransaksi() == TransactionType.INCOME) {
+            if(trans.getTransactionType() == TransactionType.INCOME) {
                 allIncome = allIncome.add(normalizeAmount(trans));
-            } else if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
+            } else if(trans.getTransactionType() == TransactionType.EXPANSE) {
                 allExpense = allExpense.add(normalizeAmount(trans));
             }
         }
@@ -216,7 +219,7 @@ public class HomeControl implements Initializable {
             if (!date.isBefore(startDate) && !date.isAfter(today)) {
                 BigDecimal amount = normalizeAmount(t);
 
-                if (t.getTipeTransaksi() == TransactionType.INCOME) {
+                if (t.getTransactionType() == TransactionType.INCOME) {
                     incomePerDay.put(
                             date,
                             incomePerDay.get(date).add(amount)
@@ -279,8 +282,8 @@ public class HomeControl implements Initializable {
 
         for(Transaction trans : dataTransaction) {
             if(!trans.getDate().isBefore(startDate) && !trans.getDate().isAfter(today)) {
-                int temp = kategoriUsed.get(trans.getKategori()) + 1;
-                kategoriUsed.put(trans.getKategori(), temp);
+                int temp = kategoriUsed.get(trans.getCategory()) + 1;
+                kategoriUsed.put(trans.getCategory(), temp);
             }
         }
 
@@ -302,7 +305,7 @@ public class HomeControl implements Initializable {
             BigDecimal sum = BigDecimal.ZERO;
 
             for(Transaction trans : dataTransaction) {
-                if(trans.getKategori().equals(topKategori.get(i).getKey())) {
+                if(trans.getCategory().equals(topKategori.get(i).getKey())) {
                     sum = sum.add(normalizeAmount(trans));
                 }
             }

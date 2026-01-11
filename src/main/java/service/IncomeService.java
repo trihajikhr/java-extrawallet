@@ -1,6 +1,6 @@
 package service;
 
-import model.TransactionType;
+import model.enums.TransactionType;
 import model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,12 +25,12 @@ public class IncomeService extends AbstractTransactionService {
 
     @Override
     protected boolean isTargetType(Transaction t) {
-        return t.getTipeTransaksi() == TransactionType.INCOME;
+        return t.getTransactionType() == TransactionType.INCOME;
     }
 
     @Override
-    protected int calculateSaldoDelta(int oldJumlah, int newJumlah) {
-        return newJumlah - oldJumlah;
+    protected BigDecimal calculateSaldoDelta(BigDecimal oldAmount, BigDecimal newAmount) {
+        return newAmount.subtract(oldAmount);
     }
 
     public BigDecimal incomeSumAfterFilter(List<Transaction> data) {

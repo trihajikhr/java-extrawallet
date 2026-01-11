@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
-import model.TransactionType;
+import model.enums.TransactionType;
 import model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +42,7 @@ public class StatisticControl {
             if (t.getDate().getYear() != currentYear) continue;
 
             int month = t.getDate().getMonthValue();
-            int delta = t.getTipeTransaksi() == TransactionType.INCOME ? t.getAmount() : -t.getAmount();
+            int delta = t.getTransactionType() == TransactionType.INCOME ? t.getAmount() : -t.getAmount();
             monthlyDelta.put(month, monthlyDelta.get(month) + delta);
         }
 

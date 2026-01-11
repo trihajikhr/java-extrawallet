@@ -51,7 +51,7 @@ public interface TransactionService {
     Boolean updateSingleAkun(
             Account account,
             Transaction oldTrans,
-            int newJumlah
+            BigDecimal newAmount
     );
 
     Boolean updateMultipleAkun(

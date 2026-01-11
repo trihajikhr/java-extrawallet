@@ -28,6 +28,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.StageStyle;
 import model.*;
+import model.enums.PaymentStatus;
+import model.enums.PaymentType;
+import model.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.io.IOException;
@@ -97,7 +100,7 @@ public class TransactionControl implements Initializable {
     @FXML private Image[][] theImage;
 
     // combobox mata uang
-    @FXML private ComboBox<MataUang> mataUangCombo_inout, mataUangCombo_from, mataUangCombo_to;
+    @FXML private ComboBox<Currency> mataUangCombo_inout, mataUangCombo_from, mataUangCombo_to;
 
     // spinner
     @FXML Spinner<Integer> spinner_inout, spinner_from, spinner_to;
@@ -215,7 +218,7 @@ public class TransactionControl implements Initializable {
             @Override
             protected void updateItem(Template temp, boolean empty) {
                 super.updateItem(temp, empty);
-                setText(empty || temp == null ? null : temp.getNama());
+                setText(empty || temp == null ? null : temp.getName());
             }
         });
         templateComboBox_inout.setButtonCell(
@@ -227,7 +230,7 @@ public class TransactionControl implements Initializable {
             @Override
             protected void updateItem(Template temp, boolean empty) {
                 super.updateItem(temp, empty);
-                setText(empty || temp == null ? null : temp.getNama());
+                setText(empty || temp == null ? null : temp.getName());
             }
         });
         templateComboBox_trans.setButtonCell(
@@ -887,19 +890,19 @@ public class TransactionControl implements Initializable {
         });
     }
     private void templateInOutDrafter(Template temp) {
-        if(temp.getTipeTransaksi() == TransactionType.INCOME) {
+        if(temp.getTransactionType() == TransactionType.INCOME) {
             activateIncome();
-        } else if (temp.getTipeTransaksi() == TransactionType.EXPANSE) {
+        } else if (temp.getTransactionType() == TransactionType.EXPANSE) {
             activateExpense();
         }
 
-        spinner_inout.getValueFactory().setValue(temp.getJumlah());
-        akunComboBox_inout.setValue(temp.getAkun());
+        spinner_inout.getValueFactory().setValue(temp.getAmount());
+        akunComboBox_inout.setValue(temp.getAccount());
 
-        categoryComboBox.setValue(temp.getKategori());
+        categoryComboBox.setValue(temp.getCategory());
 
-        tipeLabel_inout.setValue(temp.getTipeLabel());
-        note_inout.setText(temp.getKeterangan());
+        tipeLabel_inout.setValue(temp.getLabelType());
+        note_inout.setText(temp.getDescription());
         paymentType_inout.setValue(temp.getPaymentType());
         paymentStatus_inout.setValue(temp.getPaymentStatus());
     }

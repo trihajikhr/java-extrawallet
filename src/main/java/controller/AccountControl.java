@@ -6,7 +6,7 @@ import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
 import helper.MyPopup;
 import model.Account;
-import model.MataUang;
+import model.Currency;
 import helper.IOLogic;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
@@ -37,7 +37,7 @@ public class AccountControl implements Initializable {
 
     @FXML private ComboBox<AccountItem> accountComboBox;
     @FXML private ComboBox<ColorItem> colorComboBox;
-    @FXML private ComboBox<MataUang> currencyComboBox;
+    @FXML private ComboBox<Currency> currencyComboBox;
 
     @FXML private TextField accountName;
 
@@ -144,11 +144,11 @@ public class AccountControl implements Initializable {
 
         currencyComboBox.setCellFactory(cb -> new ListCell<>() {
             @Override
-            protected void updateItem(MataUang c, boolean empty) {
+            protected void updateItem(Currency c, boolean empty) {
                 super.updateItem(c, empty);
                 setText(empty || c == null
                         ? null
-                        : c.getKode());
+                        : c.getCode());
             }
         });
         currencyComboBox.setButtonCell(currencyComboBox.getCellFactory().call(null));
@@ -193,7 +193,7 @@ public class AccountControl implements Initializable {
         ColorItem warna = colorComboBox.getValue();
         AccountItem accountItem = accountComboBox.getValue();
         int jumlah = amountSpinner.getValue();
-        MataUang currencyItem = currencyComboBox.getValue();
+        Currency currencyItem = currencyComboBox.getValue();
 
         Account accountBaru = new Account(
                 0,

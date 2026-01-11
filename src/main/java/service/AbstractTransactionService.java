@@ -3,13 +3,17 @@ package service;
 import dataflow.DataManager;
 import helper.MyPopup;
 import model.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
 public abstract class AbstractTransactionService implements TransactionService {
+
+    private static final Logger log = LoggerFactory.getLogger(AbstractTransactionService.class);
     protected static final String BASE_CURRENCY = "IDR";
+
     protected AbstractTransactionService(){}
 
     @Override
@@ -24,8 +28,8 @@ public abstract class AbstractTransactionService implements TransactionService {
     }
 
     protected BigDecimal normalizeAmount(Transaction trans) {
-        BigDecimal amount = BigDecimal.valueOf(trans.getAmount());
-        String currency = trans.getAkun().getCurrencyType().getKode();
+        BigDecimal amount = trans.getAmount();
+        String currency = trans.getAccount().getCurrencyType().getCode();
 
         if (currency.equalsIgnoreCase(BASE_CURRENCY)) {
             return amount;
@@ -49,7 +53,7 @@ public abstract class AbstractTransactionService implements TransactionService {
     public BigDecimal sumByCategory(List<Transaction> dataTransaction, Category category, LocalDate startDate, LocalDate endDate) {
         BigDecimal sum = BigDecimal.ZERO;
         for(Transaction trans : filterByDate(dataTransaction, startDate, endDate)){
-            if(trans.getKategori().equals(category)) {
+            if(trans.getCategory().equals(category)) {
                 sum = sum.add(normalizeAmount(trans));
             }
         }
@@ -60,7 +64,7 @@ public abstract class AbstractTransactionService implements TransactionService {
     public BigDecimal sumByAccount(List<Transaction> dataTransaction, Account account, LocalDate startDate, LocalDate endDate) {
         BigDecimal sum = BigDecimal.ZERO;
         for(Transaction trans : filterByDate(dataTransaction, startDate,endDate)) {
-            if(trans.getAkun().equals(account)) {
+            if(trans.getAccount().equals(account)) {
                 sum = sum.add(normalizeAmount(trans));
             }
         }
@@ -88,17 +92,17 @@ public abstract class AbstractTransactionService implements TransactionService {
     }
 
     @Override
-    public Boolean updateSingleAkun(Account account, Transaction oldTrans, int newJumlah) {
-        int oldJumlah = oldTrans.getAmount();
+    public Boolean updateSingleAkun(Account account, Transaction oldTrans, BigDecimal newAmount) {
+        BigDecimal oldAmount = oldTrans.getAmount();
 
-        int delta = calculateSaldoDelta(oldJumlah, newJumlah);
+        BigDecimal delta = calculateSaldoDelta(oldAmount, newAmount);
 
-        if (delta < 0 && Math.abs(delta) > account.getBalance()) {
+        if (delta.compareTo(BigDecimal.ZERO) < 0 && delta.abs().compareTo(account.getBalance()) > 0) {
             MyPopup.showDanger("Saldo kurang!", "Saldo anda: " + account.getBalance());
             return false;
         }
 
-        int newSaldo = account.getBalance() + delta;
+        BigDecimal newSaldo = account.getBalance().add(delta);
         account.setBalance(newSaldo);
 
         return DataManager.getInstance().updateSaldoAkun(account, newSaldo);
@@ -108,12 +112,12 @@ public abstract class AbstractTransactionService implements TransactionService {
     public Boolean updateMultipleAkun(List<Transaction> selected) {
 
         for (Transaction trans : selected) {
-            Account account = trans.getAkun();
-            int jumlah = trans.getAmount();
+            Account account = trans.getAccount();
+            BigDecimal jumlah = trans.getAmount();
 
-            int delta = calculateSaldoDelta(0, jumlah);
+            BigDecimal delta = calculateSaldoDelta(0, jumlah);
 
-            if (delta < 0 && Math.abs(delta) > account.getBalance()) {
+            if (delta.compareTo(BigDecimal.ZERO) < 0 && delta.abs().compareTo(account.getBalance()) > 0) {
                 MyPopup.showDanger(
                         "Saldo kurang!",
                         "Account " + account.getName() + " saldo: " + account.getBalance()
@@ -121,7 +125,7 @@ public abstract class AbstractTransactionService implements TransactionService {
                 return false;
             }
 
-            int newSaldo = account.getBalance() + delta;
+            BigDecimal newSaldo = account.getBalance().add(delta);
 
             boolean result = DataManager.getInstance().updateSaldoAkun(account, newSaldo);
             if (!result) {
@@ -138,7 +142,7 @@ public abstract class AbstractTransactionService implements TransactionService {
         return true;
     }
 
-    protected abstract int calculateSaldoDelta(int oldJumlah, int newJumlah);
+    protected abstract BigDecimal calculateSaldoDelta(BigDecimal oldAmount, BigDecimal newAmount);
 
     protected abstract boolean isTargetType(Transaction t);
 }

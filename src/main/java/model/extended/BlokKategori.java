@@ -1,4 +1,6 @@
-package model;
+package model.extended;
+
+import model.Category;
 
 import java.math.BigDecimal;
 
