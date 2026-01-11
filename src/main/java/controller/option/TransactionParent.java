@@ -1,10 +1,10 @@
 package controller.option;
 
 import model.RecordCard;
-import model.Transaksi;
+import model.Transaction;
 
 import java.util.Map;
 
 public interface TransactionParent {
-    Map<Transaksi, RecordCard> getRecordCardBoard();
+    Map<Transaction, RecordCard> getRecordCardBoard();
 }

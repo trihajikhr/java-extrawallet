@@ -27,7 +27,7 @@ public class HomeControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(HomeControl.class);
     private static final String BASE_CURRENCY = "IDR";
 
-    private ArrayList<Transaksi> dataTransaksi;
+    private ArrayList<Transaction> dataTransaction;
 
     @FXML private VBox latestTransactionPanel;
     @FXML private VBox latestCategoriesPanel;
@@ -41,7 +41,7 @@ public class HomeControl implements Initializable {
     @FXML private Label persenExpense;
     @FXML private Label persenBalance;
 
-    // data class record card kategori
+    // data class record card category
     private ArrayList<BlokKategori> filteredKategori = new ArrayList<>();
 
     // data bigdecimal
@@ -62,13 +62,13 @@ public class HomeControl implements Initializable {
 
     // [0] >=== INITIALISASI & DATA FETCHING
     private void fetchData() {
-        dataTransaksi = DataManager.getInstance().getDataTransaksi();
+        dataTransaction = DataManager.getInstance().getDataTransaksi();
     }
 
     // [1] >=== LABEL SET
-    private BigDecimal normalizeAmount(Transaksi trans) {
-        BigDecimal amount = BigDecimal.valueOf(trans.getJumlah());
-        String currency = trans.getAkun().getMataUang().getKode();
+    private BigDecimal normalizeAmount(Transaction trans) {
+        BigDecimal amount = BigDecimal.valueOf(trans.getAmount());
+        String currency = trans.getAkun().getCurrencyType().getKode();
         if (currency.equalsIgnoreCase(BASE_CURRENCY)) {
             return amount;
         }
@@ -80,32 +80,32 @@ public class HomeControl implements Initializable {
         LocalDate startDate = today.minusDays(30);
         LocalDate previousDate = today.minusDays(60);
 
-        List<Transaksi> previousDays = dataTransaksi.stream()
+        List<Transaction> previousDays = dataTransaction.stream()
                 .filter(t ->
-                        !t.getTanggal().isBefore(previousDate) &&
-                                !t.getTanggal().isAfter(startDate)
+                        !t.getDate().isBefore(previousDate) &&
+                                !t.getDate().isAfter(startDate)
                 )
                 .toList();
 
-        List<Transaksi> last30Days = dataTransaksi.stream()
+        List<Transaction> last30Days = dataTransaction.stream()
                 .filter(t ->
-                        !t.getTanggal().isBefore(startDate) &&
-                                !t.getTanggal().isAfter(today)
+                        !t.getDate().isBefore(startDate) &&
+                                !t.getDate().isAfter(today)
                 )
                 .toList();
 
-        for(Transaksi trans : previousDays) {
-            if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
+        for(Transaction trans : previousDays) {
+            if(trans.getTipeTransaksi() == TransactionType.INCOME) {
                 lastIncome60 = lastIncome60.add(normalizeAmount(trans));
-            } else if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
+            } else if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
                 lastExpense60 = lastExpense60.add(normalizeAmount(trans));
             }
         }
 
-        for(Transaksi trans : last30Days) {
-            if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
+        for(Transaction trans : last30Days) {
+            if(trans.getTipeTransaksi() == TransactionType.INCOME) {
                 lastTotalIncome = lastTotalIncome.add(normalizeAmount(trans));
-            } else if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
+            } else if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
                 lastTotalExpense = lastTotalExpense.add(normalizeAmount(trans));
             }
         }
@@ -124,10 +124,10 @@ public class HomeControl implements Initializable {
         BigDecimal totalBalance = BigDecimal.ZERO;
         BigDecimal totalBalanceBefore = BigDecimal.ZERO;
 
-        for(Transaksi trans : dataTransaksi) {
-            if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
+        for(Transaction trans : dataTransaction) {
+            if(trans.getTipeTransaksi() == TransactionType.INCOME) {
                 allIncome = allIncome.add(normalizeAmount(trans));
-            } else if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
+            } else if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
                 allExpense = allExpense.add(normalizeAmount(trans));
             }
         }
@@ -210,13 +210,13 @@ public class HomeControl implements Initializable {
             expensePerDay.put(date, BigDecimal.ZERO);
         }
 
-        for (Transaksi t : dataTransaksi) {
-            LocalDate date = t.getTanggal();
+        for (Transaction t : dataTransaction) {
+            LocalDate date = t.getDate();
 
             if (!date.isBefore(startDate) && !date.isAfter(today)) {
                 BigDecimal amount = normalizeAmount(t);
 
-                if (t.getTipeTransaksi() == TipeTransaksi.IN) {
+                if (t.getTipeTransaksi() == TransactionType.INCOME) {
                     incomePerDay.put(
                             date,
                             incomePerDay.get(date).add(amount)
@@ -270,15 +270,15 @@ public class HomeControl implements Initializable {
         LocalDate today = LocalDate.now();
         LocalDate startDate = today.minusDays(30);
 
-        HashMap<Kategori, Integer> kategoriUsed = new HashMap<>();
-        HashMap<Kategori, BigDecimal> kategoriAmount = new HashMap<>();
+        HashMap<Category, Integer> kategoriUsed = new HashMap<>();
+        HashMap<Category, BigDecimal> kategoriAmount = new HashMap<>();
 
-        for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
+        for(Category ktgr : DataManager.getInstance().getDataKategori()) {
             kategoriUsed.put(ktgr,0);
         }
 
-        for(Transaksi trans : dataTransaksi) {
-            if(!trans.getTanggal().isBefore(startDate) && !trans.getTanggal().isAfter(today)) {
+        for(Transaction trans : dataTransaction) {
+            if(!trans.getDate().isBefore(startDate) && !trans.getDate().isAfter(today)) {
                 int temp = kategoriUsed.get(trans.getKategori()) + 1;
                 kategoriUsed.put(trans.getKategori(), temp);
             }
@@ -287,13 +287,13 @@ public class HomeControl implements Initializable {
         // sorting dan ambil beberapa terbesar
         int dataLimit = 8;
 
-        List<Map.Entry<Kategori, Integer>> sortedKategori =
+        List<Map.Entry<Category, Integer>> sortedKategori =
                 kategoriUsed.entrySet()
                         .stream()
-                        .sorted(Map.Entry.<Kategori, Integer>comparingByValue().reversed())
+                        .sorted(Map.Entry.<Category, Integer>comparingByValue().reversed())
                         .toList();
 
-        List<Map.Entry<Kategori, Integer>> topKategori =
+        List<Map.Entry<Category, Integer>> topKategori =
                 sortedKategori.stream()
                         .limit(dataLimit)
                         .toList();
@@ -301,7 +301,7 @@ public class HomeControl implements Initializable {
         for(int i=0; i<dataLimit; i++) {
             BigDecimal sum = BigDecimal.ZERO;
 
-            for(Transaksi trans : dataTransaksi) {
+            for(Transaction trans : dataTransaction) {
                 if(trans.getKategori().equals(topKategori.get(i).getKey())) {
                     sum = sum.add(normalizeAmount(trans));
                 }
@@ -310,14 +310,14 @@ public class HomeControl implements Initializable {
             kategoriAmount.put(topKategori.get(i).getKey(), sum);
         }
 
-        for (Map.Entry<Kategori, Integer> entry : topKategori) {
-            Kategori kategori = entry.getKey();
+        for (Map.Entry<Category, Integer> entry : topKategori) {
+            Category category = entry.getKey();
             if(entry.getValue() == 0) continue; // skip jika 0 penggunaan!
             filteredKategori.add(
                     new BlokKategori(
-                            kategori,
+                            category,
                             entry.getValue(),
-                            kategoriAmount.get(kategori)
+                            kategoriAmount.get(category)
                     )
             );
         }
@@ -341,8 +341,8 @@ public class HomeControl implements Initializable {
             latestCategoriesPanel.getChildren().add(cardWrapper);
         }
     }
-    private StackPane createIconStackNode(Kategori ktgr) {
-        Circle bgCircle = new Circle(20, ktgr.getWarna());
+    private StackPane createIconStackNode(Category ktgr) {
+        Circle bgCircle = new Circle(20, ktgr.getColor());
         ImageView kategoriIcon = new ImageView(ktgr.getIcon());
         kategoriIcon.setFitWidth(24);
         kategoriIcon.setFitHeight(24);
@@ -354,7 +354,7 @@ public class HomeControl implements Initializable {
         return result;
     }
     private VBox createLabelNode(BlokKategori ktgr) {
-        Label namaKategori = new Label(ktgr.getKategori().getNama());
+        Label namaKategori = new Label(ktgr.getKategori().getName());
         Label counter = new Label(ktgr.getTotalUsed() + " transactions recorded");
 
         namaKategori.setStyle("""
@@ -395,7 +395,7 @@ public class HomeControl implements Initializable {
     }
 
     // [4] >=== PANEL 15 TRANSAKSI TERAKHIR
-    private RecordCard createRecordCard(Transaksi trans) {
+    private RecordCard createRecordCard(Transaction trans) {
         RecordCard recordCard = new RecordCard(trans);
 
         // edit record card
@@ -409,17 +409,17 @@ public class HomeControl implements Initializable {
     private void generateLatestTransactionPanel(){
         log.info("data transaksi terbaru berhasil digenerate!");
         int batasData = 10;
-        List<Transaksi> latest10 =
-                dataTransaksi.stream()
+        List<Transaction> latest10 =
+                dataTransaction.stream()
                         .sorted(
                                 Comparator
-                                        .comparing(Transaksi::getTanggal).reversed()
-                                        .thenComparing(Transaksi::getId, Comparator.reverseOrder())
+                                        .comparing(Transaction::getDate).reversed()
+                                        .thenComparing(Transaction::getId, Comparator.reverseOrder())
                         )
                         .limit(batasData)
                         .toList();
 
-        for (Transaksi trans: latest10) {
+        for (Transaction trans: latest10) {
             latestTransactionPanel.getChildren().add(createRecordCard(trans).getCardWrapper());
         }
     }

@@ -1,7 +1,7 @@
 package service;
 
-import model.TipeTransaksi;
-import model.Transaksi;
+import model.TransactionType;
+import model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +24,8 @@ public class ExpenseService extends AbstractTransactionService {
     }
 
     @Override
-    protected boolean isTargetType(Transaksi t) {
-        return t.getTipeTransaksi() == TipeTransaksi.OUT;
+    protected boolean isTargetType(Transaction t) {
+        return t.getTipeTransaksi() == TransactionType.EXPANSE;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class ExpenseService extends AbstractTransactionService {
         return oldJumlah - newJumlah; // expense ngurang saldo
     }
 
-    public BigDecimal expenseSumAfterFilter(List<Transaksi> data) {
+    public BigDecimal expenseSumAfterFilter(List<Transaction> data) {
         return sumAfterFilter(data);
     }
 

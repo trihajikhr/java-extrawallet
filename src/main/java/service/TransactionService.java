@@ -1,9 +1,9 @@
 package service;
 
-import model.Akun;
-import model.Kategori;
-import model.TipeLabel;
-import model.Transaksi;
+import model.Account;
+import model.Category;
+import model.LabelType;
+import model.Transaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,49 +12,49 @@ import java.util.List;
 public interface TransactionService {
 
     BigDecimal sumAfterFilter(
-            List<Transaksi> dataTransaksi
+            List<Transaction> dataTransaction
     );
 
-    List<Transaksi> filterByDate(
-            List<Transaksi> dataTransaksi,
+    List<Transaction> filterByDate(
+            List<Transaction> dataTransaction,
             LocalDate startDate,
             LocalDate endDate
     );
 
     BigDecimal sumBetween(
-            List<Transaksi> dataTransaksi,
+            List<Transaction> dataTransaction,
             LocalDate startDate,
             LocalDate endDate
     );
 
     BigDecimal sumByCategory(
-            List<Transaksi> dataTransaksi,
-            Kategori kategori,
+            List<Transaction> dataTransaction,
+            Category category,
             LocalDate startDate,
             LocalDate endDate
     );
 
     BigDecimal sumByAccount(
-            List<Transaksi> dataTransaksi,
-            Akun akun,
+            List<Transaction> dataTransaction,
+            Account account,
             LocalDate startDate,
             LocalDate endDate
     );
 
     BigDecimal sumByLabel(
-            List<Transaksi> dataTransaksi,
-            TipeLabel label,
+            List<Transaction> dataTransaction,
+            LabelType label,
             LocalDate startDate,
             LocalDate endDate
     );
 
     Boolean updateSingleAkun(
-            Akun akun,
-            Transaksi oldTrans,
+            Account account,
+            Transaction oldTrans,
             int newJumlah
     );
 
     Boolean updateMultipleAkun(
-            List<Transaksi> selected
+            List<Transaction> selected
     );
 }

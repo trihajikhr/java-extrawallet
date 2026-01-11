@@ -72,14 +72,14 @@ public class TemplateControl implements Initializable {
     private ComboBox<MataUang> mataUangComboBox;
 
     @FXML
-    private ComboBox<Akun> akunComboBox;
+    private ComboBox<Account> akunComboBox;
 
     @FXML
-    private ComboBox<Kategori> categoryComboBox;
+    private ComboBox<Category> categoryComboBox;
 
     @FXML
-    private ComboBox<TipeLabel> tipeLabelComboBox;
-    private ObservableList<TipeLabel> tipeLabelObservable = FXCollections.observableArrayList();
+    private ComboBox<LabelType> tipeLabelComboBox;
+    private ObservableList<LabelType> labelTypeObservable = FXCollections.observableArrayList();
 
     @FXML
     private TextField noteText;
@@ -141,11 +141,11 @@ public class TemplateControl implements Initializable {
     public void setParentTransaction(TransactionControl parent) {
         this.parentTransaction = parent;
     }
-    public ComboBox<TipeLabel> getTipeLabel() {
+    public ComboBox<LabelType> getTipeLabel() {
         return tipeLabelComboBox;
     }
-    public ObservableList<TipeLabel> getTipeLabelObservable() {
-        return tipeLabelObservable;
+    public ObservableList<LabelType> getTipeLabelObservable() {
+        return labelTypeObservable;
     }
 
     // [2] >=== INIT FUNCTION
@@ -184,13 +184,13 @@ public class TemplateControl implements Initializable {
         theImage = DataManager.getInstance().getImageTransactionForm();
     }
     private void loadTipeLabelComboBox(){
-        ArrayList<TipeLabel> dataTipelabel = DataManager.getInstance().getDataTipeLabel();
-        tipeLabelObservable = FXCollections.observableArrayList(dataTipelabel);
+        ArrayList<LabelType> dataTipelabel = DataManager.getInstance().getDataTipeLabel();
+        labelTypeObservable = FXCollections.observableArrayList(dataTipelabel);
 
-        tipeLabelComboBox.setItems(tipeLabelObservable);
-        tipeLabelComboBox.setCellFactory(list -> new ListCell<TipeLabel>() {
+        tipeLabelComboBox.setItems(labelTypeObservable);
+        tipeLabelComboBox.setCellFactory(list -> new ListCell<LabelType>() {
             @Override
-            protected void updateItem(TipeLabel item, boolean empty) {
+            protected void updateItem(LabelType item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if(empty || item == null) {
@@ -212,14 +212,14 @@ public class TemplateControl implements Initializable {
 
                 iconBox.setBackground(new Background(
                         new BackgroundFill(
-                                item.getWarna(),
+                                item.getColor(),
                                 new CornerRadii(8),
                                 Insets.EMPTY
                         )
                 ));
 
                 // teks
-                Label label = new Label(item.getNama());
+                Label label = new Label(item.getName());
                 label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
                 // gabung
@@ -239,8 +239,8 @@ public class TemplateControl implements Initializable {
     private void updateCategoryCombo(String type) {
         categoryComboBox.getSelectionModel().clearSelection();
 
-        List<Kategori> filtered = DataManager.getInstance().getDataKategori().stream()
-                .filter(k -> k.getTipe().equals(type))
+        List<Category> filtered = DataManager.getInstance().getDataKategori().stream()
+                .filter(k -> k.getType().equals(type))
                 .toList();
 
         categoryComboBox.setItems(
@@ -355,7 +355,7 @@ public class TemplateControl implements Initializable {
     }
     @FXML
     private void submitHandler() {
-        TipeTransaksi tipe = valueChoosen.getValue() == 1 ? TipeTransaksi.IN : TipeTransaksi.OUT;
+        TransactionType tipe = valueChoosen.getValue() == 1 ? TransactionType.INCOME : TransactionType.EXPANSE;
         String nama = IOLogic.normalizeSpaces(nameText.getText());
 
         if(!uniqueNameValidation(nama)){
@@ -365,9 +365,9 @@ public class TemplateControl implements Initializable {
         }
 
         int jumlah = spinnerAmount.getValue();
-        Akun dataAkun = akunComboBox.getValue();
-        Kategori dataKategori = categoryComboBox.getValue();
-        TipeLabel dataLabel = tipeLabelComboBox.getValue();
+        Account dataAccount = akunComboBox.getValue();
+        Category dataCategory = categoryComboBox.getValue();
+        LabelType dataLabel = tipeLabelComboBox.getValue();
         String keterangan = IOLogic.normalizeSpaces(noteText.getText());
         PaymentType payment = paymentTypeComboBox.getValue();
         PaymentStatus status = paymentStatusComboBox.getValue();
@@ -377,8 +377,8 @@ public class TemplateControl implements Initializable {
                 tipe,
                 nama,
                 jumlah,
-                dataAkun,
-                dataKategori,
+                dataAccount,
+                dataCategory,
                 dataLabel,
                 keterangan,
                 payment,
@@ -401,21 +401,21 @@ public class TemplateControl implements Initializable {
         }
         return true;
     }
-    public void prefillFromTransaksi(Transaksi trans) {
-        TipeTransaksi tipe = trans.getTipeTransaksi();
-        if(tipe == TipeTransaksi.IN) {
+    public void prefillFromTransaksi(Transaction trans) {
+        TransactionType tipe = trans.getTipeTransaksi();
+        if(tipe == TransactionType.INCOME) {
             activateIncome();
-        } else if(tipe == TipeTransaksi.OUT){
+        } else if(tipe == TransactionType.EXPANSE){
             activateExpense();
         }
 
-        spinnerAmount.getEditor().setText(Integer.toString(trans.getJumlah()));
+        spinnerAmount.getEditor().setText(Integer.toString(trans.getAmount()));
         akunComboBox.setValue(trans.getAkun());
         categoryComboBox.setValue(trans.getKategori());
 
-        tipeLabelComboBox.setValue(trans.getTipelabel());
+        tipeLabelComboBox.setValue(trans.getLabelType());
         noteText.setText(
-                Objects.requireNonNullElse(trans.getKeterangan(), "")
+                Objects.requireNonNullElse(trans.getDescription(), "")
         );
         paymentTypeComboBox.setValue(trans.getPaymentType());
         paymentStatusComboBox.setValue(trans.getPaymentStatus());
@@ -425,7 +425,7 @@ public class TemplateControl implements Initializable {
     private void mataUangListener() {
         akunComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                mataUangComboBox.setValue(newVal.getMataUang());
+                mataUangComboBox.setValue(newVal.getCurrencyType());
             }
         });
     }

@@ -5,6 +5,7 @@ import dataflow.DataManager;
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
 import helper.MyPopup;
+import model.Account;
 import model.MataUang;
 import helper.IOLogic;
 import javafx.beans.binding.Bindings;
@@ -22,7 +23,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import model.Akun;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,7 +195,7 @@ public class AccountControl implements Initializable {
         int jumlah = amountSpinner.getValue();
         MataUang currencyItem = currencyComboBox.getValue();
 
-        Akun akunBaru = new Akun(
+        Account accountBaru = new Account(
                 0,
                 name,
                 warna.getWarna(),
@@ -205,12 +205,12 @@ public class AccountControl implements Initializable {
                 currencyItem
         );
 
-        DataManager.getInstance().addAkun(akunBaru);
+        DataManager.getInstance().addAccount(accountBaru);
         closePopup();
     }
     private boolean uniqueNameValidation(String name) {
-        for(Akun akun : DataManager.getInstance().getDataAkun()) {
-            if(name.equalsIgnoreCase(akun.getNama())){
+        for(Account account : DataManager.getInstance().getDataAkun()) {
+            if(name.equalsIgnoreCase(account.getName())){
                 return false;
             }
         }

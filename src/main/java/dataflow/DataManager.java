@@ -1,8 +1,6 @@
 package dataflow;
 
-import java.math.BigDecimal;
 import java.util.*;
-
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
 import helper.MyPopup;
@@ -13,19 +11,15 @@ import javafx.collections.ObservableList;
 import model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import service.CurrencyApiClient;
-
-// TODO: rapikan struktur fungsi di file ini  (supaya lebih rapi)
-// dan hapus beberapa fungsi tidak terpakai
 
 public class DataManager {
     private static final Logger log = LoggerFactory.getLogger(DataManager.class);
     private static DataManager instance;
 
-    private ArrayList<Kategori> dataKategori;
-    private ArrayList<Akun> dataAkun = new ArrayList<>();
-    private ArrayList<Transaksi> dataTransaksi = new ArrayList<>();
-    private ArrayList<TipeLabel> dataTipeLabel = new ArrayList<>();
+    private ArrayList<Category> dataCategory;
+    private ArrayList<Account> accountData = new ArrayList<>();
+    private ArrayList<Transaction> dataTransaction = new ArrayList<>();
+    private ArrayList<LabelType> dataLabelType = new ArrayList<>();
     private ObservableList<PaymentType> dataPaymentType = FXCollections.observableArrayList();
     private ObservableList<PaymentStatus> dataPaymentStatus = FXCollections.observableArrayList();
     private ObservableList<ColorItem> dataColor = FXCollections.observableArrayList();
@@ -36,6 +30,13 @@ public class DataManager {
     private Image[][] theImage;
 
     private DataManager() {}
+
+    public static DataManager getInstance() {
+        if(instance == null) {
+            instance = new DataManager();
+        }
+        return instance;
+    }
 
     public void initBaseData() {
         dataPaymentType = DataSeeder.seedPaymentType();
@@ -49,8 +50,8 @@ public class DataManager {
     }
 
     public void setupDefaultAcount() {
-        if(dataAkun.isEmpty()) {
-            Akun akun = new Akun(
+        if(accountData.isEmpty()) {
+            Account account = new Account(
                  1,
                  "General",
                   dataColor.get(1).getWarna(),
@@ -60,46 +61,35 @@ public class DataManager {
                    dataMataUang.get(0)
             );
 
-            dataAkun.add(akun);
-            addAkun(akun, false);
-            log.info("akun default dibuat untuk penggunaan pertama user! akun [general]");
+            accountData.add(account);
+            addAccount(account, false);
+            log.info("account default dibuat untuk penggunaan pertama user! account [general]");
         }
     }
 
     public void fetchDataDatabase() {
-        dataAkun = Database.getInstance().fetchAkun();
-        dataTipeLabel = Database.getInstance().fetchTipeLabel();
+        accountData = Database.getInstance().fetchAkun();
+        dataLabelType = Database.getInstance().fetchTipeLabel();
         dataTemplate = Database.getInstance().fetchTemplate();
-        dataTransaksi = Database.getInstance().fetchTransaksi();
+        dataTransaction = Database.getInstance().fetchTransaksi();
     }
 
+    // [1] >=== RETURN DATA DATAMANAGER
     public ArrayList<Template> getDataTemplate() {
         return dataTemplate;
     }
-
     public ObservableList<PaymentType> getDataPaymentType() {
         return dataPaymentType;
     }
-
     public ObservableList<PaymentStatus> getDataPaymentStatus() {
         return dataPaymentStatus;
     }
-
-    public static DataManager getInstance() {
-        if(instance == null) {
-            instance = new DataManager();
-        }
-        return instance;
+    public ArrayList<LabelType> getDataTipeLabel() {
+        return dataLabelType;
     }
-
-    public ArrayList<TipeLabel> getDataTipeLabel() {
-        return dataTipeLabel;
-    }
-
     public Image[][] getImageTransactionForm() {
         return theImage;
     }
-
     public ObservableList<ColorItem> getDataColor() {
         return dataColor;
     }
@@ -114,8 +104,8 @@ public class DataManager {
 
     public ArrayList<MataUang> getFilteredMataUang() {
         Set<MataUang> filteredCurrency = new LinkedHashSet<>();
-        for(Transaksi trans : dataTransaksi) {
-            filteredCurrency.add(trans.getAkun().getMataUang());
+        for(Transaction trans : dataTransaction) {
+            filteredCurrency.add(trans.getAkun().getCurrencyType());
         }
 
         return new ArrayList<>(filteredCurrency);
@@ -125,72 +115,23 @@ public class DataManager {
         return paymentStatusImage;
     }
 
-    // [1] >> =============== DATA AKUN =============== //
-    public void addAkun(Akun data) {
-        addAkun(data, true);
-    }
 
-    public void addAkun (Akun data, Boolean isGeneral) {
-        int newId = Database.getInstance().insertAkun(data);
-        if(newId > 0) {
-            data.setId(newId);
-            dataAkun.add(data);
-            log.info("akun baru [{}] berhasil dibuat!", data.getNama());
-            if(isGeneral) MyPopup.showSucces("Akun baru berhasil dibuat!", "Selamat, akun " + data.getNama() + " berhasil dibuat!");
-        } else {
-            if(isGeneral) MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
-        }
-    }
-    public Boolean updateSaldoAkun(Akun akun, int jumlah){
-        Boolean result = Database.getInstance().updateSaldoAkun(akun, jumlah);
-        if(result) {
-            log.info("saldo akun diperbarui!");
-        } else {
-            log.error("saldo akun GAGAL diperbarui!");
-        }
-        return result;
-    }
 
-    public ArrayList<Akun> getDataAkun() {
-        return dataAkun;
+    // [1] >=== DATA TRANSAKSI
+    public ArrayList<Transaction> getDataTransaksi() {
+        return dataTransaction;
     }
-
-    // [1] >> =============== DATA TRANSAKSI =============== //
-    public ArrayList<Transaksi> getDataTransaksi() {
-        return dataTransaksi;
-    }
-    public void sortingAscTanggal() {
-        this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal));
-    }
-    public void sortingDscTanggal() {
-        this.dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal).reversed());
-    }
-    public void sortingJumlahAscending(){
-        this.dataTransaksi.sort(Comparator.comparing(Transaksi::getJumlah));
-    }
-    public void sortingJumlahDescending() {
-        this.dataTransaksi.sort(Comparator.comparing(Transaksi::getJumlah).reversed());
-    }
-    public ArrayList<Transaksi> copyDataTransaksi() {
-        return new ArrayList<>(dataTransaksi);
-    }
-    public ArrayList<Transaksi> coreDataTransaksi(){
-        return dataTransaksi;
-    }
-    public void removeTransaksi(int id) {
-        Database.getInstance().deleteTransaksi(id);
-    }
-    public Boolean modifyTransaksi(Transaksi trans) {
+    public Boolean modifyTransaksi(Transaction trans) {
         Boolean result = Database.getInstance().updateTransaksi(trans);
         if(result) {
-            for (Transaksi t : DataManager.getInstance().getDataTransaksi()) {
+            for (Transaction t : DataManager.getInstance().getDataTransaksi()) {
                 if (t.getId() == trans.getId()) {
-                    t.setJumlah(trans.getJumlah());
+                    t.setAmount(trans.getAmount());
                     t.setAkun(trans.getAkun());
                     t.setKategori(trans.getKategori());
-                    t.setTipelabel(trans.getTipelabel());
-                    t.setTanggal(trans.getTanggal());
-                    t.setKeterangan(trans.getKeterangan());
+                    t.setLabelType(trans.getLabelType());
+                    t.setDate(trans.getDate());
+                    t.setDescription(trans.getDescription());
                     t.setPaymentType(trans.getPaymentType());
                     t.setPaymentStatus(trans.getPaymentStatus());
                     break;
@@ -198,27 +139,27 @@ public class DataManager {
             }
 
             log.info("transaksi berhasil diedit!");
-            MyPopup.showSucces("Operasi berhasil!", "Transaksi berhasil diedit!");
+            MyPopup.showsucces("Operasi berhasil!", "Transaction berhasil diedit!");
             return true;
         } else {
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return false;
         }
     }
-    public Boolean modifyMultipleTransaksi(List<Transaksi> selected){
+    public Boolean modifyMultipleTransaksi(List<Transaction> selected){
         int counter = 0;
-        for(Transaksi trans : selected) {
+        for(Transaction trans : selected) {
             Boolean result = Database.getInstance().updateTransaksi(trans);
             if(result){
                 counter++;
-                for (Transaksi t : DataManager.getInstance().getDataTransaksi()) {
+                for (Transaction t : DataManager.getInstance().getDataTransaksi()) {
                     if (t.getId() == trans.getId()) {
-                        t.setJumlah(trans.getJumlah());
+                        t.setAmount(trans.getAmount());
                         t.setAkun(trans.getAkun());
                         t.setKategori(trans.getKategori());
-                        t.setTipelabel(trans.getTipelabel());
-                        t.setTanggal(trans.getTanggal());
-                        t.setKeterangan(trans.getKeterangan());
+                        t.setLabelType(trans.getLabelType());
+                        t.setDate(trans.getDate());
+                        t.setDescription(trans.getDescription());
                         t.setPaymentType(trans.getPaymentType());
                         t.setPaymentStatus(trans.getPaymentStatus());
                         break;
@@ -231,101 +172,104 @@ public class DataManager {
         }
 
         if(counter == selected.size()) {
-            MyPopup.showSucces("Operasi berhasil!", "Transaksi berhasil diedit!");
+            MyPopup.showsucces("Operasi berhasil!", "Transaction berhasil diedit!");
             return true;
         } else {
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return false;
         }
     }
-
-    public Boolean importTransaksiFromCSV(Transaksi trans) {
+    public Boolean importTransaksiFromCSV(Transaction trans) {
         int newId = Database.getInstance().insertTransaksi(trans);
         if(newId > 0) {
             trans.setId(newId);
-            dataTransaksi.add(trans);
+            dataTransaction.add(trans);
             return true;
         }
         return false;
     }
 
-    // [2] >> =============== DATA PEMASUKAN =============== //
-    public ArrayList<Transaksi> getDataTransaksiPemasukan() {
-        ArrayList<Transaksi> inList = new ArrayList<>();
-        for(Transaksi trans : dataTransaksi) {
-            if(trans.getTipeTransaksi() == TipeTransaksi.IN) {
+    public ArrayList<Transaction> getIncomeTransactionData() {
+        ArrayList<Transaction> inList = new ArrayList<>();
+        for(Transaction trans : dataTransaction) {
+            if(trans.getTipeTransaksi() == TransactionType.INCOME) {
                 inList.add(trans);
             }
         }
-        log.info("Total income transaction: " + inList.size());
+        log.info("Total income transaction: {}", inList.size());
         return inList;
     }
-
-    public void addTransaksi(Transaksi trans) {
-        int newId = Database.getInstance().insertTransaksi(trans);
-        if(newId > 0) {
-            trans.setId(newId);
-            dataTransaksi.add(trans);
-            log.info("transaksi berhasil ditambahkan!");
-            MyPopup.showSucces("Operasi berhasil!", "Transaksi berhasil ditambahkan!");
-        } else {
-            MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
-        }
-    }
-
-    // [3] >> =============== DATA PENGELUARAN =============== //
-    public ArrayList<Transaksi> getDataTransaksiPengeluaran() {
-        ArrayList<Transaksi> outList = new ArrayList<>();
-        for(Transaksi trans : dataTransaksi) {
-            if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
+    public ArrayList<Transaction> getExpenseTransactionData() {
+        ArrayList<Transaction> outList = new ArrayList<>();
+        for(Transaction trans : dataTransaction) {
+            if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
                 outList.add(trans);
             }
         }
-        log.info("Total expense transaction: " + outList.size());
+        log.info("Total expense transaction: {}", outList.size());
         return outList;
     }
 
-    // [4] >> =============== DATA TOTAL JUMLAH =============== //
-    public int getTotalSaldo() {
-        int total = 0;
-        for(Transaksi t : dataTransaksi) {
-            total += t instanceof Pemasukan ? t.getJumlah() : -t.getJumlah();
+    public void addTransaksi(Transaction trans) {
+        int newId = Database.getInstance().insertTransaksi(trans);
+        if(newId > 0) {
+            trans.setId(newId);
+            dataTransaction.add(trans);
+            log.info("Transaction added successfully!");
+            MyPopup.showsucces("Operation successful!", "Transaction added successfully!");
+        } else {
+            MyPopup.showDanger("Error", "An unexpected error occurred.");
         }
-        return total;
     }
 
-    public int getTotalPemasukan() {
-        int total = 0;
-        for(Transaksi t : dataTransaksi) {
-            total += t instanceof Pemasukan ? t.getJumlah() : 0;
+    // [1] >> =============== DATA AKUN =============== //
+    public ArrayList<Account> getDataAkun() {
+        return accountData;
+    }
+    public void addAccount(Account data) {
+        addAccount(data, true);
+    }
+    public void addAccount(Account newAccount, Boolean isGeneral) {
+        int newId = Database.getInstance().insertAkun(newAccount);
+        if (newId > 0) {
+            newAccount.setId(newId);
+            accountData.add(newAccount);
+            log.info("New account [{}] created successfully!", newAccount.getName());
+
+            if (isGeneral) {
+                MyPopup.showsucces("Account created successfully!", "Congratulations, the account " + newAccount.getName() + " has been created!");
+            }
+        } else {
+            if (isGeneral) {
+                MyPopup.showDanger("Failed!", "An error occurred.");
+            }
         }
-        return total;
     }
 
-    public int getTotalPengeluaran() {
-        int total = 0;
-        for(Transaksi t : dataTransaksi) {
-            total += t instanceof Pengeluaran ? t.getJumlah() : 0;
+    public Boolean updateSaldoAkun(Account account, int jumlah){
+        Boolean result = Database.getInstance().updateSaldoAkun(account, jumlah);
+        if(result) {
+            log.info("saldo account diperbarui!");
+        } else {
+            log.error("saldo account GAGAL diperbarui!");
         }
-        return total;
+        return result;
     }
+
+
 
     // [5] >> =============== KATEGORI FUNCTION =============== //
-    public ArrayList<Kategori> copyDataKategori() {
-        return new ArrayList<>(dataKategori);
-    }
-
-    public ArrayList<Kategori> getDataKategori() {
-        return dataKategori;
+    public ArrayList<Category> getDataKategori() {
+        return dataCategory;
     }
 
     public void setDataKategori() {
-        dataKategori = new ArrayList<>(DataSeeder.seedKategori());
+        dataCategory = new ArrayList<>(DataSeeder.seedKategori());
     }
 
-    public ArrayList<Kategori> getFilteredCategory() {
-        Set<Kategori> filteredCategory = new LinkedHashSet<>();
-        for(Transaksi trans : dataTransaksi) {
+    public ArrayList<Category> getFilteredCategory() {
+        Set<Category> filteredCategory = new LinkedHashSet<>();
+        for(Transaction trans : dataTransaction) {
             if(trans.getKategori() != null) {
                 filteredCategory.add(trans.getKategori());
             }
@@ -335,13 +279,13 @@ public class DataManager {
     }
 
     // [6] >> =============== TIPE LABEL FUNCTION =============== //
-    public boolean addLabel(TipeLabel tipelabel){
+    public boolean addLabel(LabelType tipelabel){
         int newId = Database.getInstance().insertTipeLabel(tipelabel);
         if(newId > 0) {
             tipelabel.setId(newId);
-            dataTipeLabel.add(tipelabel);
-            log.info("Label baru [{}] berhasil dibuat!", tipelabel.getNama());
-            MyPopup.showSucces("Label baru berhasil dibuat!", "Label " + tipelabel.getNama() + " berhasil dibuat!");
+            dataLabelType.add(tipelabel);
+            log.info("Label baru [{}] berhasil dibuat!", tipelabel.getName());
+            MyPopup.showsucces("Label baru berhasil dibuat!", "Label " + tipelabel.getName() + " berhasil dibuat!");
             return true;
         } else {
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
@@ -355,7 +299,7 @@ public class DataManager {
             temp.setId(newId);
             dataTemplate.add(temp);
             log.info("template {} berhasil ditambahkan!", temp.getNama());
-            MyPopup.showSucces("Template baru!", "Template " + temp.getNama() + " berhasil ditambahkan!");
+            MyPopup.showsucces("Template baru!", "Template " + temp.getNama() + " berhasil ditambahkan!");
             return true;
         } else {
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
@@ -363,11 +307,11 @@ public class DataManager {
         }
     }
 
-    public ArrayList<TipeLabel> getFilteredLabel() {
-        Set<TipeLabel> filteredLabel = new LinkedHashSet<>();
-        for(Transaksi trans : dataTransaksi) {
-            if(trans.getTipelabel() != null) {
-                filteredLabel.add(trans.getTipelabel());
+    public ArrayList<LabelType> getFilteredLabel() {
+        Set<LabelType> filteredLabel = new LinkedHashSet<>();
+        for(Transaction trans : dataTransaction) {
+            if(trans.getLabelType() != null) {
+                filteredLabel.add(trans.getLabelType());
             }
         }
 

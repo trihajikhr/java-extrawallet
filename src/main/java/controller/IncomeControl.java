@@ -1,19 +1,20 @@
 package controller;
 
 import dataflow.DataManager;
-import model.Transaksi;
+import model.Transaction;
+
 import java.util.ArrayList;
 
 public class IncomeControl extends AbstractRecordControl {
 
     @Override
     protected void setTipeRecord() {
-        this.tipeRecord = "income";
+        this.recordType = "income";
     }
 
     @Override
-    protected ArrayList<Transaksi> getDataTransaksi() {
-        this.tipeRecord = "income";
-        return DataManager.getInstance().getDataTransaksiPemasukan();
+    protected ArrayList<Transaction> getDataTransaksi() {
+        this.recordType = "income";
+        return DataManager.getInstance().getIncomeTransactionData();
     }
 }

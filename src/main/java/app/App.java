@@ -64,8 +64,8 @@ public class App extends Application {
                 updateProgress(95, 100);
                 DataSeeder.seedDatabaseCurrency();
 
-                // TODO: Jika user pertama kali pasang aplikasi, tetapkan satu akun secara langsung sebagai defaul akun
-                // kedepanya, perbaiki supaya ketika database tidak mengecek adanya akun, maka buat panel pembuatan akun baru terlebih dahulu!
+                // TODO: Jika user pertama kali pasang aplikasi, tetapkan satu account secara langsung sebagai defaul account
+                // kedepanya, perbaiki supaya ketika database tidak mengecek adanya account, maka buat panel pembuatan account baru terlebih dahulu!
                 DataManager.getInstance().setupDefaultAcount();
 
                 log.info("App Mode: {}", AppPaths.IS_DEV ? "DEV" : "PROD");
@@ -89,7 +89,7 @@ public class App extends Application {
         loadTask.setOnSucceeded(e -> {
             try {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
-                Parent root = loader.load(); // load dulu → root
+                Parent root = loader.load();
 
                 // Load stylesheet
                 root.getStylesheets().add(

@@ -43,14 +43,14 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
 
     private static final Logger log = LoggerFactory.getLogger(AbstractRecordControl.class);
     DateTimeFormatter formatterNow = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
-    protected String tipeRecord;
+    protected String recordType;
 
     private double xOffset = 0;
     private double yOffset = 0;
 
     // data sumber kebenaran
-    List<Transaksi> transactionData = new ArrayList<>();
-    private final Map<Transaksi, RecordCard> recordCardBoard = new HashMap<>();
+    List<Transaction> transactionData = new ArrayList<>();
+    private final Map<Transaction, RecordCard> recordCardBoard = new HashMap<>();
     private final List<CheckBox> visibleCheckBox = new ArrayList<>();
 
     @FXML private VBox recordPanel;
@@ -73,13 +73,13 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
     @FXML private MenuButton menuButtonPaymentType;
     @FXML private MenuButton menuButtonPaymentState;
 
-    private final ObservableSet<Akun> selectedAccounts =
+    private final ObservableSet<Account> selectedAccounts =
             FXCollections.observableSet(new LinkedHashSet<>());
 
-    private final ObservableSet<Kategori> selectedCategories =
+    private final ObservableSet<Category> selectedCategories =
             FXCollections.observableSet(new LinkedHashSet<>());
 
-    private final ObservableSet<TipeLabel> selectedLabels =
+    private final ObservableSet<LabelType> selectedLabels =
             FXCollections.observableSet(new LinkedHashSet<>());
 
     private final ObservableSet<MataUang> selectedCurrencies =
@@ -108,7 +108,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         setTipeRecord();
-        log.info("panel record " + this.tipeRecord + " berhasil terbuka");
+        log.info("panel record " + this.recordType + " berhasil terbuka");
         fetchTransactionData();
         initAllComboBox();
         initBaseData();
@@ -119,7 +119,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
         updateButtons();
     }
     protected void setTipeRecord()  {
-        this.tipeRecord = "tipeRecord";
+        this.recordType = "tipeRecord";
     }
     private void initBaseData() {
         mainButtonInit();
@@ -130,7 +130,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
         setFirstFilter();
     }
     @Override
-    public Map<Transaksi, RecordCard> getRecordCardBoard() {
+    public Map<Transaction, RecordCard> getRecordCardBoard() {
         return recordCardBoard;
     }
 
@@ -162,7 +162,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
     private void setFirstFilter() {
         applyFilterAndSort();
     }
-    private void defaultTotalAmountSetter(List<Transaksi> dataIncome) {
+    private void defaultTotalAmountSetter(List<Transaction> dataIncome) {
         totalDefaultValue = (IncomeService.getInstance().incomeSumAfterFilter(dataIncome));
         String stringForm = totalDefaultValue.toPlainString();
         String result = Converter.numberFormatter(stringForm);
@@ -184,18 +184,18 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
     }
 
     // [2] >=== CARDBOARD UI/UX & DATA FETCHING
-    private RecordCard createRecordCard(Transaksi income) {
+    private RecordCard createRecordCard(Transaction income) {
         RecordCard recordCard = new RecordCard(income);
         recordCard.setOnCardClick(this::openSingleEdit);
         visibleCheckBox.add(recordCard.getCheckList());
         return recordCard;
     }
     private void fetchTransactionData() {
-        log.info("data " + this.tipeRecord + " berhasil diambil dari datamanager");
+        log.info("data " + this.recordType + " berhasil diambil dari datamanager");
 
         transactionData = getDataTransaksi();
 
-        for(Transaksi in : transactionData) {
+        for(Transaction in : transactionData) {
             recordCardBoard.put(in, createRecordCard(in));
         }
 
@@ -204,7 +204,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
         }
     }
 
-    protected ArrayList<Transaksi> getDataTransaksi() {
+    protected ArrayList<Transaction> getDataTransaksi() {
         return DataManager.getInstance().getDataTransaksi();
     }
 
@@ -231,27 +231,27 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
         menuButtonAccount.getItems().clear();
         menuButtonAccount.setText("Account");
         menuButtonAccount.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
-        List<Akun> dataAkun = DataManager.getInstance().getDataAkun();
+        List<Account> dataAccount = DataManager.getInstance().getDataAkun();
 
-        for (Akun akun : dataAkun) {
+        for (Account account : dataAccount) {
             // Icon
-            ImageView iconView = new ImageView(akun.getIcon());
+            ImageView iconView = new ImageView(account.getIcon());
             iconView.setFitWidth(14);
             iconView.setFitHeight(14);
             iconView.setPreserveRatio(true);
             StackPane iconBox = new StackPane(iconView);
             iconBox.setPrefSize(28, 28);
             iconBox.setBackground(new Background(new BackgroundFill(
-                    akun.getWarna(), new CornerRadii(8), Insets.EMPTY)));
+                    account.getColor(), new CornerRadii(8), Insets.EMPTY)));
 
             // Label
-            Label label = new Label(akun.getNama());
+            Label label = new Label(account.getName());
             label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
             // Centang
             Label checkMark = new Label("✓");
             checkMark.setTextFill(Color.GREEN);
-            checkMark.setVisible(selectedAccounts.contains(akun));
+            checkMark.setVisible(selectedAccounts.contains(account));
 
             // Spacer
             Region spacer = new Region();
@@ -270,9 +270,9 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
 
             // Klik seluruh area menuItem
             menuItem.setOnAction(e -> {
-                boolean selected = !selectedAccounts.contains(akun);
-                if (selected) selectedAccounts.add(akun);
-                else selectedAccounts.remove(akun);
+                boolean selected = !selectedAccounts.contains(account);
+                if (selected) selectedAccounts.add(account);
+                else selectedAccounts.remove(account);
 
                 checkMark.setVisible(selected);
                 updateAccountMenuText();
@@ -290,7 +290,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
             return;
         }
         String text = selectedAccounts.stream()
-                .map(Akun::getNama)
+                .map(Account::getName)
                 .collect(Collectors.joining(", "));
 
         menuButtonAccount.setText(text);
@@ -300,27 +300,27 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
         menuButtonCategory.getItems().clear();
         menuButtonCategory.setText("Category");
         menuButtonCategory.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
-        List<Kategori> dataKategori = DataManager.getInstance().getFilteredCategory();
+        List<Category> dataCategory = DataManager.getInstance().getFilteredCategory();
 
-        for (Kategori kategori : dataKategori) {
+        for (Category category : dataCategory) {
             // Icon
-            ImageView iconView = new ImageView(kategori.getIcon());
+            ImageView iconView = new ImageView(category.getIcon());
             iconView.setFitWidth(14);
             iconView.setFitHeight(14);
             iconView.setPreserveRatio(true);
             StackPane iconBox = new StackPane(iconView);
             iconBox.setPrefSize(28, 28);
             iconBox.setBackground(new Background(new BackgroundFill(
-                    kategori.getWarna(), new CornerRadii(8), Insets.EMPTY)));
+                    category.getColor(), new CornerRadii(8), Insets.EMPTY)));
 
             // Label
-            Label label = new Label(kategori.getNama());
+            Label label = new Label(category.getName());
             label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
             // Centang
             Label checkMark = new Label("✓");
             checkMark.setTextFill(Color.GREEN);
-            checkMark.setVisible(selectedCategories.contains(kategori));
+            checkMark.setVisible(selectedCategories.contains(category));
 
             // Spacer
             Region spacer = new Region();
@@ -339,9 +339,9 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
 
             // Klik seluruh area menuItem
             menuItem.setOnAction(e -> {
-                boolean selected = !selectedCategories.contains(kategori);
-                if (selected) selectedCategories.add(kategori);
-                else selectedCategories.remove(kategori);
+                boolean selected = !selectedCategories.contains(category);
+                if (selected) selectedCategories.add(category);
+                else selectedCategories.remove(category);
 
                 checkMark.setVisible(selected);
                 updateCategoriesMenuText();
@@ -359,7 +359,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
             return;
         }
         String text = selectedCategories.stream()
-                .map(Kategori::getNama)
+                .map(Category::getName)
                 .collect(Collectors.joining(", "));
 
         menuButtonCategory.setText(text);
@@ -369,9 +369,9 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
         menuButtonLabel.getItems().clear();
         menuButtonLabel.setText("Label");
         menuButtonLabel.setStyle("-fx-text-fill: #9CA3AF;"); // abu-abu
-        List<TipeLabel> dataTipeLabel = DataManager.getInstance().getFilteredLabel();
+        List<LabelType> dataLabelType = DataManager.getInstance().getFilteredLabel();
 
-        for (TipeLabel tipeLabel : dataTipeLabel) {
+        for (LabelType labelType : dataLabelType) {
             // Icon
             ImageView iconView = new ImageView(new Image(Objects.requireNonNull(getClass().getResource("/icons/tagW.png").toString())));
             iconView.setFitWidth(14);
@@ -380,16 +380,16 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
             StackPane iconBox = new StackPane(iconView);
             iconBox.setPrefSize(28, 28);
             iconBox.setBackground(new Background(new BackgroundFill(
-                    tipeLabel.getWarna(), new CornerRadii(8), Insets.EMPTY)));
+                    labelType.getColor(), new CornerRadii(8), Insets.EMPTY)));
 
             // Label
-            Label label = new Label(tipeLabel.getNama());
+            Label label = new Label(labelType.getName());
             label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
             // Centang
             Label checkMark = new Label("✓");
             checkMark.setTextFill(Color.GREEN);
-            checkMark.setVisible(selectedLabels.contains(tipeLabel));
+            checkMark.setVisible(selectedLabels.contains(labelType));
 
             // Spacer
             Region spacer = new Region();
@@ -408,9 +408,9 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
 
             // Klik seluruh area menuItem
             menuItem.setOnAction(e -> {
-                boolean selected = !selectedLabels.contains(tipeLabel);
-                if (selected) selectedLabels.add(tipeLabel);
-                else selectedLabels.remove(tipeLabel);
+                boolean selected = !selectedLabels.contains(labelType);
+                if (selected) selectedLabels.add(labelType);
+                else selectedLabels.remove(labelType);
 
                 checkMark.setVisible(selected);
                 updateLabelMenuText();
@@ -428,7 +428,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
             return;
         }
         String text = selectedLabels.stream()
-                .map(TipeLabel::getNama)
+                .map(LabelType::getName)
                 .collect(Collectors.joining(", "));
 
         menuButtonLabel.setText(text);
@@ -605,32 +605,32 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
     }
 
     // [4] >=== FILTER LISTENER
-    private Predicate<Transaksi> accountFilter() {
+    private Predicate<Transaction> accountFilter() {
         return t ->
                 selectedAccounts.isEmpty()
                         || selectedAccounts.contains(t.getAkun());
     }
-    private Predicate<Transaksi> categoryFilter() {
+    private Predicate<Transaction> categoryFilter() {
         return t ->
                 selectedCategories.isEmpty()
                         || selectedCategories.contains(t.getKategori());
     }
-    private Predicate<Transaksi> labelFilter() {
+    private Predicate<Transaction> labelFilter() {
         return t ->
                 selectedLabels.isEmpty()
-                        || selectedLabels.contains(t.getTipelabel());
+                        || selectedLabels.contains(t.getLabelType());
     }
-    private Predicate<Transaksi> currencyFilter() {
+    private Predicate<Transaction> currencyFilter() {
         return t ->
                 selectedCurrencies.isEmpty()
-                        || selectedCurrencies.contains(t.getAkun().getMataUang());
+                        || selectedCurrencies.contains(t.getAkun().getCurrencyType());
     }
-    private Predicate<Transaksi> paymentTypeFilter() {
+    private Predicate<Transaction> paymentTypeFilter() {
         return t ->
                 selectedPaymentTypes.isEmpty()
                         || selectedPaymentTypes.contains(t.getPaymentType());
     }
-    private Predicate<Transaksi> paymentStateFilter() {
+    private Predicate<Transaction> paymentStateFilter() {
         return t ->
                 selectedPaymentStates.isEmpty()
                         || selectedPaymentStates.contains(t.getPaymentStatus());
@@ -638,7 +638,7 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
 
     // [5] >=== FILTER HANDLER
     private void applyFilterAndSort() {
-        List<Transaksi> result = transactionData.stream()
+        List<Transaction> result = transactionData.stream()
                 .filter(accountFilter())
                 .filter(categoryFilter())
                 .filter(labelFilter())
@@ -657,38 +657,38 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
         refreshVisibleCheckbox(result);
         resetSelectedAmount();
     }
-    private Comparator<Transaksi> activeComparator() {
+    private Comparator<Transaction> activeComparator() {
         SortOption sort = comboBoxSort.getValue();
         if (sort == null) {
-            return Comparator.comparing(Transaksi::getTanggal).reversed()
-                    .thenComparing(Comparator.comparing(Transaksi::getId).reversed());
+            return Comparator.comparing(Transaction::getDate).reversed()
+                    .thenComparing(Comparator.comparing(Transaction::getId).reversed());
         }
 
-        Comparator<Transaksi> byIdDesc =
-                Comparator.comparing(Transaksi::getId).reversed();
+        Comparator<Transaction> byIdDesc =
+                Comparator.comparing(Transaction::getId).reversed();
 
         switch (sort) {
             case TIME_NEWEST:
-                return Comparator.comparing(Transaksi::getTanggal).reversed()
+                return Comparator.comparing(Transaction::getDate).reversed()
                         .thenComparing(byIdDesc);
             case TIME_OLDEST:
-                return Comparator.comparing(Transaksi::getTanggal)
-                        .thenComparing(Transaksi::getId);
+                return Comparator.comparing(Transaction::getDate)
+                        .thenComparing(Transaction::getId);
             case AMOUNT_HIGHEST:
-                return Comparator.comparing(Transaksi::getJumlah).reversed()
+                return Comparator.comparing(Transaction::getAmount).reversed()
                         .thenComparing(byIdDesc);
             case AMOUNT_LOWEST:
-                return Comparator.comparing(Transaksi::getJumlah)
+                return Comparator.comparing(Transaction::getAmount)
                         .thenComparing(byIdDesc);
             default:
-                return Comparator.comparing(Transaksi::getTanggal).reversed()
+                return Comparator.comparing(Transaction::getDate).reversed()
                         .thenComparing(byIdDesc);
         }
     }
-    private void refreshView(List<Transaksi> data) {
+    private void refreshView(List<Transaction> data) {
         recordPanel.getChildren().clear();
 
-        for (Transaksi trans : data) {
+        for (Transaction trans : data) {
             recordPanel.getChildren().add(recordCardBoard.get(trans).getCardWrapper());
         }
     }
@@ -705,10 +705,10 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
             selectedAmountSetter(false);
         });
     }
-    private void refreshVisibleCheckbox(List<Transaksi> dataTransaksi){
+    private void refreshVisibleCheckbox(List<Transaction> dataTransaction){
         applyDeselectAllCheckBox();
         visibleCheckBox.clear();
-        for(Transaksi trans : dataTransaksi) {
+        for(Transaction trans : dataTransaction) {
             visibleCheckBox.add(recordCardBoard.get(trans).getCheckList());
         }
     }
@@ -742,14 +742,14 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
 
                 if(isSelected) {
                     totalSelectedValue = totalSelectedValue.add(CurrencyApiClient.getInstance().convert(
-                            BigDecimal.valueOf(rc.getTransaksi().getJumlah()),
-                            rc.getTransaksi().getAkun().getMataUang().getKode(),
+                            BigDecimal.valueOf(rc.getTransaksi().getAmount()),
+                            rc.getTransaksi().getAkun().getCurrencyType().getKode(),
                             "IDR"
                     ));
                 } else{
                     totalSelectedValue = totalSelectedValue.subtract(CurrencyApiClient.getInstance().convert(
-                            BigDecimal.valueOf(rc.getTransaksi().getJumlah()),
-                            rc.getTransaksi().getAkun().getMataUang().getKode(),
+                            BigDecimal.valueOf(rc.getTransaksi().getAmount()),
+                            rc.getTransaksi().getAkun().getCurrencyType().getKode(),
                             "IDR"
                     ));
                 }
@@ -806,11 +806,11 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
     }
 
     // [7] >=== TOMBOL EDIT UNTUK RECORDCARD
-    private void openSingleEdit(Transaksi trans) {
+    private void openSingleEdit(Transaction trans) {
         openSingleEdit(trans, true); // default true
     }
     @FXML
-    private void openSingleEdit(Transaksi trans, Boolean isSingle) {
+    private void openSingleEdit(Transaction trans, Boolean isSingle) {
         // setting stage ini mirip dengan fungsi addTransaction di class DashboardController!
         // komentas yang lebih lengkap ada disana!
 
@@ -892,11 +892,11 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
 
     @FXML
     private void handleDelete() {
-        MyPopup.showSucces("Coming Soon!", "dalam tahap pengembangan");
+        MyPopup.showsucces("Coming Soon!", "dalam tahap pengembangan");
     }
 
     @FXML
     private void handleExport() {
-        MyPopup.showSucces("Coming Soon!", "dalam tahap pengembangan");
+        MyPopup.showsucces("Coming Soon!", "dalam tahap pengembangan");
     }
 }

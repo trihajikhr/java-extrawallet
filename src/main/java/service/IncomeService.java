@@ -1,7 +1,7 @@
 package service;
 
-import model.TipeTransaksi;
-import model.Transaksi;
+import model.TransactionType;
+import model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +24,8 @@ public class IncomeService extends AbstractTransactionService {
     }
 
     @Override
-    protected boolean isTargetType(Transaksi t) {
-        return t.getTipeTransaksi() == TipeTransaksi.IN;
+    protected boolean isTargetType(Transaction t) {
+        return t.getTipeTransaksi() == TransactionType.INCOME;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class IncomeService extends AbstractTransactionService {
         return newJumlah - oldJumlah;
     }
 
-    public BigDecimal incomeSumAfterFilter(List<Transaksi> data) {
+    public BigDecimal incomeSumAfterFilter(List<Transaction> data) {
         return sumAfterFilter(data);
     }
 }

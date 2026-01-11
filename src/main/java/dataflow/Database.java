@@ -1,10 +1,7 @@
 package dataflow;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -81,7 +78,7 @@ public class Database {
         try (Statement perintah = koneksi.createStatement()){
             String querySql =
                 """
-                CREATE TABLE IF NOT EXISTS "kategori" (
+                CREATE TABLE IF NOT EXISTS "category" (
                     "id"	INTEGER NOT NULL UNIQUE,
                     "tipe"	TEXT NOT NULL,
                     "nama"	TEXT NOT NULL,
@@ -91,10 +88,10 @@ public class Database {
                 )
                 """;
             perintah.executeUpdate(querySql);
-            log.info("table kategori berhasil dibuat!");
+            log.info("table category berhasil dibuat!");
 
         } catch (Exception e) {
-            log.error("table kategori gagal dibuat: " , e);
+            log.error("table category gagal dibuat: " , e);
         }
     }
     private void createTableMataUang() {
@@ -140,7 +137,7 @@ public class Database {
         try (Statement perintah = koneksi.createStatement()) {
             String querySql =
             """
-            CREATE TABLE IF NOT EXISTS "akun" (
+            CREATE TABLE IF NOT EXISTS "account" (
                 "id"	INTEGER NOT NULL UNIQUE,
                 "nama"	TEXT NOT NULL,
                 "warna"	TEXT NOT NULL,
@@ -152,17 +149,17 @@ public class Database {
             )
             """;
             perintah.executeUpdate(querySql);
-            log.info("table akun berhasil dibuat!");
+            log.info("table account berhasil dibuat!");
 
         } catch (SQLException e) {
-            log.error("table akun gagal dibuat: ", e);
+            log.error("table account gagal dibuat: ", e);
         }
     }
     private void createTableTransaksi() {
         try (Statement perintah = koneksi.createStatement()) {
             String querySql =
             """
-            CREATE TABLE IF NOT EXISTS "transaksi" (
+            CREATE TABLE IF NOT EXISTS "transaction" (
                 "id"	INTEGER NOT NULL UNIQUE,
                 "tipe"	TEXT NOT NULL,
                 "jumlah"	INTEGER NOT NULL,
@@ -174,16 +171,16 @@ public class Database {
                 "metode_transaksi"	TEXT,
                 "status"	TEXT,
                 PRIMARY KEY("id" AUTOINCREMENT),
-                CONSTRAINT "transaksi_akun" FOREIGN KEY("id_akun") REFERENCES "akun"("id") ON DELETE CASCADE,
-                CONSTRAINT "transaksi_kategori" FOREIGN KEY("id_kategori") REFERENCES "kategori"("id") ON DELETE RESTRICT,
+                CONSTRAINT "transaksi_akun" FOREIGN KEY("id_akun") REFERENCES "account"("id") ON DELETE CASCADE,
+                CONSTRAINT "transaksi_kategori" FOREIGN KEY("id_kategori") REFERENCES "category"("id") ON DELETE RESTRICT,
                 CONSTRAINT "transaksi_label" FOREIGN KEY("id_tipelabel") REFERENCES "tipelabel"("id") ON DELETE RESTRICT
             )
             """;
             perintah.executeUpdate(querySql);
-            log.info("table transaksi berhasil dibuat!");
+            log.info("table transaction berhasil dibuat!");
 
         } catch (SQLException e){
-            log.error("table transaksi gagal dibuat: ", e);
+            log.error("table transaction gagal dibuat: ", e);
         }
     }
     private void createTableTemplate() {
@@ -202,8 +199,8 @@ public class Database {
                 "metode_transaksi"	TEXT,
                 "status"	TEXT,
                 PRIMARY KEY("id" AUTOINCREMENT),
-                CONSTRAINT "template_akun" FOREIGN KEY("id_akun") REFERENCES "akun"("id") ON DELETE CASCADE,
-                CONSTRAINT "template_kategori" FOREIGN KEY("id_kategori") REFERENCES "kategori"("id") ON DELETE CASCADE,
+                CONSTRAINT "template_akun" FOREIGN KEY("id_akun") REFERENCES "account"("id") ON DELETE CASCADE,
+                CONSTRAINT "template_kategori" FOREIGN KEY("id_kategori") REFERENCES "category"("id") ON DELETE CASCADE,
                 CONSTRAINT "template_label" FOREIGN KEY("id_tipelabel") REFERENCES "tipelabel"("id") ON DELETE CASCADE
             )
             """;
@@ -216,15 +213,15 @@ public class Database {
     }
 
     // [3] >=== manipulasi data tipelabel
-    public int insertTipeLabel(TipeLabel tipelabel) {
+    public int insertTipeLabel(LabelType tipelabel) {
         String querySql = "INSERT INTO tipelabel (nama, warna) VALUES (?, ?)";
 
         try {
             koneksi.setAutoCommit(false);
             try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
 
-                ps.setString(1, tipelabel.getNama());
-                ps.setString(2, Converter.colorToHex(tipelabel.getWarna()));
+                ps.setString(1, tipelabel.getName());
+                ps.setString(2, Converter.colorToHex(tipelabel.getColor()));
 
                 if (ps.executeUpdate() == 0) {
                     throw new SQLException("Insert tidak mengubah data");
@@ -257,10 +254,10 @@ public class Database {
             }
         }
     }
-    public ArrayList<TipeLabel> fetchTipeLabel() {
+    public ArrayList<LabelType> fetchTipeLabel() {
         try (Statement stat = koneksi.createStatement()){
             ResultSet rs = stat.executeQuery("SELECT * FROM tipelabel");
-            ArrayList<TipeLabel> data = new ArrayList<>();
+            ArrayList<LabelType> data = new ArrayList<>();
 
             while(rs.next()) {
                 int id = rs.getInt("id");
@@ -268,7 +265,7 @@ public class Database {
                 String hex = rs.getString("warna");
 
                 Color warna = Converter.hexToColor(hex);
-                data.add(new TipeLabel(id, nama, warna));
+                data.add(new LabelType(id, nama, warna));
             }
             log.info("fetch data tipelabel berhasil!");
             return data;
@@ -280,11 +277,11 @@ public class Database {
         }
     }
 
-    // [4] >=== manipulasi data kategori
-    public ArrayList<Kategori> fetchKategori() {
+    // [4] >=== manipulasi data category
+    public ArrayList<Category> fetchKategori() {
         try (Statement stat = koneksi.createStatement()) {
-            ResultSet rs = stat.executeQuery("SELECT * FROM kategori");
-            ArrayList<Kategori> data = new ArrayList<>();
+            ResultSet rs = stat.executeQuery("SELECT * FROM category");
+            ArrayList<Category> data = new ArrayList<>();
 
             while(rs.next()) {
                 int id = rs.getInt("id");
@@ -294,7 +291,7 @@ public class Database {
                 Color warna = Converter.hexToColor(rs.getString("warna"));
 
                 data.add(
-                    new Kategori (
+                    new Category(
                         id,
                         tipe,
                         nama,
@@ -305,25 +302,25 @@ public class Database {
                 );
             }
 
-            log.info("Data kategori berhasil difetch!");
+            log.info("Data category berhasil difetch!");
             return data;
 
         } catch (SQLException e) {
-            log.error("Gagal fetch data 'kategori'!", e);
+            log.error("Gagal fetch data 'category'!", e);
             return null;
         }
     }
 
-    // [5] >=== manipulasi data transaksi
-    public ArrayList<Transaksi> fetchTransaksi() {
+    // [5] >=== manipulasi data transaction
+    public ArrayList<Transaction> fetchTransaksi() {
         try (Statement stat = koneksi.createStatement()) {
-            ResultSet rs = stat.executeQuery("SELECT * FROM transaksi");
+            ResultSet rs = stat.executeQuery("SELECT * FROM transaction");
 
-            ArrayList<Transaksi> data = new ArrayList<>();
+            ArrayList<Transaction> data = new ArrayList<>();
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                TipeTransaksi tipe = TipeTransaksi.valueOf(rs.getString("tipe"));
+                TransactionType tipe = TransactionType.valueOf(rs.getString("tipe"));
                 int jumlah = rs.getInt("jumlah");
                 int idAkun = rs.getInt("id_akun");
                 int idKategori = rs.getInt("id_kategori");
@@ -335,57 +332,57 @@ public class Database {
 
                 LocalDate tanggal = LocalDate.parse(tanggalSet, formatter);
 
-                Akun akun = null;
-                for(Akun item : DataManager.getInstance().getDataAkun()){
+                Account account = null;
+                for(Account item : DataManager.getInstance().getDataAkun()){
                     if(item.getId() == idAkun) {
-                        akun = item;
+                        account = item;
                         break;
                     }
                 }
 
-                if (akun == null ) {
-                    log.warn("fetch transaksi:  idAkun={} tidak ditemukan!", idAkun);
+                if (account == null ) {
+                    log.warn("fetch transaction:  idAkun={} tidak ditemukan!", idAkun);
                     continue; // skip
                 }
 
-                Kategori kategori = null;
-                for(Kategori item : DataManager.getInstance().getDataKategori()){
+                Category category = null;
+                for(Category item : DataManager.getInstance().getDataKategori()){
                     if(item.getId() == idKategori) {
-                        kategori = item;
+                        category = item;
                         break;
                     }
                 }
 
-                if (kategori == null ) {
-                    log.warn("fetch transaksi:  idKategori={} tidak ditemukan!", idKategori);
+                if (category == null ) {
+                    log.warn("fetch transaction:  idKategori={} tidak ditemukan!", idKategori);
                     continue; // skip
                 }
 
-                TipeLabel tipelabel = null;
-                for(TipeLabel item : DataManager.getInstance().getDataTipeLabel()) {
+                LabelType tipelabel = null;
+                for(LabelType item : DataManager.getInstance().getDataTipeLabel()) {
                     if(item.getId() == idTipeLabel) {
                         tipelabel = item;
                         break;
                     }
                 }
 
-                if(tipe == TipeTransaksi.IN){
-                    data.add(new Pemasukan(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, paymentType, status));
-                } else if(tipe == TipeTransaksi.OUT) {
-                    data.add(new Pengeluaran(id, tipe, jumlah, akun, kategori, tipelabel, tanggal, keterangan, paymentType, status));
+                if(tipe == TransactionType.INCOME){
+                    data.add(new Pemasukan(id, tipe, jumlah, account, category, tipelabel, tanggal, keterangan, paymentType, status));
+                } else if(tipe == TransactionType.EXPANSE) {
+                    data.add(new Pengeluaran(id, tipe, jumlah, account, category, tipelabel, tanggal, keterangan, paymentType, status));
                 }
             }
 
-            log.info("data transaksi berhasil di fetch!");
+            log.info("data transaction berhasil di fetch!");
             return data;
 
         } catch (SQLException e) {
-            log.error("gagal fetch data 'transaksi'!", e);
+            log.error("gagal fetch data 'transaction'!", e);
             return null;
         }
     }
-    public int insertTransaksi(Transaksi trans) {
-        String querySql = "INSERT INTO transaksi " +
+    public int insertTransaksi(Transaction trans) {
+        String querySql = "INSERT INTO transaction " +
                 "(tipe, jumlah, id_akun, id_kategori, id_tipelabel, tanggal, keterangan, metode_transaksi, status) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)";
 
@@ -393,19 +390,19 @@ public class Database {
             koneksi.setAutoCommit(false); // mulai
             try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, trans.getTipeTransaksi().name());
-                ps.setInt(2, trans.getJumlah());
+                ps.setInt(2, trans.getAmount());
                 ps.setInt(3, trans.getAkun().getId());
                 ps.setInt(4, trans.getKategori().getId());
 
-                if (trans.getTipelabel() != null) {
-                    ps.setInt(5, trans.getTipelabel().getId());
+                if (trans.getLabelType() != null) {
+                    ps.setInt(5, trans.getLabelType().getId());
                 } else {
                     ps.setNull(5, Types.INTEGER);
                 }
-                ps.setString(6, trans.getTanggal().format(formatter));
+                ps.setString(6, trans.getDate().format(formatter));
 
-                if (trans.getKeterangan() != null) {
-                    ps.setString(7, trans.getKeterangan());
+                if (trans.getDescription() != null) {
+                    ps.setString(7, trans.getDescription());
                 } else {
                     ps.setNull(7, Types.VARCHAR);
                 }
@@ -447,7 +444,7 @@ public class Database {
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
-            log.error("insert transaksi gagal", e);
+            log.error("insert transaction gagal", e);
             return -1;
 
         } finally {
@@ -459,23 +456,23 @@ public class Database {
         }
     }
     public void deleteTransaksi(int id) {
-        String querySql = "DELETE FROM transaksi WHERE id = ?";
+        String querySql = "DELETE FROM transaction WHERE id = ?";
 
         try (PreparedStatement perintah = Database.getInstance().koneksi.prepareStatement(querySql)){
             perintah.setInt(1, id);
             int affectedRows = perintah.executeUpdate();
 
             if (affectedRows > 0) {
-                DataManager.getInstance().coreDataTransaksi().removeIf(t -> t.getId() == id);
+                DataManager.getInstance().getDataTransaksi().removeIf(t -> t.getId() == id);
             }
-            log.info("Data transaksi berhasil dihapus!");
+            log.info("Data transaction berhasil dihapus!");
         } catch (Exception e) {
-            log.error("Data transaksi gagal dihapus!", e);
+            log.error("Data transaction gagal dihapus!", e);
         }
     }
-    public Boolean updateTransaksi(Transaksi trans){
+    public Boolean updateTransaksi(Transaction trans){
         String querySql = """
-            UPDATE transaksi SET
+            UPDATE transaction SET
                 jumlah = ?,
                 id_akun = ?,
                 id_kategori = ?,
@@ -490,20 +487,20 @@ public class Database {
         try {
             koneksi.setAutoCommit(false);
             try (PreparedStatement ps = koneksi.prepareStatement(querySql)) {
-                ps.setInt(1, trans.getJumlah());
+                ps.setInt(1, trans.getAmount());
                 ps.setInt(2, trans.getAkun().getId());
                 ps.setInt(3, trans.getKategori().getId());
 
-                if(trans.getTipelabel() != null) {
-                    ps.setInt(4, trans.getTipelabel().getId());
+                if(trans.getLabelType() != null) {
+                    ps.setInt(4, trans.getLabelType().getId());
                 } else {
                     ps.setNull(4, Types.INTEGER);
                 }
 
-                ps.setString(5, trans.getTanggal().format(formatter));
+                ps.setString(5, trans.getDate().format(formatter));
 
-                if (trans.getKeterangan() != null) {
-                    ps.setString(6, trans.getKeterangan());
+                if (trans.getDescription() != null) {
+                    ps.setString(6, trans.getDescription());
                 } else {
                     ps.setNull(6, Types.VARCHAR);
                 }
@@ -539,7 +536,7 @@ public class Database {
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
-            log.error("update transaksi gagal", e);
+            log.error("update transaction gagal", e);
             return false;
 
         } finally {
@@ -551,10 +548,10 @@ public class Database {
         }
     }
 
-    // [6] >=== manipulasi data akun
-    public int insertAkun(Akun dataAkun) {
+    // [6] >=== manipulasi data account
+    public int insertAkun(Account dataAccount) {
         String querySql = """
-        INSERT INTO akun (nama, warna, icon_path, jumlah, id_mata_uang)
+        INSERT INTO account (nama, warna, icon_path, jumlah, id_mata_uang)
         VALUES (?, ?, ?, ?, ?)
         """;
 
@@ -563,11 +560,11 @@ public class Database {
 
             try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
 
-                ps.setString(1, dataAkun.getNama());
-                ps.setString(2, Converter.colorToHex(dataAkun.getWarna()));
-                ps.setString(3, dataAkun.getIconPath());
-                ps.setInt(4, dataAkun.getJumlah());
-                ps.setInt(5, dataAkun.getMataUang().getId());
+                ps.setString(1, dataAccount.getName());
+                ps.setString(2, Converter.colorToHex(dataAccount.getColor()));
+                ps.setString(3, dataAccount.getIconPath());
+                ps.setInt(4, dataAccount.getBalance());
+                ps.setInt(5, dataAccount.getCurrencyType().getId());
 
                 if (ps.executeUpdate() == 0) {
                     throw new SQLException("Insert tidak mengubah data");
@@ -589,7 +586,7 @@ public class Database {
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
-            log.error("insert akun gagal", e);
+            log.error("insert account gagal", e);
             return -1;
 
         } finally {
@@ -600,11 +597,11 @@ public class Database {
             }
         }
     }
-    public ArrayList<Akun> fetchAkun() {
+    public ArrayList<Account> fetchAkun() {
         try (Statement stat = koneksi.createStatement()) {
-            ResultSet rs = stat.executeQuery("SELECT * FROM akun");
+            ResultSet rs = stat.executeQuery("SELECT * FROM account");
 
-            ArrayList<Akun> data = new ArrayList<>();
+            ArrayList<Account> data = new ArrayList<>();
 
             while(rs.next()) {
                 int id = rs.getInt("id");
@@ -622,11 +619,11 @@ public class Database {
                     }
                 }
                 if (mataUang == null ) {
-                    log.warn("fetch akun: id_mata_uang={} tidak ditemukan!", idMataUang);
+                    log.warn("fetch account: id_mata_uang={} tidak ditemukan!", idMataUang);
                     continue; // skip
                 }
 
-                data.add(new Akun(
+                data.add(new Account(
                         id,
                         nama,
                         warna,
@@ -636,17 +633,17 @@ public class Database {
                         mataUang)
                 );
             }
-            log.info("data akun berhasil di fetch!");
+            log.info("data account berhasil di fetch!");
             return data;
 
         } catch (SQLException e) {
-            log.error("gagal fetch data akun: ", e);
+            log.error("gagal fetch data account: ", e);
             return null;
         }
     }
-    public Boolean updateSaldoAkun(Akun akun, int jumlah) {
+    public Boolean updateSaldoAkun(Account account, int jumlah) {
         String querySql = """
-            UPDATE akun SET
+            UPDATE account SET
             jumlah = ?
             WHERE id = ?;
             """;
@@ -655,7 +652,7 @@ public class Database {
             koneksi.setAutoCommit(false);
             try (PreparedStatement ps = koneksi.prepareStatement(querySql)) {
                 ps.setInt(1, jumlah);
-                ps.setInt(2, akun.getId());
+                ps.setInt(2, account.getId());
 
                 int affected = ps.executeUpdate();
                 if(affected == 0) {
@@ -673,7 +670,7 @@ public class Database {
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
-            log.error("update saldo akun gagal", e);
+            log.error("update saldo account gagal", e);
             return false;
 
         } finally {
@@ -694,7 +691,7 @@ public class Database {
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                TipeTransaksi tipe = TipeTransaksi.valueOf(rs.getString("tipe"));
+                TransactionType tipe = TransactionType.valueOf(rs.getString("tipe"));
                 String nama = rs.getString("nama");
                 int jumlah = rs.getInt("jumlah");
                 int idAkun = rs.getInt("id_akun");
@@ -704,36 +701,36 @@ public class Database {
                 PaymentType paymentType = PaymentType.fromString(rs.getString("metode_transaksi"));
                 PaymentStatus paymentStatus = PaymentStatus.fromString(rs.getString("status"));
 
-                Akun akun = null;
-                for(Akun item : DataManager.getInstance().getDataAkun()) {
+                Account account = null;
+                for(Account item : DataManager.getInstance().getDataAkun()) {
                     if(item.getId() == idAkun) {
-                        akun = item;
+                        account = item;
                         break;
                     }
                 }
 
-                if(akun == null) {
+                if(account == null) {
                     log.error("id_akun {} tidak ditemukan!", idAkun);
                     continue;
                 }
 
-                Kategori kategori = null;
-                for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
+                Category category = null;
+                for(Category ktgr : DataManager.getInstance().getDataKategori()) {
                     if(ktgr.getId() == idKategori) {
-                        kategori = ktgr;
+                        category = ktgr;
                         break;
                     }
                 }
 
-                if(kategori == null) {
+                if(category == null) {
                     log.error("id_kategori {} tidak ditemukan!", idKategori);
                     continue;
                 }
 
-                TipeLabel tipeLabel = null;
-                for(TipeLabel item : DataManager.getInstance().getDataTipeLabel()){
+                LabelType labelType = null;
+                for(LabelType item : DataManager.getInstance().getDataTipeLabel()){
                     if(item.getId() == idTipeLabel) {
-                        tipeLabel = item;
+                        labelType = item;
                         break;
                     }
                 }
@@ -743,9 +740,9 @@ public class Database {
                         tipe,
                         nama,
                         jumlah,
-                        akun,
-                        kategori,
-                        tipeLabel,
+                        account,
+                        category,
+                        labelType,
                         keterangan,
                         paymentType,
                         paymentStatus

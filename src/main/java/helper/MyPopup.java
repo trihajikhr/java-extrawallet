@@ -17,7 +17,7 @@ public class MyPopup {
     private static double xOffset = 0;
     private static double yOffset = 0;
 
-    public static void showSucces(String title, String message) {
+    public static void showsucces(String title, String message) {
         try {
             FXMLLoader loader = new FXMLLoader(
                     MyPopup.class.getResource("/fxml/popup-succes.fxml")

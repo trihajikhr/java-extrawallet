@@ -12,7 +12,7 @@ Mode ini **tidak aman** untuk operasi yang:
 * membutuhkan konsistensi antara database dan data lokal
 * tidak boleh menghasilkan data setengah jadi
 
-Untuk itu, JDBC menyediakan **mekanisme transaksi**.
+Untuk itu, JDBC menyediakan **mekanisme transaction**.
 
 ---
 
@@ -33,7 +33,7 @@ Karakteristik:
 Contoh:
 
 ```java
-INSERT INTO akun ...
+INSERT INTO account ...
 // langsung tersimpan, tidak bisa rollback
 ```
 
@@ -52,7 +52,7 @@ Karakteristik:
 
     * `commit()` → simpan
     * `rollback()` → batalkan
-* Semua query setelah ini berada dalam **satu transaksi**
+* Semua query setelah ini berada dalam **satu transaction**
 
 ---
 
@@ -64,8 +64,8 @@ koneksi.commit();
 
 Fungsi:
 
-* Menyimpan **seluruh perubahan** sejak transaksi dimulai
-* Mengakhiri transaksi
+* Menyimpan **seluruh perubahan** sejak transaction dimulai
+* Mengakhiri transaction
 * Perubahan menjadi **permanen**
 
 Digunakan ketika:
@@ -84,7 +84,7 @@ koneksi.rollback();
 
 Fungsi:
 
-* Membatalkan **seluruh perubahan** sejak transaksi dimulai
+* Membatalkan **seluruh perubahan** sejak transaction dimulai
 * Database kembali ke kondisi awal
 * Tidak ada data setengah jadi
 
@@ -123,13 +123,13 @@ try {
 ### Tanpa Transaksi (Berbahaya)
 
 ```java
-INSERT akun
+INSERT account
 INSERT log_transaksi  // gagal
 ```
 
 Hasil:
 
-* `akun` masuk
+* `account` masuk
 * `log_transaksi` tidak
 * Database tidak konsisten
 
@@ -140,7 +140,7 @@ Hasil:
 ```java
 setAutoCommit(false)
 
-INSERT akun
+INSERT account
 INSERT log_transaksi
 
 commit()
@@ -162,7 +162,7 @@ Hasil:
 ## 7. Prinsip Desain yang Wajib Diingat
 
 1. **Database dan data lokal harus selalu konsisten**
-2. **Insert sukses tapi ID tidak tersedia = transaksi gagal**
+2. **Insert sukses tapi ID tidak tersedia = transaction gagal**
 3. Jangan pernah:
 
     * insert data
@@ -173,7 +173,7 @@ Hasil:
 
 ## 8. Catatan Khusus SQLite
 
-* SQLite **mendukung transaksi sepenuhnya**
+* SQLite **mendukung transaction sepenuhnya**
 * `setAutoCommit(false)` aman dan ringan
 * Sangat dianjurkan bahkan untuk single insert yang krusial
 
@@ -183,7 +183,7 @@ Hasil:
 
 | Method                 | Fungsi                  |
 | ---------------------- | ----------------------- |
-| `setAutoCommit(false)` | Memulai transaksi       |
+| `setAutoCommit(false)` | Memulai transaction       |
 | `commit()`             | Menyimpan perubahan     |
 | `rollback()`           | Membatalkan perubahan   |
 | `setAutoCommit(true)`  | Kembali ke mode default |
@@ -192,7 +192,7 @@ Hasil:
 
 ## 10. Kesimpulan
 
-Menggunakan transaksi berarti:
+Menggunakan transaction berarti:
 
 * Tidak ada data yatim
 * Tidak ada state setengah jadi
@@ -200,4 +200,4 @@ Menggunakan transaksi berarti:
 * Bug lebih sedikit
 * Masa depan lebih damai
 
-> **Jika data itu penting, transaksi bukan pilihan — tapi kewajiban.**
+> **Jika data itu penting, transaction bukan pilihan — tapi kewajiban.**

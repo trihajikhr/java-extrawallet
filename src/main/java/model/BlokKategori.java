@@ -3,24 +3,24 @@ package model;
 import java.math.BigDecimal;
 
 public class BlokKategori{
-    private Kategori kategori;
+    private Category category;
     private int totalUsed;
     private BigDecimal totalAmount;
 
-    public BlokKategori(Kategori kategori, int counter, BigDecimal totalAmount) {
-        this.kategori = kategori;
+    public BlokKategori(Category category, int counter, BigDecimal totalAmount) {
+        this.category = category;
         this.totalUsed = counter;
         this.totalAmount = totalAmount;
     }
 
     public BlokKategori(){}
 
-    public Kategori getKategori() {
-        return kategori;
+    public Category getKategori() {
+        return category;
     }
 
-    public void setKategori(Kategori kategori) {
-        this.kategori = kategori;
+    public void setKategori(Category category) {
+        this.category = category;
     }
 
     public int getTotalUsed() {

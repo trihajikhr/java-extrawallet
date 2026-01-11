@@ -45,7 +45,7 @@ public class EditControl implements Initializable {
     private static final Logger log = LoggerFactory.getLogger(EditControl.class);
     private Stage stage;
     @FXML private AnchorPane rootPane;
-    private Transaksi transOriginal;
+    private Transaction transOriginal;
     private Boolean isSingle = false;
     private TransactionParent parent;
 
@@ -53,14 +53,14 @@ public class EditControl implements Initializable {
     private double xOffset = 0;
     private double yOffset = 0;
     private boolean closing = false;
-    private ObservableList<TipeLabel> tipeLabelList = FXCollections.observableArrayList();
+    private ObservableList<LabelType> labelTypeList = FXCollections.observableArrayList();
 
     // atribut fxml
     @FXML private Spinner<Integer> amountEdit;
     @FXML private ComboBox<MataUang> mataUangCombo;
-    @FXML private ComboBox<Akun> akunComboBox;
-    @FXML private ComboBox<Kategori> categoryComboBox;
-    @FXML private ComboBox<TipeLabel> tipeLabelCombo;
+    @FXML private ComboBox<Account> akunComboBox;
+    @FXML private ComboBox<Category> categoryComboBox;
+    @FXML private ComboBox<LabelType> tipeLabelCombo;
     @FXML private DatePicker dateEdit;
     @FXML private TextField noteEdit;
     @FXML private ComboBox<PaymentType> paymentType;
@@ -98,16 +98,16 @@ public class EditControl implements Initializable {
     public void setParent(TransactionParent parent) {
         this.parent = parent;
     }
-    public Map<Transaksi, RecordCard> getParentRecordCards() {
+    public Map<Transaction, RecordCard> getParentRecordCards() {
         return parent.getRecordCardBoard();
     }
 
     // [1] >=== SCENE CONNECTION
-    public ComboBox<TipeLabel> getTipeLabelCombo() {
+    public ComboBox<LabelType> getTipeLabelCombo() {
         return tipeLabelCombo;
     }
-    public ObservableList<TipeLabel> getTipeLabelList() {
-        return tipeLabelList;
+    public ObservableList<LabelType> getTipeLabelList() {
+        return labelTypeList;
     }
 
     // [2] >=== DATA LOADER
@@ -126,13 +126,13 @@ public class EditControl implements Initializable {
         mataUangCombo.getStyleClass().add("locked");
     }
     private void loadTipeLabelComboBox(){
-        ArrayList<TipeLabel> dataTipelabel = DataManager.getInstance().getDataTipeLabel();
-        tipeLabelList = FXCollections.observableArrayList(dataTipelabel);
+        ArrayList<LabelType> dataTipelabel = DataManager.getInstance().getDataTipeLabel();
+        labelTypeList = FXCollections.observableArrayList(dataTipelabel);
 
-        tipeLabelCombo.setItems(tipeLabelList);
-        tipeLabelCombo.setCellFactory(list -> new ListCell<TipeLabel>() {
+        tipeLabelCombo.setItems(labelTypeList);
+        tipeLabelCombo.setCellFactory(list -> new ListCell<LabelType>() {
             @Override
-            protected void updateItem(TipeLabel item, boolean empty) {
+            protected void updateItem(LabelType item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if(empty || item == null) {
@@ -154,14 +154,14 @@ public class EditControl implements Initializable {
 
                 iconBox.setBackground(new Background(
                         new BackgroundFill(
-                                item.getWarna(),
+                                item.getColor(),
                                 new CornerRadii(8),
                                 Insets.EMPTY
                         )
                 ));
 
                 // teks
-                Label label = new Label(item.getNama());
+                Label label = new Label(item.getName());
                 label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
                 // gabung
@@ -172,14 +172,14 @@ public class EditControl implements Initializable {
         });
         tipeLabelCombo.setButtonCell(tipeLabelCombo.getCellFactory().call(null));
     }
-    public void prefilFromRecord(Transaksi trans) {
-        amountEdit.getEditor().setText(Integer.toString(trans.getJumlah()));
+    public void prefilFromRecord(Transaction trans) {
+        amountEdit.getEditor().setText(Integer.toString(trans.getAmount()));
         akunComboBox.setValue(trans.getAkun());
         categoryComboBox.setValue(trans.getKategori());
-        tipeLabelCombo.setValue(trans.getTipelabel());
-        dateEdit.setValue(trans.getTanggal());
+        tipeLabelCombo.setValue(trans.getLabelType());
+        dateEdit.setValue(trans.getDate());
         noteEdit.setText(
-                Objects.requireNonNullElse(trans.getKeterangan(), "")
+                Objects.requireNonNullElse(trans.getDescription(), "")
         );
         paymentType.setValue(trans.getPaymentType());
         paymentStatus.setValue(trans.getPaymentStatus());
@@ -221,7 +221,7 @@ public class EditControl implements Initializable {
         return Bindings.createBooleanBinding(() -> {
                     if (transOriginal == null) return false;
 
-                    Transaksi current = new Transaksi(
+                    Transaction current = new Transaction(
                             transOriginal.getId(),
                             transOriginal.getTipeTransaksi(),
                             amountEdit.getValue(),
@@ -259,7 +259,7 @@ public class EditControl implements Initializable {
     private void akunToMataUangListener() {
         akunComboBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                mataUangCombo.setValue(newVal.getMataUang());
+                mataUangCombo.setValue(newVal.getCurrencyType());
             }
         });
     }
@@ -322,7 +322,7 @@ public class EditControl implements Initializable {
             String note = noteEdit.getText();
             note = (note == null || note.isBlank()) ? null : note;
 
-            Transaksi transModified = new Transaksi(
+            Transaction transModified = new Transaction(
                     transOriginal.getId(),
                     transOriginal.getTipeTransaksi(),
                     amountEdit.getValue(),
@@ -339,9 +339,9 @@ public class EditControl implements Initializable {
             if(isChanged) {
 
                 boolean saldoOk = service.updateSingleAkun(
-                        transOriginal.getAkun(),   // akun LAMA
+                        transOriginal.getAkun(),   // account LAMA
                         transOriginal,             // transaksi LAMA
-                        transModified.getJumlah()  // jumlah BARU
+                        transModified.getAmount()  // jumlah BARU
                 );
 
                 if (!saldoOk) {
@@ -354,7 +354,7 @@ public class EditControl implements Initializable {
             }
 
         } else {
-            List<Transaksi> selected = parent.getRecordCardBoard().entrySet().stream()
+            List<Transaction> selected = parent.getRecordCardBoard().entrySet().stream()
                     .filter(e -> e.getValue().getCheckList().isSelected())
                     .map(Map.Entry::getKey)
                     .toList();
@@ -362,23 +362,23 @@ public class EditControl implements Initializable {
             // safety: minimal 1 data
             if (selected.isEmpty()) return;
 
-            // safety: satu akun saja
-            if (selected.stream().map(Transaksi::getAkun).distinct().count() > 1) {
-                MyPopup.showDanger("Gagal", "Edit massal hanya boleh untuk satu akun");
+            // safety: satu account saja
+            if (selected.stream().map(Transaction::getAkun).distinct().count() > 1) {
+                MyPopup.showDanger("Gagal", "Edit massal hanya boleh untuk satu account");
                 return;
             }
 
             AbstractTransactionService service =
                     resolveService(selected.get(0));
 
-            Akun akun = selected.get(0).getAkun();
-            int saldoAwal = akun.getJumlah();
+            Account account = selected.get(0).getAkun();
+            int saldoAwal = account.getBalance();
 
-            List<Transaksi> newList = new ArrayList<>();
+            List<Transaction> newList = new ArrayList<>();
 
             // === VALIDASI & HITUNG SALDO (SIMULASI) ===
-            for (Transaksi old : selected) {
-                Transaksi edited = new Transaksi(
+            for (Transaction old : selected) {
+                Transaction edited = new Transaction(
                         old.getId(),
                         old.getTipeTransaksi(),
                         amountEdit.getValue(),
@@ -392,14 +392,14 @@ public class EditControl implements Initializable {
                 );
 
                 boolean ok = service.updateSingleAkun(
-                        akun,
+                        account,
                         old,
-                        edited.getJumlah()
+                        edited.getAmount()
                 );
 
                 if (!ok) {
-                    akun.setJumlah(saldoAwal);
-                    DataManager.getInstance().updateSaldoAkun(akun, saldoAwal);
+                    account.setBalance(saldoAwal);
+                    DataManager.getInstance().updateSaldoAkun(account, saldoAwal);
                     return;
                 }
 
@@ -414,10 +414,10 @@ public class EditControl implements Initializable {
         closePopup();
     }
 
-    private AbstractTransactionService resolveService(Transaksi t) {
+    private AbstractTransactionService resolveService(Transaction t) {
         return switch (t.getTipeTransaksi()) {
-            case IN  -> new IncomeService();
-            case OUT -> new ExpenseService();
+            case INCOME -> new IncomeService();
+            case EXPANSE -> new ExpenseService();
         };
     }
 }

@@ -5,8 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
-import model.TipeTransaksi;
-import model.Transaksi;
+import model.TransactionType;
+import model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +18,7 @@ import java.util.Map;
 
 public class StatisticControl {
     private static final Logger log = LoggerFactory.getLogger(StatisticControl.class);
-    private ArrayList<Transaksi> dataTransaksi = new ArrayList<>();
+    private ArrayList<Transaction> dataTransaction = new ArrayList<>();
     @FXML private AreaChart mainStatistik;
     @FXML private Label labelTahun;
 
@@ -29,8 +29,8 @@ public class StatisticControl {
     }
 
     private void setGrafikArea(){
-        dataTransaksi = DataManager.getInstance().getDataTransaksi();
-        dataTransaksi.sort(Comparator.comparing(Transaksi::getTanggal));
+        dataTransaction = DataManager.getInstance().getDataTransaksi();
+        dataTransaction.sort(Comparator.comparing(Transaction::getDate));
 
         Map<Integer, Integer> monthlyDelta = new HashMap<>();
         for (int i = 1; i <= 12; i++) monthlyDelta.put(i, 0);
@@ -38,11 +38,11 @@ public class StatisticControl {
         int currentYear = LocalDate.now().getYear();
         int currentMonth = LocalDate.now().getMonthValue();
 
-        for (Transaksi t : dataTransaksi) {
-            if (t.getTanggal().getYear() != currentYear) continue;
+        for (Transaction t : dataTransaction) {
+            if (t.getDate().getYear() != currentYear) continue;
 
-            int month = t.getTanggal().getMonthValue();
-            int delta = t.getTipeTransaksi() == TipeTransaksi.IN ? t.getJumlah() : -t.getJumlah();
+            int month = t.getDate().getMonthValue();
+            int delta = t.getTipeTransaksi() == TransactionType.INCOME ? t.getAmount() : -t.getAmount();
             monthlyDelta.put(month, monthlyDelta.get(month) + delta);
         }
 

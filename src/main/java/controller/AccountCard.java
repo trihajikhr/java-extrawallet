@@ -6,11 +6,11 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import model.Akun;
+import model.Account;
 
 public class AccountCard extends HBox {
 
-    public AccountCard(Akun account) {
+    public AccountCard(Account account) {
 
         setSpacing(10);
         setPadding(new Insets(10));
@@ -18,17 +18,17 @@ public class AccountCard extends HBox {
 
         // override warna
         setStyle(
-                "-fx-background-color: " + Converter.colorToHex(account.getWarna()) + ";"
+                "-fx-background-color: " + Converter.colorToHex(account.getColor()) + ";"
         );
 
         ImageView icon = new ImageView(account.getIcon());
         icon.setFitWidth(32);
         icon.setFitHeight(32);
 
-        Label name = new Label(account.getNama());
+        Label name = new Label(account.getName());
         name.getStyleClass().add("account-name");
 
-        Label balance = new Label(formatCurrency(account.getJumlah()));
+        Label balance = new Label(formatCurrency(account.getBalance()));
         balance.getStyleClass().add("account-balance");
 
         VBox textBox = new VBox(name, balance);

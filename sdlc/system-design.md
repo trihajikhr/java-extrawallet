@@ -13,15 +13,15 @@ Sebaliknya, ia membuat representasi awal (biasanya antarmuka/GUI), lalu melakuka
 
 Kebutuhan fungsioanl adalah fungsi apa saja yang harus dapat dilakukan oleh aplikasi:
 
-1. Aplikasi dapat digunakan oleh lebih dari satu akun. Aplikasi harus mampu untuk memyimpan data yang berda untuk setiap akun pengguna. Ini membuat user dapat memiliki lebih dari satu akun pada aplikasi, memungkinkan user untuk memisahkan data.
+1. Aplikasi dapat digunakan oleh lebih dari satu account. Aplikasi harus mampu untuk memyimpan data yang berda untuk setiap account pengguna. Ini membuat user dapat memiliki lebih dari satu account pada aplikasi, memungkinkan user untuk memisahkan data.
 2. Aplikasi dapat menangani kebutuhan penggantian username, nama, dan password.
 3. Aplikasi dapat menerima jenis mata uang, dan mengganti mata uang dengan mempertahankan value yang sesuai.
-4. Aplikasi menyimpan setiap transaksi dengan beberapa kategori yang bisa dipilih oleh user, dan kategori tersebut sudah terbuat semisal 10 kategori diawal. Namun user masih dapat menambahkanya sendiri jika ingin kategori custom.
-5. Aplikasi dapat menerima data yang dimasukan oleh user, dimana aplikasi menerima inputan nominal, dan mencatat tanggal transaksi.
+4. Aplikasi menyimpan setiap transaction dengan beberapa category yang bisa dipilih oleh user, dan category tersebut sudah terbuat semisal 10 category diawal. Namun user masih dapat menambahkanya sendiri jika ingin category custom.
+5. Aplikasi dapat menerima data yang dimasukan oleh user, dimana aplikasi menerima inputan nominal, dan mencatat tanggal transaction.
 6. Aplikasi dapat mencatat tanggal ketika saldo aplikasi bertambah atau berkurang.
-7. Aplikasi dapat menampilkan data yang diminta pengguna, seperti melihat riwayat transaksi dalam 1 minggu, 2 minggu, 1 bulan, 6 bulan, dan 1 tahun.
-8. Aplikasi dapat menampilkan statistik transaksi yang difilter berdasarkan waktu, dan kategori.
-9. Aplikasi dapat menampilkan data yang bisa disort ascending dan descending, untuk menampilkan riwayat transaksi berdasarkan kategori
+7. Aplikasi dapat menampilkan data yang diminta pengguna, seperti melihat riwayat transaction dalam 1 minggu, 2 minggu, 1 bulan, 6 bulan, dan 1 tahun.
+8. Aplikasi dapat menampilkan statistik transaction yang difilter berdasarkan waktu, dan category.
+9. Aplikasi dapat menampilkan data yang bisa disort ascending dan descending, untuk menampilkan riwayat transaction berdasarkan category
 10. Aplikasi menyimpan semua data ke dalam SQlite, dan untuk data sensitif seperti password, harus ditangani dengan data hasil hashing
 11. Aplikasi memiliki tampilan GUI.
 12. Aplikasi menggunakan konsep OOP
@@ -85,7 +85,7 @@ SQLite memiliki beberapa perbedaan syntax dengan query SQL lain, sehingga akan d
 
 ### User
 
-Aplikasi akan dirancang untuk bisa menangai lebih dari satu akun pengguna, yaitu dengan dibuat memiliki lebih dari akun. Setiap akun akan memiliki data keuangan yang berbeda-beda. Aplikasi personal finance modern kebanyakan mengikuti pendekatna ini.
+Aplikasi akan dirancang untuk bisa menangai lebih dari satu account pengguna, yaitu dengan dibuat memiliki lebih dari account. Setiap account akan memiliki data keuangan yang berbeda-beda. Aplikasi personal finance modern kebanyakan mengikuti pendekatna ini.
 
 | Atribut       | Tipe data | Keterangan                    |
 |---------------|-----------|-------------------------------|
@@ -98,7 +98,7 @@ Aplikasi akan dirancang untuk bisa menangai lebih dari satu akun pengguna, yaitu
 
 ### Mata Uang
 
-Ketika user pertama kali masuk dan membuat akun, user akan diminta untuk memberi tahu aplikasi jenis mata uang apa yang dia gunakan. Namun jika ditengah-tengah pemakaian yser ingin berganti mata uang, maka aplikasi harus bisa menghandle hal tersebut.
+Ketika user pertama kali masuk dan membuat account, user akan diminta untuk memberi tahu aplikasi jenis mata uang apa yang dia gunakan. Namun jika ditengah-tengah pemakaian yser ingin berganti mata uang, maka aplikasi harus bisa menghandle hal tersebut.
 
 Kasus ini mungkin untuk terjadi, jika semisal user berpindah negara, dan ingin mempertahankan value mata uang yang dimilikinya di aplikasi.
 
@@ -113,7 +113,7 @@ Kasus ini mungkin untuk terjadi, jika semisal user berpindah negara, dan ingin m
 
 ### Kategori
 
-Kategori akan menyimpan pengelompokan pemasukan dan pengeluaran yang dikelompokan berdasarkan kategori. User bisa memantau total pengeluaran dan pemasukan berdasarkan kategori tertentu, dengan menyediakan opsi yang menyediakan tampilakan riwayat transaksi berdasar kategori.
+Kategori akan menyimpan pengelompokan pemasukan dan pengeluaran yang dikelompokan berdasarkan category. User bisa memantau total pengeluaran dan pemasukan berdasarkan category tertentu, dengan menyediakan opsi yang menyediakan tampilakan riwayat transaction berdasar category.
 
 
 | Atribut       | Tipe data | Keterangan               |
@@ -135,7 +135,7 @@ Pemasukan mencaatat uang masuk yang diterima oleh sistem, dan kemudian akan mena
 
 ### Pengeluaran
 
-Pengeluaran mencatat uang yang keluar, atau dispent oleh user. Fungsinya mendukung pencatatan riwayat transaksi, yang tidak berbeda jauh dengan pencatatn pemasukan.
+Pengeluaran mencatat uang yang keluar, atau dispent oleh user. Fungsinya mendukung pencatatan riwayat transaction, yang tidak berbeda jauh dengan pencatatn pemasukan.
 
 | Atribut        | Tipe data  | Keterangan            |
 | -------------- |------------|-----------------------|
@@ -146,9 +146,9 @@ Pengeluaran mencatat uang yang keluar, atau dispent oleh user. Fungsinya menduku
 
 ### Tabungan:
 
-Beberapa aplikasi menawarkan opsi untuk membuat pengelompokan, dimana user membuat rencana finansial untuk kepentingan tertentu, dan mengharuskan menambung uangnya. Aplikasi akan dirancang untuk menyediakan opsi tersebut, sehingga pencatatn transaksi akan dipisahkan dengan pencatatn transaksi utama, namun dengan beberapa fitur yang lebih disederhanakan.
+Beberapa aplikasi menawarkan opsi untuk membuat pengelompokan, dimana user membuat rencana finansial untuk kepentingan tertentu, dan mengharuskan menambung uangnya. Aplikasi akan dirancang untuk menyediakan opsi tersebut, sehingga pencatatn transaction akan dipisahkan dengan pencatatn transaction utama, namun dengan beberapa fitur yang lebih disederhanakan.
 
-Ini artinya, tabungan akan memiliki entitas pemasukan dan pengeluaranya sendri, namun dengan kategori, user, dan mata uang utama.
+Ini artinya, tabungan akan memiliki entitas pemasukan dan pengeluaranya sendri, namun dengan category, user, dan mata uang utama.
 
 | Atribut       | Tipe data   | Keterangan            |
 | ------------- |-------------| --------------------- |

@@ -71,15 +71,15 @@ public class TransactionControl implements Initializable {
     @FXML private GridPane inoutForm;
     @FXML private GridPane transForm;
 
-    @FXML private ComboBox<Kategori> categoryComboBox;
+    @FXML private ComboBox<Category> categoryComboBox;
     @FXML private ComboBox<PaymentType> paymentType_inout, paymentType_trans;
     @FXML private ComboBox<PaymentStatus> paymentStatus_inout, paymentStatus_trans;
-    @FXML private ComboBox<Akun> akunComboBox_inout, akunComboBox_from, akunComboBox_to;
+    @FXML private ComboBox<Account> akunComboBox_inout, akunComboBox_from, akunComboBox_to;
 
     // combobox tipeLabel
-    private ObservableList<TipeLabel> tipeLabelList = FXCollections.observableArrayList();
-    @FXML private ComboBox<TipeLabel> tipeLabel_inout;
-    @FXML private ComboBox<TipeLabel> tipeLabel_trans;
+    private ObservableList<LabelType> labelTypeList = FXCollections.observableArrayList();
+    @FXML private ComboBox<LabelType> tipeLabel_inout;
+    @FXML private ComboBox<LabelType> tipeLabel_trans;
 
     // template
     private ObservableList<Template> dataTemplateList = FXCollections.observableArrayList();
@@ -116,7 +116,7 @@ public class TransactionControl implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        log.info("Transaksi pop up terbuka");
+        log.info("Transaction pop up terbuka");
 
         // isformcomplete function
         isInOutFormComplete();
@@ -235,10 +235,10 @@ public class TransactionControl implements Initializable {
         );
     }
     private void initTipeLabelList() {
-        ArrayList<TipeLabel> data = DataManager.getInstance().getDataTipeLabel();
-        tipeLabelList = FXCollections.observableArrayList(data);
-        tipeLabel_inout.setItems(tipeLabelList);
-        tipeLabel_trans.setItems(tipeLabelList);
+        ArrayList<LabelType> data = DataManager.getInstance().getDataTipeLabel();
+        labelTypeList = FXCollections.observableArrayList(data);
+        tipeLabel_inout.setItems(labelTypeList);
+        tipeLabel_trans.setItems(labelTypeList);
     }
     private void initButtons() {
 
@@ -365,34 +365,34 @@ public class TransactionControl implements Initializable {
     }
     @FXML
     private void inoutSubmitHandler(boolean closeAfterSubmit) {
-        TipeTransaksi tipe = getValueChoosen() == 1 ? TipeTransaksi.IN : TipeTransaksi.OUT;
+        TransactionType tipe = getValueChoosen() == 1 ? TransactionType.INCOME : TransactionType.EXPANSE;
         int jumlah = spinner_inout.getValue();
-        Akun akun = akunComboBox_inout.getValue();
-        Kategori kategori = categoryComboBox.getValue();
-        TipeLabel tipeLabel = tipeLabel_inout.getValue();
+        Account account = akunComboBox_inout.getValue();
+        Category category = categoryComboBox.getValue();
+        LabelType labelType = tipeLabel_inout.getValue();
         LocalDate tanggal = date_inout.getValue();
         String keterangan = IOLogic.normalizeSpaces(note_inout.getText());
         PaymentType payment = paymentType_inout.getValue();
         PaymentStatus status = paymentStatus_inout.getValue();
 
-        if(tipe == TipeTransaksi.OUT && jumlah > akun.getJumlah()){
-            MyPopup.showDanger("Saldo kurang!", "Saldo anda: " + akun.getJumlah());
+        if(tipe == TransactionType.EXPANSE && jumlah > account.getBalance()){
+            MyPopup.showDanger("Saldo kurang!", "Saldo anda: " + account.getBalance());
             return;
         }
 
         int newSaldo = 0;
         Boolean result = false;
-        if(tipe == TipeTransaksi.IN) {
-            newSaldo = akun.getJumlah() + jumlah;
-            result = DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
+        if(tipe == TransactionType.INCOME) {
+            newSaldo = account.getBalance() + jumlah;
+            result = DataManager.getInstance().updateSaldoAkun(account, newSaldo);
             if(result) {
-                akun.setJumlah(newSaldo);
+                account.setBalance(newSaldo);
             }
         } else {
-            newSaldo = akun.getJumlah() - jumlah;
-            result = DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
+            newSaldo = account.getBalance() - jumlah;
+            result = DataManager.getInstance().updateSaldoAkun(account, newSaldo);
             if(result) {
-                akun.setJumlah(newSaldo);
+                account.setBalance(newSaldo);
             }
         }
 
@@ -400,13 +400,13 @@ public class TransactionControl implements Initializable {
             return;
         }
 
-        DataManager.getInstance().addTransaksi(new Transaksi(
+        DataManager.getInstance().addTransaksi(new Transaction(
                 0,
                 tipe,
                 jumlah,
-                akun,
-                kategori,
-                tipeLabel,
+                account,
+                category,
+                labelType,
                 tanggal,
                 keterangan,
                 payment,
@@ -464,7 +464,7 @@ public class TransactionControl implements Initializable {
             ctrl.setStage(stage);
             ctrl.setParentTransaction(this);
 
-            Transaksi draft = buildDraftTransaksi();
+            Transaction draft = buildDraftTransaksi();
             ctrl.prefillFromTransaksi(draft);
 
             stage.showAndWait();
@@ -476,81 +476,81 @@ public class TransactionControl implements Initializable {
     }
     @FXML
     private void transSubmitHandler(boolean closeAfterSubmit) {
-        Akun fromAkun = akunComboBox_from.getValue();
-        Akun toAkun = akunComboBox_to.getValue();
+        Account fromAccount = akunComboBox_from.getValue();
+        Account toAccount = akunComboBox_to.getValue();
         int fromJumlah = spinner_from.getValue();
         int toJumlah = spinner_to.getValue();
-        TipeLabel tipeLabel = tipeLabel_trans.getValue();
+        LabelType labelType = tipeLabel_trans.getValue();
         LocalDate tanggal = date_trans.getValue();
         String keterangan = IOLogic.normalizeSpaces(note_trans.getText());
         PaymentType payment = paymentType_trans.getValue();
         PaymentStatus status = paymentStatus_trans.getValue();
 
-        if(fromJumlah > fromAkun.getJumlah()){
-            MyPopup.showDanger("Saldo akun kurang!", "Saldo anda: " + fromAkun.getJumlah());
+        if(fromJumlah > fromAccount.getBalance()){
+            MyPopup.showDanger("Saldo account kurang!", "Saldo anda: " + fromAccount.getBalance());
             return;
         }
 
         Boolean fromValid = false, toValid = false;
-        int newFromJumlah = fromAkun.getJumlah() - fromJumlah;
-        int newToJumlah = toAkun.getJumlah() + toJumlah;
+        int newFromJumlah = fromAccount.getBalance() - fromJumlah;
+        int newToJumlah = toAccount.getBalance() + toJumlah;
 
-        fromValid = DataManager.getInstance().updateSaldoAkun(fromAkun, newFromJumlah);
-        toValid = DataManager.getInstance().updateSaldoAkun(fromAkun, newToJumlah);
+        fromValid = DataManager.getInstance().updateSaldoAkun(fromAccount, newFromJumlah);
+        toValid = DataManager.getInstance().updateSaldoAkun(fromAccount, newToJumlah);
 
         if(fromValid && toValid) {
-            fromAkun.setJumlah(newFromJumlah);
-            toAkun.setJumlah(newToJumlah);
+            fromAccount.setBalance(newFromJumlah);
+            toAccount.setBalance(newToJumlah);
         } else {
             return;
         }
 
-        Kategori fromKategori = null;
-        for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
+        Category fromCategory = null;
+        for(Category ktgr : DataManager.getInstance().getDataKategori()) {
             if(ktgr.getId() == 32) {
-                fromKategori = ktgr;
+                fromCategory = ktgr;
                 break;
             }
         }
 
-        if(fromKategori == null) {
+        if(fromCategory == null) {
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return;
         }
 
-        DataManager.getInstance().addTransaksi(new Transaksi(
+        DataManager.getInstance().addTransaksi(new Transaction(
                 0,
-                TipeTransaksi.OUT,
+                TransactionType.EXPANSE,
                 fromJumlah,
-                fromAkun,
-                fromKategori,
-                tipeLabel,
+                fromAccount,
+                fromCategory,
+                labelType,
                 tanggal,
                 keterangan,
                 payment,
                 status
         ));
 
-        Kategori toKategori = null;
-        for(Kategori ktgr : DataManager.getInstance().getDataKategori()) {
+        Category toCategory = null;
+        for(Category ktgr : DataManager.getInstance().getDataKategori()) {
             if(ktgr.getId() == 31) {
-                toKategori = ktgr;
+                toCategory = ktgr;
                 break;
             }
         }
 
-        if(toKategori == null) {
+        if(toCategory == null) {
             MyPopup.showDanger("Gagal!", "Terjadi kesalahan!");
             return;
         }
 
-        DataManager.getInstance().addTransaksi(new Transaksi(
+        DataManager.getInstance().addTransaksi(new Transaction(
                 0,
-                TipeTransaksi.IN,
+                TransactionType.INCOME,
                 toJumlah,
-                toAkun,
-                toKategori,
-                tipeLabel,
+                toAccount,
+                toCategory,
+                labelType,
                 tanggal,
                 keterangan,
                 payment,
@@ -703,13 +703,13 @@ public class TransactionControl implements Initializable {
     }
 
     // [4] >=== CONNECTOR FUNCTION
-    public ObservableList<TipeLabel> getTipeLabelList() {
-        return tipeLabelList;
+    public ObservableList<LabelType> getTipeLabelList() {
+        return labelTypeList;
     }
-    public ComboBox<TipeLabel> getTipeLabelInOut() {
+    public ComboBox<LabelType> getTipeLabelInOut() {
         return tipeLabel_inout;
     }
-    public ComboBox<TipeLabel> getTipeLabelTrans() {
+    public ComboBox<LabelType> getTipeLabelTrans() {
         return tipeLabel_trans;
     }
     public ObservableList<Template> getTemplateList() {
@@ -776,8 +776,8 @@ public class TransactionControl implements Initializable {
     private void updateCategoryCombo(String type) {
         categoryComboBox.getSelectionModel().clearSelection();
 
-        List<Kategori> filtered = DataManager.getInstance().getDataKategori().stream()
-                .filter(k -> k.getTipe().equals(type))
+        List<Category> filtered = DataManager.getInstance().getDataKategori().stream()
+                .filter(k -> k.getType().equals(type))
                 .toList();
 
         categoryComboBox.setItems(
@@ -814,24 +814,24 @@ public class TransactionControl implements Initializable {
             transferImg_trans.setImage(DataManager.getInstance().getImageTransactionForm()[2][1]);
         }
     }
-    private Transaksi buildDraftTransaksi() {
-        TipeTransaksi tipe = getValueChoosen() == 1 ? TipeTransaksi.IN : TipeTransaksi.OUT;
+    private Transaction buildDraftTransaksi() {
+        TransactionType tipe = getValueChoosen() == 1 ? TransactionType.INCOME : TransactionType.EXPANSE;
         int jumlah = spinner_inout.getValue();
-        Akun akun = akunComboBox_inout.getValue();
-        Kategori kategori = categoryComboBox.getValue();
-        TipeLabel tipeLabel = tipeLabel_inout.getValue();
+        Account account = akunComboBox_inout.getValue();
+        Category category = categoryComboBox.getValue();
+        LabelType labelType = tipeLabel_inout.getValue();
         LocalDate tanggal = date_inout.getValue();
         String keterangan = IOLogic.normalizeSpaces(note_inout.getText());
         PaymentType payment = paymentType_inout.getValue();
         PaymentStatus status = paymentStatus_inout.getValue();
 
-        Transaksi draft = new Transaksi(
+        Transaction draft = new Transaction(
                 0,
                 tipe,
                 jumlah,
-                akun,
-                kategori,
-                tipeLabel,
+                account,
+                category,
+                labelType,
                 tanggal,
                 keterangan,
                 payment,
@@ -856,17 +856,17 @@ public class TransactionControl implements Initializable {
     private void akunToMataUangListener() {
         akunComboBox_inout.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                mataUangCombo_inout.setValue(newVal.getMataUang());
+                mataUangCombo_inout.setValue(newVal.getCurrencyType());
             }
         });
         akunComboBox_from.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                mataUangCombo_from.setValue(newVal.getMataUang());
+                mataUangCombo_from.setValue(newVal.getCurrencyType());
             }
         });
         akunComboBox_to.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
-                mataUangCombo_to.setValue(newVal.getMataUang());
+                mataUangCombo_to.setValue(newVal.getCurrencyType());
             }
         });
     }
@@ -887,9 +887,9 @@ public class TransactionControl implements Initializable {
         });
     }
     private void templateInOutDrafter(Template temp) {
-        if(temp.getTipeTransaksi() == TipeTransaksi.IN) {
+        if(temp.getTipeTransaksi() == TransactionType.INCOME) {
             activateIncome();
-        } else if (temp.getTipeTransaksi() == TipeTransaksi.OUT) {
+        } else if (temp.getTipeTransaksi() == TransactionType.EXPANSE) {
             activateExpense();
         }
 

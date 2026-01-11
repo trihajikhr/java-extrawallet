@@ -14,10 +14,7 @@ import javafx.scene.shape.Line;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.math.BigDecimal;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
 // TODO: sempurnakan constructor, dan atur setter dan getter, dan pikirkan soal listener
@@ -46,11 +43,11 @@ public class RecordCard {
     private ImageView paymentStatusIcon;
 
     // atribute helper
-    private Transaksi transaksi;
+    private Transaction transaction;
 
     // [0] >=== CONSTRUCTOR
-    public RecordCard(Transaksi trans) {
-        this.transaksi = trans;
+    public RecordCard(Transaction trans) {
+        this.transaction = trans;
 
         // [0] parent node
         this.cardWrapper = createParentNode(trans);
@@ -62,10 +59,10 @@ public class RecordCard {
         // [2] icon dengan stackpane:
         StackPane iconStack = createIconStackNode(trans);
 
-        // [3] vbox untuk label, kategori, dan keterangan
+        // [3] vbox untuk label, category, dan keterangan
         VBox infoDasar = createInfoDasarNode(trans);
 
-        // [4] menampilkan badges nama akun
+        // [4] menampilkan badges nama account
         HBox infoAkun = createInfoAkunNode(trans);
 
         // [5] menampilkan badges nama label
@@ -88,7 +85,7 @@ public class RecordCard {
     }
 
     // [1] >=== MODULARISASI PEMBUATAN NODE
-    private HBox createParentNode(Transaksi trans) {
+    private HBox createParentNode(Transaction trans) {
         HBox result = new HBox(20);
         result.setAlignment(Pos.CENTER_LEFT);
         result.setPrefHeight(65);
@@ -102,12 +99,12 @@ public class RecordCard {
         """);
         return result;
     }
-    private CheckBox createCheckBoxNode(Transaksi trans) {
+    private CheckBox createCheckBoxNode(Transaction trans) {
         CheckBox result = new CheckBox();
         return result;
     }
-    private StackPane createIconStackNode(Transaksi trans) {
-        Circle bgCircle = new Circle(20, trans.getKategori().getWarna());
+    private StackPane createIconStackNode(Transaction trans) {
+        Circle bgCircle = new Circle(20, trans.getKategori().getColor());
         this.kategoriIcon = new ImageView(trans.getKategori().getIcon());
         this.kategoriIcon.setFitWidth(24);
         this.kategoriIcon.setFitHeight(24);
@@ -118,13 +115,13 @@ public class RecordCard {
         StackPane result = new StackPane(bgCircle, this.kategoriIcon);
         return result;
     }
-    private VBox createInfoDasarNode(Transaksi trans) {
+    private VBox createInfoDasarNode(Transaction trans) {
         VBox result = new VBox(5);
         result.setAlignment(Pos.CENTER_LEFT);
         result.setPrefWidth(400);
         result.setMinWidth(300);
         result.setMaxWidth(500);
-        this.labelKategori = new Label(trans.getKategori().getNama());
+        this.labelKategori = new Label(trans.getKategori().getName());
         this.labelKategori.setStyle("""
             -fx-text-fill: #000000;
             -fx-font-size: 18px;
@@ -146,9 +143,9 @@ public class RecordCard {
 
         String tempKeterangan = "";
         this.labelKeterangan = null;
-        if(trans.getKeterangan() != null) {
+        if(trans.getDescription() != null) {
             this.labelKeterangan = new Label();
-            tempKeterangan = trans.getKeterangan();
+            tempKeterangan = trans.getDescription();
             this.labelKeterangan.setText(tempKeterangan);
             this.labelKeterangan.setStyle("-fx-text-fill: #6B7280");
         }
@@ -168,7 +165,7 @@ public class RecordCard {
         result.getChildren().add(this.infoDasarWrapper);
         return result;
     }
-    private HBox createInfoAkunNode(Transaksi trans) {
+    private HBox createInfoAkunNode(Transaction trans) {
         HBox result = new HBox(15);
         result.setPrefWidth(300);
         result.setMinWidth(200);
@@ -176,8 +173,8 @@ public class RecordCard {
         //result.setStyle("-fx-background-color: blue;");
         HBox.setHgrow(result, Priority.ALWAYS);
         result.setAlignment(Pos.CENTER_LEFT);
-        this.labelAkun = new Label(trans.getAkun().getNama());
-        String warnaHex = Converter.colorToHex(trans.getAkun().getWarna());
+        this.labelAkun = new Label(trans.getAkun().getName());
+        String warnaHex = Converter.colorToHex(trans.getAkun().getColor());
         this.labelAkun.setStyle("""
                 -fx-background-color: %s;
                 -fx-font-size: 11;
@@ -189,7 +186,7 @@ public class RecordCard {
         result.getChildren().add(this.labelAkun);
         return result;
     }
-    private HBox createInfoLabelNode(Transaksi trans) {
+    private HBox createInfoLabelNode(Transaction trans) {
         HBox result = new HBox(15);
         result.setPrefWidth(100);
         result.setMinWidth(100);
@@ -198,9 +195,9 @@ public class RecordCard {
 
         HBox.setHgrow(result, Priority.ALWAYS);
         result.setAlignment(Pos.CENTER_LEFT);
-        if(trans.getTipelabel() != null) {
-            this.labelTipeLabel = new Label(trans.getTipelabel().getNama());
-            String warnaHex = Converter.colorToHex(trans.getTipelabel().getWarna());
+        if(trans.getLabelType() != null) {
+            this.labelTipeLabel = new Label(trans.getLabelType().getName());
+            String warnaHex = Converter.colorToHex(trans.getLabelType().getColor());
             this.labelTipeLabel.setStyle("""
                 -fx-background-color: %s;
                 -fx-font-size: 11;
@@ -215,22 +212,22 @@ public class RecordCard {
             return result;
         }
     }
-    private Region createSpacerRightNode(Transaksi trans) {
+    private Region createSpacerRightNode(Transaction trans) {
         Region result = new Region();
         HBox.setHgrow(result, Priority.ALWAYS);
         result.setMaxWidth(50);
         // result.setStyle("-fx-background-color: blue;");
         return result;
     }
-    private VBox createInfoTransaksiNode(Transaksi trans) {
+    private VBox createInfoTransaksiNode(Transaction trans) {
         VBox result = new VBox(5);
         result.setPrefWidth(250);
         result.setMaxWidth(250);
         result.setAlignment(Pos.CENTER_RIGHT);
-        String formatJumlah = Converter.numberFormatter(Integer.toString(trans.getJumlah()));
+        String formatJumlah = Converter.numberFormatter(Integer.toString(trans.getAmount()));
 
-        if(trans.getTipeTransaksi() == TipeTransaksi.IN){
-            this.labelJumlahTransaksi = new Label(trans.getAkun().getMataUang().getSimbol() + " " + formatJumlah);
+        if(trans.getTipeTransaksi() == TransactionType.INCOME){
+            this.labelJumlahTransaksi = new Label(trans.getAkun().getCurrencyType().getSimbol() + " " + formatJumlah);
             this.labelJumlahTransaksi.setStyle(
                     """
                     -fx-text-fill: #01AA71;
@@ -238,8 +235,8 @@ public class RecordCard {
                     -fx-font-weight: bold;
                     """
             );
-        } else if(trans.getTipeTransaksi() == TipeTransaksi.OUT) {
-            this.labelJumlahTransaksi = new Label("-" + trans.getAkun().getMataUang().getSimbol() + " " + formatJumlah);
+        } else if(trans.getTipeTransaksi() == TransactionType.EXPANSE) {
+            this.labelJumlahTransaksi = new Label("-" + trans.getAkun().getCurrencyType().getSimbol() + " " + formatJumlah);
             this.labelJumlahTransaksi.setStyle(
                     """
                     -fx-text-fill: #F92222;
@@ -253,7 +250,7 @@ public class RecordCard {
 
         this.tanggalStatusWrapper = new HBox(5);
         this.tanggalStatusWrapper.setAlignment(Pos.CENTER_RIGHT);
-        this.labelTanggalTransaksi = new Label(trans.getTanggal().format(formatter));
+        this.labelTanggalTransaksi = new Label(trans.getDate().format(formatter));
         this.labelTanggalTransaksi.setStyle("-fx-text-fill: #6B7280");
 
         // kondisional icon payment
@@ -302,7 +299,7 @@ public class RecordCard {
     }
 
     // [4] >=== CARD LISTENER JIKA DIKLIK
-    public void setOnCardClick(Consumer<Transaksi> onClick) {
+    public void setOnCardClick(Consumer<Transaction> onClick) {
         if (onClick == null) return;
 
         cardWrapper.setOnMouseClicked(e -> {
@@ -311,7 +308,7 @@ public class RecordCard {
             // Kalau yang diklik checkbox (atau child-nya), stop! Abaikan!
             if (e.getTarget() instanceof CheckBox) return;
 
-            onClick.accept(transaksi);
+            onClick.accept(transaction);
         });
     }
 
@@ -422,11 +419,11 @@ public class RecordCard {
         this.paymentStatusIcon = paymentStatusIcon;
     }
 
-    public Transaksi getTransaksi() {
-        return transaksi;
+    public Transaction getTransaksi() {
+        return transaction;
     }
 
-    public void setTransaksi(Transaksi transaksi) {
-        this.transaksi = transaksi;
+    public void setTransaksi(Transaction transaction) {
+        this.transaction = transaction;
     }
 }

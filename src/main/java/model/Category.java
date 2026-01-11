@@ -3,21 +3,21 @@ package model;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class Kategori {
+public class Category {
     private int id;
-    private String tipe;
-    private String nama;
+    private String type;
+    private String name;
     private Image icon;
     private String iconPath;
-    private Color warna;
+    private Color color;
 
-    public Kategori(int id, String tipe, String nama, Image icon, String iconPath, Color warna) {
+    public Category(int id, String type, String name, Image icon, String iconPath, Color color) {
         this.id = id;
-        this.tipe = tipe;
-        this.nama = nama;
+        this.type = type;
+        this.name = name;
         this.icon = icon;
         this.iconPath = iconPath;
-        this.warna = warna;
+        this.color = color;
     }
 
     public int getId() {
@@ -28,20 +28,20 @@ public class Kategori {
         this.id = id;
     }
 
-    public String getTipe() {
-        return tipe;
+    public String getType() {
+        return type;
     }
 
-    public void setTipe(String tipe) {
-        this.tipe = tipe;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public String getNama() {
-        return nama;
+    public String getName() {
+        return name;
     }
 
-    public void setNama(String nama) {
-        this.nama = nama;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Image getIcon() {
@@ -60,11 +60,11 @@ public class Kategori {
         this.iconPath = iconPath;
     }
 
-    public Color getWarna() {
-        return warna;
+    public Color getColor() {
+        return color;
     }
 
-    public void setWarna(Color warna) {
-        this.warna = warna;
+    public void setColor(Color color) {
+        this.color = color;
     }
 }

@@ -2,36 +2,36 @@ package model;
 
 public class Template {
     private int id;
-    private TipeTransaksi tipeTransaksi;
+    private TransactionType transactionType;
     private String nama;
     private int jumlah;
-    private Akun akun;
-    private Kategori kategori;
-    private TipeLabel tipeLabel;
+    private Account account;
+    private Category category;
+    private LabelType labelType;
     private String keterangan;
     private PaymentType paymentType;
     private PaymentStatus paymentStatus;
 
     // constructor full atribut
-    public Template(int id, TipeTransaksi tipeTransaksi, String nama, int jumlah, Akun akun, Kategori kategori, TipeLabel tipeLabel, String keterangan, PaymentType paymentType, PaymentStatus paymentStatus) {
+    public Template(int id, TransactionType transactionType, String nama, int jumlah, Account account, Category category, LabelType labelType, String keterangan, PaymentType paymentType, PaymentStatus paymentStatus) {
         this.id = id;
-        this.tipeTransaksi = tipeTransaksi;
+        this.transactionType = transactionType;
         this.nama = nama;
         this.jumlah = jumlah;
-        this.akun = akun;
-        this.kategori = kategori;
-        this.tipeLabel = tipeLabel;
+        this.account = account;
+        this.category = category;
+        this.labelType = labelType;
         this.keterangan = keterangan;
         this.paymentType = paymentType;
         this.paymentStatus = paymentStatus;
     }
 
     // constructor atribut wajib
-    public Template(int id, String nama, Akun akun, TipeTransaksi tipeTransaksi, int jumlah) {
+    public Template(int id, String nama, Account account, TransactionType transactionType, int jumlah) {
         this.id = id;
         this.nama = nama;
-        this.akun = akun;
-        this.tipeTransaksi = tipeTransaksi;
+        this.account = account;
+        this.transactionType = transactionType;
         this.jumlah = jumlah;
     }
 
@@ -46,12 +46,12 @@ public class Template {
         this.id = id;
     }
 
-    public TipeTransaksi getTipeTransaksi() {
-        return tipeTransaksi;
+    public TransactionType getTipeTransaksi() {
+        return transactionType;
     }
 
-    public void setTipeTransaksi(TipeTransaksi tipeTransaksi) {
-        this.tipeTransaksi = tipeTransaksi;
+    public void setTipeTransaksi(TransactionType transactionType) {
+        this.transactionType = transactionType;
     }
 
     public String getNama() {
@@ -70,28 +70,28 @@ public class Template {
         this.jumlah = jumlah;
     }
 
-    public Akun getAkun() {
-        return akun;
+    public Account getAkun() {
+        return account;
     }
 
-    public void setAkun(Akun akun) {
-        this.akun = akun;
+    public void setAkun(Account account) {
+        this.account = account;
     }
 
-    public Kategori getKategori() {
-        return kategori;
+    public Category getKategori() {
+        return category;
     }
 
-    public void setKategori(Kategori kategori) {
-        this.kategori = kategori;
+    public void setKategori(Category category) {
+        this.category = category;
     }
 
-    public TipeLabel getTipeLabel() {
-        return tipeLabel;
+    public LabelType getTipeLabel() {
+        return labelType;
     }
 
-    public void setTipeLabel(TipeLabel tipeLabel) {
-        this.tipeLabel = tipeLabel;
+    public void setTipeLabel(LabelType labelType) {
+        this.labelType = labelType;
     }
 
     public String getKeterangan() {

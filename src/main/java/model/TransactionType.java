@@ -1,12 +1,12 @@
 package model;
 
-public enum TipeTransaksi {
-    IN("In"),
-    OUT("Out");
+public enum TransactionType {
+    INCOME("In"),
+    EXPANSE("Out");
 
     private final String label;
 
-    TipeTransaksi(String label) {
+    TransactionType(String label) {
         this.label = label;
     }
 
@@ -14,10 +14,10 @@ public enum TipeTransaksi {
         return label;
     }
 
-    public static TipeTransaksi  fromString(String input) {
+    public static TransactionType fromString(String input) {
         if (input == null) return null;
         String val = input.trim();
-        for (TipeTransaksi type : values()) {
+        for (TransactionType type : values()) {
             if (type.name().equalsIgnoreCase(val) || type.label.equalsIgnoreCase(val)) {
                 return type;
             }

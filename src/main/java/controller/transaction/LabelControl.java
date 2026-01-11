@@ -14,7 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import model.TipeLabel;
+import model.LabelType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,27 +86,27 @@ public class LabelControl implements Initializable {
 
         Color warna = colorComboBox.getValue().getWarna();
 
-        TipeLabel tipeLabel = new TipeLabel(0, nama, warna);
+        LabelType labelType = new LabelType(0, nama, warna);
 
-        boolean result = DataManager.getInstance().addLabel(tipeLabel);
+        boolean result = DataManager.getInstance().addLabel(labelType);
         if(parentTemplate != null && result) {
-            parentTemplate.getTipeLabelObservable().add(tipeLabel);
-            parentTemplate.getTipeLabel().getSelectionModel().select(tipeLabel);
-            grandParent.getTipeLabelList().add(tipeLabel);
+            parentTemplate.getTipeLabelObservable().add(labelType);
+            parentTemplate.getTipeLabel().getSelectionModel().select(labelType);
+            grandParent.getTipeLabelList().add(labelType);
         } else if(result && parentTransaction != null) {
-            parentTransaction.getTipeLabelList().add(tipeLabel);
-            parentTransaction.getTipeLabelInOut().getSelectionModel().select(tipeLabel);
-            parentTransaction.getTipeLabelTrans().getSelectionModel().select(tipeLabel);
+            parentTransaction.getTipeLabelList().add(labelType);
+            parentTransaction.getTipeLabelInOut().getSelectionModel().select(labelType);
+            parentTransaction.getTipeLabelTrans().getSelectionModel().select(labelType);
         } else if(result && parentEdit != null) {
-            parentEdit.getTipeLabelList().add(tipeLabel);
-            parentEdit.getTipeLabelCombo().getSelectionModel().select(tipeLabel);
+            parentEdit.getTipeLabelList().add(labelType);
+            parentEdit.getTipeLabelCombo().getSelectionModel().select(labelType);
         }
         closePopup();
     }
 
     private boolean uniqueNameValidation(String name) {
-        for(TipeLabel tipeLabel : DataManager.getInstance().getDataTipeLabel()) {
-            if(name.equalsIgnoreCase(tipeLabel.getNama())) {
+        for(LabelType labelType : DataManager.getInstance().getDataTipeLabel()) {
+            if(name.equalsIgnoreCase(labelType.getName())) {
                 return false;
             }
         }

@@ -11,10 +11,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
-import model.Akun;
-import model.Kategori;
+import model.Account;
+import model.Category;
+import model.LabelType;
 import model.MataUang;
-import model.TipeLabel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,13 +26,13 @@ public final class DataLoader {
 
     private DataLoader() {}
 
-    public static void kategoriComboBoxLoader(ComboBox<Kategori> dataKategoriComboBox) {
-        ArrayList<Kategori> listKategori = DataManager.getInstance().getDataKategori();
-        dataKategoriComboBox.setItems(FXCollections.observableArrayList(listKategori));
+    public static void kategoriComboBoxLoader(ComboBox<Category> dataKategoriComboBox) {
+        ArrayList<Category> listCategory = DataManager.getInstance().getDataKategori();
+        dataKategoriComboBox.setItems(FXCollections.observableArrayList(listCategory));
 
-        dataKategoriComboBox.setCellFactory(list -> new ListCell<Kategori>() {
+        dataKategoriComboBox.setCellFactory(list -> new ListCell<Category>() {
             @Override
-            protected void updateItem(Kategori item, boolean empty) {
+            protected void updateItem(Category item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if(empty || item == null) {
@@ -54,14 +54,14 @@ public final class DataLoader {
 
                 iconBox.setBackground(new Background(
                         new BackgroundFill(
-                                item.getWarna(),
+                                item.getColor(),
                                 new CornerRadii(8),
                                 Insets.EMPTY
                         )
                 ));
 
                 // teks
-                Label label = new Label(item.getNama());
+                Label label = new Label(item.getName());
                 label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
                 // gabung
@@ -73,13 +73,13 @@ public final class DataLoader {
         });
         dataKategoriComboBox.setButtonCell(dataKategoriComboBox.getCellFactory().call(null));
     }
-    public static void tipeLabelComboBoxLoader(ComboBox<TipeLabel> dataTipeLabelComboBox) {
-        ArrayList<TipeLabel> tipeLabel = DataManager.getInstance().getDataTipeLabel();
-        dataTipeLabelComboBox.setItems(FXCollections.observableArrayList(tipeLabel));
+    public static void tipeLabelComboBoxLoader(ComboBox<LabelType> dataTipeLabelComboBox) {
+        ArrayList<LabelType> labelType = DataManager.getInstance().getDataTipeLabel();
+        dataTipeLabelComboBox.setItems(FXCollections.observableArrayList(labelType));
 
-        dataTipeLabelComboBox.setCellFactory(list -> new ListCell<TipeLabel>() {
+        dataTipeLabelComboBox.setCellFactory(list -> new ListCell<LabelType>() {
             @Override
-            protected void updateItem(TipeLabel item, boolean empty) {
+            protected void updateItem(LabelType item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if(empty || item == null) {
@@ -101,14 +101,14 @@ public final class DataLoader {
 
                 iconBox.setBackground(new Background(
                         new BackgroundFill(
-                                item.getWarna(),
+                                item.getColor(),
                                 new CornerRadii(8),
                                 Insets.EMPTY
                         )
                 ));
 
                 // teks
-                Label label = new Label(item.getNama());
+                Label label = new Label(item.getName());
                 label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
                 // gabung
@@ -120,13 +120,13 @@ public final class DataLoader {
         });
         dataTipeLabelComboBox.setButtonCell(dataTipeLabelComboBox.getCellFactory().call(null));
     }
-    public static void akunComboBoxLoader(ComboBox<Akun> dataAkunComboBox) {
-        ArrayList<Akun> dataAkun = DataManager.getInstance().getDataAkun();
-        dataAkunComboBox.setItems(FXCollections.observableArrayList(dataAkun));
+    public static void akunComboBoxLoader(ComboBox<Account> dataAkunComboBox) {
+        ArrayList<Account> dataAccount = DataManager.getInstance().getDataAkun();
+        dataAkunComboBox.setItems(FXCollections.observableArrayList(dataAccount));
 
-        dataAkunComboBox.setCellFactory(list -> new ListCell<Akun>() {
+        dataAkunComboBox.setCellFactory(list -> new ListCell<Account>() {
             @Override
-            protected void updateItem(Akun item, boolean empty) {
+            protected void updateItem(Account item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if(empty || item == null) {
@@ -148,14 +148,14 @@ public final class DataLoader {
 
                 iconBox.setBackground(new Background(
                         new BackgroundFill(
-                                item.getWarna(),
+                                item.getColor(),
                                 new CornerRadii(8),
                                 Insets.EMPTY
                         )
                 ));
 
                 // teks
-                Label label = new Label(item.getNama());
+                Label label = new Label(item.getName());
                 label.setStyle("-fx-font-size: 13px; -fx-text-fill: black;");
 
                 // gabung

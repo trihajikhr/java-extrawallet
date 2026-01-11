@@ -13,19 +13,19 @@ public abstract class AbstractTransactionService implements TransactionService {
     protected AbstractTransactionService(){}
 
     @Override
-    public List<Transaksi> filterByDate(List<Transaksi> dataTransaksi, LocalDate startDate, LocalDate endDate) {
-        return dataTransaksi.stream()
+    public List<Transaction> filterByDate(List<Transaction> dataTransaction, LocalDate startDate, LocalDate endDate) {
+        return dataTransaction.stream()
                 .filter(this::isTargetType)
                 .filter(t ->
-                        !t.getTanggal().isBefore(startDate) &&
-                                !t.getTanggal().isAfter(endDate)
+                        !t.getDate().isBefore(startDate) &&
+                                !t.getDate().isAfter(endDate)
                 )
                 .toList();
     }
 
-    protected BigDecimal normalizeAmount(Transaksi trans) {
-        BigDecimal amount = BigDecimal.valueOf(trans.getJumlah());
-        String currency = trans.getAkun().getMataUang().getKode();
+    protected BigDecimal normalizeAmount(Transaction trans) {
+        BigDecimal amount = BigDecimal.valueOf(trans.getAmount());
+        String currency = trans.getAkun().getCurrencyType().getKode();
 
         if (currency.equalsIgnoreCase(BASE_CURRENCY)) {
             return amount;
@@ -37,19 +37,19 @@ public abstract class AbstractTransactionService implements TransactionService {
     }
 
     @Override
-    public BigDecimal sumBetween(List<Transaksi> dataTransaksi, LocalDate startDate, LocalDate endDate) {
+    public BigDecimal sumBetween(List<Transaction> dataTransaction, LocalDate startDate, LocalDate endDate) {
         BigDecimal sum = BigDecimal.ZERO;
-        for(Transaksi trans : filterByDate(dataTransaksi, startDate, endDate)) {
+        for(Transaction trans : filterByDate(dataTransaction, startDate, endDate)) {
             sum = sum.add(normalizeAmount(trans));
         }
         return sum;
     }
 
     @Override
-    public BigDecimal sumByCategory(List<Transaksi> dataTransaksi, Kategori kategori, LocalDate startDate, LocalDate endDate) {
+    public BigDecimal sumByCategory(List<Transaction> dataTransaction, Category category, LocalDate startDate, LocalDate endDate) {
         BigDecimal sum = BigDecimal.ZERO;
-        for(Transaksi trans : filterByDate(dataTransaksi, startDate, endDate)){
-            if(trans.getKategori().equals(kategori)) {
+        for(Transaction trans : filterByDate(dataTransaction, startDate, endDate)){
+            if(trans.getKategori().equals(category)) {
                 sum = sum.add(normalizeAmount(trans));
             }
         }
@@ -57,10 +57,10 @@ public abstract class AbstractTransactionService implements TransactionService {
     }
 
     @Override
-    public BigDecimal sumByAccount(List<Transaksi> dataTransaksi, Akun akun, LocalDate startDate, LocalDate endDate) {
+    public BigDecimal sumByAccount(List<Transaction> dataTransaction, Account account, LocalDate startDate, LocalDate endDate) {
         BigDecimal sum = BigDecimal.ZERO;
-        for(Transaksi trans : filterByDate(dataTransaksi, startDate,endDate)) {
-            if(trans.getAkun().equals(akun)) {
+        for(Transaction trans : filterByDate(dataTransaction, startDate,endDate)) {
+            if(trans.getAkun().equals(account)) {
                 sum = sum.add(normalizeAmount(trans));
             }
         }
@@ -68,10 +68,10 @@ public abstract class AbstractTransactionService implements TransactionService {
     }
 
     @Override
-    public BigDecimal sumByLabel(List<Transaksi> dataTransaksi, TipeLabel label, LocalDate startDate, LocalDate endDate) {
+    public BigDecimal sumByLabel(List<Transaction> dataTransaction, LabelType label, LocalDate startDate, LocalDate endDate) {
         BigDecimal sum = BigDecimal.ZERO;
-        for(Transaksi trans : filterByDate(dataTransaksi, startDate,endDate)) {
-            if(trans.getTipelabel().equals(label)) {
+        for(Transaction trans : filterByDate(dataTransaction, startDate,endDate)) {
+            if(trans.getLabelType().equals(label)) {
                 sum = sum.add(normalizeAmount(trans));
             }
         }
@@ -79,60 +79,60 @@ public abstract class AbstractTransactionService implements TransactionService {
     }
 
     @Override
-    public BigDecimal sumAfterFilter(List<Transaksi> dataTransaksi) {
+    public BigDecimal sumAfterFilter(List<Transaction> dataTransaction) {
         BigDecimal sum = BigDecimal.ZERO; // mulai dari 0
-        for(Transaksi trans : dataTransaksi) {
+        for(Transaction trans : dataTransaction) {
             sum = sum.add(normalizeAmount(trans));
         }
         return sum;
     }
 
     @Override
-    public Boolean updateSingleAkun(Akun akun, Transaksi oldTrans, int newJumlah) {
-        int oldJumlah = oldTrans.getJumlah();
+    public Boolean updateSingleAkun(Account account, Transaction oldTrans, int newJumlah) {
+        int oldJumlah = oldTrans.getAmount();
 
         int delta = calculateSaldoDelta(oldJumlah, newJumlah);
 
-        if (delta < 0 && Math.abs(delta) > akun.getJumlah()) {
-            MyPopup.showDanger("Saldo kurang!", "Saldo anda: " + akun.getJumlah());
+        if (delta < 0 && Math.abs(delta) > account.getBalance()) {
+            MyPopup.showDanger("Saldo kurang!", "Saldo anda: " + account.getBalance());
             return false;
         }
 
-        int newSaldo = akun.getJumlah() + delta;
-        akun.setJumlah(newSaldo);
+        int newSaldo = account.getBalance() + delta;
+        account.setBalance(newSaldo);
 
-        return DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
+        return DataManager.getInstance().updateSaldoAkun(account, newSaldo);
     }
 
     @Override
-    public Boolean updateMultipleAkun(List<Transaksi> selected) {
+    public Boolean updateMultipleAkun(List<Transaction> selected) {
 
-        for (Transaksi trans : selected) {
-            Akun akun = trans.getAkun();
-            int jumlah = trans.getJumlah();
+        for (Transaction trans : selected) {
+            Account account = trans.getAkun();
+            int jumlah = trans.getAmount();
 
             int delta = calculateSaldoDelta(0, jumlah);
 
-            if (delta < 0 && Math.abs(delta) > akun.getJumlah()) {
+            if (delta < 0 && Math.abs(delta) > account.getBalance()) {
                 MyPopup.showDanger(
                         "Saldo kurang!",
-                        "Akun " + akun.getNama() + " saldo: " + akun.getJumlah()
+                        "Account " + account.getName() + " saldo: " + account.getBalance()
                 );
                 return false;
             }
 
-            int newSaldo = akun.getJumlah() + delta;
+            int newSaldo = account.getBalance() + delta;
 
-            boolean result = DataManager.getInstance().updateSaldoAkun(akun, newSaldo);
+            boolean result = DataManager.getInstance().updateSaldoAkun(account, newSaldo);
             if (!result) {
                 MyPopup.showDanger(
-                        "Gagal update saldo untuk akun: " + akun.getNama(),
+                        "Gagal update saldo untuk account: " + account.getName(),
                         "Coba lagi nanti."
                 );
                 return false;
             }
 
-            akun.setJumlah(newSaldo);
+            account.setBalance(newSaldo);
         }
 
         return true;
@@ -140,5 +140,5 @@ public abstract class AbstractTransactionService implements TransactionService {
 
     protected abstract int calculateSaldoDelta(int oldJumlah, int newJumlah);
 
-    protected abstract boolean isTargetType(Transaksi t);
+    protected abstract boolean isTargetType(Transaction t);
 }

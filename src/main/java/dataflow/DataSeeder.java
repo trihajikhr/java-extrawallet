@@ -2,6 +2,7 @@ package dataflow;
 
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
+import model.Category;
 import model.MataUang;
 import helper.Converter;
 import javafx.collections.FXCollections;
@@ -18,8 +19,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import model.Kategori;
-
 public final class DataSeeder {
 
     private static final Logger log = LoggerFactory.getLogger(DataSeeder.class);
@@ -27,13 +26,13 @@ public final class DataSeeder {
     private DataSeeder() {}
 
     // [1] >=== SEED LOCAL DATA
-    public static ObservableList<Kategori> seedKategori() {
-        ObservableList<Kategori> data = FXCollections.observableArrayList();
+    public static ObservableList<Category> seedKategori() {
+        ObservableList<Category> data = FXCollections.observableArrayList();
 
         try {
             data.addAll(
                     // IN
-                    new Kategori(
+                    new Category(
                             1,
                             "IN",
                             "Salary",
@@ -41,7 +40,7 @@ public final class DataSeeder {
                             "/category-icons/1_salary.png",
                             Color.web("#D0006F")
                     ),
-                    new Kategori(
+                    new Category(
                             2,
                             "IN",
                             "Allowance",
@@ -49,7 +48,7 @@ public final class DataSeeder {
                             "/category-icons/2_allowance.png",
                             Color.web("#FF0000")
                     ),
-                    new Kategori(
+                    new Category(
                             3,
                             "IN",
                             "Bonuses",
@@ -57,7 +56,7 @@ public final class DataSeeder {
                             "/category-icons/3_bonuses.png",
                             Color.web("#FF7F00")
                     ),
-                    new Kategori(
+                    new Category(
                             4,
                             "IN",
                             "Busines",
@@ -65,7 +64,7 @@ public final class DataSeeder {
                             "/category-icons/4_business.png",
                             Color.web("#FFD700")
                     ),
-                    new Kategori(
+                    new Category(
                             5,
                             "IN",
                             "Freelance/project",
@@ -73,7 +72,7 @@ public final class DataSeeder {
                             "/category-icons/5_freelance.png",
                             Color.web("#808000")
                     ),
-                    new Kategori(
+                    new Category(
                             6,
                             "IN",
                             "Sales",
@@ -81,7 +80,7 @@ public final class DataSeeder {
                             "/category-icons/6_sales.png",
                             Color.web("#32CD32")
                     ),
-                    new Kategori(
+                    new Category(
                             7,
                             "IN",
                             "Dividends",
@@ -89,7 +88,7 @@ public final class DataSeeder {
                             "/category-icons/7_dividends.png",
                             Color.web("#3EB489")
                     ),
-                    new Kategori(
+                    new Category(
                             8,
                             "IN",
                             "Investment Gains",
@@ -97,7 +96,7 @@ public final class DataSeeder {
                             "/category-icons/8_investment.png",
                             Color.web("#008000")
                     ),
-                    new Kategori(
+                    new Category(
                             9,
                             "IN",
                             "Incoming Transfer",
@@ -105,7 +104,7 @@ public final class DataSeeder {
                             "/category-icons/9_incoming-transfer.png",
                             Color.web("#3EB489")
                     ),
-                    new Kategori(
+                    new Category(
                             10,
                             "IN",
                             "Gift",
@@ -113,7 +112,7 @@ public final class DataSeeder {
                             "/category-icons/10_gift.png",
                             Color.web("#008080")
                     ),
-                    new Kategori(
+                    new Category(
                             11,
                             "IN",
                             "Cashback",
@@ -121,7 +120,7 @@ public final class DataSeeder {
                             "/category-icons/11_cashback.png",
                             Color.web("#87CEEB")
                     ),
-                    new Kategori(
+                    new Category(
                             12,
                             "IN",
                             "Commission",
@@ -129,7 +128,7 @@ public final class DataSeeder {
                             "/category-icons/12_commission.png",
                             Color.web("#ADD8E6")
                     ),
-                    new Kategori(
+                    new Category(
                             13,
                             "IN",
                             "Royalty",
@@ -137,7 +136,7 @@ public final class DataSeeder {
                             "/category-icons/13_royalty.png",
                             Color.web("#0000FF")
                     ),
-                    new Kategori(
+                    new Category(
                             14,
                             "IN",
                             "App Reward",
@@ -145,7 +144,7 @@ public final class DataSeeder {
                             "/category-icons/14_app-reward.png",
                             Color.web("#6F2DA8")
                     ),
-                    new Kategori(
+                    new Category(
                             15,
                             "IN",
                             "Others",
@@ -155,7 +154,7 @@ public final class DataSeeder {
                     ),
 
                     // OUT
-                    new Kategori(
+                    new Category(
                             16,
                             "OUT",
                             "Food & Beverages",
@@ -163,7 +162,7 @@ public final class DataSeeder {
                             "/category-icons/16_food.png",
                             Color.web("#D0006F")
                     ),
-                    new Kategori(
+                    new Category(
                             17,
                             "OUT",
                             "Daily Shopping",
@@ -171,7 +170,7 @@ public final class DataSeeder {
                             "/category-icons/17_shopping.png",
                             Color.web("#FF0000")
                     ),
-                    new Kategori(
+                    new Category(
                             18,
                             "OUT",
                             "Transportation",
@@ -179,7 +178,7 @@ public final class DataSeeder {
                             "/category-icons/18_transportation.png",
                             Color.web("#FF7F00")
                     ),
-                    new Kategori(
+                    new Category(
                             19,
                             "OUT",
                             "Bills & Utilities",
@@ -187,7 +186,7 @@ public final class DataSeeder {
                             "/category-icons/19_bills.png",
                             Color.web("#FFD700")
                     ),
-                    new Kategori(
+                    new Category(
                             20,
                             "OUT",
                             "Personal Shopping",
@@ -195,7 +194,7 @@ public final class DataSeeder {
                             "/category-icons/13_royalty.png",
                             Color.web("#808000")
                     ),
-                    new Kategori(
+                    new Category(
                             21,
                             "OUT",
                             "Gadgets & Electronics",
@@ -203,7 +202,7 @@ public final class DataSeeder {
                             "/category-icons/20_gadgets.png",
                             Color.web("#32CD32")
                     ),
-                    new Kategori(
+                    new Category(
                             22,
                             "OUT",
                             "Health",
@@ -211,7 +210,7 @@ public final class DataSeeder {
                             "/category-icons/21_health.png",
                             Color.web("#3EB489")
                     ),
-                    new Kategori(
+                    new Category(
                             23,
                             "OUT",
                             "Entertainment & Lifestyle",
@@ -219,7 +218,7 @@ public final class DataSeeder {
                             "/category-icons/22_entertainment.png",
                             Color.web("#008000")
                     ),
-                    new Kategori(
+                    new Category(
                             24,
                             "OUT",
                             "Education & Courses",
@@ -227,7 +226,7 @@ public final class DataSeeder {
                             "/category-icons/23_education.png",
                             Color.web("#008080")
                     ),
-                    new Kategori(
+                    new Category(
                             25,
                             "OUT",
                             "Financial Obligations",
@@ -235,7 +234,7 @@ public final class DataSeeder {
                             "/category-icons/24_obligation.png",
                             Color.web("#87CEEB")
                     ),
-                    new Kategori(
+                    new Category(
                             26,
                             "OUT",
                             "Home & Appliances",
@@ -243,7 +242,7 @@ public final class DataSeeder {
                             "/category-icons/25_home.png",
                             Color.web("#ADD8E6")
                     ),
-                    new Kategori(
+                    new Category(
                             27,
                             "OUT",
                             "Family",
@@ -251,7 +250,7 @@ public final class DataSeeder {
                             "/category-icons/28_family.png",
                             Color.web("#0000FF")
                     ),
-                    new Kategori(
+                    new Category(
                             28,
                             "OUT",
                             "Gift",
@@ -259,7 +258,7 @@ public final class DataSeeder {
                             "/category-icons/10_gift.png",
                             Color.web("#6F2DA8")
                     ),
-                    new Kategori(
+                    new Category(
                             29,
                             "OUT",
                             "Donation",
@@ -267,21 +266,21 @@ public final class DataSeeder {
                             "/category-icons/27_donation.png",
                             Color.web("#8A2BE2")
                     ),
-                    new Kategori(
+                    new Category(
                             30,
                             "OUT",
                             "Others",
                             new Image(Objects.requireNonNull(DataSeeder.class.getResource("/category-icons/15_others.png")).toString()),
                             "/category-icons/15_others.png",
                             Color.web("#62718a")
-                    ), new Kategori (
+                    ), new Category(
                             31,
                         "IN",
                             "Transfer, withdraw",
                             new Image(Objects.requireNonNull(DataSeeder.class.getResource("/category-icons/transfer_extra.png")).toString()),
                             "/category-icons/transfer_extra.png",
                             Color.web("#32CD32")
-                    ), new Kategori (
+                    ), new Category(
                             32,
                             "OUT",
                             "Transfer, withdraw",
@@ -290,7 +289,7 @@ public final class DataSeeder {
                             Color.web("#32CD32")
                     )
             );
-            log.info("pembuatan data kategori berhasil!");
+            log.info("pembuatan data category berhasil!");
             return data;
 
         } catch (Exception e) {
@@ -354,7 +353,7 @@ public final class DataSeeder {
                         "/account-type/credit.png"
                 )
         );
-        log.info("data jenis akun berhasil dibuat!");
+        log.info("data jenis account berhasil dibuat!");
     }
     public static void seedCurrency() {
         DataManager.getInstance().getDataMataUang().setAll(
@@ -411,22 +410,22 @@ public final class DataSeeder {
     // [2] >=== SEED DATA DATABASE
     public static void seedDatabaseKategori() {
         Database dataConnect = Database.getInstance();
-        String querySql = "INSERT OR IGNORE INTO kategori (id, tipe, nama, icon_path, warna) VALUES (?, ?, ?, ?, ?)";
+        String querySql = "INSERT OR IGNORE INTO category (id, tipe, nama, icon_path, warna) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
-            for(Kategori ktr : DataManager.getInstance().getDataKategori()) {
+            for(Category ktr : DataManager.getInstance().getDataKategori()) {
                 stat.setInt(1, ktr.getId());
-                stat.setString(2, ktr.getTipe());
-                stat.setString(3, ktr.getNama());
+                stat.setString(2, ktr.getType());
+                stat.setString(3, ktr.getName());
                 stat.setString(4, ktr.getIconPath());
-                stat.setString(5, Converter.colorToHex(ktr.getWarna()));
+                stat.setString(5, Converter.colorToHex(ktr.getColor()));
 
                 stat.executeUpdate();
             }
-            log.info("data kategori berhasil di seed ke database!");
+            log.info("data category berhasil di seed ke database!");
 
         } catch (SQLException e) {
-            log.error("gagal seed data kategori: ", e);
+            log.error("gagal seed data category: ", e);
         }
     }
     public static void seedDatabaseCurrency() {
