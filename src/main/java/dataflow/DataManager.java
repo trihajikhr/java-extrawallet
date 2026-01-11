@@ -38,13 +38,13 @@ public class DataManager {
     private DataManager() {}
 
     public void initBaseData() {
-        dataPaymentType = DataSeeder.getInstance().seedPaymentType();
-        dataPaymentStatus = DataSeeder.getInstance().seedPaymentStatus();
-        DataSeeder.getInstance().seedColor();
-        DataSeeder.getInstance().seedAccountItem();
-        DataSeeder.getInstance().seedCurrency();
-        theImage = DataSeeder.getInstance().seedImageTransactionForm();
-        paymentStatusImage = DataSeeder.getInstance().seedPaymentStatusImage();
+        dataPaymentType = DataSeeder.seedPaymentType();
+        dataPaymentStatus = DataSeeder.seedPaymentStatus();
+        DataSeeder.seedColor();
+        DataSeeder.seedAccountItem();
+        DataSeeder.seedCurrency();
+        theImage = DataSeeder.seedImageTransactionForm();
+        paymentStatusImage = DataSeeder.seedPaymentStatusImage();
 
     }
 
@@ -320,7 +320,7 @@ public class DataManager {
     }
 
     public void setDataKategori() {
-        dataKategori = new ArrayList<>(DataSeeder.getInstance().seedKategori());
+        dataKategori = new ArrayList<>(DataSeeder.seedKategori());
     }
 
     public ArrayList<Kategori> getFilteredCategory() {

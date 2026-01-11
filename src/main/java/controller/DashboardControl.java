@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 
 public class DashboardControl {
 
-    // logger
     private static final Logger log = LoggerFactory.getLogger(DashboardControl.class);
 
     private boolean isExpanded = false;
@@ -94,7 +93,6 @@ public class DashboardControl {
         Stage stage = new Stage();
 
         // --- 1. PENGATURAN STYLE STAGE ---
-        // Hapus StageStyle.UNDECORATED yang bertentangan
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.initModality(Modality.APPLICATION_MODAL);
 
@@ -108,7 +106,6 @@ public class DashboardControl {
 
         // --- 3. PENGATURAN SCENE (Harus SETELAH root dimuat dan diberi efek) ---
         Scene scene = new Scene(root);
-        // Kesalahan Ada di sini: hanya menulis ".setFill(Color.TRANSPARENT);"
         scene.setFill(Color.TRANSPARENT); // Wajib agar area di sekitar shadow transparan
         stage.setScene(scene); // Set Scene harus dilakukan setelah scene dibuat
 

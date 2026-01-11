@@ -21,21 +21,12 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class DataLoader {
-    private static DataLoader instance;
+public final class DataLoader {
     private static final Logger log = LoggerFactory.getLogger(DataLoader.class);
 
-    // [0] >=== INSTANCE
-    public static DataLoader getInstance() {
-        if(instance == null) {
-            instance = new DataLoader();
-            log.info("objek data loader berhasil dibuat!");
-        }
-        return instance;
-    }
+    private DataLoader() {}
 
-    // [1] COMBOBOX LOADER
-    public void kategoriComboBoxLoader(ComboBox<Kategori> dataKategoriComboBox) {
+    public static void kategoriComboBoxLoader(ComboBox<Kategori> dataKategoriComboBox) {
         ArrayList<Kategori> listKategori = DataManager.getInstance().getDataKategori();
         dataKategoriComboBox.setItems(FXCollections.observableArrayList(listKategori));
 
@@ -82,7 +73,7 @@ public class DataLoader {
         });
         dataKategoriComboBox.setButtonCell(dataKategoriComboBox.getCellFactory().call(null));
     }
-    public void tipeLabelComboBoxLoader(ComboBox<TipeLabel> dataTipeLabelComboBox) {
+    public static void tipeLabelComboBoxLoader(ComboBox<TipeLabel> dataTipeLabelComboBox) {
         ArrayList<TipeLabel> tipeLabel = DataManager.getInstance().getDataTipeLabel();
         dataTipeLabelComboBox.setItems(FXCollections.observableArrayList(tipeLabel));
 
@@ -129,7 +120,7 @@ public class DataLoader {
         });
         dataTipeLabelComboBox.setButtonCell(dataTipeLabelComboBox.getCellFactory().call(null));
     }
-    public void akunComboBoxLoader(ComboBox<Akun> dataAkunComboBox) {
+    public static void akunComboBoxLoader(ComboBox<Akun> dataAkunComboBox) {
         ArrayList<Akun> dataAkun = DataManager.getInstance().getDataAkun();
         dataAkunComboBox.setItems(FXCollections.observableArrayList(dataAkun));
 
@@ -176,7 +167,7 @@ public class DataLoader {
         });
         dataAkunComboBox.setButtonCell(dataAkunComboBox.getCellFactory().call(null));
     }
-    public void mataUangComboBoxLoader(ComboBox<MataUang> dataMataUangComboBox) {
+    public static void mataUangComboBoxLoader(ComboBox<MataUang> dataMataUangComboBox) {
         dataMataUangComboBox.setItems(DataManager.getInstance().getDataMataUang());
         dataMataUangComboBox.setCellFactory(cb -> new ListCell<>() {
             @Override
@@ -189,7 +180,7 @@ public class DataLoader {
         });
         dataMataUangComboBox.setButtonCell(dataMataUangComboBox.getCellFactory().call(null));
     }
-    public void warnaComboBoxLoader(ComboBox<ColorItem> dataWarnaComboBox) {
+    public static void warnaComboBoxLoader(ComboBox<ColorItem> dataWarnaComboBox) {
         dataWarnaComboBox.setItems(DataManager.getInstance().getDataColor());
         dataWarnaComboBox.setCellFactory(list -> new ListCell<>() {
             @Override

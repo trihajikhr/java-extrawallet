@@ -858,11 +858,8 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
             ctrl.setParent(this);
             if(isSingle){
                 ctrl.prefilFromRecord(trans);
-                ctrl.setIsMultiple(isSingle);
-            } else {
-                ctrl.setIsMultiple(isSingle);
-
             }
+            ctrl.setIsMultiple(isSingle);
 
             stage.showAndWait();
         } catch (IOException e) {

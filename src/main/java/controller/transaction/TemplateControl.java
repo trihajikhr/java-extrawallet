@@ -175,9 +175,9 @@ public class TemplateControl implements Initializable {
         updateCategoryCombo("OUT");
     }
     private void initDataComboBox() {
-        DataLoader.getInstance().kategoriComboBoxLoader(categoryComboBox);
-        DataLoader.getInstance().akunComboBoxLoader(akunComboBox);
-        DataLoader.getInstance().mataUangComboBoxLoader(mataUangComboBox);
+        DataLoader.kategoriComboBoxLoader(categoryComboBox);
+        DataLoader.akunComboBoxLoader(akunComboBox);
+        DataLoader.mataUangComboBoxLoader(mataUangComboBox);
 
     }
     private void initButtonImage() {

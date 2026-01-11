@@ -10,14 +10,9 @@ import javafx.util.Duration;
 
 public class PopupController {
 
-    @FXML
-    private AnchorPane root;
-
-    @FXML
-    private Label titleLabel;
-
-    @FXML
-    private Label messageLabel;
+    @FXML private AnchorPane root;
+    @FXML private Label titleLabel;
+    @FXML private Label messageLabel;
 
     private Stage stage;
 

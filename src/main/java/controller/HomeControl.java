@@ -261,7 +261,7 @@ public class HomeControl implements Initializable {
         grafikArea.getData().addAll(incomeSeries, expenseSeries);
     }
 
-    // [3] >=== PANEL 10 CARD KATEGORI
+    // [3] >=== PANEL 8 CARD KATEGORI
     private void setMostUsedCategories() {
         mostTransactionCategories();
         createCardCategories();

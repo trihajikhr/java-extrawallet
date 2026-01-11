@@ -6,9 +6,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.util.converter.IntegerStringConverter;
 
-import java.util.ArrayList;
+public final class IOLogic {
 
-public class IOLogic {
+    private IOLogic() {}
+
     public static void makeIntegerOnly(Spinner<Integer> spinner, int min, int max, int initial) {
         spinner.setEditable(true);
 
@@ -58,7 +59,6 @@ public class IOLogic {
 
         spinner.increment(0); // force init state
     }
-
     public static void makeIntegerOnlyBlankInitial(Spinner<Integer> spinner, int min, int max) {
         spinner.setEditable(true);
 
@@ -101,7 +101,6 @@ public class IOLogic {
             }
         });
     }
-
     public static void isTextFieldValid(TextField theTextField, int length) {
         TextFormatter<String> formatter = new TextFormatter<>(change -> {
             if (change.getControlNewText().length() <= length) {
@@ -112,7 +111,6 @@ public class IOLogic {
         });
         theTextField.setTextFormatter(formatter);
     }
-
     public static String normalizeSpaces(String input) {
         if (input == null) return null;
 

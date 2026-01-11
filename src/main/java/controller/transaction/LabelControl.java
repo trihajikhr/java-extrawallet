@@ -41,7 +41,7 @@ public class LabelControl implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        DataLoader.getInstance().warnaComboBoxLoader(colorComboBox);
+        DataLoader.warnaComboBoxLoader(colorComboBox);
         IOLogic.isTextFieldValid(labelName,20);
         isFormComplete();
         showPopup();

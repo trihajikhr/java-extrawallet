@@ -1,15 +1,12 @@
 package controller;
 
+import dataflow.DataLoader;
 import dataflow.DataManager;
 import dataflow.basedata.AccountItem;
 import dataflow.basedata.ColorItem;
 import helper.MyPopup;
 import model.MataUang;
 import helper.IOLogic;
-import javafx.animation.FadeTransition;
-import javafx.animation.Interpolator;
-import javafx.animation.ParallelTransition;
-import javafx.animation.ScaleTransition;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.BooleanBinding;
 import javafx.fxml.FXML;
@@ -20,9 +17,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -38,26 +33,17 @@ public class AccountControl implements Initializable {
     private Stage stage;
     private boolean closing = false;
 
-    @FXML
-    private AnchorPane rootPane;
+    @FXML private AnchorPane rootPane;
 
-    @FXML
-    private ComboBox<AccountItem> accountComboBox;
+    @FXML private ComboBox<AccountItem> accountComboBox;
+    @FXML private ComboBox<ColorItem> colorComboBox;
+    @FXML private ComboBox<MataUang> currencyComboBox;
 
-    @FXML
-    private ComboBox<ColorItem> colorComboBox;
+    @FXML private TextField accountName;
 
-    @FXML
-    private ComboBox<MataUang> currencyComboBox;
+    @FXML private Spinner<Integer> amountSpinner;
 
-    @FXML
-    private TextField accountName;
-
-    @FXML
-    private Spinner<Integer> amountSpinner;
-
-    @FXML
-    private Button submitButton;
+    @FXML private Button submitButton;
 
     // [0] >=== INIT FUNCTION
     @Override
@@ -85,73 +71,18 @@ public class AccountControl implements Initializable {
     // [2] >=== SCENE CONTROLLER FUUNCTION
     @FXML
     public void showPopup() {
-        if (stage == null) return;
-
-        rootPane.setOpacity(0);
-        rootPane.setScaleX(0.6);
-        rootPane.setScaleY(0.6);
-
-        FadeTransition fade = new FadeTransition(Duration.millis(250), rootPane);
-        fade.setFromValue(0);
-        fade.setToValue(1);
-
-        ScaleTransition scale = new ScaleTransition(Duration.millis(250), rootPane);
-        scale.setFromX(0.6);
-        scale.setFromY(0.6);
-        scale.setToX(1);
-        scale.setToY(1);
-
-        ParallelTransition pt = new ParallelTransition(fade, scale);
-        pt.setInterpolator(Interpolator.EASE_OUT);
-        pt.play();
+        PopupUtils.showPopup(rootPane, stage);
     }
     @FXML
     private void closePopup() {
         if (closing) return;
         closing = true;
-        if (stage == null) return;
-
-        FadeTransition fade = new FadeTransition(Duration.millis(150), rootPane);
-        fade.setFromValue(1);
-        fade.setToValue(0);
-
-        ScaleTransition scale = new ScaleTransition(Duration.millis(150), rootPane);
-        scale.setFromX(1);
-        scale.setFromY(1);
-        scale.setToX(0.8);
-        scale.setToY(0.8);
-
-        ParallelTransition hideAnim = new ParallelTransition(fade, scale);
-        hideAnim.setInterpolator(Interpolator.EASE_BOTH);
-
-        hideAnim.setOnFinished(e -> stage.close());
-        hideAnim.play();
+        PopupUtils.closePopup(rootPane, stage);
     }
 
     // [3] >=== INIT DATA
     private void initComboBoxColor() {
-        colorComboBox.setItems(DataManager.getInstance().getDataColor());
-        colorComboBox.setCellFactory(list -> new ListCell<>() {
-            @Override
-            protected void updateItem(ColorItem item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                    setGraphic(null);
-                } else {
-                    Circle circle = new Circle(8, item.getWarna());
-                    Label label = new Label(item.getLabel());
-                    label.setStyle("-fx-text-fill: black;");
-                    HBox box = new HBox(8, circle, label);
-                    box.setAlignment(Pos.CENTER_LEFT);
-                    setGraphic(box);
-                }
-            }
-        });
-
-        // biar yang dipilih juga tampil sama
-        colorComboBox.setButtonCell(colorComboBox.getCellFactory().call(null));
-
+        DataLoader.warnaComboBoxLoader(colorComboBox);
         for (AccountItem item : accountComboBox.getItems()) {
             item.setWarna(Color.GREY);
         }
@@ -217,7 +148,6 @@ public class AccountControl implements Initializable {
                 super.updateItem(c, empty);
                 setText(empty || c == null
                         ? null
-//                        : c.getCode() + " — " + c.getName());
                         : c.getKode());
             }
         });

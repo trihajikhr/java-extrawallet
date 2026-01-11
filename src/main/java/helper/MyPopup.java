@@ -6,11 +6,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 
 public class MyPopup {
 
+    private static final Logger log = LoggerFactory.getLogger(MyPopup.class);
     private static double xOffset = 0;
     private static double yOffset = 0;
 
@@ -51,7 +54,7 @@ public class MyPopup {
             stage.showAndWait();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("gagal menampilkan popup sukses!", e);
         }
     }
 
@@ -92,7 +95,7 @@ public class MyPopup {
             stage.showAndWait();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("gagal menampilkan popup gagal!", e);
         }
     }
 }

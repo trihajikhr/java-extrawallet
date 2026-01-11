@@ -112,9 +112,9 @@ public class EditControl implements Initializable {
 
     // [2] >=== DATA LOADER
     private void loadAllData() {
-        DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo);
-        DataLoader.getInstance().akunComboBoxLoader(akunComboBox);
-        DataLoader.getInstance().kategoriComboBoxLoader(categoryComboBox);
+        DataLoader.mataUangComboBoxLoader(mataUangCombo);
+        DataLoader.akunComboBoxLoader(akunComboBox);
+        DataLoader.kategoriComboBoxLoader(categoryComboBox);
         paymentType.setItems(DataManager.getInstance().getDataPaymentType());
         paymentStatus.setItems(DataManager.getInstance().getDataPaymentStatus());
         Converter.bindEnumComboBox(paymentType, PaymentType::getLabel);

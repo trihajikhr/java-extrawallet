@@ -60,9 +60,9 @@ public class App extends Application {
                 updateProgress(65, 100);
                 DataManager.getInstance().fetchDataDatabase();
                 updateProgress(90, 100);
-                DataSeeder.getInstance().seedDatabaseKategori();
+                DataSeeder.seedDatabaseKategori();
                 updateProgress(95, 100);
-                DataSeeder.getInstance().seedDatabaseCurrency();
+                DataSeeder.seedDatabaseCurrency();
 
                 // TODO: Jika user pertama kali pasang aplikasi, tetapkan satu akun secara langsung sebagai defaul akun
                 // kedepanya, perbaiki supaya ketika database tidak mengecek adanya akun, maka buat panel pembuatan akun baru terlebih dahulu!

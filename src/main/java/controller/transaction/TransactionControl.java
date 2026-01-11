@@ -274,17 +274,17 @@ public class TransactionControl implements Initializable {
         note_trans.textProperty().bindBidirectional(noteState);
     }
     private void initDataComboBox() {
-        DataLoader.getInstance().akunComboBoxLoader(akunComboBox_inout);
-        DataLoader.getInstance().akunComboBoxLoader(akunComboBox_from);
-        DataLoader.getInstance().akunComboBoxLoader(akunComboBox_to);
+        DataLoader.akunComboBoxLoader(akunComboBox_inout);
+        DataLoader.akunComboBoxLoader(akunComboBox_from);
+        DataLoader.akunComboBoxLoader(akunComboBox_to);
 
-        DataLoader.getInstance().kategoriComboBoxLoader(categoryComboBox);
-        DataLoader.getInstance().tipeLabelComboBoxLoader(tipeLabel_inout);
-        DataLoader.getInstance().tipeLabelComboBoxLoader(tipeLabel_trans);
+        DataLoader.kategoriComboBoxLoader(categoryComboBox);
+        DataLoader.tipeLabelComboBoxLoader(tipeLabel_inout);
+        DataLoader.tipeLabelComboBoxLoader(tipeLabel_trans);
 
-        DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo_inout);
-        DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo_from);
-        DataLoader.getInstance().mataUangComboBoxLoader(mataUangCombo_to);
+        DataLoader.mataUangComboBoxLoader(mataUangCombo_inout);
+        DataLoader.mataUangComboBoxLoader(mataUangCombo_from);
+        DataLoader.mataUangComboBoxLoader(mataUangCombo_to);
     }
     private void activateIncome() {
         select(1, 0, incomeBtn_inout, incomeImg, incomeLbl, "#01AA71");
