@@ -115,7 +115,7 @@ public abstract class AbstractTransactionService implements TransactionService {
             Account account = trans.getAccount();
             BigDecimal jumlah = trans.getAmount();
 
-            BigDecimal delta = calculateSaldoDelta(0, jumlah);
+            BigDecimal delta = calculateSaldoDelta(BigDecimal.ZERO, jumlah);
 
             if (delta.compareTo(BigDecimal.ZERO) < 0 && delta.abs().compareTo(account.getBalance()) > 0) {
                 MyPopup.showDanger(

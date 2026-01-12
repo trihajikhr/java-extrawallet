@@ -37,6 +37,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +70,7 @@ public class TemplateControl implements Initializable {
     @FXML private ImageView expenseImg;
 
     @FXML
-    private Spinner<Integer> spinnerAmount;
+    private Spinner<BigDecimal> spinnerAmount;
 
     @FXML
     private ComboBox<Currency> mataUangComboBox;
@@ -119,7 +120,7 @@ public class TemplateControl implements Initializable {
         loadTipeLabelComboBox();
 
         // uncategorized
-        IOLogic.makeIntegerOnlyBlankInitial(spinnerAmount, 0, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(spinnerAmount, BigDecimal.ZERO, new BigDecimal("1_000_000_000_000"));
         mataUangComboBox.setMouseTransparent(true);
         mataUangComboBox.setFocusTraversable(false);
         mataUangComboBox.getStyleClass().add("locked");
@@ -290,7 +291,10 @@ public class TemplateControl implements Initializable {
 
         BooleanBinding amountValid =
                 Bindings.createBooleanBinding(
-                        () -> spinnerAmount.getValue() != null && spinnerAmount.getValue() > 0,
+                        () -> {
+                            BigDecimal value = spinnerAmount.getValue();
+                            return value != null && value.compareTo(BigDecimal.ZERO) > 0;
+                        },
                         spinnerAmount.valueProperty()
                 );
 
@@ -367,7 +371,7 @@ public class TemplateControl implements Initializable {
             return;
         }
 
-        int jumlah = spinnerAmount.getValue();
+        BigDecimal jumlah = spinnerAmount.getValue();
         Account dataAccount = akunComboBox.getValue();
         Category dataCategory = categoryComboBox.getValue();
         LabelType dataLabel = tipeLabelComboBox.getValue();
@@ -412,7 +416,7 @@ public class TemplateControl implements Initializable {
             activateExpense();
         }
 
-        spinnerAmount.getEditor().setText(Integer.toString(trans.getAmount()));
+        spinnerAmount.getEditor().setText(trans.getAmount().toPlainString());
         akunComboBox.setValue(trans.getAccount());
         categoryComboBox.setValue(trans.getCategory());
 

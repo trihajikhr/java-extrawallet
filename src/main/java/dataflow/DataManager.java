@@ -58,10 +58,10 @@ public class DataManager {
             Account account = new Account(
                  1,
                  "General",
-                  dataColor.get(1).getWarna(),
+                  dataColor.get(1).getColor(),
                   dataAccountItem.get(0).getIcon(),
                   dataAccountItem.get(0).getIconPath(),
-                   0,
+                   BigDecimal.ZERO,
                    dataCurrency.get(0)
             );
 
@@ -75,7 +75,7 @@ public class DataManager {
         accountData = Database.getInstance().fetchAkun();
         dataLabelType = Database.getInstance().fetchTipeLabel();
         dataTemplate = Database.getInstance().fetchTemplate();
-        dataTransaction = Database.getInstance().fetchTransaksi();
+        dataTransaction = Database.getInstance().fetchTransaction();
     }
 
     // [1] >=== RETURN DATA DATAMANAGER

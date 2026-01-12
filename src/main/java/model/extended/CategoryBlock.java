@@ -4,24 +4,24 @@ import model.Category;
 
 import java.math.BigDecimal;
 
-public class BlokKategori{
+public class CategoryBlock {
     private Category category;
     private int totalUsed;
     private BigDecimal totalAmount;
 
-    public BlokKategori(Category category, int counter, BigDecimal totalAmount) {
+    public CategoryBlock(Category category, int counter, BigDecimal totalAmount) {
         this.category = category;
         this.totalUsed = counter;
         this.totalAmount = totalAmount;
     }
 
-    public BlokKategori(){}
+    public CategoryBlock(){}
 
-    public Category getKategori() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setKategori(Category category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

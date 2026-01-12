@@ -746,14 +746,14 @@ public abstract class AbstractRecordControl implements Initializable, Transactio
 
                 if(isSelected) {
                     totalSelectedValue = totalSelectedValue.add(CurrencyApiClient.getInstance().convert(
-                            BigDecimal.valueOf(rc.getTransaksi().getAmount()),
-                            rc.getTransaksi().getAccount().getCurrencyType().getCode(),
+                            rc.getTransaction().getAmount(),
+                            rc.getTransaction().getAccount().getCurrencyType().getCode(),
                             "IDR"
                     ));
                 } else{
                     totalSelectedValue = totalSelectedValue.subtract(CurrencyApiClient.getInstance().convert(
-                            BigDecimal.valueOf(rc.getTransaksi().getAmount()),
-                            rc.getTransaksi().getAccount().getCurrencyType().getCode(),
+                            rc.getTransaction().getAmount(),
+                            rc.getTransaction().getAccount().getCurrencyType().getCode(),
                             "IDR"
                     ));
                 }

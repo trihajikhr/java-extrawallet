@@ -41,6 +41,7 @@ import service.ExpenseService;
 import service.IncomeService;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
 
@@ -60,7 +61,7 @@ public class EditControl implements Initializable {
     private ObservableList<LabelType> labelTypeList = FXCollections.observableArrayList();
 
     // atribut fxml
-    @FXML private Spinner<Integer> amountEdit;
+    @FXML private Spinner<BigDecimal> amountEdit;
     @FXML private ComboBox<Currency> mataUangCombo;
     @FXML private ComboBox<Account> akunComboBox;
     @FXML private ComboBox<Category> categoryComboBox;
@@ -177,7 +178,7 @@ public class EditControl implements Initializable {
         tipeLabelCombo.setButtonCell(tipeLabelCombo.getCellFactory().call(null));
     }
     public void prefilFromRecord(Transaction trans) {
-        amountEdit.getEditor().setText(Integer.toString(trans.getAmount()));
+        amountEdit.getEditor().setText(trans.getAmount().toPlainString());
         akunComboBox.setValue(trans.getAccount());
         categoryComboBox.setValue(trans.getCategory());
         tipeLabelCombo.setValue(trans.getLabelType());
@@ -193,12 +194,15 @@ public class EditControl implements Initializable {
     // [3] >=== LOGIC HANDLER & FORM VALIDATION
     private void logicHandler() {
         IOLogic.isTextFieldValid(noteEdit, 50);
-        IOLogic.makeIntegerOnlyBlankInitial(amountEdit, 0, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(amountEdit, BigDecimal.ZERO, new BigDecimal("1_000_000_000_000"));
     }
     private void isFormComplete() {
         BooleanBinding amountValid =
                 Bindings.createBooleanBinding(
-                        () -> amountEdit.getValue() != null && amountEdit.getValue() > 0,
+                        () -> {
+                            BigDecimal value = amountEdit.getValue();
+                            return value != null && value.compareTo(BigDecimal.ZERO) > 0;
+                        },
                         amountEdit.valueProperty()
                 );
 
@@ -376,7 +380,7 @@ public class EditControl implements Initializable {
                     resolveService(selected.get(0));
 
             Account account = selected.get(0).getAccount();
-            int saldoAwal = account.getBalance();
+            BigDecimal saldoAwal = account.getBalance();
 
             List<Transaction> newList = new ArrayList<>();
 

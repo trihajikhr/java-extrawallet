@@ -9,7 +9,7 @@ public class AccountItem {
     private String label;
     private Image icon;
     private String iconPath;
-    private ObjectProperty<Color> warna = new SimpleObjectProperty<>(Color.WHITE);
+    private ObjectProperty<Color> color = new SimpleObjectProperty<>(Color.WHITE);
 
     public AccountItem(String label, Image icon, String iconPath) {
         this.label = label;
@@ -41,15 +41,15 @@ public class AccountItem {
         this.iconPath = iconPath;
     }
 
-    public Color getWarna() {
-        return warna.get();
+    public Color getColor() {
+        return color.get();
     }
 
-    public ObjectProperty<Color> warnaProperty() {
-        return warna;
+    public ObjectProperty<Color> colorProperty() {
+        return color;
     }
 
-    public void setWarna(Color warna) {
-        this.warna.set(warna);
+    public void setColor(Color color) {
+        this.color.set(color);
     }
 }

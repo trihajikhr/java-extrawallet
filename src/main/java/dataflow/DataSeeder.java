@@ -410,7 +410,7 @@ public final class DataSeeder {
     // [2] >=== SEED DATA DATABASE
     public static void seedDatabaseKategori() {
         Database dataConnect = Database.getInstance();
-        String querySql = "INSERT OR IGNORE INTO category (id, tipe, nama, icon_path, warna) VALUES (?, ?, ?, ?, ?)";
+        String querySql = "INSERT OR IGNORE INTO category (id, type, name, icon_path, color) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
             for(Category ktr : DataManager.getInstance().getDataKategori()) {
@@ -430,7 +430,7 @@ public final class DataSeeder {
     }
     public static void seedDatabaseCurrency() {
         Database dataConnect = Database.getInstance();
-        String querySql = "INSERT OR IGNORE INTO mata_uang(id, kode, nama, simbol, desimal) VALUES (?, ?, ?, ?, ?)";
+        String querySql = "INSERT OR IGNORE INTO currency (id, code, name, symbol, decimal) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
             for(Currency mk : DataManager.getInstance().getDataMataUang()) {

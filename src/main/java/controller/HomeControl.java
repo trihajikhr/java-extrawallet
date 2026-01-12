@@ -13,7 +13,7 @@ import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import model.*;
 import model.enums.TransactionType;
-import model.extended.BlokKategori;
+import model.extended.CategoryBlock;
 import model.extended.RecordCard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class HomeControl implements Initializable {
     @FXML private Label persenBalance;
 
     // data class record card category
-    private ArrayList<BlokKategori> filteredKategori = new ArrayList<>();
+    private ArrayList<CategoryBlock> filteredKategori = new ArrayList<>();
 
     // data bigdecimal
     private BigDecimal lastIncome60 = BigDecimal.ZERO;
@@ -70,7 +70,7 @@ public class HomeControl implements Initializable {
 
     // [1] >=== LABEL SET
     private BigDecimal normalizeAmount(Transaction trans) {
-        BigDecimal amount = BigDecimal.valueOf(trans.getAmount());
+        BigDecimal amount = trans.getAmount();
         String currency = trans.getAccount().getCurrencyType().getCode();
         if (currency.equalsIgnoreCase(BASE_CURRENCY)) {
             return amount;
@@ -317,7 +317,7 @@ public class HomeControl implements Initializable {
             Category category = entry.getKey();
             if(entry.getValue() == 0) continue; // skip jika 0 penggunaan!
             filteredKategori.add(
-                    new BlokKategori(
+                    new CategoryBlock(
                             category,
                             entry.getValue(),
                             kategoriAmount.get(category)
@@ -328,7 +328,7 @@ public class HomeControl implements Initializable {
     private void createCardCategories() {
         latestCategoriesPanel.getChildren().clear();
 
-        for(BlokKategori ktgr : filteredKategori) {
+        for(CategoryBlock ktgr : filteredKategori) {
             HBox cardWrapper = new HBox();
             cardWrapper.setPrefHeight(60);
             HBox.setHgrow(cardWrapper, Priority.ALWAYS);
@@ -336,7 +336,7 @@ public class HomeControl implements Initializable {
             cardWrapper.setAlignment(Pos.CENTER);
             cardWrapper.getStyleClass().add("record-card-categories");
 
-            StackPane iconStack = createIconStackNode(ktgr.getKategori());
+            StackPane iconStack = createIconStackNode(ktgr.getCategory());
             VBox labelWrap = createLabelNode(ktgr);
             HBox amountLabel = createLabelAmount(ktgr);
 
@@ -356,8 +356,8 @@ public class HomeControl implements Initializable {
         StackPane result = new StackPane(bgCircle, kategoriIcon);
         return result;
     }
-    private VBox createLabelNode(BlokKategori ktgr) {
-        Label namaKategori = new Label(ktgr.getKategori().getName());
+    private VBox createLabelNode(CategoryBlock ktgr) {
+        Label namaKategori = new Label(ktgr.getCategory().getName());
         Label counter = new Label(ktgr.getTotalUsed() + " transactions recorded");
 
         namaKategori.setStyle("""
@@ -378,7 +378,7 @@ public class HomeControl implements Initializable {
         labelWrap.setAlignment(Pos.CENTER_LEFT);
         return labelWrap;
     }
-    private HBox createLabelAmount(BlokKategori ktgr) {
+    private HBox createLabelAmount(CategoryBlock ktgr) {
         String stringForm = ktgr.getTotalAmount().toPlainString();
         String result = Converter.numberFormatter(stringForm);
 

@@ -15,11 +15,8 @@ import model.Transaction;
 import model.enums.TransactionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
-
-// TODO: sempurnakan constructor, dan atur setter dan getter, dan pikirkan soal listener
 
 public class RecordCard {
 
@@ -28,20 +25,17 @@ public class RecordCard {
 
     // all node atribute
     private HBox cardWrapper;
-    private HBox infoDasarWrapper;
-    private HBox tanggalStatusWrapper;
-
+    private HBox basicInfoWrapper;
+    private HBox dateStatusWrapper;
     private CheckBox checkList;
-
-    private Label labelKategori;
-    private Label labelMetodeBayar;
-    private Label labelKeterangan;
-    private Label labelAkun;
-    private Label labelTipeLabel;
-    private Label labelJumlahTransaksi;
-    private Label labelTanggalTransaksi;
-
-    private ImageView kategoriIcon;
+    private Label categoryLabel;
+    private Label paymentTypeLabel;
+    private Label descriptionLabel;
+    private Label accountLabel;
+    private Label labelTypeLabel;
+    private Label totalAmountLabel;
+    private Label transactionDateLabel;
+    private ImageView categoryIcon;
     private ImageView paymentStatusIcon;
 
     // atribute helper
@@ -62,19 +56,19 @@ public class RecordCard {
         StackPane iconStack = createIconStackNode(trans);
 
         // [3] vbox untuk label, category, dan keterangan
-        VBox infoDasar = createInfoDasarNode(trans);
+        VBox infoDasar = createBasicInfoNode(trans);
 
         // [4] menampilkan badges nama account
-        HBox infoAkun = createInfoAkunNode(trans);
+        HBox infoAkun = createAccountInfoNode(trans);
 
         // [5] menampilkan badges nama label
-        HBox infoLabel = createInfoLabelNode(trans);
+        HBox infoLabel = createLabelInfoNode(trans);
 
         // [6] spacer
         Region spacerRight = createSpacerRightNode(trans);
 
         // [7] menampilkan info harga, tanggal, dan keterangan lain
-        VBox infoTransaksi = createInfoTransaksiNode(trans);
+        VBox infoTransaksi = createTransactionInfoNode(trans);
 
        this.cardWrapper.getChildren().addAll(
                this.checkList,
@@ -107,77 +101,76 @@ public class RecordCard {
     }
     private StackPane createIconStackNode(Transaction trans) {
         Circle bgCircle = new Circle(20, trans.getCategory().getColor());
-        this.kategoriIcon = new ImageView(trans.getCategory().getIcon());
-        this.kategoriIcon.setFitWidth(24);
-        this.kategoriIcon.setFitHeight(24);
+        this.categoryIcon = new ImageView(trans.getCategory().getIcon());
+        this.categoryIcon.setFitWidth(24);
+        this.categoryIcon.setFitHeight(24);
 
         Circle clip = new Circle(12, 12, 12);
-        this.kategoriIcon.setClip(clip);
+        this.categoryIcon.setClip(clip);
 
-        StackPane result = new StackPane(bgCircle, this.kategoriIcon);
+        StackPane result = new StackPane(bgCircle, this.categoryIcon);
         return result;
     }
-    private VBox createInfoDasarNode(Transaction trans) {
+    private VBox createBasicInfoNode(Transaction trans) {
         VBox result = new VBox(5);
         result.setAlignment(Pos.CENTER_LEFT);
         result.setPrefWidth(400);
         result.setMinWidth(300);
         result.setMaxWidth(500);
-        this.labelKategori = new Label(trans.getCategory().getName());
-        this.labelKategori.setStyle("""
+        this.categoryLabel = new Label(trans.getCategory().getName());
+        this.categoryLabel.setStyle("""
             -fx-text-fill: #000000;
             -fx-font-size: 18px;
             -fx-font-weight: bold;
             """
         );
-        result.getChildren().add(this.labelKategori);
+        result.getChildren().add(this.categoryLabel);
 
-        this.infoDasarWrapper = new HBox(5);
+        this.basicInfoWrapper = new HBox(5);
 
         String paymentTypeLabel = "";
-        this.labelMetodeBayar = null;
+        this.paymentTypeLabel = null;
         if(trans.getPaymentType() != null)  {
-            this.labelMetodeBayar = new Label();
+            this.paymentTypeLabel = new Label();
             paymentTypeLabel = trans.getPaymentType().getLabel();
-            this.labelMetodeBayar.setText(paymentTypeLabel);
-            this.labelMetodeBayar.setStyle("-fx-text-fill: #000000");
+            this.paymentTypeLabel.setText(paymentTypeLabel);
+            this.paymentTypeLabel.setStyle("-fx-text-fill: #000000");
         }
 
         String tempKeterangan = "";
-        this.labelKeterangan = null;
+        this.descriptionLabel = null;
         if(trans.getDescription() != null) {
-            this.labelKeterangan = new Label();
+            this.descriptionLabel = new Label();
             tempKeterangan = trans.getDescription();
-            this.labelKeterangan.setText(tempKeterangan);
-            this.labelKeterangan.setStyle("-fx-text-fill: #6B7280");
+            this.descriptionLabel.setText(tempKeterangan);
+            this.descriptionLabel.setStyle("-fx-text-fill: #6B7280");
         }
 
         Line lineSeparator = null;
-        if(this.labelMetodeBayar != null && this.labelKeterangan != null) {
+        if(this.paymentTypeLabel != null && this.descriptionLabel != null) {
             lineSeparator = createLineSeparatorHelper();
-            this.infoDasarWrapper.getChildren().addAll(this.labelMetodeBayar, lineSeparator, this.labelKeterangan);
+            this.basicInfoWrapper.getChildren().addAll(this.paymentTypeLabel, lineSeparator, this.descriptionLabel);
         }  else {
-            if(this.labelMetodeBayar != null) {
-                this.infoDasarWrapper.getChildren().add(this.labelMetodeBayar);
-            } else if(this.labelKeterangan != null) {
-                this.infoDasarWrapper.getChildren().add(this.labelKeterangan);
+            if(this.paymentTypeLabel != null) {
+                this.basicInfoWrapper.getChildren().add(this.paymentTypeLabel);
+            } else if(this.descriptionLabel != null) {
+                this.basicInfoWrapper.getChildren().add(this.descriptionLabel);
             }
         }
 
-        result.getChildren().add(this.infoDasarWrapper);
+        result.getChildren().add(this.basicInfoWrapper);
         return result;
     }
-    private HBox createInfoAkunNode(Transaction trans) {
+    private HBox createAccountInfoNode(Transaction trans) {
         HBox result = new HBox(15);
         result.setPrefWidth(300);
         result.setMinWidth(200);
         result.setMaxWidth(800);
-        //result.setStyle("-fx-background-color: blue;");
         HBox.setHgrow(result, Priority.ALWAYS);
         result.setAlignment(Pos.CENTER_LEFT);
-        this.labelAkun = new Label(trans.getAccount().getName());
+        this.accountLabel = new Label(trans.getAccount().getName());
         String warnaHex = Converter.colorToHex(trans.getAccount().getColor());
-        this.labelAkun.setStyle("""
+        this.accountLabel.setStyle("""
                 -fx-background-color: %s;
                 -fx-font-size: 11;
                 -fx-text-fill: white;
@@ -185,22 +178,21 @@ public class RecordCard {
                 -fx-background-radius: 4;
                 -fx-font-weight: bold;
             """.formatted(warnaHex));
-        result.getChildren().add(this.labelAkun);
+        result.getChildren().add(this.accountLabel);
         return result;
     }
-    private HBox createInfoLabelNode(Transaction trans) {
+    private HBox createLabelInfoNode(Transaction trans) {
         HBox result = new HBox(15);
         result.setPrefWidth(100);
         result.setMinWidth(100);
         result.setMaxWidth(300);
-        //result.setStyle("-fx-background-color: red;");
 
         HBox.setHgrow(result, Priority.ALWAYS);
         result.setAlignment(Pos.CENTER_LEFT);
         if(trans.getLabelType() != null) {
-            this.labelTipeLabel = new Label(trans.getLabelType().getName());
+            this.labelTypeLabel = new Label(trans.getLabelType().getName());
             String warnaHex = Converter.colorToHex(trans.getLabelType().getColor());
-            this.labelTipeLabel.setStyle("""
+            this.labelTypeLabel.setStyle("""
                 -fx-background-color: %s;
                 -fx-font-size: 11;
                 -fx-text-fill: white;
@@ -208,7 +200,7 @@ public class RecordCard {
                 -fx-background-radius: 4;
                 -fx-font-weight: bold;
             """.formatted(warnaHex));
-            result.getChildren().add(this.labelTipeLabel);
+            result.getChildren().add(this.labelTypeLabel);
             return result;
         } else {
             return result;
@@ -218,10 +210,9 @@ public class RecordCard {
         Region result = new Region();
         HBox.setHgrow(result, Priority.ALWAYS);
         result.setMaxWidth(50);
-        // result.setStyle("-fx-background-color: blue;");
         return result;
     }
-    private VBox createInfoTransaksiNode(Transaction trans) {
+    private VBox createTransactionInfoNode(Transaction trans) {
         VBox result = new VBox(5);
         result.setPrefWidth(250);
         result.setMaxWidth(250);
@@ -229,8 +220,8 @@ public class RecordCard {
         String formatJumlah = Converter.numberFormatter(trans.getAmount().toPlainString());
 
         if(trans.getTransactionType() == TransactionType.INCOME){
-            this.labelJumlahTransaksi = new Label(trans.getAccount().getCurrencyType().getSymbol() + " " + formatJumlah);
-            this.labelJumlahTransaksi.setStyle(
+            this.totalAmountLabel = new Label(trans.getAccount().getCurrencyType().getSymbol() + " " + formatJumlah);
+            this.totalAmountLabel.setStyle(
                     """
                     -fx-text-fill: #01AA71;
                     -fx-font-size: 18px;
@@ -238,8 +229,8 @@ public class RecordCard {
                     """
             );
         } else if(trans.getTransactionType() == TransactionType.EXPANSE) {
-            this.labelJumlahTransaksi = new Label("-" + trans.getAccount().getCurrencyType().getSymbol() + " " + formatJumlah);
-            this.labelJumlahTransaksi.setStyle(
+            this.totalAmountLabel = new Label("-" + trans.getAccount().getCurrencyType().getSymbol() + " " + formatJumlah);
+            this.totalAmountLabel.setStyle(
                     """
                     -fx-text-fill: #F92222;
                     -fx-font-size: 18px;
@@ -248,12 +239,12 @@ public class RecordCard {
             );
         }
 
-        result.getChildren().add(this.labelJumlahTransaksi);
+        result.getChildren().add(this.totalAmountLabel);
 
-        this.tanggalStatusWrapper = new HBox(5);
-        this.tanggalStatusWrapper.setAlignment(Pos.CENTER_RIGHT);
-        this.labelTanggalTransaksi = new Label(trans.getDate().format(formatter));
-        this.labelTanggalTransaksi.setStyle("-fx-text-fill: #6B7280");
+        this.dateStatusWrapper = new HBox(5);
+        this.dateStatusWrapper.setAlignment(Pos.CENTER_RIGHT);
+        this.transactionDateLabel = new Label(trans.getDate().format(formatter));
+        this.transactionDateLabel.setStyle("-fx-text-fill: #6B7280");
 
         // kondisional icon payment
         this.paymentStatusIcon = null;
@@ -272,11 +263,11 @@ public class RecordCard {
             lineSeparator.setEndY(20);
             lineSeparator.setStroke(Color.web("#E5E7EB"));
             lineSeparator.setStrokeWidth(1);
-            this.tanggalStatusWrapper.getChildren().addAll(this.labelTanggalTransaksi, lineSeparator, this.paymentStatusIcon);
+            this.dateStatusWrapper.getChildren().addAll(this.transactionDateLabel, lineSeparator, this.paymentStatusIcon);
         } else {
-            this.tanggalStatusWrapper.getChildren().add(this.labelTanggalTransaksi);
+            this.dateStatusWrapper.getChildren().add(this.transactionDateLabel);
         }
-        result.getChildren().add(this.tanggalStatusWrapper);
+        result.getChildren().add(this.dateStatusWrapper);
         return result;
     }
 
@@ -314,9 +305,7 @@ public class RecordCard {
         });
     }
 
-
-    // [4] >=== SETTER & GETTER
-
+    // [5] >=== SETTER & GETTER
     public HBox getCardWrapper() {
         return cardWrapper;
     }
@@ -325,20 +314,20 @@ public class RecordCard {
         this.cardWrapper = cardWrapper;
     }
 
-    public HBox getInfoDasarWrapper() {
-        return infoDasarWrapper;
+    public HBox getBasicInfoWrapper() {
+        return basicInfoWrapper;
     }
 
-    public void setInfoDasarWrapper(HBox infoDasarWrapper) {
-        this.infoDasarWrapper = infoDasarWrapper;
+    public void setBasicInfoWrapper(HBox basicInfoWrapper) {
+        this.basicInfoWrapper = basicInfoWrapper;
     }
 
-    public HBox getTanggalStatusWrapper() {
-        return tanggalStatusWrapper;
+    public HBox getDateStatusWrapper() {
+        return dateStatusWrapper;
     }
 
-    public void setTanggalStatusWrapper(HBox tanggalStatusWrapper) {
-        this.tanggalStatusWrapper = tanggalStatusWrapper;
+    public void setDateStatusWrapper(HBox dateStatusWrapper) {
+        this.dateStatusWrapper = dateStatusWrapper;
     }
 
     public CheckBox getCheckList() {
@@ -349,68 +338,68 @@ public class RecordCard {
         this.checkList = checkList;
     }
 
-    public Label getLabelKategori() {
-        return labelKategori;
+    public Label getCategoryLabel() {
+        return categoryLabel;
     }
 
-    public void setLabelKategori(Label labelKategori) {
-        this.labelKategori = labelKategori;
+    public void setCategoryLabel(Label categoryLabel) {
+        this.categoryLabel = categoryLabel;
     }
 
-    public Label getLabelMetodeBayar() {
-        return labelMetodeBayar;
+    public Label getPaymentTypeLabel() {
+        return paymentTypeLabel;
     }
 
-    public void setLabelMetodeBayar(Label labelMetodeBayar) {
-        this.labelMetodeBayar = labelMetodeBayar;
+    public void setPaymentTypeLabel(Label paymentTypeLabel) {
+        this.paymentTypeLabel = paymentTypeLabel;
     }
 
-    public Label getLabelKeterangan() {
-        return labelKeterangan;
+    public Label getDescriptionLabel() {
+        return descriptionLabel;
     }
 
-    public void setLabelKeterangan(Label labelKeterangan) {
-        this.labelKeterangan = labelKeterangan;
+    public void setDescriptionLabel(Label descriptionLabel) {
+        this.descriptionLabel = descriptionLabel;
     }
 
-    public Label getLabelAkun() {
-        return labelAkun;
+    public Label getAccountLabel() {
+        return accountLabel;
     }
 
-    public void setLabelAkun(Label labelAkun) {
-        this.labelAkun = labelAkun;
+    public void setAccountLabel(Label accountLabel) {
+        this.accountLabel = accountLabel;
     }
 
-    public Label getLabelTipeLabel() {
-        return labelTipeLabel;
+    public Label getLabelTypeLabel() {
+        return labelTypeLabel;
     }
 
-    public void setLabelTipeLabel(Label labelTipeLabel) {
-        this.labelTipeLabel = labelTipeLabel;
+    public void setLabelTypeLabel(Label labelTypeLabel) {
+        this.labelTypeLabel = labelTypeLabel;
     }
 
-    public Label getLabelJumlahTransaksi() {
-        return labelJumlahTransaksi;
+    public Label getTotalAmountLabel() {
+        return totalAmountLabel;
     }
 
-    public void setLabelJumlahTransaksi(Label labelJumlahTransaksi) {
-        this.labelJumlahTransaksi = labelJumlahTransaksi;
+    public void setTotalAmountLabel(Label totalAmountLabel) {
+        this.totalAmountLabel = totalAmountLabel;
     }
 
-    public Label getLabelTanggalTransaksi() {
-        return labelTanggalTransaksi;
+    public Label getTransactionDateLabel() {
+        return transactionDateLabel;
     }
 
-    public void setLabelTanggalTransaksi(Label labelTanggalTransaksi) {
-        this.labelTanggalTransaksi = labelTanggalTransaksi;
+    public void setTransactionDateLabel(Label transactionDateLabel) {
+        this.transactionDateLabel = transactionDateLabel;
     }
 
-    public ImageView getKategoriIcon() {
-        return kategoriIcon;
+    public ImageView getCategoryIcon() {
+        return categoryIcon;
     }
 
-    public void setKategoriIcon(ImageView kategoriIcon) {
-        this.kategoriIcon = kategoriIcon;
+    public void setCategoryIcon(ImageView categoryIcon) {
+        this.categoryIcon = categoryIcon;
     }
 
     public ImageView getPaymentStatusIcon() {
@@ -421,11 +410,11 @@ public class RecordCard {
         this.paymentStatusIcon = paymentStatusIcon;
     }
 
-    public Transaction getTransaksi() {
+    public Transaction getTransaction() {
         return transaction;
     }
 
-    public void setTransaksi(Transaction transaction) {
+    public void setTransaction(Transaction transaction) {
         this.transaction = transaction;
     }
 }

@@ -84,7 +84,7 @@ public class LabelControl implements Initializable {
             return;
         }
 
-        Color warna = colorComboBox.getValue().getWarna();
+        Color warna = colorComboBox.getValue().getColor();
 
         LabelType labelType = new LabelType(0, nama, warna);
 

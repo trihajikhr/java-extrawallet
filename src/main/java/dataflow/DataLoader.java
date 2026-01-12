@@ -190,7 +190,7 @@ public final class DataLoader {
                     setText(null);
                     setGraphic(null);
                 } else {
-                    Circle circle = new Circle(8, item.getWarna());
+                    Circle circle = new Circle(8, item.getColor());
                     Label label = new Label(item.getLabel());
                     label.setStyle("-fx-text-fill: black;");
                     HBox box = new HBox(8, circle, label);

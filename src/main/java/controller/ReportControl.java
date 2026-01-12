@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import service.AppPaths;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.LocalDate;
@@ -180,7 +181,7 @@ public class ReportControl implements Initializable {
         // t.setId(Integer.parseInt(d[0]));
 
         t.setTransactionType(TransactionType.valueOf(d[1].trim().toUpperCase()));
-        t.setAmount(Integer.parseInt(d[2]));
+        t.setAmount(new BigDecimal(d[2]));
 
         t.setAccount(findAkun(d[3]));
         t.setCategory(findKategori(d[4]));

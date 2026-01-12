@@ -10,6 +10,7 @@ import model.Transaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -32,8 +33,8 @@ public class StatisticControl {
         dataTransaction = DataManager.getInstance().getDataTransaksi();
         dataTransaction.sort(Comparator.comparing(Transaction::getDate));
 
-        Map<Integer, Integer> monthlyDelta = new HashMap<>();
-        for (int i = 1; i <= 12; i++) monthlyDelta.put(i, 0);
+        Map<Integer, BigDecimal> monthlyDelta = new HashMap<>();
+        for (int i = 1; i <= 12; i++) monthlyDelta.put(i, BigDecimal.ZERO);
 
         int currentYear = LocalDate.now().getYear();
         int currentMonth = LocalDate.now().getMonthValue();
@@ -42,17 +43,17 @@ public class StatisticControl {
             if (t.getDate().getYear() != currentYear) continue;
 
             int month = t.getDate().getMonthValue();
-            int delta = t.getTransactionType() == TransactionType.INCOME ? t.getAmount() : -t.getAmount();
-            monthlyDelta.put(month, monthlyDelta.get(month) + delta);
+            BigDecimal delta = t.getTransactionType() == TransactionType.INCOME ? t.getAmount() : t.getAmount().negate();
+            monthlyDelta.put(month, monthlyDelta.get(month).add(delta));
         }
 
         XYChart.Series<String, Number> series = new XYChart.Series<>();
         series.setName("Balance Growth");
 
         String[] bulan = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
-        int cumulative = 0;
+        BigDecimal cumulative = BigDecimal.ZERO;
         for (int i = 1; i <= Math.min(currentMonth, 12); i++) {
-            cumulative += monthlyDelta.get(i);
+            cumulative =  cumulative.add(monthlyDelta.get(i));
             series.getData().add(new XYChart.Data<>(bulan[i-1], cumulative));
         }
 

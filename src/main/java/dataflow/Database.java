@@ -6,7 +6,6 @@ import java.nio.file.Files;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -28,14 +27,12 @@ import service.AppPaths;
 // Jangan refactor sekarang, fokus fitur dulu!
 
 public class Database {
+
     private static final Logger log = LoggerFactory.getLogger(Database.class);
     private static Database instance;
-
     private final String JDBC_URL = "jdbc:sqlite:";
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-
-    private Connection koneksi;
+    private Connection myConnection;
 
     // [0] >=== instance
     public static Database getInstance() {
@@ -46,7 +43,7 @@ public class Database {
         return instance;
     }
     public Connection getConnection() {
-        return koneksi;
+        return myConnection;
     }
 
     // [1] >=== objek database singleton
@@ -54,18 +51,18 @@ public class Database {
         try {
             Files.createDirectories(AppPaths.DATABASE_DIR);
 
-            this.koneksi = DriverManager.getConnection(JDBC_URL + AppPaths.DB_FILE.toAbsolutePath());
+            this.myConnection = DriverManager.getConnection(JDBC_URL + AppPaths.DB_FILE.toAbsolutePath());
 
             // aktifkan opsi foreign key (tidak aktif secara default!)
-            try (Statement perintah = koneksi.createStatement()) {
+            try (Statement perintah = myConnection.createStatement()) {
                 perintah.execute("PRAGMA foreign_keys = ON");
             }
 
-            createTableKategori();
-            createTableMataUang();
-            createTableTipeLabel();
-            createTableAkun();
-            createTableTransaksi();
+            createCategoryTable();
+            createCurrencyTable();
+            createLabelTypeTable();
+            createAccountTable();
+            createTransactionTable();
             createTableTemplate();
 
             log.info("Database siap digunakan di: {}", AppPaths.DB_FILE.toAbsolutePath());
@@ -78,16 +75,16 @@ public class Database {
     }
 
     // [2] >=== modularisasi statement create table
-    private void createTableKategori() {
-        try (Statement perintah = koneksi.createStatement()){
+    private void createCategoryTable() {
+        try (Statement perintah = myConnection.createStatement()){
             String querySql =
                 """
                 CREATE TABLE IF NOT EXISTS "category" (
                     "id"	INTEGER NOT NULL UNIQUE,
-                    "tipe"	TEXT NOT NULL,
-                    "nama"	TEXT NOT NULL,
+                    "type"	TEXT NOT NULL,
+                    "name"	TEXT NOT NULL,
                     "icon_path"	TEXT NOT NULL,
-                    "warna"	TEXT NOT NULL,
+                    "color"	TEXT NOT NULL,
                     PRIMARY KEY("id" AUTOINCREMENT)
                 )
                 """;
@@ -98,16 +95,16 @@ public class Database {
             log.error("table category gagal dibuat: " , e);
         }
     }
-    private void createTableMataUang() {
-        try(Statement perintah = koneksi.createStatement()) {
+    private void createCurrencyTable() {
+        try(Statement perintah = myConnection.createStatement()) {
             String querySql =
             """
-            CREATE TABLE IF NOT EXISTS "mata_uang" (
+            CREATE TABLE IF NOT EXISTS "currency" (
                 "id"	INTEGER NOT NULL UNIQUE,
-                "kode"	TEXT NOT NULL,
-                "nama"	TEXT NOT NULL,
-                "simbol"	TEXT NOT NULL,
-                "desimal"	INTEGER NOT NULL,
+                "code"	TEXT NOT NULL,
+                "name"	TEXT NOT NULL,
+                "symbol"	TEXT NOT NULL,
+                "decimal"	INTEGER NOT NULL,
                 PRIMARY KEY("id" AUTOINCREMENT)
             )
             """;
@@ -119,14 +116,14 @@ public class Database {
             log.error("table mata_uang gagal dibuat: ", e);
         }
     }
-    private void createTableTipeLabel() {
-        try (Statement perintah = koneksi.createStatement()){
+    private void createLabelTypeTable() {
+        try (Statement perintah = myConnection.createStatement()){
             String querySql =
                 """
-                CREATE TABLE IF NOT EXISTS "tipelabel" (
+                CREATE TABLE IF NOT EXISTS "labeltype" (
                     "id"	INTEGER NOT NULL UNIQUE,
-                    "nama"	TEXT NOT NULL UNIQUE,
-                    "warna"	TEXT NOT NULL,
+                    "name"	TEXT NOT NULL UNIQUE,
+                    "color"	TEXT NOT NULL,
                     PRIMARY KEY("id" AUTOINCREMENT)
                 )
                 """;
@@ -137,19 +134,19 @@ public class Database {
             log.error("table tipelabel gagal dibuat: ", e);
         }
     }
-    private void createTableAkun() {
-        try (Statement perintah = koneksi.createStatement()) {
+    private void createAccountTable() {
+        try (Statement perintah = myConnection.createStatement()) {
             String querySql =
             """
             CREATE TABLE IF NOT EXISTS "account" (
                 "id"	INTEGER NOT NULL UNIQUE,
-                "nama"	TEXT NOT NULL,
-                "warna"	TEXT NOT NULL,
+                "name"	TEXT NOT NULL,
+                "color"	TEXT NOT NULL,
                 "icon_path"	TEXT NOT NULL,
-                "jumlah"	INTEGER NOT NULL,
-                "id_mata_uang"	INTEGER NOT NULL,
+                "balance"	INTEGER NOT NULL,
+                "id_currency"	INTEGER NOT NULL,
                 PRIMARY KEY("id" AUTOINCREMENT),
-                CONSTRAINT "akun_mata_uang" FOREIGN KEY("id_mata_uang") REFERENCES "mata_uang"("id")
+                CONSTRAINT "account_to_currency" FOREIGN KEY("id_currency") REFERENCES "currency"("id")
             )
             """;
             perintah.executeUpdate(querySql);
@@ -159,25 +156,25 @@ public class Database {
             log.error("table account gagal dibuat: ", e);
         }
     }
-    private void createTableTransaksi() {
-        try (Statement perintah = koneksi.createStatement()) {
+    private void createTransactionTable() {
+        try (Statement perintah = myConnection.createStatement()) {
             String querySql =
             """
             CREATE TABLE IF NOT EXISTS "transaction" (
                 "id"	INTEGER NOT NULL UNIQUE,
-                "tipe"	TEXT NOT NULL,
-                "jumlah"	INTEGER NOT NULL,
-                "id_akun"	INTEGER NOT NULL,
-                "id_kategori"	INTEGER NOT NULL,
-                "id_tipelabel"	INTEGER,
-                "tanggal"	TEXT NOT NULL,
-                "keterangan"	TEXT,
-                "metode_transaksi"	TEXT,
-                "status"	TEXT,
+                "type"	TEXT NOT NULL,
+                "amount"	INTEGER NOT NULL,
+                "id_account"	INTEGER NOT NULL,
+                "id_category"	INTEGER NOT NULL,
+                "id_labeltype"	INTEGER,
+                "date"	TEXT NOT NULL,
+                "description"	TEXT,
+                "payment_type"	TEXT,
+                "payment_status"	TEXT,
                 PRIMARY KEY("id" AUTOINCREMENT),
-                CONSTRAINT "transaksi_akun" FOREIGN KEY("id_akun") REFERENCES "account"("id") ON DELETE CASCADE,
-                CONSTRAINT "transaksi_kategori" FOREIGN KEY("id_kategori") REFERENCES "category"("id") ON DELETE RESTRICT,
-                CONSTRAINT "transaksi_label" FOREIGN KEY("id_tipelabel") REFERENCES "tipelabel"("id") ON DELETE RESTRICT
+                CONSTRAINT "transaction_to_account" FOREIGN KEY("id_account") REFERENCES "account"("id") ON DELETE CASCADE,
+                CONSTRAINT "transaction_to_category" FOREIGN KEY("id_category") REFERENCES "category"("id") ON DELETE RESTRICT,
+                CONSTRAINT "transaction_to_labeltype" FOREIGN KEY("id_labeltype") REFERENCES "labeltype"("id") ON DELETE RESTRICT
             )
             """;
             perintah.executeUpdate(querySql);
@@ -188,24 +185,24 @@ public class Database {
         }
     }
     private void createTableTemplate() {
-        try (Statement perintah = koneksi.createStatement()) {
+        try (Statement perintah = myConnection.createStatement()) {
             String querySql =
             """
             CREATE TABLE IF NOT EXISTS "template" (
                 "id"	INTEGER NOT NULL UNIQUE,
-                "tipe"	TEXT NOT NULL,
-                "nama"	TEXT NOT NULL,
-                "jumlah"	INTEGER NOT NULL,
-                "id_akun"	INTEGER NOT NULL,
-                "id_kategori"	INTEGER NOT NULL,
-                "id_tipelabel"	INTEGER,
-                "keterangan"	TEXT,
-                "metode_transaksi"	TEXT,
-                "status"	TEXT,
+                "type"	TEXT NOT NULL,
+                "name"	TEXT NOT NULL,
+                "amount"	INTEGER NOT NULL,
+                "id_account"	INTEGER NOT NULL,
+                "id_category"	INTEGER NOT NULL,
+                "id_labeltype"	INTEGER,
+                "description"	TEXT,
+                "payment_type"	TEXT,
+                "payment_status"	TEXT,
                 PRIMARY KEY("id" AUTOINCREMENT),
-                CONSTRAINT "template_akun" FOREIGN KEY("id_akun") REFERENCES "account"("id") ON DELETE CASCADE,
-                CONSTRAINT "template_kategori" FOREIGN KEY("id_kategori") REFERENCES "category"("id") ON DELETE CASCADE,
-                CONSTRAINT "template_label" FOREIGN KEY("id_tipelabel") REFERENCES "tipelabel"("id") ON DELETE CASCADE
+                CONSTRAINT "template_to_account" FOREIGN KEY("id_account") REFERENCES "account"("id") ON DELETE CASCADE,
+                CONSTRAINT "template_to_category" FOREIGN KEY("id_category") REFERENCES "category"("id") ON DELETE CASCADE,
+                CONSTRAINT "template_to_labeltype" FOREIGN KEY("id_category") REFERENCES "labeltype"("id") ON DELETE CASCADE
             )
             """;
             perintah.executeUpdate(querySql);
@@ -218,11 +215,11 @@ public class Database {
 
     // [3] >=== manipulasi data tipelabel
     public int insertTipeLabel(LabelType tipelabel) {
-        String querySql = "INSERT INTO tipelabel (nama, warna) VALUES (?, ?)";
+        String querySql = "INSERT INTO labeltype (name, color) VALUES (?, ?)";
 
         try {
-            koneksi.setAutoCommit(false);
-            try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
+            myConnection.setAutoCommit(false);
+            try (PreparedStatement ps = myConnection.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
 
                 ps.setString(1, tipelabel.getName());
                 ps.setString(2, Converter.colorToHex(tipelabel.getColor()));
@@ -237,13 +234,13 @@ public class Database {
                     }
 
                     int newId = rs.getInt(1);
-                    koneksi.commit();
+                    myConnection.commit();
                     return newId;
                 }
             }
         } catch (SQLException e) {
             try {
-                koneksi.rollback();
+                myConnection.rollback();
             } catch (SQLException ex) {
                 log.error("rollback database gagal!", ex);
             }
@@ -252,21 +249,21 @@ public class Database {
 
         } finally {
             try {
-                koneksi.setAutoCommit(true);
+                myConnection.setAutoCommit(true);
             } catch (SQLException e) {
                 log.error("gagal reset autoCommit!", e);
             }
         }
     }
     public ArrayList<LabelType> fetchTipeLabel() {
-        try (Statement stat = koneksi.createStatement()){
-            ResultSet rs = stat.executeQuery("SELECT * FROM tipelabel");
+        try (Statement stat = myConnection.createStatement()){
+            ResultSet rs = stat.executeQuery("SELECT * FROM labeltype");
             ArrayList<LabelType> data = new ArrayList<>();
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                String nama = rs.getString("nama");
-                String hex = rs.getString("warna");
+                String nama = rs.getString("name");
+                String hex = rs.getString("color");
 
                 Color warna = Converter.hexToColor(hex);
                 data.add(new LabelType(id, nama, warna));
@@ -283,16 +280,16 @@ public class Database {
 
     // [4] >=== manipulasi data category
     public ArrayList<Category> fetchKategori() {
-        try (Statement stat = koneksi.createStatement()) {
+        try (Statement stat = myConnection.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM category");
             ArrayList<Category> data = new ArrayList<>();
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                String tipe = rs.getString("tipe");
-                String nama = rs.getString("nama");
+                String tipe = rs.getString("type");
+                String nama = rs.getString("name");
                 String iconPath = rs.getString("icon_path");
-                Color warna = Converter.hexToColor(rs.getString("warna"));
+                Color warna = Converter.hexToColor(rs.getString("color"));
 
                 data.add(
                     new Category(
@@ -316,25 +313,25 @@ public class Database {
     }
 
     // [5] >=== manipulasi data transaction
-    public ArrayList<Transaction> fetchTransaksi() {
-        try (Statement stat = koneksi.createStatement()) {
-            ResultSet rs = stat.executeQuery("SELECT * FROM transaction");
+    public ArrayList<Transaction> fetchTransaction() {
+        try (Statement stat = myConnection.createStatement()) {
+            ResultSet rs = stat.executeQuery("SELECT * FROM `transaction`");
 
             ArrayList<Transaction> data = new ArrayList<>();
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                TransactionType tipe = TransactionType.valueOf(rs.getString("tipe"));
-                BigDecimal jumlah = rs.getBigDecimal("jumlah");
-                int idAkun = rs.getInt("id_akun");
-                int idKategori = rs.getInt("id_kategori");
-                int idTipeLabel = rs.getInt("id_tipelabel");
-                String tanggalSet = rs.getString("tanggal");
-                String keterangan = rs.getString("keterangan");
-                PaymentType paymentType = PaymentType.fromString(rs.getString("metode_transaksi"));
-                PaymentStatus status = PaymentStatus.fromString(rs.getString("status"));
+                TransactionType tipe = TransactionType.valueOf(rs.getString("type"));
+                BigDecimal jumlah = rs.getBigDecimal("amount");
+                int idAkun = rs.getInt("id_account");
+                int idKategori = rs.getInt("id_category");
+                int idTipeLabel = rs.getInt("id_labeltype");
+                String tanggalSet = rs.getString("date");
+                String keterangan = rs.getString("description");
+                PaymentType paymentType = PaymentType.fromString(rs.getString("payment_type"));
+                PaymentStatus status = PaymentStatus.fromString(rs.getString("payment_status"));
 
-                LocalDate tanggal = LocalDate.parse(tanggalSet, formatter);
+                LocalDate tanggal = LocalDate.parse(tanggalSet, Converter.formatter);
 
                 Account account = null;
                 for(Account item : DataManager.getInstance().getDataAkun()){
@@ -383,14 +380,14 @@ public class Database {
     }
     public int insertTransaksi(Transaction trans) {
         String querySql = "INSERT INTO transaction " +
-                "(tipe, jumlah, id_akun, id_kategori, id_tipelabel, tanggal, keterangan, metode_transaksi, status) " +
+                "(type, amount, id_account, id_category, id_labeltype, date, description, payment_type, payment_status) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)";
 
         try {
-            koneksi.setAutoCommit(false); // mulai
-            try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
+            myConnection.setAutoCommit(false); // mulai
+            try (PreparedStatement ps = myConnection.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, trans.getTransactionType().name());
-                ps.setInt(2, trans.getAmount());
+                ps.setBigDecimal(2, trans.getAmount());
                 ps.setInt(3, trans.getAccount().getId());
                 ps.setInt(4, trans.getCategory().getId());
 
@@ -399,7 +396,7 @@ public class Database {
                 } else {
                     ps.setNull(5, Types.INTEGER);
                 }
-                ps.setString(6, trans.getDate().format(formatter));
+                ps.setString(6, trans.getDate().format(Converter.formatter));
 
                 if (trans.getDescription() != null) {
                     ps.setString(7, trans.getDescription());
@@ -421,26 +418,26 @@ public class Database {
 
                 int affected = ps.executeUpdate();
                 if (affected == 0) {
-                    koneksi.rollback();
+                    myConnection.rollback();
                     return -1;
                 }
 
                 try (ResultSet rs = ps.getGeneratedKeys()) {
                     if (rs.next()) {
                         int newId = rs.getInt(1);
-                        koneksi.commit(); // aman
+                        myConnection.commit(); // aman
                         return newId;
                     }
                 }
 
                 // proteksi gagal
-                koneksi.rollback(); // batal insert
+                myConnection.rollback(); // batal insert
                 return -1;
             }
 
         } catch (SQLException e) {
             try {
-                koneksi.rollback();
+                myConnection.rollback();
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
@@ -449,7 +446,7 @@ public class Database {
 
         } finally {
             try {
-                koneksi.setAutoCommit(true); // balikin normal
+                myConnection.setAutoCommit(true); // balikin normal
             } catch (SQLException e) {
                 log.error("gagal reset autoCommit", e);
             }
@@ -458,7 +455,7 @@ public class Database {
     public void deleteTransaksi(int id) {
         String querySql = "DELETE FROM transaction WHERE id = ?";
 
-        try (PreparedStatement perintah = Database.getInstance().koneksi.prepareStatement(querySql)){
+        try (PreparedStatement perintah = Database.getInstance().myConnection.prepareStatement(querySql)){
             perintah.setInt(1, id);
             int affectedRows = perintah.executeUpdate();
 
@@ -473,21 +470,21 @@ public class Database {
     public Boolean updateTransaksi(Transaction trans){
         String querySql = """
             UPDATE transaction SET
-                jumlah = ?,
-                id_akun = ?,
-                id_kategori = ?,
-                id_tipelabel = ?,
-                tanggal = ?,
-                keterangan = ?,
-                metode_transaksi = ?,
-                status = ?
+                amount = ?,
+                id_account = ?,
+                id_category = ?,
+                id_labeltype = ?,
+                date = ?,
+                description = ?,
+                payment_type = ?,
+                payment_status = ?
             WHERE id = ?;
             """;
 
         try {
-            koneksi.setAutoCommit(false);
-            try (PreparedStatement ps = koneksi.prepareStatement(querySql)) {
-                ps.setInt(1, trans.getAmount());
+            myConnection.setAutoCommit(false);
+            try (PreparedStatement ps = myConnection.prepareStatement(querySql)) {
+                ps.setBigDecimal(1, trans.getAmount());
                 ps.setInt(2, trans.getAccount().getId());
                 ps.setInt(3, trans.getCategory().getId());
 
@@ -497,7 +494,7 @@ public class Database {
                     ps.setNull(4, Types.INTEGER);
                 }
 
-                ps.setString(5, trans.getDate().format(formatter));
+                ps.setString(5, trans.getDate().format(Converter.formatter));
 
                 if (trans.getDescription() != null) {
                     ps.setString(6, trans.getDescription());
@@ -522,17 +519,17 @@ public class Database {
 
                 int affected = ps.executeUpdate();
                 if(affected == 0) {
-                    koneksi.rollback();
+                    myConnection.rollback();
                     return false;
                 }
 
-                koneksi.commit();
+                myConnection.commit();
                 return true;
 
             }
         } catch (SQLException e) {
             try {
-                koneksi.rollback();
+                myConnection.rollback();
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
@@ -541,7 +538,7 @@ public class Database {
 
         } finally {
             try {
-                koneksi.setAutoCommit(true); // balikin normal
+                myConnection.setAutoCommit(true); // balikin normal
             } catch (SQLException e) {
                 log.error("gagal reset autoCommit", e);
             }
@@ -551,19 +548,19 @@ public class Database {
     // [6] >=== manipulasi data account
     public int insertAkun(Account dataAccount) {
         String querySql = """
-        INSERT INTO account (nama, warna, icon_path, jumlah, id_mata_uang)
+        INSERT INTO account (name, color, icon_path, balance, id_currency)
         VALUES (?, ?, ?, ?, ?)
         """;
 
         try {
-            koneksi.setAutoCommit(false); // mulai
+            myConnection.setAutoCommit(false); // mulai
 
-            try (PreparedStatement ps = koneksi.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = myConnection.prepareStatement(querySql, Statement.RETURN_GENERATED_KEYS)) {
 
                 ps.setString(1, dataAccount.getName());
                 ps.setString(2, Converter.colorToHex(dataAccount.getColor()));
                 ps.setString(3, dataAccount.getIconPath());
-                ps.setInt(4, dataAccount.getBalance());
+                ps.setBigDecimal(4, dataAccount.getBalance());
                 ps.setInt(5, dataAccount.getCurrencyType().getId());
 
                 if (ps.executeUpdate() == 0) {
@@ -576,13 +573,13 @@ public class Database {
                     }
 
                     int newId = rs.getInt(1);
-                    koneksi.commit();
+                    myConnection.commit();
                     return newId;
                 }
             }
         } catch (SQLException e) {
             try {
-                koneksi.rollback();
+                myConnection.rollback();
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
@@ -591,25 +588,25 @@ public class Database {
 
         } finally {
             try {
-                koneksi.setAutoCommit(true);
+                myConnection.setAutoCommit(true);
             } catch (SQLException e) {
                 log.error("gagal reset autoCommit", e);
             }
         }
     }
     public ArrayList<Account> fetchAkun() {
-        try (Statement stat = koneksi.createStatement()) {
+        try (Statement stat = myConnection.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM account");
 
             ArrayList<Account> data = new ArrayList<>();
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                String nama = rs.getString("nama");
-                Color warna = Converter.hexToColor(rs.getString("warna"));
+                String nama = rs.getString("name");
+                Color warna = Converter.hexToColor(rs.getString("color"));
                 String iconPath = rs.getString("icon_path");
-                int jumlah = rs.getInt("jumlah");
-                int idMataUang = rs.getInt("id_mata_uang");
+                BigDecimal jumlah = rs.getBigDecimal("balance");
+                int idMataUang = rs.getInt("id_currency");
 
                 Currency currency = null;
                 for(Currency item : DataManager.getInstance().getDataMataUang()){
@@ -644,29 +641,29 @@ public class Database {
     public Boolean updateSaldoAkun(Account account, BigDecimal jumlah) {
         String querySql = """
             UPDATE account SET
-            jumlah = ?
+            balance = ?
             WHERE id = ?;
             """;
 
         try {
-            koneksi.setAutoCommit(false);
-            try (PreparedStatement ps = koneksi.prepareStatement(querySql)) {
+            myConnection.setAutoCommit(false);
+            try (PreparedStatement ps = myConnection.prepareStatement(querySql)) {
                 ps.setBigDecimal(1, jumlah);
                 ps.setInt(2, account.getId());
 
                 int affected = ps.executeUpdate();
                 if(affected == 0) {
-                    koneksi.rollback();
+                    myConnection.rollback();
                     return false;
                 }
 
-                koneksi.commit();
+                myConnection.commit();
                 return true;
 
             }
         } catch (SQLException e) {
             try {
-                koneksi.rollback();
+                myConnection.rollback();
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
@@ -675,7 +672,7 @@ public class Database {
 
         } finally {
             try {
-                koneksi.setAutoCommit(true); // balikin normal
+                myConnection.setAutoCommit(true); // balikin normal
             } catch (SQLException e) {
                 log.error("gagal reset autoCommit", e);
             }
@@ -684,22 +681,22 @@ public class Database {
 
     // [7] >=== manipulasi data template
     public ArrayList<Template> fetchTemplate() {
-        try (Statement stat = koneksi.createStatement()) {
+        try (Statement stat = myConnection.createStatement()) {
             ResultSet rs = stat.executeQuery("SELECT * FROM template");
 
             ArrayList<Template> dataTemplate = new ArrayList<>();
 
             while(rs.next()) {
                 int id = rs.getInt("id");
-                TransactionType tipe = TransactionType.valueOf(rs.getString("tipe"));
-                String nama = rs.getString("nama");
-                int jumlah = rs.getInt("jumlah");
-                int idAkun = rs.getInt("id_akun");
-                int idKategori = rs.getInt("id_kategori");
-                int idTipeLabel = rs.getInt("id_tipelabel");
-                String keterangan = rs.getString("keterangan");
-                PaymentType paymentType = PaymentType.fromString(rs.getString("metode_transaksi"));
-                PaymentStatus paymentStatus = PaymentStatus.fromString(rs.getString("status"));
+                TransactionType tipe = TransactionType.valueOf(rs.getString("type"));
+                String nama = rs.getString("name");
+                BigDecimal jumlah = rs.getBigDecimal("amount");
+                int idAkun = rs.getInt("id_account");
+                int idKategori = rs.getInt("id_category");
+                int idTipeLabel = rs.getInt("id_labeltype");
+                String keterangan = rs.getString("description");
+                PaymentType paymentType = PaymentType.fromString(rs.getString("payment_type"));
+                PaymentStatus paymentStatus = PaymentStatus.fromString(rs.getString("payment_status"));
 
                 Account account = null;
                 for(Account item : DataManager.getInstance().getDataAkun()) {
@@ -758,16 +755,16 @@ public class Database {
         }
     }
     public int insertTemplate(Template temp) {
-        String quertSql = "INSERT INTO template (tipe, nama, jumlah, id_akun, id_kategori, id_tipelabel, keterangan, metode_transaksi, status) " +
+        String quertSql = "INSERT INTO template (type, name, amount, id_account, id_category, id_labeltype, description, payment_type, payment_status) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try {
-            koneksi.setAutoCommit(false);
+            myConnection.setAutoCommit(false);
 
-            try (PreparedStatement ps = koneksi.prepareStatement(quertSql, Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement ps = myConnection.prepareStatement(quertSql, Statement.RETURN_GENERATED_KEYS)) {
                 ps.setString(1, temp.getTransactionType().name());
                 ps.setString(2, temp.getName());
-                ps.setInt(3, temp.getAmount());
+                ps.setBigDecimal(3, temp.getAmount());
                 ps.setInt(4, temp.getAccount().getId());
                 ps.setInt(5, temp.getCategory().getId());
 
@@ -805,13 +802,13 @@ public class Database {
                     }
 
                     int newId = rs.getInt(1);
-                    koneksi.commit();
+                    myConnection.commit();
                     return newId;
                 }
             }
         } catch (SQLException e) {
             try {
-                koneksi.rollback();
+                myConnection.rollback();
             } catch (SQLException ex) {
                 log.error("rollback database gagal", ex);
             }
@@ -819,7 +816,7 @@ public class Database {
             return -1;
         } finally {
             try {
-                koneksi.setAutoCommit(true);
+                myConnection.setAutoCommit(true);
             } catch (SQLException e) {
                 log.error("gagal reset autoCommit", e);
             }

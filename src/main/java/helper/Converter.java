@@ -5,9 +5,13 @@ import javafx.scene.control.ListCell;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 
+import java.time.format.DateTimeFormatter;
 import java.util.function.Function;
 
 public class Converter {
+
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
     private Converter() {}
 
     public static String colorToHex(Color warna) {

@@ -58,7 +58,7 @@ public class Transaction {
         return Integer.hashCode(id);
     }
 
-    public boolean isSameState(Transaction t) {
+    public Boolean isSameState(Transaction t) {
         if (t == null) return false;
 
         return Objects.equals(amount, t.amount) &&

@@ -20,6 +20,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -41,7 +42,7 @@ public class AccountControl implements Initializable {
 
     @FXML private TextField accountName;
 
-    @FXML private Spinner<Integer> amountSpinner;
+    @FXML private Spinner<BigDecimal> amountSpinner;
 
     @FXML private Button submitButton;
 
@@ -59,7 +60,7 @@ public class AccountControl implements Initializable {
         // validation init
         IOLogic.isTextFieldValid(accountName, 20);
         isFormComplete();
-        IOLogic.makeIntegerOnlyBlankInitial(amountSpinner, 0, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(amountSpinner, BigDecimal.ZERO, new BigDecimal("1_000_000_000_000"));
     }
 
     // [1] >=== CONNECTOR FUNCTION
@@ -84,14 +85,14 @@ public class AccountControl implements Initializable {
     private void initComboBoxColor() {
         DataLoader.warnaComboBoxLoader(colorComboBox);
         for (AccountItem item : accountComboBox.getItems()) {
-            item.setWarna(Color.GREY);
+            item.setColor(Color.GREY);
         }
 
         colorComboBox.valueProperty().addListener((obs, oldColor, newColor) -> {
             if (newColor == null) return;
 
             for (AccountItem item : accountComboBox.getItems()) {
-                item.setWarna(newColor.getWarna());
+                item.setColor(newColor.getColor());
             }
         });
     }
@@ -122,8 +123,8 @@ public class AccountControl implements Initializable {
                 // BIND background ke property warna
                 iconBox.backgroundProperty().bind(
                         Bindings.createObjectBinding(
-                                () -> new Background(new BackgroundFill(item.getWarna(), new CornerRadii(8), Insets.EMPTY)),
-                                item.warnaProperty()
+                                () -> new Background(new BackgroundFill(item.getColor(), new CornerRadii(8), Insets.EMPTY)),
+                                item.colorProperty()
                         )
                 );
 
@@ -167,7 +168,10 @@ public class AccountControl implements Initializable {
         BooleanBinding currencyValid = currencyComboBox.valueProperty().isNotNull();
         BooleanBinding amountValid =
                 Bindings.createBooleanBinding(
-                        () -> amountSpinner.getValue() != null && amountSpinner.getValue() >= 0,
+                        () -> {
+                            BigDecimal value = amountSpinner.getValue();
+                            return value != null && value.compareTo(BigDecimal.ZERO) > 0;
+                        },
                         amountSpinner.valueProperty()
                 );
 
@@ -192,13 +196,13 @@ public class AccountControl implements Initializable {
 
         ColorItem warna = colorComboBox.getValue();
         AccountItem accountItem = accountComboBox.getValue();
-        int jumlah = amountSpinner.getValue();
+        BigDecimal jumlah = amountSpinner.getValue();
         Currency currencyItem = currencyComboBox.getValue();
 
         Account accountBaru = new Account(
                 0,
                 name,
-                warna.getWarna(),
+                warna.getColor(),
                 accountItem.getIcon(),
                 accountItem.getIconPath(),
                 jumlah,
