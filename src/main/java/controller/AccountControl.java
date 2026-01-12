@@ -42,7 +42,7 @@ public class AccountControl implements Initializable {
 
     @FXML private TextField accountName;
 
-    @FXML private Spinner<BigDecimal> amountSpinner;
+    @FXML private Spinner<Integer> amountSpinner;
 
     @FXML private Button submitButton;
 
@@ -60,7 +60,7 @@ public class AccountControl implements Initializable {
         // validation init
         IOLogic.isTextFieldValid(accountName, 20);
         isFormComplete();
-        IOLogic.makeIntegerOnlyBlankInitial(amountSpinner, BigDecimal.ZERO, new BigDecimal("1_000_000_000_000"));
+        IOLogic.makeIntegerOnlyBlankInitial(amountSpinner, 0, 2_147_483_647);
     }
 
     // [1] >=== CONNECTOR FUNCTION
@@ -168,10 +168,7 @@ public class AccountControl implements Initializable {
         BooleanBinding currencyValid = currencyComboBox.valueProperty().isNotNull();
         BooleanBinding amountValid =
                 Bindings.createBooleanBinding(
-                        () -> {
-                            BigDecimal value = amountSpinner.getValue();
-                            return value != null && value.compareTo(BigDecimal.ZERO) > 0;
-                        },
+                        () -> amountSpinner.getValue() != null && amountSpinner.getValue() > 0,
                         amountSpinner.valueProperty()
                 );
 
@@ -196,7 +193,7 @@ public class AccountControl implements Initializable {
 
         ColorItem warna = colorComboBox.getValue();
         AccountItem accountItem = accountComboBox.getValue();
-        BigDecimal jumlah = amountSpinner.getValue();
+        BigDecimal jumlah = BigDecimal.valueOf(amountSpinner.getValue());
         Currency currencyItem = currencyComboBox.getValue();
 
         Account accountBaru = new Account(

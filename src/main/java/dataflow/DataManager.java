@@ -61,11 +61,10 @@ public class DataManager {
                   dataColor.get(1).getColor(),
                   dataAccountItem.get(0).getIcon(),
                   dataAccountItem.get(0).getIconPath(),
-                   BigDecimal.ZERO,
-                   dataCurrency.get(0)
+                  BigDecimal.ZERO,
+                  dataCurrency.get(0)
             );
 
-            accountData.add(account);
             addAccount(account, false);
             log.info("account default dibuat untuk penggunaan pertama user! account [general]");
         }

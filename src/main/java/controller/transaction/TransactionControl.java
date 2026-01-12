@@ -39,6 +39,7 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class TransactionControl implements Initializable {
@@ -104,7 +105,7 @@ public class TransactionControl implements Initializable {
     @FXML private ComboBox<Currency> mataUangCombo_inout, mataUangCombo_from, mataUangCombo_to;
 
     // spinner
-    @FXML Spinner<BigDecimal> spinner_inout, spinner_from, spinner_to;
+    @FXML Spinner<Integer> spinner_inout, spinner_from, spinner_to;
 
     // tanggal
     @FXML DatePicker date_inout, date_trans;
@@ -304,12 +305,10 @@ public class TransactionControl implements Initializable {
         BooleanBinding valueChoosenValid = valueChoosen.isNotEqualTo(0);
         BooleanBinding amountValid =
                 Bindings.createBooleanBinding(
-                        () -> {
-                            BigDecimal value = spinner_inout.getValue();
-                            return value != null && value.compareTo(BigDecimal.ZERO) > 0;
-                        },
+                        () -> spinner_inout.getValue() != null && spinner_inout.getValue() > 0,
                         spinner_inout.valueProperty()
                 );
+
         BooleanBinding akunValid = akunComboBox_inout.valueProperty().isNotNull();
         BooleanBinding kategoriValid = categoryComboBox.valueProperty().isNotNull();
         BooleanBinding dateValid = date_inout.valueProperty().isNotNull();
@@ -338,19 +337,13 @@ public class TransactionControl implements Initializable {
 
         BooleanBinding amountFromValid =
                 Bindings.createBooleanBinding(
-                        () -> {
-                            BigDecimal value = spinner_from.getValue();
-                            return value != null && value.compareTo(BigDecimal.ZERO) > 0;
-                        },
+                        () -> spinner_from.getValue() != null && spinner_from.getValue() > 0,
                         spinner_from.valueProperty()
                 );
 
         BooleanBinding amountToValid =
                 Bindings.createBooleanBinding(
-                        () -> {
-                            BigDecimal value = spinner_to.getValue();
-                            return value != null && value.compareTo(BigDecimal.ZERO) > 0;
-                        },
+                        () -> spinner_to.getValue() != null && spinner_to.getValue() > 0,
                         spinner_to.valueProperty()
                 );
 
@@ -379,7 +372,7 @@ public class TransactionControl implements Initializable {
     @FXML
     private void inoutSubmitHandler(boolean closeAfterSubmit) {
         TransactionType tipe = getValueChoosen() == 1 ? TransactionType.INCOME : TransactionType.EXPANSE;
-        BigDecimal jumlah = spinner_inout.getValue();
+        BigDecimal jumlah = BigDecimal.valueOf(spinner_inout.getValue());
         Account account = akunComboBox_inout.getValue();
         Category category = categoryComboBox.getValue();
         LabelType labelType = tipeLabel_inout.getValue();
@@ -491,8 +484,8 @@ public class TransactionControl implements Initializable {
     private void transSubmitHandler(boolean closeAfterSubmit) {
         Account fromAccount = akunComboBox_from.getValue();
         Account toAccount = akunComboBox_to.getValue();
-        BigDecimal fromJumlah = spinner_from.getValue();
-        BigDecimal toJumlah = spinner_to.getValue();
+        BigDecimal fromJumlah = BigDecimal.valueOf(spinner_from.getValue());
+        BigDecimal toJumlah = BigDecimal.valueOf(spinner_to.getValue());
         LabelType labelType = tipeLabel_trans.getValue();
         LocalDate tanggal = date_trans.getValue();
         String keterangan = IOLogic.normalizeSpaces(note_trans.getText());
@@ -734,9 +727,9 @@ public class TransactionControl implements Initializable {
 
     // [5] >=== HELPER FUNCTION
     private void spinnerLogicHandler() {
-        IOLogic.makeIntegerOnlyBlankInitial(spinner_inout, BigDecimal.ZERO, new BigDecimal("1_000_000_000_000"));
-        IOLogic.makeIntegerOnlyBlankInitial(spinner_from, BigDecimal.ZERO, new BigDecimal("1_000_000_000_000"));
-        IOLogic.makeIntegerOnlyBlankInitial(spinner_to, BigDecimal.ZERO, new BigDecimal("1_000_000_000_000"));
+        IOLogic.makeIntegerOnlyBlankInitial(spinner_inout, 0, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(spinner_from, 0, 2_147_483_647);
+        IOLogic.makeIntegerOnlyBlankInitial(spinner_to, 0, 2_147_483_647);
     }
     private void showInOut() {
         inoutForm.setVisible(true);
@@ -829,7 +822,7 @@ public class TransactionControl implements Initializable {
     }
     private Transaction buildDraftTransaksi() {
         TransactionType tipe = getValueChoosen() == 1 ? TransactionType.INCOME : TransactionType.EXPANSE;
-        BigDecimal jumlah = spinner_inout.getValue();
+        BigDecimal jumlah = BigDecimal.valueOf(spinner_inout.getValue());
         Account account = akunComboBox_inout.getValue();
         Category category = categoryComboBox.getValue();
         LabelType labelType = tipeLabel_inout.getValue();
@@ -906,7 +899,7 @@ public class TransactionControl implements Initializable {
             activateExpense();
         }
 
-        spinner_inout.getValueFactory().setValue(temp.getAmount());
+        spinner_inout.getValueFactory().setValue(temp.getAmount().intValue());
         akunComboBox_inout.setValue(temp.getAccount());
 
         categoryComboBox.setValue(temp.getCategory());

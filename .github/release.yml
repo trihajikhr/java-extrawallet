@@ -1,0 +1,25 @@
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release      # label untuk commit/PR yang ga mau masuk changelog
+    authors:
+      - octocat                 # exclude commits dari author ini
+  categories:
+    - title: 🛠 Breaking Changes
+      labels:
+        - Semver-Major
+        - breaking-change
+    - title: 🎉 New Features
+      labels:
+        - Semver-Minor
+        - enhancement
+    - title: 🐛 Bug Fixes
+      labels:
+        - bug
+        - fix
+    - title: 📝 Documentation
+      labels:
+        - docs
+    - title: ⚡ Other Changes
+      labels:
+        - "*"                    # semua label lain masuk sini

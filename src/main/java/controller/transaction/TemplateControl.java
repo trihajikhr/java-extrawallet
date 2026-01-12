@@ -70,7 +70,7 @@ public class TemplateControl implements Initializable {
     @FXML private ImageView expenseImg;
 
     @FXML
-    private Spinner<BigDecimal> spinnerAmount;
+    private Spinner<Integer> spinnerAmount;
 
     @FXML
     private ComboBox<Currency> mataUangComboBox;
@@ -120,7 +120,7 @@ public class TemplateControl implements Initializable {
         loadTipeLabelComboBox();
 
         // uncategorized
-        IOLogic.makeIntegerOnlyBlankInitial(spinnerAmount, BigDecimal.ZERO, new BigDecimal("1_000_000_000_000"));
+        IOLogic.makeIntegerOnlyBlankInitial(spinnerAmount, 0, 2_147_483_647);
         mataUangComboBox.setMouseTransparent(true);
         mataUangComboBox.setFocusTraversable(false);
         mataUangComboBox.getStyleClass().add("locked");
@@ -291,10 +291,7 @@ public class TemplateControl implements Initializable {
 
         BooleanBinding amountValid =
                 Bindings.createBooleanBinding(
-                        () -> {
-                            BigDecimal value = spinnerAmount.getValue();
-                            return value != null && value.compareTo(BigDecimal.ZERO) > 0;
-                        },
+                        () -> spinnerAmount.getValue() != null && spinnerAmount.getValue() > 0,
                         spinnerAmount.valueProperty()
                 );
 
@@ -371,7 +368,7 @@ public class TemplateControl implements Initializable {
             return;
         }
 
-        BigDecimal jumlah = spinnerAmount.getValue();
+        BigDecimal jumlah = BigDecimal.valueOf(spinnerAmount.getValue());
         Account dataAccount = akunComboBox.getValue();
         Category dataCategory = categoryComboBox.getValue();
         LabelType dataLabel = tipeLabelComboBox.getValue();

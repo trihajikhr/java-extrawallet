@@ -5,15 +5,15 @@ public class Currency {
     private String code;        // ISO code: IDR, USD, EUR
     private String name;        // Rupiah, US Dollar
     private String symbol;      // Rp, $, €
-    private int decimal;        // 0 = IDR, 2 = USD
+    private int fractionDigits;        // 0 = IDR, 2 = USD
 
     // full field constructor
-    public Currency(int id, String code, String name, String symbol, int decimal) {
+    public Currency(int id, String code, String name, String symbol, int fractionDigits) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.symbol = symbol;
-        this.decimal = decimal;
+        this.fractionDigits = fractionDigits;
     }
 
     // Default constructor for manual field assignment
@@ -51,11 +51,11 @@ public class Currency {
         this.symbol = symbol;
     }
 
-    public int getDecimal() {
-        return decimal;
+    public int getFractionDigits() {
+        return fractionDigits;
     }
 
-    public void setDecimal(int decimal) {
-        this.decimal = decimal;
+    public void setFractionDigits(int fractionDigits) {
+        this.fractionDigits = fractionDigits;
     }
 }

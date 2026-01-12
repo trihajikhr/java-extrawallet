@@ -61,7 +61,7 @@ public class EditControl implements Initializable {
     private ObservableList<LabelType> labelTypeList = FXCollections.observableArrayList();
 
     // atribut fxml
-    @FXML private Spinner<BigDecimal> amountEdit;
+    @FXML private Spinner<Integer> amountEdit;
     @FXML private ComboBox<Currency> mataUangCombo;
     @FXML private ComboBox<Account> akunComboBox;
     @FXML private ComboBox<Category> categoryComboBox;
@@ -194,15 +194,12 @@ public class EditControl implements Initializable {
     // [3] >=== LOGIC HANDLER & FORM VALIDATION
     private void logicHandler() {
         IOLogic.isTextFieldValid(noteEdit, 50);
-        IOLogic.makeIntegerOnlyBlankInitial(amountEdit, BigDecimal.ZERO, new BigDecimal("1_000_000_000_000"));
+        IOLogic.makeIntegerOnlyBlankInitial(amountEdit, 0, 2_147_483_647);
     }
     private void isFormComplete() {
         BooleanBinding amountValid =
                 Bindings.createBooleanBinding(
-                        () -> {
-                            BigDecimal value = amountEdit.getValue();
-                            return value != null && value.compareTo(BigDecimal.ZERO) > 0;
-                        },
+                        () -> amountEdit.getValue() != null && amountEdit.getValue() > 0,
                         amountEdit.valueProperty()
                 );
 
@@ -232,7 +229,7 @@ public class EditControl implements Initializable {
                     Transaction current = new Transaction(
                             transOriginal.getId(),
                             transOriginal.getTransactionType(),
-                            amountEdit.getValue(),
+                            BigDecimal.valueOf(amountEdit.getValue()),
                             akunComboBox.getValue(),
                             categoryComboBox.getValue(),
                             tipeLabelCombo.getValue(),
@@ -333,7 +330,7 @@ public class EditControl implements Initializable {
             Transaction transModified = new Transaction(
                     transOriginal.getId(),
                     transOriginal.getTransactionType(),
-                    amountEdit.getValue(),
+                    BigDecimal.valueOf(amountEdit.getValue()),
                     akunComboBox.getValue(),
                     categoryComboBox.getValue(),
                     tipeLabelCombo.getValue(),
@@ -389,7 +386,7 @@ public class EditControl implements Initializable {
                 Transaction edited = new Transaction(
                         old.getId(),
                         old.getTransactionType(),
-                        amountEdit.getValue(),
+                        BigDecimal.valueOf(amountEdit.getValue()),
                         akunComboBox.getValue(),
                         categoryComboBox.getValue(),
                         tipeLabelCombo.getValue(),

@@ -430,7 +430,7 @@ public final class DataSeeder {
     }
     public static void seedDatabaseCurrency() {
         Database dataConnect = Database.getInstance();
-        String querySql = "INSERT OR IGNORE INTO currency (id, code, name, symbol, decimal) VALUES (?, ?, ?, ?, ?)";
+        String querySql = "INSERT OR IGNORE INTO currency (id, code, name, symbol, fraction_digits) VALUES (?, ?, ?, ?, ?)";
 
         try (PreparedStatement stat = dataConnect.getConnection().prepareStatement(querySql)) {
             for(Currency mk : DataManager.getInstance().getDataMataUang()) {
@@ -438,7 +438,7 @@ public final class DataSeeder {
                 stat.setString(2, mk.getCode());
                 stat.setString(3, mk.getName());
                 stat.setString(4, mk.getSymbol());
-                stat.setInt(5, mk.getDecimal());
+                stat.setInt(5, mk.getFractionDigits());
 
                 stat.executeUpdate();
             }

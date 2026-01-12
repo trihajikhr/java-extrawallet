@@ -63,7 +63,7 @@ public class Database {
             createLabelTypeTable();
             createAccountTable();
             createTransactionTable();
-            createTableTemplate();
+            createTemplateTable();
 
             log.info("Database siap digunakan di: {}", AppPaths.DB_FILE.toAbsolutePath());
 
@@ -104,7 +104,7 @@ public class Database {
                 "code"	TEXT NOT NULL,
                 "name"	TEXT NOT NULL,
                 "symbol"	TEXT NOT NULL,
-                "decimal"	INTEGER NOT NULL,
+                "fraction_digits"	INTEGER NOT NULL,
                 PRIMARY KEY("id" AUTOINCREMENT)
             )
             """;
@@ -160,7 +160,7 @@ public class Database {
         try (Statement perintah = myConnection.createStatement()) {
             String querySql =
             """
-            CREATE TABLE IF NOT EXISTS "transaction" (
+            CREATE TABLE IF NOT EXISTS "transaction_record" (
                 "id"	INTEGER NOT NULL UNIQUE,
                 "type"	TEXT NOT NULL,
                 "amount"	INTEGER NOT NULL,
@@ -184,7 +184,7 @@ public class Database {
             log.error("table transaction gagal dibuat: ", e);
         }
     }
-    private void createTableTemplate() {
+    private void createTemplateTable() {
         try (Statement perintah = myConnection.createStatement()) {
             String querySql =
             """
@@ -202,7 +202,7 @@ public class Database {
                 PRIMARY KEY("id" AUTOINCREMENT),
                 CONSTRAINT "template_to_account" FOREIGN KEY("id_account") REFERENCES "account"("id") ON DELETE CASCADE,
                 CONSTRAINT "template_to_category" FOREIGN KEY("id_category") REFERENCES "category"("id") ON DELETE CASCADE,
-                CONSTRAINT "template_to_labeltype" FOREIGN KEY("id_category") REFERENCES "labeltype"("id") ON DELETE CASCADE
+                CONSTRAINT "template_to_labeltype" FOREIGN KEY("id_labeltype") REFERENCES "labeltype"("id") ON DELETE CASCADE
             )
             """;
             perintah.executeUpdate(querySql);
@@ -315,7 +315,7 @@ public class Database {
     // [5] >=== manipulasi data transaction
     public ArrayList<Transaction> fetchTransaction() {
         try (Statement stat = myConnection.createStatement()) {
-            ResultSet rs = stat.executeQuery("SELECT * FROM `transaction`");
+            ResultSet rs = stat.executeQuery("SELECT * FROM transaction_record");
 
             ArrayList<Transaction> data = new ArrayList<>();
 
@@ -379,7 +379,7 @@ public class Database {
         }
     }
     public int insertTransaksi(Transaction trans) {
-        String querySql = "INSERT INTO transaction " +
+        String querySql = "INSERT INTO transaction_record " +
                 "(type, amount, id_account, id_category, id_labeltype, date, description, payment_type, payment_status) " +
                 "VALUES (?,?,?,?,?,?,?,?,?)";
 
@@ -453,7 +453,7 @@ public class Database {
         }
     }
     public void deleteTransaksi(int id) {
-        String querySql = "DELETE FROM transaction WHERE id = ?";
+        String querySql = "DELETE FROM transaction_record WHERE id = ?";
 
         try (PreparedStatement perintah = Database.getInstance().myConnection.prepareStatement(querySql)){
             perintah.setInt(1, id);
@@ -469,7 +469,7 @@ public class Database {
     }
     public Boolean updateTransaksi(Transaction trans){
         String querySql = """
-            UPDATE transaction SET
+            UPDATE transaction_record SET
                 amount = ?,
                 id_account = ?,
                 id_category = ?,
